@@ -28,8 +28,8 @@ bootloader:
   can: CAN0
 
 diagnostics:
-  request_id: 0x7E0
-  response_id: 0x7E8
+  request_id: 0x7E1
+  response_id: 0x7E9
 
 use:
   can: [CAN0]
