@@ -1,0 +1,41 @@
+{
+    "vendor": {
+        "nextbsw.org/workspace": {
+            "note": [
+                "<workspace>/CMakePresets.json - one visible preset per project of the customer repository.",
+                "Written once by the wizard (TOOL-59) and extended per project; checked in.",
+                "The base presets come from the pinned neXtBSW tree: include <tree>/cmake/NxPresets.json. There,",
+                "${sourceDir} is this workspace - build directory (build/<preset>) and .venv come from the",
+                "workspace, while the tree contributes toolchain file, compiler options and the build check.",
+                "Placeholders of the template: nextbsw = nextbsw.path (the tree), battsim-master = preset name,",
+                "battsim_master = the project folder below projects/."
+            ]
+        }
+    },
+    "version": 6,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 28,
+        "patch": 3
+    },
+    "include": [
+        "nextbsw/cmake/NxPresets.json"
+    ],
+    "configurePresets": [
+        {
+            "name": "battsim-master",
+            "inherits": "nx-arm-gcc",
+            "displayName": "battsim_master",
+            "cacheVariables": {
+                "NX_PROJECT": "${sourceDir}/projects/battsim_master/project.yaml"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "battsim-master",
+            "configurePreset": "battsim-master",
+            "configuration": "RelWithDebInfo"
+        }
+    ]
+}

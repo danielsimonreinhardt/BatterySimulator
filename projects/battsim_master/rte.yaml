@@ -1,0 +1,15 @@
+# SPDX-License-Identifier: Apache-2.0 WITH AdditionRef-neXtBSW-Generator-Output-Exception
+# Generator output exception (NOTICE): this generated file may be used under terms of your choice.
+# ECU description (tools/rtegen) of project battsim_master, created empty (TOOL-59): no software component yet.
+# Format: swc/README.md and projects/README.md. Add components in neXtBSW Studio (step Komponenten).
+# RTE-22: components[].path and can.dbc are relative to this file.
+schema_version: 2
+# One application task with the defaults of ecu/asyncCoreConfiguration/tasks.yaml (application_default).
+# Without a runnables: list every runnable runs in it; the Studio writes the list as soon as
+# a runnable is assigned or a second task is added.
+tasks:
+  - name: swc
+    period_ms: 10
+    priority: 30
+    stack_bytes: 2048
+components: []

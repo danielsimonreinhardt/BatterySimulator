@@ -1,0 +1,26 @@
+# BattSimFW/nextbsw.yaml - mit welchem neXtBSW dieses Repository gebaut wird.
+# Einmal vom Assistenten 'Neues Projekt' des neXtBSW Studio geschrieben (TOOL-60).
+#
+# Das ist **keine** Konfigurationsebene des Steuergeraets: hier steht kein Wert der ECU, nur wo
+# neXtBSW und die eigenen Erweiterungen dieses Repositorys liegen
+# (doc/architecture/customer-project.md 3.1).
+#
+# Der Pin wird nie automatisch nachgezogen. Ein Umzug ist ein eigener, geprüfter Schritt:
+# Zweig, nxconfig migrate, Bericht unter doc/nextbsw-updates/, Review (customer-project.md 5.5).
+#
+# Quelle des Untermoduls: https://github.com/danielsimonreinhardt/neXtBSW_development.git
+# ENTWICKLUNGS-PIN: Das Untermodul steht auf dem Commit 3cba3467fbf314b1fa5846d3abb898eba1e40d6d, auf den **kein**
+#   Release-Tag v1.0.0 zeigt. Erlaubt, solange entwickelt wird (customer-project.md 4.4,
+#   Frage Q8); fuer eine Serienauslieferung gehoert hier ein annotierter Tag auf master (SYS-68),
+#   und `tools/ci run --release` weist einen Entwicklungs-Pin ab.
+schema_version: 1
+nextbsw:
+  version: 1.0.0
+  source: submodule
+  path: nextbsw
+  profile: open
+search:
+  # Die eigenen Erweiterungen dieses Repositorys, vor den Ordnern des Baums durchsucht.
+  mcudb: [mcudb]
+  modules: [libs]
+  boards: [boards]
