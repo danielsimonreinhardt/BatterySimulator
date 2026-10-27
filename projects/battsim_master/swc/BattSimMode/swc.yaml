@@ -1,0 +1,78 @@
+# Software component description (RTE-07), written by neXtBSW Studio (TOOL-08).
+# The model was created from it once (tools/swc/swc_create.m); afterwards the .slx is the master.
+# Schema and checks: tools/swc/swc_yaml.py, rules: swc/README.md (Modellregeln).
+version: 1
+name: BattSimMode
+description: Betriebsarten des Simulators (Standby, Fernsteuerung, FAIL), Ausgang ein/aus, Lebenszeichen der Statusbotschaften
+runnables:
+  - name: ModeTask10ms
+    period_ms: 10
+ports:
+  - name: RemoteControl
+    direction: in
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: ModeControl
+    direction: in
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: OutputControl
+    direction: in
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: ControlBattSimQlf
+    direction: in
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: BtnAllOnOff
+    direction: in
+    type: boolean
+    runnables: [ModeTask10ms]
+  - name: BtnRemote
+    direction: in
+    type: boolean
+    runnables: [ModeTask10ms]
+  - name: Overload
+    direction: in
+    type: boolean
+    runnables: [ModeTask10ms]
+  - name: BattSimStatus
+    direction: out
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: OutputStatus
+    direction: out
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: LedRemote
+    direction: out
+    type: boolean
+    runnables: [ModeTask10ms]
+  - name: OutputEnable
+    direction: out
+    type: boolean
+    runnables: [ModeTask10ms]
+  - name: AliveStatusBattSim
+    direction: out
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: AliveStatusCells010203
+    direction: out
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: AliveStatusCells040506
+    direction: out
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: AliveStatusCells070809
+    direction: out
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: AliveStatusCells101112
+    direction: out
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: AliveStatusCells131415
+    direction: out
+    type: uint8
+    runnables: [ModeTask10ms]

@@ -1,0 +1,594 @@
+# Software component description (RTE-07), written by neXtBSW Studio (TOOL-08).
+# The model was created from it once (tools/swc/swc_create.m); afterwards the .slx is the master.
+# Schema and checks: tools/swc/swc_yaml.py, rules: swc/README.md (Modellregeln).
+version: 1
+name: CellChannels
+description: '14 Zellkanaele: Sollwert begrenzen, Tastgrad, Istwert messen, Freigabe und Status'
+runnables:
+  - name: CellTask10ms
+    period_ms: 10
+ports:
+  - name: OutputEnable
+    direction: in
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Control010203Qlf
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: Control040506Qlf
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: Control070809Qlf
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: Control101112Qlf
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: Control131415Qlf
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: Cell01VoltSet_V
+    direction: in
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell01Enable
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: St01
+    direction: in
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: UCell01_mV
+    direction: in
+    type: uint32
+    runnables: [CellTask10ms]
+  - name: UCell01Qlf
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: En01
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Sel01
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Cell01VoltAct_V
+    direction: out
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell01State
+    direction: out
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: Duty01_permille
+    direction: out
+    type: uint16
+    runnables: [CellTask10ms]
+  - name: Cell02VoltSet_V
+    direction: in
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell02Enable
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: St02
+    direction: in
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: UCell02_mV
+    direction: in
+    type: uint32
+    runnables: [CellTask10ms]
+  - name: UCell02Qlf
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: En02
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Sel02
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Cell02VoltAct_V
+    direction: out
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell02State
+    direction: out
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: Duty02_permille
+    direction: out
+    type: uint16
+    runnables: [CellTask10ms]
+  - name: Cell03VoltSet_V
+    direction: in
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell03Enable
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: St03
+    direction: in
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: UCell03_mV
+    direction: in
+    type: uint32
+    runnables: [CellTask10ms]
+  - name: UCell03Qlf
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: En03
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Sel03
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Cell03VoltAct_V
+    direction: out
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell03State
+    direction: out
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: Duty03_permille
+    direction: out
+    type: uint16
+    runnables: [CellTask10ms]
+  - name: Cell04VoltSet_V
+    direction: in
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell04Enable
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: St04
+    direction: in
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: UCell04_mV
+    direction: in
+    type: uint32
+    runnables: [CellTask10ms]
+  - name: UCell04Qlf
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: En04
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Sel04
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Cell04VoltAct_V
+    direction: out
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell04State
+    direction: out
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: Duty04_permille
+    direction: out
+    type: uint16
+    runnables: [CellTask10ms]
+  - name: Cell05VoltSet_V
+    direction: in
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell05Enable
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: St05
+    direction: in
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: UCell05_mV
+    direction: in
+    type: uint32
+    runnables: [CellTask10ms]
+  - name: UCell05Qlf
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: En05
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Sel05
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Cell05VoltAct_V
+    direction: out
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell05State
+    direction: out
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: Duty05_permille
+    direction: out
+    type: uint16
+    runnables: [CellTask10ms]
+  - name: Cell06VoltSet_V
+    direction: in
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell06Enable
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: St06
+    direction: in
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: UCell06_mV
+    direction: in
+    type: uint32
+    runnables: [CellTask10ms]
+  - name: UCell06Qlf
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: En06
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Sel06
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Cell06VoltAct_V
+    direction: out
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell06State
+    direction: out
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: Duty06_permille
+    direction: out
+    type: uint16
+    runnables: [CellTask10ms]
+  - name: Cell07VoltSet_V
+    direction: in
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell07Enable
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: St07
+    direction: in
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: UCell07_mV
+    direction: in
+    type: uint32
+    runnables: [CellTask10ms]
+  - name: UCell07Qlf
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: En07
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Sel07
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Cell07VoltAct_V
+    direction: out
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell07State
+    direction: out
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: Duty07_permille
+    direction: out
+    type: uint16
+    runnables: [CellTask10ms]
+  - name: Cell08VoltSet_V
+    direction: in
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell08Enable
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: St08
+    direction: in
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: UCell08_mV
+    direction: in
+    type: uint32
+    runnables: [CellTask10ms]
+  - name: UCell08Qlf
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: En08
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Sel08
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Cell08VoltAct_V
+    direction: out
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell08State
+    direction: out
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: Duty08_permille
+    direction: out
+    type: uint16
+    runnables: [CellTask10ms]
+  - name: Cell09VoltSet_V
+    direction: in
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell09Enable
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: St09
+    direction: in
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: UCell09_mV
+    direction: in
+    type: uint32
+    runnables: [CellTask10ms]
+  - name: UCell09Qlf
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: En09
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Sel09
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Cell09VoltAct_V
+    direction: out
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell09State
+    direction: out
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: Duty09_permille
+    direction: out
+    type: uint16
+    runnables: [CellTask10ms]
+  - name: Cell10VoltSet_V
+    direction: in
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell10Enable
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: St10
+    direction: in
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: UCell10_mV
+    direction: in
+    type: uint32
+    runnables: [CellTask10ms]
+  - name: UCell10Qlf
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: En10
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Sel10
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Cell10VoltAct_V
+    direction: out
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell10State
+    direction: out
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: Duty10_permille
+    direction: out
+    type: uint16
+    runnables: [CellTask10ms]
+  - name: Cell11VoltSet_V
+    direction: in
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell11Enable
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: St11
+    direction: in
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: UCell11_mV
+    direction: in
+    type: uint32
+    runnables: [CellTask10ms]
+  - name: UCell11Qlf
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: En11
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Sel11
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Cell11VoltAct_V
+    direction: out
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell11State
+    direction: out
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: Duty11_permille
+    direction: out
+    type: uint16
+    runnables: [CellTask10ms]
+  - name: Cell12VoltSet_V
+    direction: in
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell12Enable
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: St12
+    direction: in
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: UCell12_mV
+    direction: in
+    type: uint32
+    runnables: [CellTask10ms]
+  - name: UCell12Qlf
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: En12
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Sel12
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Cell12VoltAct_V
+    direction: out
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell12State
+    direction: out
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: Duty12_permille
+    direction: out
+    type: uint16
+    runnables: [CellTask10ms]
+  - name: Cell13VoltSet_V
+    direction: in
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell13Enable
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: St13
+    direction: in
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: UCell13_mV
+    direction: in
+    type: uint32
+    runnables: [CellTask10ms]
+  - name: UCell13Qlf
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: En13
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Sel13
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Cell13VoltAct_V
+    direction: out
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell13State
+    direction: out
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: Duty13_permille
+    direction: out
+    type: uint16
+    runnables: [CellTask10ms]
+  - name: Cell14VoltSet_V
+    direction: in
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell14Enable
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: St14
+    direction: in
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: UCell14_mV
+    direction: in
+    type: uint32
+    runnables: [CellTask10ms]
+  - name: UCell14Qlf
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: En14
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Sel14
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Cell14VoltAct_V
+    direction: out
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell14State
+    direction: out
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: Duty14_permille
+    direction: out
+    type: uint16
+    runnables: [CellTask10ms]

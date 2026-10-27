@@ -1,0 +1,26 @@
+# Software component description (RTE-07), written by neXtBSW Studio (TOOL-08).
+# The model was created from it once (tools/swc/swc_create.m); afterwards the .slx is the master.
+# Schema and checks: tools/swc/swc_yaml.py, rules: swc/README.md (Modellregeln).
+version: 1
+name: SupplyMonitor
+description: '48-V-Versorgung: Strom filtern, Ueberlast, LIMIT-Leitung'
+runnables:
+  - name: SupplyTask10ms
+    period_ms: 10
+ports:
+  - name: ISupply_mV
+    direction: in
+    type: uint32
+    runnables: [SupplyTask10ms]
+  - name: ISupplyQlf
+    direction: in
+    type: uint8
+    runnables: [SupplyTask10ms]
+  - name: Limit
+    direction: in
+    type: boolean
+    runnables: [SupplyTask10ms]
+  - name: Overload
+    direction: out
+    type: boolean
+    runnables: [SupplyTask10ms]
