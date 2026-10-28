@@ -1,0 +1,49 @@
+# SPDX-License-Identifier: Apache-2.0
+# Testliste dieses Workspace (BattSimFW). Format und Felder sind die des neXtBSW-Baums (nextbsw/tools/test/README.md);
+# Aufruf: .venv/Scripts/python nextbsw/tools/test --workspace .
+# Die sechs Eintraege des Baums, die die Mechanik eines Workspace pruefen, laufen von selbst mit.
+
+version: 1
+
+groups: [python, host, target]
+
+tools:
+  ziglang:
+    kind: python_module
+    module: ziglang
+    hint: "in der .venv des Workspace (python -m tools.setup venv .)"
+
+# Vollstaendigkeitspruefung: eine Testdatei dieses Workspace, die auf ein Muster passt und in keinem `covers` und in
+# keiner `ignore`-Zeile steht, macht den Lauf rot.
+inventory:
+  patterns: ["test_*.py", "*HostTest.cpp", "*HostTest.c", "*_host_test.cpp", "*_sil_test.c"]
+  skip_dirs: [nextbsw, build, .venv, .git, __pycache__, node_modules, generated]
+  ignore: []
+
+inherit: []
+
+tests:
+
+  - name: konfiguration
+    group: python
+    kind: command
+    comment: >
+      Die Projektbeschreibung battsim_master gegen das Konfigurationsmodell des gepinnten Baums: Bezuege zwischen
+      Projekt, Board und Derivat, Ressourcenkonflikte (PWM-Gruppen, Pins), Meldungen mit YAML-Pfad
+    argv: ["{python}", "{tree}/tools/nxconfig", check, "{workspace}/projects/battsim_master/project.yaml"]
+    covers: []
+
+  - name: battsim-sil
+    group: host
+    kind: script
+    comment: >
+      Software-in-the-Loop von SupplyMonitor, BattSimMode und CellChannels auf dem PC (Stufe B): erzeugter Modellcode,
+      RTE von tools/rtegen und CAN-Datenbank des Projekts. Sollwert-Frame 0x100 -> Tastgrad (Kennlinie), Freigabe,
+      Istwert, Timeout und Alive-Fehler von 0x130 -> Ausgaenge aus und FAIL im selben 10-ms-Schritt, Rueckkehr aus FAIL,
+      Ueberlast mit Hysterese, Tasten, LED, Lebenszeichen 1..14 und Statusbotschaft 0x121
+    args: [projects/battsim_master/test/test_battsim_sil.py, projects/battsim_master/test/battsim_sil_test.c]
+    covers:
+      - projects/battsim_master/test/test_battsim_sil.py
+      - projects/battsim_master/test/battsim_sil_test.c
+    requires: [ziglang]
+    timeout: 600
