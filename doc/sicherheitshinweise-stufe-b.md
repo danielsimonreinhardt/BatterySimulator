@@ -53,3 +53,46 @@ COM-56 des gepinnten neXtBSW). Der Umlauf 14 -> 1 zaehlt als Schritt 1 (signal-q
 0 und 15 sind Alive-Fehler und werden nie zur Referenz. Ein Alive-Fehler wird 150 ms (0x130) entprellt und fuehrt in RUN
 danach zu FAIL mit Grund 2. Der SIL-Test (`projects/battsim_master/test/battsim_sil_test.c`) prueft die Folge
 13, 14, 1, 2 als OK und 0 und 15 als Fehler gegen die Konfiguration aus dem erzeugten Code.
+
+## 4. Geraeteteil Stufe B (28.10.2026, J-Link, Firmware ca8d4ac, LabControl-Treiber 0.22.1)
+
+Aufbau: PicoScope 2204A Kanal A an Zelle 1, Tastkopf 10:1, DC, eine Masse an Zelle-1-Minus; CAN allein ueber vector:59177:1
+mit Hardware-Zeitstempeln (TX-Bestaetigungen der Steuerbotschaften und RX der Statusbotschaften). Plots in
+`doc/messungen-stufe-b/`. Der Aufbau ist in der Messunsicherheit begrenzt: 8-Bit-Oszilloskop, Rauschen am Tastkopf ca. 0,3 V
+Spitze-Spitze, Statusbotschaften 0x120/0x121 nur alle 100 ms.
+
+### 4.1 Abschaltzeit bei Ausfall von 0x130 (Timeout)
+
+Alle Zellen 3,7 V, Ausgang ein, dann sendet der Treiber nichts mehr (keine Shutdown-Frames). Elf Laeufe.
+
+- **Firmware-Reaktion (CAN):** Der FAIL-Entscheidungszeitpunkt nach der letzten gesendeten 0x130 liegt zwischen
+  **299,7 ms und 308,4 ms** (Schnittmenge der zehn Laeufe mit gegeneinander verschobener Phase zum 100-ms-Takt von
+  0x120; jeder einzelne Lauf kennt die Entscheidung nur auf 100 ms genau). Erste 0x121 mit FAIL-Grund 1 und erste 0x120 mit
+  Status FAIL erscheinen im Mittel 1,5 ms auseinander. Das passt zu Timeout 300 ms plus einem 10-ms-Schritt.
+- **Analoger Abfall (Oszilloskop, drei Aufnahmen):** Zelle 1 faellt von 3,69 V auf < 0,5 V in **4,4 bis 4,7 ms**
+  (Beginn des Abfalls bis 0,5 V; 90 % bis 0,5 V: 3,9 bis 4,3 ms), Plateau 3,69 V.
+- **Summe (Grenze 310 ms, letzte 0x130 bis Zelle 1 < 0,5 V):** 304 ms bis 313 ms. Ob der analoge Abfall genau mit der
+  FAIL-Entscheidung beginnt oder eine Verzoegerung der Ausgangsstufe dazukommt, ist mit dieser Messung nicht trennbar
+  (Oszilloskop und CAN haben keine gemeinsame Zeitbasis). Im ungunstigsten Fall liegt die Summe damit etwa 3 ms ueber 310 ms.
+  Die Grenze wird nicht verschoben, das ist ein Befund fuer die Bewertung.
+- Der Umlauf des Alive-Zaehlers 14 -> 1 (elf Laeufe mit je 1,5 bis 4,5 s Betrieb im Zustand RUN) loest keinen Alive-Fehler aus.
+
+### 4.2 Alive-Fehler (Zaehler 0)
+
+Im Betrieb mit Ausgang ein sendet der Treiber 0x130 mit Alive-Zaehler 0 weiter (alle anderen Botschaften gueltig). Vier Laeufe:
+FAIL mit **Grund 2** nach 148 bis 215 ms ab dem ersten Frame mit Zaehler 0 (Schnittmenge, Entprellzeit 150 ms), Ausgang aus,
+Status FAIL; Rueckkehr mit dem Reset-Kommando in STANDBY.
+
+### 4.3 Zelle 1 mit gehaltenem Reset (nRESET per J-Link `r0`/`r1`)
+
+nRESET am SWD-Stecker ist verdrahtet: 0x120 bleibt waehrend `r0` 20,5 s lang aus und kommt nach `r1` mit STANDBY, Alive 1,
+alle Zellen aus zurueck.
+
+- **Zelle 1 liegt waehrend des gehaltenen Resets bei etwa 5,25 V** (nach ca. 50 ms Anstieg, ueber die ganzen 20 s konstant),
+  also auf dem hoechsten Wert. Der Ausgang ist im Reset **nicht** aus. Das ist der Fall S2 (etwa 5,3 V), nicht der Fall
+  „0 V, mindestens ein Weg aus“.
+- Nach `r1` faellt Zelle 1 binnen etwa 10 ms auf 0 V (Start der Firmware setzt die PWM-Pins auf den sicheren Pegel),
+  ohne sichtbaren Zwischenwert; die Aufloesung war dort 5 ms.
+- Folge fuer 1: Der zweite Abschaltweg ueber EN_01..14 ist **im Reset nicht wirksam**; mit dem Reset-Pegel von EN ist
+  Zelle 1 auf dem Maximum. Es wurde nur Zelle 1 gemessen und nur der Ausgangspegel, nicht der Pin-Pegel von EN_01 und
+  PWM-Pin getrennt: die Pin-Messung bleibt offen. Das Einschalten des Geraets (Spannungsversorgung) wurde nicht gemessen.
