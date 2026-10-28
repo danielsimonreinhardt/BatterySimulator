@@ -3,14 +3,14 @@
 Auto generated XML Component Description for model SupplyMonitor
 Model version                : 1.2
 Simulink Coder version       : Simulink Coder 24.1 (R2024a) 19-Nov-2023
-Model Checksum               : 4140426895 2007029204 31371037 14228201
+Model Checksum               : 1177443849 507097898 2899082614 2434188553
 -->
 <AUTOSAR xmlns="http://autosar.org/schema/r4.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://autosar.org/schema/r4.0 AUTOSAR_00051.xsd">
     <AR-PACKAGES>
         <AR-PACKAGE>
             <SHORT-NAME>DataTypes</SHORT-NAME>
             <ELEMENTS>
-                <IMPLEMENTATION-DATA-TYPE UUID="76258010-dedf-545f-72f8-e96f37afbcfe">
+                <IMPLEMENTATION-DATA-TYPE UUID="3e322e8e-b0dc-50f7-2f1d-b6fb501f6b23">
                     <SHORT-NAME>uint32</SHORT-NAME>
                     <CATEGORY>VALUE</CATEGORY>
                     <SW-DATA-DEF-PROPS>
@@ -21,7 +21,7 @@ Model Checksum               : 4140426895 2007029204 31371037 14228201
                         </SW-DATA-DEF-PROPS-VARIANTS>
                     </SW-DATA-DEF-PROPS>
                 </IMPLEMENTATION-DATA-TYPE>
-                <IMPLEMENTATION-DATA-TYPE UUID="9d1f6b53-415e-514e-b3eb-75c827c990cc">
+                <IMPLEMENTATION-DATA-TYPE UUID="49d8830c-a496-58f6-d56b-95b038bb98fe">
                     <SHORT-NAME>uint8</SHORT-NAME>
                     <CATEGORY>VALUE</CATEGORY>
                     <SW-DATA-DEF-PROPS>
@@ -32,7 +32,7 @@ Model Checksum               : 4140426895 2007029204 31371037 14228201
                         </SW-DATA-DEF-PROPS-VARIANTS>
                     </SW-DATA-DEF-PROPS>
                 </IMPLEMENTATION-DATA-TYPE>
-                <IMPLEMENTATION-DATA-TYPE UUID="36a45f35-3894-59cc-1d55-7785b525edb8">
+                <IMPLEMENTATION-DATA-TYPE UUID="5c69f865-2806-5c00-2a6c-6637f9d2fee7">
                     <SHORT-NAME>boolean</SHORT-NAME>
                     <CATEGORY>VALUE</CATEGORY>
                     <SW-DATA-DEF-PROPS>
@@ -44,12 +44,23 @@ Model Checksum               : 4140426895 2007029204 31371037 14228201
                         </SW-DATA-DEF-PROPS-VARIANTS>
                     </SW-DATA-DEF-PROPS>
                 </IMPLEMENTATION-DATA-TYPE>
+                <IMPLEMENTATION-DATA-TYPE UUID="6b40ad56-f17c-51e4-3d10-a04bdce19d23">
+                    <SHORT-NAME>float32</SHORT-NAME>
+                    <CATEGORY>VALUE</CATEGORY>
+                    <SW-DATA-DEF-PROPS>
+                        <SW-DATA-DEF-PROPS-VARIANTS>
+                            <SW-DATA-DEF-PROPS-CONDITIONAL>
+                                <BASE-TYPE-REF DEST="SW-BASE-TYPE">/DataTypes/SwBaseTypes/float32</BASE-TYPE-REF>
+                            </SW-DATA-DEF-PROPS-CONDITIONAL>
+                        </SW-DATA-DEF-PROPS-VARIANTS>
+                    </SW-DATA-DEF-PROPS>
+                </IMPLEMENTATION-DATA-TYPE>
             </ELEMENTS>
             <AR-PACKAGES>
                 <AR-PACKAGE>
                     <SHORT-NAME>CompuMethods</SHORT-NAME>
                     <ELEMENTS>
-                        <COMPU-METHOD UUID="9be90ebd-933a-5e9c-b8b2-57b40fd00765">
+                        <COMPU-METHOD UUID="68518c36-b09e-565c-3b2f-00c78dd1de6a">
                             <SHORT-NAME>COMPU_boolean</SHORT-NAME>
                             <CATEGORY>TEXTTABLE</CATEGORY>
                             <UNIT-REF DEST="UNIT">/DataTypes/Units/NoUnit</UNIT-REF>
@@ -77,15 +88,15 @@ Model Checksum               : 4140426895 2007029204 31371037 14228201
                 <AR-PACKAGE>
                     <SHORT-NAME>SwAddrMethods</SHORT-NAME>
                     <ELEMENTS>
-                        <SW-ADDR-METHOD UUID="4e1a2495-22d9-569a-f840-7b80a640308b">
+                        <SW-ADDR-METHOD UUID="158bd1f3-d318-5662-9f2d-00940258602d">
                             <SHORT-NAME>CODE</SHORT-NAME>
                             <SECTION-TYPE>CODE</SECTION-TYPE>
                         </SW-ADDR-METHOD>
-                        <SW-ADDR-METHOD UUID="f1a48616-b785-50a1-eac1-1b1d7fd7cef4">
+                        <SW-ADDR-METHOD UUID="89466665-168b-5abc-e59b-95584e0a2990">
                             <SHORT-NAME>CONST</SHORT-NAME>
                             <SECTION-TYPE>CONST</SECTION-TYPE>
                         </SW-ADDR-METHOD>
-                        <SW-ADDR-METHOD UUID="dded0193-1484-566c-ca1f-79abbd09390f">
+                        <SW-ADDR-METHOD UUID="282b7119-edfa-5089-716d-f2e375b6a9ae">
                             <SHORT-NAME>VAR</SHORT-NAME>
                             <SECTION-TYPE>VAR</SECTION-TYPE>
                         </SW-ADDR-METHOD>
@@ -94,33 +105,40 @@ Model Checksum               : 4140426895 2007029204 31371037 14228201
                 <AR-PACKAGE>
                     <SHORT-NAME>SwBaseTypes</SHORT-NAME>
                     <ELEMENTS>
-                        <SW-BASE-TYPE UUID="98990eab-71e5-5649-6f02-4ddfe4e0532d">
+                        <SW-BASE-TYPE UUID="50966d44-e549-5a99-de4c-187d297c1ffb">
                             <SHORT-NAME>uint32</SHORT-NAME>
                             <CATEGORY>FIXED_LENGTH</CATEGORY>
                             <BASE-TYPE-SIZE>32</BASE-TYPE-SIZE>
                             <BASE-TYPE-ENCODING>NONE</BASE-TYPE-ENCODING>
                             <NATIVE-DECLARATION>uint32</NATIVE-DECLARATION>
                         </SW-BASE-TYPE>
-                        <SW-BASE-TYPE UUID="f8be4741-348f-528b-bb2c-0ff12b05716d">
+                        <SW-BASE-TYPE UUID="95b831fe-1694-5e7d-316f-fce8426944b5">
                             <SHORT-NAME>uint8</SHORT-NAME>
                             <CATEGORY>FIXED_LENGTH</CATEGORY>
                             <BASE-TYPE-SIZE>8</BASE-TYPE-SIZE>
                             <BASE-TYPE-ENCODING>NONE</BASE-TYPE-ENCODING>
                             <NATIVE-DECLARATION>uint8</NATIVE-DECLARATION>
                         </SW-BASE-TYPE>
-                        <SW-BASE-TYPE UUID="95017884-c9f5-5d97-74cc-11ad8980d2aa">
+                        <SW-BASE-TYPE UUID="03c22e1a-6e76-55ff-9fed-2d95f00fc718">
                             <SHORT-NAME>boolean</SHORT-NAME>
                             <CATEGORY>FIXED_LENGTH</CATEGORY>
                             <BASE-TYPE-SIZE>8</BASE-TYPE-SIZE>
                             <BASE-TYPE-ENCODING>BOOLEAN</BASE-TYPE-ENCODING>
                             <NATIVE-DECLARATION>boolean</NATIVE-DECLARATION>
                         </SW-BASE-TYPE>
+                        <SW-BASE-TYPE UUID="e5f31042-95ba-531d-4499-c846fb6c3258">
+                            <SHORT-NAME>float32</SHORT-NAME>
+                            <CATEGORY>FIXED_LENGTH</CATEGORY>
+                            <BASE-TYPE-SIZE>32</BASE-TYPE-SIZE>
+                            <BASE-TYPE-ENCODING>IEEE754</BASE-TYPE-ENCODING>
+                            <NATIVE-DECLARATION>float32</NATIVE-DECLARATION>
+                        </SW-BASE-TYPE>
                     </ELEMENTS>
                 </AR-PACKAGE>
                 <AR-PACKAGE>
                     <SHORT-NAME>Units</SHORT-NAME>
                     <ELEMENTS>
-                        <UNIT UUID="ba367da2-39d2-50fa-2d33-e4700f9e4e50">
+                        <UNIT UUID="cf015151-0941-5372-114d-d2a8063e7d11">
                             <SHORT-NAME>NoUnit</SHORT-NAME>
                             <FACTOR-SI-TO-UNIT>1</FACTOR-SI-TO-UNIT>
                             <OFFSET-SI-TO-UNIT>0</OFFSET-SI-TO-UNIT>

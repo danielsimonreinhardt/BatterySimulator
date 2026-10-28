@@ -1,9 +1,10 @@
-# Software component description (RTE-07), written by neXtBSW Studio (TOOL-08).
-# The model was created from it once (tools/swc/swc_create.m); afterwards the .slx is the master.
-# Schema and checks: tools/swc/swc_yaml.py, rules: swc/README.md (Modellregeln).
+# SPDX-License-Identifier: Apache-2.0
+# Description of SupplyMonitor: the model SupplyMonitor.slx is the master (made by SupplyMonitor_create.m); this file is the
+# description it matches, and tools/rtegen compares it with the generated ARXML. Written by stufeb_gen.py.
 version: 1
 name: SupplyMonitor
-description: '48-V-Versorgung: Strom filtern, Ueberlast, LIMIT-Leitung'
+description: "48-V-Versorgung: Strom filtern, Ueberlast mit Hysterese, LIMIT-Leitung"
+implementation: simulink
 runnables:
   - name: SupplyTask10ms
     period_ms: 10
@@ -23,4 +24,25 @@ ports:
   - name: Overload
     direction: out
     type: boolean
+    runnables: [SupplyTask10ms]
+  - name: SupplyCurrent_A
+    direction: out
+    type: float32
+    runnables: [SupplyTask10ms]
+  - name: LimitActive
+    direction: out
+    type: boolean
+    runnables: [SupplyTask10ms]
+parameters:
+  - name: SupplyCurrentFilter
+    type: float32
+    runnables: [SupplyTask10ms]
+  - name: SupplyCurrentGain
+    type: float32
+    runnables: [SupplyTask10ms]
+  - name: OverloadThd_mA
+    type: float32
+    runnables: [SupplyTask10ms]
+  - name: OverloadHyst_mA
+    type: float32
     runnables: [SupplyTask10ms]

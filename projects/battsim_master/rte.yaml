@@ -30,181 +30,233 @@ can:
   task: swc
   monitor: [CONTROL_CELL16, CONTROL_DYNCELLSIM1, CONTROL_DYNCELLSIM2]   # received for their timeout qualifier, no port yet (cells 16 and cell model: Stufe D)
   qualifiers:
-    CONTROL_BATTSIM:            # 0x130, 100 ms: Lebenszeichen der Steuerung; 300 ms = 3 Zyklen (Konzept: Ausgaenge im selben 10-ms-Schritt aus)
+    # Timeout and alive counter of every control message of the LabControl driver (FW-03, COM-54). The driver counts
+    # 0..15 and +1 per frame it sends (device-driver/battsim/driver.py), so the counter has its whole width and no
+    # counter_min/counter_max; max_delta_counter 2 tolerates one lost frame. debounce_ms is 1.5 cycles: a single jump
+    # of the counter is bridged and heals with the next frame, two wrong frames in a row are QLF_ERROR_ALIVE (the
+    # mode logic switches off with FAIL reason 2 in RUN). Values stay as they were when a message is invalid (hold).
+    CONTROL_BATTSIM:            # 0x130, 100 ms: Lebenszeichen der Steuerung; 300 ms = 3 Zyklen, Ausgaenge im selben 10-ms-Schritt aus
       timeout_ms: 300
+      debounce_ms: 150
       on_error: hold
-    CONTROL_CELL01_02_03: { timeout_ms: 3000, on_error: hold }   # 0x100-0x105 alle 1000 ms, 3 Zyklen, letzte Werte gelten weiter (wie heute)
-    CONTROL_CELL04_05_06: { timeout_ms: 3000, on_error: hold }
-    CONTROL_CELL07_08_09: { timeout_ms: 3000, on_error: hold }
-    CONTROL_CELL10_11_12: { timeout_ms: 3000, on_error: hold }
-    CONTROL_CELL13_14_15: { timeout_ms: 3000, on_error: hold }
-    CONTROL_CELL16: { timeout_ms: 3000, on_error: hold }
-    CONTROL_DYNCELLSIM1: { timeout_ms: 300, on_error: hold }     # 0x131, 100 ms, 3 Zyklen (Zellmodell kommt mit Stufe D)
-    CONTROL_DYNCELLSIM2: { timeout_ms: 3000, on_error: hold }    # 0x132, 1000 ms, 3 Zyklen
+      alive: { counter: ALIVE_CONTROL_BATTSIM, max_delta_counter: 2 }
+    CONTROL_CELL01_02_03:       # 0x100-0x105 alle 1000 ms, 3 Zyklen, letzte Werte gelten weiter (wie heute)
+      timeout_ms: 3000
+      debounce_ms: 1500
+      on_error: hold
+      alive: { counter: ALIVE_CONTROL_CELL01_02_03, max_delta_counter: 2 }
+    CONTROL_CELL04_05_06:
+      timeout_ms: 3000
+      debounce_ms: 1500
+      on_error: hold
+      alive: { counter: ALIVE_CONTROL_CELL04_05_06, max_delta_counter: 2 }
+    CONTROL_CELL07_08_09:
+      timeout_ms: 3000
+      debounce_ms: 1500
+      on_error: hold
+      alive: { counter: ALIVE_CONTROL_CELL07_08_09, max_delta_counter: 2 }
+    CONTROL_CELL10_11_12:
+      timeout_ms: 3000
+      debounce_ms: 1500
+      on_error: hold
+      alive: { counter: ALIVE_CONTROL_CELL10_11_12, max_delta_counter: 2 }
+    CONTROL_CELL13_14_15:
+      timeout_ms: 3000
+      debounce_ms: 1500
+      on_error: hold
+      alive: { counter: ALIVE_CONTROL_CELL13_14_15, max_delta_counter: 2 }
+    CONTROL_CELL16:
+      timeout_ms: 3000
+      debounce_ms: 1500
+      on_error: hold
+      alive: { counter: ALIVE_CONTROL_CELL16, max_delta_counter: 2 }
+    CONTROL_DYNCELLSIM1:        # 0x131, 100 ms, 3 Zyklen (Zellmodell kommt mit Stufe D)
+      timeout_ms: 300
+      debounce_ms: 150
+      on_error: hold
+      alive: { counter: ALIVE_CONTROL_DYNCELLSIM1, max_delta_counter: 2 }
+    CONTROL_DYNCELLSIM2:        # 0x132, 1000 ms, 3 Zyklen
+      timeout_ms: 3000
+      debounce_ms: 1500
+      on_error: hold
+      alive: { counter: ALIVE_CONTROL_DYNCELLSIM2, max_delta_counter: 2 }
 
 connections:
   SupplyMonitor.ISupply_mV.ISupply_mV: adc.mv.I_SUPPLY
   SupplyMonitor.ISupplyQlf.ISupplyQlf: adc.qlf.I_SUPPLY
   SupplyMonitor.Limit.Limit: dio.in.LIMIT
+  SupplyMonitor.Overload.Overload: can.tx.STATUS_BATTSIM_EXT.BATTSIM_OVERLOAD
+  SupplyMonitor.SupplyCurrent_A.SupplyCurrent_A: can.tx.STATUS_BATTSIM_EXT.BATTSIM_SUPPLY_CURRENT
+  SupplyMonitor.LimitActive.LimitActive: can.tx.STATUS_BATTSIM_EXT.BATTSIM_LIMIT
   BattSimMode.RemoteControl.RemoteControl: can.rx.CONTROL_BATTSIM.BATTSIM_REMOTE_CONTROL
   BattSimMode.ModeControl.ModeControl: can.rx.CONTROL_BATTSIM.BATTSIM_MODE_CONTROL
   BattSimMode.OutputControl.OutputControl: can.rx.CONTROL_BATTSIM.BATTSIM_OUTPUT_CONTROL
+  BattSimMode.ControlCell010203Qlf.ControlCell010203Qlf: can.qlf.CONTROL_CELL01_02_03
+  BattSimMode.ControlCell040506Qlf.ControlCell040506Qlf: can.qlf.CONTROL_CELL04_05_06
+  BattSimMode.ControlCell070809Qlf.ControlCell070809Qlf: can.qlf.CONTROL_CELL07_08_09
+  BattSimMode.ControlCell101112Qlf.ControlCell101112Qlf: can.qlf.CONTROL_CELL10_11_12
+  BattSimMode.ControlCell131415Qlf.ControlCell131415Qlf: can.qlf.CONTROL_CELL13_14_15
+  BattSimMode.ControlCell16Qlf.ControlCell16Qlf: can.qlf.CONTROL_CELL16
   BattSimMode.ControlBattSimQlf.ControlBattSimQlf: can.qlf.CONTROL_BATTSIM
+  BattSimMode.ControlDynCellSim1Qlf.ControlDynCellSim1Qlf: can.qlf.CONTROL_DYNCELLSIM1
+  BattSimMode.ControlDynCellSim2Qlf.ControlDynCellSim2Qlf: can.qlf.CONTROL_DYNCELLSIM2
   BattSimMode.BtnAllOnOff.BtnAllOnOff: dio.in.BTN_ALL_ON_OFF
   BattSimMode.BtnRemote.BtnRemote: dio.in.BTN_REMOTE
   BattSimMode.Overload.Overload: SupplyMonitor.Overload.Overload
+  BattSimMode.ResetWatchdog.ResetWatchdog: bsw.reset.watchdog
+  BattSimMode.ResetQlf.ResetQlf: bsw.reset.qlf
   BattSimMode.BattSimStatus.BattSimStatus: can.tx.STATUS_BATTSIM.BATTSIM_STATUS
   BattSimMode.OutputStatus.OutputStatus: can.tx.STATUS_BATTSIM.BATTSIM_OUTPUT_STATUS
   BattSimMode.LedRemote.LedRemote: dio.out.LED_REMOTE
+  BattSimMode.FailReason.FailReason: can.tx.STATUS_BATTSIM_EXT.BATTSIM_FAIL_REASON
   BattSimMode.AliveStatusBattSim.AliveStatusBattSim: can.tx.STATUS_BATTSIM.ALIVE_STATUS_BATTSIM
   BattSimMode.AliveStatusCells010203.AliveStatusCells010203: can.tx.STATUS_CELL01_02_03.ALIVE_STATUS_CELL01_02_03
   BattSimMode.AliveStatusCells040506.AliveStatusCells040506: can.tx.STATUS_CELL04_05_06.ALIVE_STATUS_CELL04_05_06
   BattSimMode.AliveStatusCells070809.AliveStatusCells070809: can.tx.STATUS_CELL07_08_09.ALIVE_STATUS_CELL07_08_09
   BattSimMode.AliveStatusCells101112.AliveStatusCells101112: can.tx.STATUS_CELL10_11_12.ALIVE_STATUS_CELL10_11_12
   BattSimMode.AliveStatusCells131415.AliveStatusCells131415: can.tx.STATUS_CELL13_14_15.ALIVE_STATUS_CELL13_14_15
+  BattSimMode.AliveStatusCell16.AliveStatusCell16: can.tx.STATUS_CELL16.ALIVE_STATUS_CELL16
+  BattSimMode.AliveStatusBattSimExt.AliveStatusBattSimExt: can.tx.STATUS_BATTSIM_EXT.ALIVE_STATUS_BATTSIM_EXT
+  BattSimMode.ValidCell010203.ValidCell010203: can.tx.STATUS_BATTSIM_EXT.QLF_CONTROL_CELL01_02_03
+  BattSimMode.ValidCell040506.ValidCell040506: can.tx.STATUS_BATTSIM_EXT.QLF_CONTROL_CELL04_05_06
+  BattSimMode.ValidCell070809.ValidCell070809: can.tx.STATUS_BATTSIM_EXT.QLF_CONTROL_CELL07_08_09
+  BattSimMode.ValidCell101112.ValidCell101112: can.tx.STATUS_BATTSIM_EXT.QLF_CONTROL_CELL10_11_12
+  BattSimMode.ValidCell131415.ValidCell131415: can.tx.STATUS_BATTSIM_EXT.QLF_CONTROL_CELL13_14_15
+  BattSimMode.ValidCell16.ValidCell16: can.tx.STATUS_BATTSIM_EXT.QLF_CONTROL_CELL16
+  BattSimMode.ValidBattSim.ValidBattSim: can.tx.STATUS_BATTSIM_EXT.QLF_CONTROL_BATTSIM
+  BattSimMode.ValidDynCellSim1.ValidDynCellSim1: can.tx.STATUS_BATTSIM_EXT.QLF_CONTROL_DYNCELLSIM1
+  BattSimMode.ValidDynCellSim2.ValidDynCellSim2: can.tx.STATUS_BATTSIM_EXT.QLF_CONTROL_DYNCELLSIM2
+  BattSimMode.FwVersionMajor.FwVersionMajor: can.tx.STATUS_BATTSIM_EXT.FW_VERSION_MAJOR
+  BattSimMode.FwVersionMinor.FwVersionMinor: can.tx.STATUS_BATTSIM_EXT.FW_VERSION_MINOR
+  BattSimMode.FwVersionPatch.FwVersionPatch: can.tx.STATUS_BATTSIM_EXT.FW_VERSION_PATCH
   CellChannels.OutputEnable.OutputEnable: BattSimMode.OutputEnable.OutputEnable
-  CellChannels.Control010203Qlf.Control010203Qlf: can.qlf.CONTROL_CELL01_02_03
-  CellChannels.Control040506Qlf.Control040506Qlf: can.qlf.CONTROL_CELL04_05_06
-  CellChannels.Control070809Qlf.Control070809Qlf: can.qlf.CONTROL_CELL07_08_09
-  CellChannels.Control101112Qlf.Control101112Qlf: can.qlf.CONTROL_CELL10_11_12
-  CellChannels.Control131415Qlf.Control131415Qlf: can.qlf.CONTROL_CELL13_14_15
   CellChannels.Cell01VoltSet_V.Cell01VoltSet_V: can.rx.CONTROL_CELL01_02_03.CELL01_VOLTAGE_SET
   CellChannels.Cell01Enable.Cell01Enable: can.rx.CONTROL_CELL01_02_03.CELL01_ENABLE
-  CellChannels.St01.St01: dio.in.ST_01
   CellChannels.UCell01_mV.UCell01_mV: adc.mv.U_CELL_01
   CellChannels.UCell01Qlf.UCell01Qlf: adc.qlf.U_CELL_01
   CellChannels.En01.En01: dio.out.EN_01
   CellChannels.Sel01.Sel01: dio.out.SEL_01
   CellChannels.Cell01VoltAct_V.Cell01VoltAct_V: can.tx.STATUS_CELL01_02_03.CELL01_VOLTAGE_ACT
   CellChannels.Cell01State.Cell01State: can.tx.STATUS_CELL01_02_03.CELL01_STATUS
-  CellChannels.Duty01_permille.Duty01_permille: rte
+  CellChannels.Duty01.Duty01: pwm.SET_01
   CellChannels.Cell02VoltSet_V.Cell02VoltSet_V: can.rx.CONTROL_CELL01_02_03.CELL02_VOLTAGE_SET
   CellChannels.Cell02Enable.Cell02Enable: can.rx.CONTROL_CELL01_02_03.CELL02_ENABLE
-  CellChannels.St02.St02: dio.in.ST_02
   CellChannels.UCell02_mV.UCell02_mV: adc.mv.U_CELL_02
   CellChannels.UCell02Qlf.UCell02Qlf: adc.qlf.U_CELL_02
   CellChannels.En02.En02: dio.out.EN_02
   CellChannels.Sel02.Sel02: dio.out.SEL_02
   CellChannels.Cell02VoltAct_V.Cell02VoltAct_V: can.tx.STATUS_CELL01_02_03.CELL02_VOLTAGE_ACT
   CellChannels.Cell02State.Cell02State: can.tx.STATUS_CELL01_02_03.CELL02_STATUS
-  CellChannels.Duty02_permille.Duty02_permille: rte
+  CellChannels.Duty02.Duty02: pwm.SET_02
   CellChannels.Cell03VoltSet_V.Cell03VoltSet_V: can.rx.CONTROL_CELL01_02_03.CELL03_VOLTAGE_SET
   CellChannels.Cell03Enable.Cell03Enable: can.rx.CONTROL_CELL01_02_03.CELL03_ENABLE
-  CellChannels.St03.St03: dio.in.ST_03
   CellChannels.UCell03_mV.UCell03_mV: adc.mv.U_CELL_03
   CellChannels.UCell03Qlf.UCell03Qlf: adc.qlf.U_CELL_03
   CellChannels.En03.En03: dio.out.EN_03
   CellChannels.Sel03.Sel03: dio.out.SEL_03
   CellChannels.Cell03VoltAct_V.Cell03VoltAct_V: can.tx.STATUS_CELL01_02_03.CELL03_VOLTAGE_ACT
   CellChannels.Cell03State.Cell03State: can.tx.STATUS_CELL01_02_03.CELL03_STATUS
-  CellChannels.Duty03_permille.Duty03_permille: rte
+  CellChannels.Duty03.Duty03: pwm.SET_03
   CellChannels.Cell04VoltSet_V.Cell04VoltSet_V: can.rx.CONTROL_CELL04_05_06.CELL04_VOLTAGE_SET
   CellChannels.Cell04Enable.Cell04Enable: can.rx.CONTROL_CELL04_05_06.CELL04_ENABLE
-  CellChannels.St04.St04: dio.in.ST_04
   CellChannels.UCell04_mV.UCell04_mV: adc.mv.U_CELL_04
   CellChannels.UCell04Qlf.UCell04Qlf: adc.qlf.U_CELL_04
   CellChannels.En04.En04: dio.out.EN_04
   CellChannels.Sel04.Sel04: dio.out.SEL_04
   CellChannels.Cell04VoltAct_V.Cell04VoltAct_V: can.tx.STATUS_CELL04_05_06.CELL04_VOLTAGE_ACT
   CellChannels.Cell04State.Cell04State: can.tx.STATUS_CELL04_05_06.CELL04_STATUS
-  CellChannels.Duty04_permille.Duty04_permille: rte
+  CellChannels.Duty04.Duty04: pwm.SET_04
   CellChannels.Cell05VoltSet_V.Cell05VoltSet_V: can.rx.CONTROL_CELL04_05_06.CELL05_VOLTAGE_SET
   CellChannels.Cell05Enable.Cell05Enable: can.rx.CONTROL_CELL04_05_06.CELL05_ENABLE
-  CellChannels.St05.St05: dio.in.ST_05
   CellChannels.UCell05_mV.UCell05_mV: adc.mv.U_CELL_05
   CellChannels.UCell05Qlf.UCell05Qlf: adc.qlf.U_CELL_05
   CellChannels.En05.En05: dio.out.EN_05
   CellChannels.Sel05.Sel05: dio.out.SEL_05
   CellChannels.Cell05VoltAct_V.Cell05VoltAct_V: can.tx.STATUS_CELL04_05_06.CELL05_VOLTAGE_ACT
   CellChannels.Cell05State.Cell05State: can.tx.STATUS_CELL04_05_06.CELL05_STATUS
-  CellChannels.Duty05_permille.Duty05_permille: rte
+  CellChannels.Duty05.Duty05: pwm.SET_05
   CellChannels.Cell06VoltSet_V.Cell06VoltSet_V: can.rx.CONTROL_CELL04_05_06.CELL06_VOLTAGE_SET
   CellChannels.Cell06Enable.Cell06Enable: can.rx.CONTROL_CELL04_05_06.CELL06_ENABLE
-  CellChannels.St06.St06: dio.in.ST_06
   CellChannels.UCell06_mV.UCell06_mV: adc.mv.U_CELL_06
   CellChannels.UCell06Qlf.UCell06Qlf: adc.qlf.U_CELL_06
   CellChannels.En06.En06: dio.out.EN_06
   CellChannels.Sel06.Sel06: dio.out.SEL_06
   CellChannels.Cell06VoltAct_V.Cell06VoltAct_V: can.tx.STATUS_CELL04_05_06.CELL06_VOLTAGE_ACT
   CellChannels.Cell06State.Cell06State: can.tx.STATUS_CELL04_05_06.CELL06_STATUS
-  CellChannels.Duty06_permille.Duty06_permille: rte
+  CellChannels.Duty06.Duty06: pwm.SET_06
   CellChannels.Cell07VoltSet_V.Cell07VoltSet_V: can.rx.CONTROL_CELL07_08_09.CELL07_VOLTAGE_SET
   CellChannels.Cell07Enable.Cell07Enable: can.rx.CONTROL_CELL07_08_09.CELL07_ENABLE
-  CellChannels.St07.St07: dio.in.ST_07
   CellChannels.UCell07_mV.UCell07_mV: adc.mv.U_CELL_07
   CellChannels.UCell07Qlf.UCell07Qlf: adc.qlf.U_CELL_07
   CellChannels.En07.En07: dio.out.EN_07
   CellChannels.Sel07.Sel07: dio.out.SEL_07
   CellChannels.Cell07VoltAct_V.Cell07VoltAct_V: can.tx.STATUS_CELL07_08_09.CELL07_VOLTAGE_ACT
   CellChannels.Cell07State.Cell07State: can.tx.STATUS_CELL07_08_09.CELL07_STATUS
-  CellChannels.Duty07_permille.Duty07_permille: rte
+  CellChannels.Duty07.Duty07: pwm.SET_07
   CellChannels.Cell08VoltSet_V.Cell08VoltSet_V: can.rx.CONTROL_CELL07_08_09.CELL08_VOLTAGE_SET
   CellChannels.Cell08Enable.Cell08Enable: can.rx.CONTROL_CELL07_08_09.CELL08_ENABLE
-  CellChannels.St08.St08: dio.in.ST_08
   CellChannels.UCell08_mV.UCell08_mV: adc.mv.U_CELL_08
   CellChannels.UCell08Qlf.UCell08Qlf: adc.qlf.U_CELL_08
   CellChannels.En08.En08: dio.out.EN_08
   CellChannels.Sel08.Sel08: dio.out.SEL_08
   CellChannels.Cell08VoltAct_V.Cell08VoltAct_V: can.tx.STATUS_CELL07_08_09.CELL08_VOLTAGE_ACT
   CellChannels.Cell08State.Cell08State: can.tx.STATUS_CELL07_08_09.CELL08_STATUS
-  CellChannels.Duty08_permille.Duty08_permille: rte
+  CellChannels.Duty08.Duty08: pwm.SET_08
   CellChannels.Cell09VoltSet_V.Cell09VoltSet_V: can.rx.CONTROL_CELL07_08_09.CELL09_VOLTAGE_SET
   CellChannels.Cell09Enable.Cell09Enable: can.rx.CONTROL_CELL07_08_09.CELL09_ENABLE
-  CellChannels.St09.St09: dio.in.ST_09
   CellChannels.UCell09_mV.UCell09_mV: adc.mv.U_CELL_09
   CellChannels.UCell09Qlf.UCell09Qlf: adc.qlf.U_CELL_09
   CellChannels.En09.En09: dio.out.EN_09
   CellChannels.Sel09.Sel09: dio.out.SEL_09
   CellChannels.Cell09VoltAct_V.Cell09VoltAct_V: can.tx.STATUS_CELL07_08_09.CELL09_VOLTAGE_ACT
   CellChannels.Cell09State.Cell09State: can.tx.STATUS_CELL07_08_09.CELL09_STATUS
-  CellChannels.Duty09_permille.Duty09_permille: rte
+  CellChannels.Duty09.Duty09: pwm.SET_09
   CellChannels.Cell10VoltSet_V.Cell10VoltSet_V: can.rx.CONTROL_CELL10_11_12.CELL10_VOLTAGE_SET
   CellChannels.Cell10Enable.Cell10Enable: can.rx.CONTROL_CELL10_11_12.CELL10_ENABLE
-  CellChannels.St10.St10: dio.in.ST_10
   CellChannels.UCell10_mV.UCell10_mV: adc.mv.U_CELL_10
   CellChannels.UCell10Qlf.UCell10Qlf: adc.qlf.U_CELL_10
   CellChannels.En10.En10: dio.out.EN_10
   CellChannels.Sel10.Sel10: dio.out.SEL_10
   CellChannels.Cell10VoltAct_V.Cell10VoltAct_V: can.tx.STATUS_CELL10_11_12.CELL10_VOLTAGE_ACT
   CellChannels.Cell10State.Cell10State: can.tx.STATUS_CELL10_11_12.CELL10_STATUS
-  CellChannels.Duty10_permille.Duty10_permille: rte
+  CellChannels.Duty10.Duty10: pwm.SET_10
   CellChannels.Cell11VoltSet_V.Cell11VoltSet_V: can.rx.CONTROL_CELL10_11_12.CELL11_VOLTAGE_SET
   CellChannels.Cell11Enable.Cell11Enable: can.rx.CONTROL_CELL10_11_12.CELL11_ENABLE
-  CellChannels.St11.St11: dio.in.ST_11
   CellChannels.UCell11_mV.UCell11_mV: adc.mv.U_CELL_11
   CellChannels.UCell11Qlf.UCell11Qlf: adc.qlf.U_CELL_11
   CellChannels.En11.En11: dio.out.EN_11
   CellChannels.Sel11.Sel11: dio.out.SEL_11
   CellChannels.Cell11VoltAct_V.Cell11VoltAct_V: can.tx.STATUS_CELL10_11_12.CELL11_VOLTAGE_ACT
   CellChannels.Cell11State.Cell11State: can.tx.STATUS_CELL10_11_12.CELL11_STATUS
-  CellChannels.Duty11_permille.Duty11_permille: rte
+  CellChannels.Duty11.Duty11: pwm.SET_11
   CellChannels.Cell12VoltSet_V.Cell12VoltSet_V: can.rx.CONTROL_CELL10_11_12.CELL12_VOLTAGE_SET
   CellChannels.Cell12Enable.Cell12Enable: can.rx.CONTROL_CELL10_11_12.CELL12_ENABLE
-  CellChannels.St12.St12: dio.in.ST_12
   CellChannels.UCell12_mV.UCell12_mV: adc.mv.U_CELL_12
   CellChannels.UCell12Qlf.UCell12Qlf: adc.qlf.U_CELL_12
   CellChannels.En12.En12: dio.out.EN_12
   CellChannels.Sel12.Sel12: dio.out.SEL_12
   CellChannels.Cell12VoltAct_V.Cell12VoltAct_V: can.tx.STATUS_CELL10_11_12.CELL12_VOLTAGE_ACT
   CellChannels.Cell12State.Cell12State: can.tx.STATUS_CELL10_11_12.CELL12_STATUS
-  CellChannels.Duty12_permille.Duty12_permille: rte
+  CellChannels.Duty12.Duty12: pwm.SET_12
   CellChannels.Cell13VoltSet_V.Cell13VoltSet_V: can.rx.CONTROL_CELL13_14_15.CELL13_VOLTAGE_SET
   CellChannels.Cell13Enable.Cell13Enable: can.rx.CONTROL_CELL13_14_15.CELL13_ENABLE
-  CellChannels.St13.St13: dio.in.ST_13
   CellChannels.UCell13_mV.UCell13_mV: adc.mv.U_CELL_13
   CellChannels.UCell13Qlf.UCell13Qlf: adc.qlf.U_CELL_13
   CellChannels.En13.En13: dio.out.EN_13
   CellChannels.Sel13.Sel13: dio.out.SEL_13
   CellChannels.Cell13VoltAct_V.Cell13VoltAct_V: can.tx.STATUS_CELL13_14_15.CELL13_VOLTAGE_ACT
   CellChannels.Cell13State.Cell13State: can.tx.STATUS_CELL13_14_15.CELL13_STATUS
-  CellChannels.Duty13_permille.Duty13_permille: rte
+  CellChannels.Duty13.Duty13: pwm.SET_13
   CellChannels.Cell14VoltSet_V.Cell14VoltSet_V: can.rx.CONTROL_CELL13_14_15.CELL14_VOLTAGE_SET
   CellChannels.Cell14Enable.Cell14Enable: can.rx.CONTROL_CELL13_14_15.CELL14_ENABLE
-  CellChannels.St14.St14: dio.in.ST_14
   CellChannels.UCell14_mV.UCell14_mV: adc.mv.U_CELL_14
   CellChannels.UCell14Qlf.UCell14Qlf: adc.qlf.U_CELL_14
   CellChannels.En14.En14: dio.out.EN_14
   CellChannels.Sel14.Sel14: dio.out.SEL_14
   CellChannels.Cell14VoltAct_V.Cell14VoltAct_V: can.tx.STATUS_CELL13_14_15.CELL14_VOLTAGE_ACT
   CellChannels.Cell14State.Cell14State: can.tx.STATUS_CELL13_14_15.CELL14_STATUS
-  CellChannels.Duty14_permille.Duty14_permille: rte
+  CellChannels.Duty14.Duty14: pwm.SET_14
+  CellChannels.Cell15State.Cell15State: can.tx.STATUS_CELL13_14_15.CELL15_STATUS
+  CellChannels.Cell15VoltAct_V.Cell15VoltAct_V: can.tx.STATUS_CELL13_14_15.CELL15_VOLTAGE_ACT
+  CellChannels.Cell16State.Cell16State: can.tx.STATUS_CELL16.CELL16_STATUS
+  CellChannels.Cell16VoltAct_V.Cell16VoltAct_V: can.tx.STATUS_CELL16.CELL16_VOLTAGE_ACT

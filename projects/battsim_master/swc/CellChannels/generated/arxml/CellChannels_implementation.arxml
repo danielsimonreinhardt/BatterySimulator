@@ -3,7 +3,7 @@
 Auto generated XML Component Description for model CellChannels
 Model version                : 1.2
 Simulink Coder version       : Simulink Coder 24.1 (R2024a) 19-Nov-2023
-Model Checksum               : 3900958062 287670167 878579429 2302575048
+Model Checksum               : 1250277000 3333890275 4141108225 3787423765
 -->
 <AUTOSAR xmlns="http://autosar.org/schema/r4.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://autosar.org/schema/r4.0 AUTOSAR_00051.xsd">
     <AR-PACKAGES>
@@ -14,7 +14,7 @@ Model Checksum               : 3900958062 287670167 878579429 2302575048
                 <AR-PACKAGE>
                     <SHORT-NAME>SwcImplementations</SHORT-NAME>
                     <ELEMENTS>
-                        <SWC-IMPLEMENTATION UUID="31b8066f-7edb-5240-5449-bb1f048574ae">
+                        <SWC-IMPLEMENTATION UUID="e02c7eac-23be-5f57-424d-2070975e0719">
                             <SHORT-NAME>CellChannels_Impl</SHORT-NAME>
                             <CODE-DESCRIPTORS>
                                 <CODE>
@@ -22,6 +22,10 @@ Model Checksum               : 3900958062 287670167 878579429 2302575048
                                     <ARTIFACT-DESCRIPTORS>
                                         <AUTOSAR-ENGINEERING-OBJECT>
                                             <SHORT-LABEL>CellChannels_c</SHORT-LABEL>
+                                            <CATEGORY>SWSRC</CATEGORY>
+                                        </AUTOSAR-ENGINEERING-OBJECT>
+                                        <AUTOSAR-ENGINEERING-OBJECT>
+                                            <SHORT-LABEL>CellChannels_data_c</SHORT-LABEL>
                                             <CATEGORY>SWSRC</CATEGORY>
                                         </AUTOSAR-ENGINEERING-OBJECT>
                                         <AUTOSAR-ENGINEERING-OBJECT>

@@ -22,6 +22,15 @@
 
 #include "SupplyMonitor_types.h"
 
+/* PublicStructure Variables for Internal Data, for system '<Root>' */
+typedef struct {
+  float32 y;                           /* '<S1>/SupplyCore' */
+  boolean ovl;                         /* '<S1>/SupplyCore' */
+} ARID_DEF_SupplyMonitor_T;
+
+/* PublicStructure Variables for Internal Data */
+extern ARID_DEF_SupplyMonitor_T SupplyMonitor_ARID_DEF;/* '<S1>/SupplyCore' */
+
 /*-
  * The generated code includes comments that allow you to trace directly
  * back to the appropriate location in the model.  The basic format
@@ -38,6 +47,7 @@
  *
  * '<Root>' : 'SupplyMonitor'
  * '<S1>'   : 'SupplyMonitor/SupplyMonitor_task10ms'
+ * '<S2>'   : 'SupplyMonitor/SupplyMonitor_task10ms/SupplyCore'
  */
 #endif                                 /* SupplyMonitor_h_ */
 

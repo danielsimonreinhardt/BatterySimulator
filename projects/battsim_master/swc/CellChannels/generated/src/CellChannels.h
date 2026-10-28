@@ -22,6 +22,22 @@
 
 #include "CellChannels_types.h"
 
+/* PublicStructure Variables for Internal Data, for system '<Root>' */
+typedef struct {
+  float32 y[14];                       /* '<S1>/CellCore' */
+  boolean seen[14];                    /* '<S1>/CellCore' */
+} ARID_DEF_CellChannels_T;
+
+/* Invariant block signals (default storage) */
+typedef struct {
+  const uint8 Cell15State_Const;       /* '<S1>/Cell15State_Const' */
+  const uint8 Cell16State_Const;       /* '<S1>/Cell16State_Const' */
+} ConstB_CellChannels_T;
+
+/* PublicStructure Variables for Internal Data */
+extern ARID_DEF_CellChannels_T CellChannels_ARID_DEF;/* '<S1>/CellCore' */
+extern const ConstB_CellChannels_T CellChannels_ConstB;/* constant block i/o */
+
 /*-
  * The generated code includes comments that allow you to trace directly
  * back to the appropriate location in the model.  The basic format
@@ -38,6 +54,7 @@
  *
  * '<Root>' : 'CellChannels'
  * '<S1>'   : 'CellChannels/CellChannels_task10ms'
+ * '<S2>'   : 'CellChannels/CellChannels_task10ms/CellCore'
  */
 #endif                                 /* CellChannels_h_ */
 

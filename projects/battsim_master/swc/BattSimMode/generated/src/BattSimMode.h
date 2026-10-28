@@ -22,6 +22,23 @@
 
 #include "BattSimMode_types.h"
 
+/* PublicStructure Variables for Internal Data, for system '<Root>' */
+typedef struct {
+  uint8 st;                            /* '<S1>/ModeCore' */
+  uint8 reason;                        /* '<S1>/ModeCore' */
+  uint8 aliveCnt;                      /* '<S1>/ModeCore' */
+  uint8 tick;                          /* '<S1>/ModeCore' */
+  uint8 cntA;                          /* '<S1>/ModeCore' */
+  uint8 cntR;                          /* '<S1>/ModeCore' */
+  boolean outBlock;                    /* '<S1>/ModeCore' */
+  boolean levA;                        /* '<S1>/ModeCore' */
+  boolean levR;                        /* '<S1>/ModeCore' */
+  boolean wdDone;                      /* '<S1>/ModeCore' */
+} ARID_DEF_BattSimMode_T;
+
+/* PublicStructure Variables for Internal Data */
+extern ARID_DEF_BattSimMode_T BattSimMode_ARID_DEF;/* '<S1>/ModeCore' */
+
 /*-
  * The generated code includes comments that allow you to trace directly
  * back to the appropriate location in the model.  The basic format
@@ -38,6 +55,7 @@
  *
  * '<Root>' : 'BattSimMode'
  * '<S1>'   : 'BattSimMode/BattSimMode_task10ms'
+ * '<S2>'   : 'BattSimMode/BattSimMode_task10ms/ModeCore'
  */
 #endif                                 /* BattSimMode_h_ */
 
