@@ -129,3 +129,10 @@ Kennwert fuer das Geraet gilt: von der letzten 0x130 bis Zelle < 0,5 V hoechsten
 Auf dem Geraet bleibt die Werksfirmware (Sicherung vom 27.10.2026, P-Flash 1 MB ab 0x0). Die Messung 4.3 (Zelle 1 im
 Reset) laesst sich mit der Werksfirmware nicht wiederholen: die alte Firmware reagiert beim Reset genauso, weil der Pegel
 von der Hardware kommt und nicht von der Firmware. Das Ergebnis des Rueckwegs steht unten.
+
+**Ergebnis des Rueckwegs (28.10.2026):** Die Sicherung (SHA-256 `cb1f88f3…1ab0`, geprueft vor dem Schreiben) wurde mit
+`loadbin` ab 0x0 per J-Link (1000 kHz, ohne Erase- und Unlock-Befehl, `verifybin` erfolgreich) auf das Geraet geschrieben; J-Link
+hat zwei Bereiche mit zusammen 237568 Bytes neu programmiert. Der danach gelesene P-Flash (1 MB) hat dieselbe SHA-256 wie die
+Sicherung, FCF bei 0x400 unveraendert (FF×12, FSEC 0xFE, FOPT 0x7F), SIM_FCFG1 0xFF32F000, FTFC 80 02 FE 7F. Die
+Werksfirmware laeuft: 0x120 wird empfangen (Standby), alle 14 Zellen aus (0,016 bis 0,047 V), `check_battsim.py --hardware`
+ohne `--remote` meldet „Alles ok“. Auf dem Geraet bleibt die Werksfirmware.
