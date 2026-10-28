@@ -40,6 +40,13 @@ use:
 can:
   CAN0: { bitrate: 500000 }
 
+# PWM setpoint outputs: 1 kHz, 20000 ticks per period at 80 MHz / 4 (the frequency of the old firmware, 0.26 mV per step).
+pwm:
+  SET_FTM5: { frequency_hz: 1000, prescaler: 4 }
+  SET_FTM4: { frequency_hz: 1000, prescaler: 4 }
+  SET_FTM3: { frequency_hz: 1000, prescaler: 4 }
+  SET_FTM0: { frequency_hz: 1000, prescaler: 4 }
+
 # Interrupt priorities as ranks (PLAT-21): CAN before the console.
 interrupts:
   ranks:

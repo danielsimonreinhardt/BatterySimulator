@@ -90,6 +90,51 @@ adc:
   - { name: I_SUPPLY, instance: ADC0, channel: SE18, pin: PTB21,
       scale: { factor: 1, offset_mv: 0, verify: true } }   # [MUX] ADC0_SE18 on PTB21
 
+# PWM setpoint outputs (VOLTAGE_SET of the 14 cell channels, IO-116): every channel is an output of its own, one group per
+# timer. The card inverts the signal (transistor Q8 with pull-up to 5 V), so the pin is low during the pulse and high at
+# rest: duty 0 = 0 V, and the safe state of a channel is the pin high. Pins and timer channels as built, read off the
+# KiCad netlist of the master (BatterieSimulator doc/hardware-system.html, "Master: Pinbelegung je Kanal"); channel 15
+# (PTC11, FTM3_CH5) and 16 (PTC27, FTM4_CH4) are not fitted and not listed (board decision 26.10.).
+pwm:
+  - name: SET_FTM5
+    instance: FTM5
+    mode: single
+    active_level: low
+    verify: true
+    channels:
+      - { name: SET_05, channel: 0, pin: PTC9 }
+      - { name: SET_01, channel: 1, pin: PTC8 }
+      - { name: SET_02, channel: 2, pin: PTC29 }
+      - { name: SET_03, channel: 3, pin: PTA7 }
+      - { name: SET_04, channel: 4, pin: PTC30 }
+  - name: SET_FTM4
+    instance: FTM4
+    mode: single
+    active_level: low
+    verify: true
+    channels:
+      - { name: SET_06, channel: 7, pin: PTC28 }
+  - name: SET_FTM3
+    instance: FTM3
+    mode: single
+    active_level: low
+    verify: true
+    channels:
+      - { name: SET_07, channel: 4, pin: PTC10 }
+      - { name: SET_08, channel: 6, pin: PTC12 }
+      - { name: SET_14, channel: 7, pin: PTC13 }
+  - name: SET_FTM0
+    instance: FTM0
+    mode: single
+    active_level: low
+    verify: true
+    channels:
+      - { name: SET_09, channel: 0, pin: PTC0 }
+      - { name: SET_13, channel: 1, pin: PTC1 }
+      - { name: SET_10, channel: 2, pin: PTC2 }
+      - { name: SET_12, channel: 3, pin: PTC3 }
+      - { name: SET_11, channel: 4, pin: PTB4 }
+
 # Digital inputs and outputs. `active` is the pin level of the active state and `pull` the resistor the MCU has to
 # switch on - both are properties of the circuit, not of the software; a wrong level only inverts the signal, the code
 # stays the same.
