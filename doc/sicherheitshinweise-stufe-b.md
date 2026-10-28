@@ -96,3 +96,36 @@ alle Zellen aus zurueck.
 - Folge fuer 1: Der zweite Abschaltweg ueber EN_01..14 ist **im Reset nicht wirksam**; mit dem Reset-Pegel von EN ist
   Zelle 1 auf dem Maximum. Es wurde nur Zelle 1 gemessen und nur der Ausgangspegel, nicht der Pin-Pegel von EN_01 und
   PWM-Pin getrennt: die Pin-Messung bleibt offen. Das Einschalten des Geraets (Spannungsversorgung) wurde nicht gemessen.
+
+## 5. Entscheidungen aus der Safety-Eskalation (Board bs-reset-eskalation, 28.10.2026)
+
+### 5.1 Annahme (AoU) zum Reset (S-1 a)
+
+Zelle 1 liegt im gehaltenen Reset bei etwa 5,25 V (Abschnitt 4.3). Ursache nach dem Schaltplan der Zellkarte
+(BatterieSimulator `doc/hardware-system.html`, S2): Die Master-Pins fuer SET und EN sind im Reset hochohmig, Q8/Q9 sperren, die
+Pull-ups R45/R48 legen die Isolatoreingaenge auf high, und der ISO6742F gibt bei vorhandener 5-V-Versorgung der
+Eingangsseite diesen Pegel weiter: SET voll, EN ein, **beide Abschaltwege sind im Reset „ein“**. Der Ruhepegel low der
+Variante F gilt nur bei unversorgter Eingangsseite und hilft hier nicht. Die Pin-Pegel von EN und SET werden getrennt
+gemessen, sobald das Geraet offen ist (Messung offen); die Erklaerung beruht bis dahin auf Schaltplan und Ausgangsmessung.
+
+**Annahme fuer den Betrieb des Batterie-Simulators (gilt, bis die Hardware geaendert ist):**
+
+- Ein Pruefling (BCU-Board, MC33771C) wird erst angeschlossen, wenn der Master laeuft, also wenn 0x120 den Zustand
+  STANDBY meldet.
+- Mit angeschlossenem Pruefling wird nicht geflasht und kein Halt und kein Reset per J-Link ausgeloest.
+- Die Annahme gilt ebenso fuer jeden anderen Reset des Masters mit angeschlossenem Pruefling: Watchdog-Reset und
+  Safety-Reset (kurz) und Reset an der Versorgung (Ein- und Ausschalten, Einbruch der Versorgung). In jedem dieser Faelle sind
+  die Zellausgaenge fuer die Dauer des Resets auf etwa 5,25 V.
+- Die Hardware-Abhilfe (Ruhepegel „aus“ fuer SET/EN im Reset) steht als offener Punkt im Repo BatterieSimulator.
+
+### 5.2 Abschaltzeit (S-2 a)
+
+Die Grenze von 310 ms gilt fuer die **Reaktion der Firmware** auf den Ausfall von 0x130: gemessen 299,7 bis 308,4 ms
+(Abschnitt 4.1). Der Abfall am Ausgang (Zelle 1 von 3,69 V auf < 0,5 V, 4,4 bis 4,7 ms) ist getrennt dokumentiert. Als
+Kennwert fuer das Geraet gilt: von der letzten 0x130 bis Zelle < 0,5 V hoechstens **315 ms**.
+
+### 5.3 Rueckweg (S-3 b)
+
+Auf dem Geraet bleibt die Werksfirmware (Sicherung vom 27.10.2026, P-Flash 1 MB ab 0x0). Die Messung 4.3 (Zelle 1 im
+Reset) laesst sich mit der Werksfirmware nicht wiederholen: die alte Firmware reagiert beim Reset genauso, weil der Pegel
+von der Hardware kommt und nicht von der Firmware. Das Ergebnis des Rueckwegs steht unten.
