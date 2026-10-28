@@ -30,56 +30,57 @@ can:
   task: swc
   monitor: [CONTROL_CELL16, CONTROL_DYNCELLSIM1, CONTROL_DYNCELLSIM2]   # received for their timeout qualifier, no port yet (cells 16 and cell model: Stufe D)
   qualifiers:
-    # Timeout and alive counter of every control message of the LabControl driver (FW-03, COM-54). The driver counts
-    # 0..15 and +1 per frame it sends (device-driver/battsim/driver.py), so the counter has its whole width and no
-    # counter_min/counter_max; max_delta_counter 2 tolerates one lost frame. debounce_ms is 1.5 cycles: a single jump
-    # of the counter is bridged and heals with the next frame, two wrong frames in a row are QLF_ERROR_ALIVE (the
-    # mode logic switches off with FAIL reason 2 in RUN). Values stay as they were when a message is invalid (hold).
+    # Timeout and alive counter of every control message of the LabControl driver (FW-03, COM-54, COM-56). The driver
+    # counts 1..14 and wraps 14 -> 1 (the counting of the old firmware, answer bs-alive-rx b); 0 and 15 never occur and
+    # are an alive error. counter_min/counter_max give that range, the wrap is a step of 1; max_delta_counter 2 tolerates
+    # one lost frame. debounce_ms is 1.5 cycles: a single jump of the counter is bridged and heals with the next frame,
+    # two wrong frames in a row are QLF_ERROR_ALIVE (the mode logic switches off with FAIL reason 2 in RUN). Values stay
+    # as they were when a message is invalid (hold).
     CONTROL_BATTSIM:            # 0x130, 100 ms: Lebenszeichen der Steuerung; 300 ms = 3 Zyklen, Ausgaenge im selben 10-ms-Schritt aus
       timeout_ms: 300
       debounce_ms: 150
       on_error: hold
-      alive: { counter: ALIVE_CONTROL_BATTSIM, max_delta_counter: 2 }
+      alive: { counter: ALIVE_CONTROL_BATTSIM, counter_min: 1, counter_max: 14, max_delta_counter: 2 }
     CONTROL_CELL01_02_03:       # 0x100-0x105 alle 1000 ms, 3 Zyklen, letzte Werte gelten weiter (wie heute)
       timeout_ms: 3000
       debounce_ms: 1500
       on_error: hold
-      alive: { counter: ALIVE_CONTROL_CELL01_02_03, max_delta_counter: 2 }
+      alive: { counter: ALIVE_CONTROL_CELL01_02_03, counter_min: 1, counter_max: 14, max_delta_counter: 2 }
     CONTROL_CELL04_05_06:
       timeout_ms: 3000
       debounce_ms: 1500
       on_error: hold
-      alive: { counter: ALIVE_CONTROL_CELL04_05_06, max_delta_counter: 2 }
+      alive: { counter: ALIVE_CONTROL_CELL04_05_06, counter_min: 1, counter_max: 14, max_delta_counter: 2 }
     CONTROL_CELL07_08_09:
       timeout_ms: 3000
       debounce_ms: 1500
       on_error: hold
-      alive: { counter: ALIVE_CONTROL_CELL07_08_09, max_delta_counter: 2 }
+      alive: { counter: ALIVE_CONTROL_CELL07_08_09, counter_min: 1, counter_max: 14, max_delta_counter: 2 }
     CONTROL_CELL10_11_12:
       timeout_ms: 3000
       debounce_ms: 1500
       on_error: hold
-      alive: { counter: ALIVE_CONTROL_CELL10_11_12, max_delta_counter: 2 }
+      alive: { counter: ALIVE_CONTROL_CELL10_11_12, counter_min: 1, counter_max: 14, max_delta_counter: 2 }
     CONTROL_CELL13_14_15:
       timeout_ms: 3000
       debounce_ms: 1500
       on_error: hold
-      alive: { counter: ALIVE_CONTROL_CELL13_14_15, max_delta_counter: 2 }
+      alive: { counter: ALIVE_CONTROL_CELL13_14_15, counter_min: 1, counter_max: 14, max_delta_counter: 2 }
     CONTROL_CELL16:
       timeout_ms: 3000
       debounce_ms: 1500
       on_error: hold
-      alive: { counter: ALIVE_CONTROL_CELL16, max_delta_counter: 2 }
+      alive: { counter: ALIVE_CONTROL_CELL16, counter_min: 1, counter_max: 14, max_delta_counter: 2 }
     CONTROL_DYNCELLSIM1:        # 0x131, 100 ms, 3 Zyklen (Zellmodell kommt mit Stufe D)
       timeout_ms: 300
       debounce_ms: 150
       on_error: hold
-      alive: { counter: ALIVE_CONTROL_DYNCELLSIM1, max_delta_counter: 2 }
+      alive: { counter: ALIVE_CONTROL_DYNCELLSIM1, counter_min: 1, counter_max: 14, max_delta_counter: 2 }
     CONTROL_DYNCELLSIM2:        # 0x132, 1000 ms, 3 Zyklen
       timeout_ms: 3000
       debounce_ms: 1500
       on_error: hold
-      alive: { counter: ALIVE_CONTROL_DYNCELLSIM2, max_delta_counter: 2 }
+      alive: { counter: ALIVE_CONTROL_DYNCELLSIM2, counter_min: 1, counter_max: 14, max_delta_counter: 2 }
 
 connections:
   SupplyMonitor.ISupply_mV.ISupply_mV: adc.mv.I_SUPPLY

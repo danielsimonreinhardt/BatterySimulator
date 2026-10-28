@@ -44,3 +44,12 @@ aus, bleibt die Ueberlasterkennung (FAIL Grund 3) damit unwirksam und der Ausfal
 **Entscheidung (Review Stufe B, B-2): bleibt in Stufe B unbehandelt.** Die Reaktion auf eine ungueltige Strommessung
 (Fail-safe Abschalten, Meldung, Entprellzeit) wird in der **Safety-Bewertung von Stufe C** entschieden. Bis dahin ist das
 ein offener Punkt, der nicht durch eine Zwischenloesung im Kundenprojekt umgangen wird.
+
+## 3. Alive-Zaehler der Steuerbotschaften (bs-alive-rx b)
+
+Alle neun Steuerbotschaften (0x130, 0x100 bis 0x105, 0x131, 0x132) werden beim Empfang auf einen Alive-Zaehler **1..14**
+geprueft (`counter_min: 1`, `counter_max: 14`, `max_delta_counter: 2` in `projects/battsim_master/rte.yaml`, COM-54 und
+COM-56 des gepinnten neXtBSW). Der Umlauf 14 -> 1 zaehlt als Schritt 1 (signal-qualifier.md, „Counter range (COM-56)“),
+0 und 15 sind Alive-Fehler und werden nie zur Referenz. Ein Alive-Fehler wird 150 ms (0x130) entprellt und fuehrt in RUN
+danach zu FAIL mit Grund 2. Der SIL-Test (`projects/battsim_master/test/battsim_sil_test.c`) prueft die Folge
+13, 14, 1, 2 als OK und 0 und 15 als Fehler gegen die Konfiguration aus dem erzeugten Code.

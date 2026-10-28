@@ -11,6 +11,7 @@
 #include "Rte_CellChannels.h"
 #include "Rte_Internal.h"
 #include "Rte_SupplyMonitor.h"
+#include "e2e/E2E_Alive.h"
 
 #include <math.h>
 #include <stdio.h>
@@ -359,6 +360,82 @@ static void aliveErrorSwitchesOffAfterDebounce(void)
     CHECK(MODE(BattSimStatus) == STATUS_STANDBY);
 }
 
+/* Alive counter of the control messages as the generated RteConfig.cpp checks it (checkAliveCONTROL_BATTSIM): same
+ * library call and mapping; the configuration comes from the generated code through -DALIVE_* (test_battsim_sil.py,
+ * which also checks that all nine control messages have the same one). */
+static E2E_AliveConfigType const aliveConfig = {ALIVE_COUNTER_BITS, ALIVE_MAX_DELTA, ALIVE_COUNTER_MIN, ALIVE_COUNTER_MAX};
+static E2E_AliveCheckStateType aliveState;
+
+static uint8 aliveQualifierOfFrame(uint8 counter)
+{
+    E2E_ReturnType const rc = E2E_AliveCheck(&aliveConfig, &aliveState, counter);
+    if ((rc == E2E_E_OK) && (aliveState.Status == E2E_ALIVESTATUS_INITIAL))
+    {
+        return QLF_DEBOUNCE;
+    }
+    return (E2E_AliveMapStatusToSM(rc, aliveState.Status) == E2E_P_OK) ? QLF_OK : QLF_ERROR_ALIVE;
+}
+
+static void aliveCounterRangeOneToFourteen(void)
+{
+    CHECK(aliveConfig.CounterMin == 1U && aliveConfig.CounterMax == 14U); /* answer bs-alive-rx b: 1..14 */
+    CHECK(E2E_AliveCheckConfig(&aliveConfig) == E2E_E_OK);
+    CHECK(E2E_AliveCheckInit(&aliveState) == E2E_E_OK);
+    /* the first frame only takes the reference */
+    CHECK(aliveQualifierOfFrame(12U) == QLF_DEBOUNCE);
+    /* 13, 14, 1, 2: the wrap 14 -> 1 is a step of 1 */
+    CHECK(aliveQualifierOfFrame(13U) == QLF_OK);
+    CHECK(aliveQualifierOfFrame(14U) == QLF_OK);
+    CHECK(aliveQualifierOfFrame(1U) == QLF_OK);
+    CHECK(aliveState.Status == E2E_ALIVESTATUS_OK);
+    CHECK(aliveQualifierOfFrame(2U) == QLF_OK);
+    /* three laps, no error */
+    for (uint8 n = 0U; n < 42U; ++n)
+    {
+        CHECK(aliveQualifierOfFrame((uint8)(aliveState.Counter % 14U + 1U)) == QLF_OK);
+    }
+    /* one lost frame (step 2) is still OK, also over the wrap */
+    for (uint8 n = 0U; n < 14U; ++n)
+    {
+        CHECK(aliveQualifierOfFrame((uint8)((aliveState.Counter + 1U) % 14U + 1U)) == QLF_OK);
+    }
+    /* 0 and 15 are outside the range: alive error, and never the reference */
+    uint8 ref = aliveState.Counter;
+    CHECK(aliveQualifierOfFrame(0U) == QLF_ERROR_ALIVE);
+    CHECK(aliveState.Counter == ref);
+    CHECK(aliveQualifierOfFrame(15U) == QLF_ERROR_ALIVE);
+    CHECK(aliveState.Counter == ref);
+    CHECK(aliveQualifierOfFrame((uint8)(ref % 14U + 1U)) == QLF_OK); /* the next one in sequence heals it */
+    /* a repeated counter and a jump of 3 are errors as before */
+    CHECK(aliveQualifierOfFrame(aliveState.Counter) == QLF_ERROR_ALIVE);
+    CHECK(aliveQualifierOfFrame((uint8)((aliveState.Counter + 2U) % 14U + 1U)) == QLF_ERROR_ALIVE);
+
+    /* effect on the mode logic: 0 in RUN is debounced (not yet a switch-off), then FAIL with reason 2 */
+    setpointFrame123(ENABLE_ON, 3.7, ENABLE_ON, 3.7, ENABLE_ON, 3.7);
+    goToRun();
+    CHECK(E2E_AliveCheckInit(&aliveState) == E2E_E_OK);
+    CHECK(aliveQualifierOfFrame(13U) == QLF_DEBOUNCE);
+    CHECK(aliveQualifierOfFrame(14U) == QLF_OK);
+    CHECK(aliveQualifierOfFrame(1U) == QLF_OK);
+    *controlQlf[6] = QLF_OK;
+    cycles(5);
+    CHECK(MODE(BattSimStatus) == STATUS_REMOTE);
+    uint8 verdict = aliveQualifierOfFrame(0U);
+    CHECK(verdict == QLF_ERROR_ALIVE);
+    *controlQlf[6] = QLF_DEBOUNCE; /* the RTE debounces the error for debounce_ms (150 ms) first */
+    cycles(5);
+    CHECK(MODE(BattSimStatus) == STATUS_REMOTE);
+    *controlQlf[6] = verdict;      /* debounce time over, the error stays */
+    cycle();
+    CHECK(MODE(BattSimStatus) == STATUS_FAIL);
+    CHECK(MODE(FailReason) == FAIL_ALIVE);
+    CHECK(outputsOff());
+    *controlQlf[6] = QLF_OK;
+    controlFrame(REMOTE_REMOTE, MODE_STANDBY, OUTPUT_DISABLE);
+    cycle();
+    CHECK(MODE(BattSimStatus) == STATUS_STANDBY);
+}
+
 static void lostControlMessageInStopIsNoFail(void)
 {
     controlFrame(REMOTE_REMOTE, MODE_ON, OUTPUT_DISABLE);
@@ -571,6 +648,7 @@ int main(void)
     actualValueFollowsTheMeasurement();
     timeoutOfControlMessageSwitchesOffInTheSameStep();
     aliveErrorSwitchesOffAfterDebounce();
+    aliveCounterRangeOneToFourteen();
     lostControlMessageInStopIsNoFail();
     keysSwitchTheModes();
     remoteLedBlinksInFail();
