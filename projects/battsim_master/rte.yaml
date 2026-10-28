@@ -20,24 +20,27 @@ components:
   - name: CellChannels
     path: swc/CellChannels
 
-# CAN matrix of the simulator (Stufe A): BattSimV1 content unchanged (LabControl driver stays valid) plus nodes and cycle
-# times; sender BATTSIM = this ECU. Vorlaeufig bis zur Antwort im Entscheidungsboard: Knoten LABCONTROL (battsim-knoten-gegenseite),
-# Timeouts (battsim-timeouts-stufe-a), 0x121 (battsim-0121-layout) kommt danach.
+# CAN matrix of the simulator (Stufe A): BattSimV1 content unchanged (LabControl driver stays valid) plus nodes, cycle
+# times and 0x121 STATUS_BATTSIM_EXT; sender BATTSIM = this ECU, counterpart LABCONTROL (Board battsim-knoten-gegenseite).
+# Timeouts per Board battsim-timeouts-stufe-a: only timeout qualifiers, Alive stays a normal signal until G3 (COM-54).
 can:
   dbc: BattSimV2.dbc
   node: BATTSIM
   bus: CAN0
   task: swc
+  monitor: [CONTROL_CELL16, CONTROL_DYNCELLSIM1, CONTROL_DYNCELLSIM2]   # received for their timeout qualifier, no port yet (cells 16 and cell model: Stufe D)
   qualifiers:
     CONTROL_BATTSIM:            # 0x130, 100 ms: Lebenszeichen der Steuerung; 300 ms = 3 Zyklen (Konzept: Ausgaenge im selben 10-ms-Schritt aus)
       timeout_ms: 300
       on_error: hold
-    # 0x131/0x132 (CONTROL_DYNCELLSIM1/2, Zellmodell): kommen mit Stufe D, dann je 300 ms (3 Zyklen), hold
     CONTROL_CELL01_02_03: { timeout_ms: 3000, on_error: hold }   # 0x100-0x105 alle 1000 ms, 3 Zyklen, letzte Werte gelten weiter (wie heute)
     CONTROL_CELL04_05_06: { timeout_ms: 3000, on_error: hold }
     CONTROL_CELL07_08_09: { timeout_ms: 3000, on_error: hold }
     CONTROL_CELL10_11_12: { timeout_ms: 3000, on_error: hold }
     CONTROL_CELL13_14_15: { timeout_ms: 3000, on_error: hold }
+    CONTROL_CELL16: { timeout_ms: 3000, on_error: hold }
+    CONTROL_DYNCELLSIM1: { timeout_ms: 300, on_error: hold }     # 0x131, 100 ms, 3 Zyklen (Zellmodell kommt mit Stufe D)
+    CONTROL_DYNCELLSIM2: { timeout_ms: 3000, on_error: hold }    # 0x132, 1000 ms, 3 Zyklen
 
 connections:
   SupplyMonitor.ISupply_mV.ISupply_mV: adc.mv.I_SUPPLY

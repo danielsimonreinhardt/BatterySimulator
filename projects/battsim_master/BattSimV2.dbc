@@ -164,6 +164,26 @@ BO_ 256 CONTROL_CELL01_02_03: 8 LABCONTROL
  SG_ CELL01_VOLTAGE_SET : 16|16@1+ (0.0001,0) [0|6.5535] "V" BATTSIM
  SG_ CELL01_ENABLE : 8|2@1+ (1,0) [0|3] "" BATTSIM
 
+BO_ 289 STATUS_BATTSIM_EXT: 8 BATTSIM
+ SG_ ALIVE_STATUS_BATTSIM_EXT : 0|4@1+ (1,0) [0|15] "" LABCONTROL
+ SG_ BATTSIM_OVERLOAD : 4|1@1+ (1,0) [0|1] "" LABCONTROL
+ SG_ BATTSIM_LIMIT : 5|1@1+ (1,0) [0|1] "" LABCONTROL
+ SG_ BATTSIM_CONTROLLER_ON : 6|1@1+ (1,0) [0|1] "" LABCONTROL
+ SG_ BATTSIM_FAIL_REASON : 8|4@1+ (1,0) [0|15] "" LABCONTROL
+ SG_ QLF_CONTROL_CELL01_02_03 : 12|1@1+ (1,0) [0|1] "" LABCONTROL
+ SG_ QLF_CONTROL_CELL04_05_06 : 13|1@1+ (1,0) [0|1] "" LABCONTROL
+ SG_ QLF_CONTROL_CELL07_08_09 : 14|1@1+ (1,0) [0|1] "" LABCONTROL
+ SG_ QLF_CONTROL_CELL10_11_12 : 15|1@1+ (1,0) [0|1] "" LABCONTROL
+ SG_ QLF_CONTROL_CELL13_14_15 : 16|1@1+ (1,0) [0|1] "" LABCONTROL
+ SG_ QLF_CONTROL_CELL16 : 17|1@1+ (1,0) [0|1] "" LABCONTROL
+ SG_ QLF_CONTROL_BATTSIM : 18|1@1+ (1,0) [0|1] "" LABCONTROL
+ SG_ QLF_CONTROL_DYNCELLSIM1 : 19|1@1+ (1,0) [0|1] "" LABCONTROL
+ SG_ QLF_CONTROL_DYNCELLSIM2 : 20|1@1+ (1,0) [0|1] "" LABCONTROL
+ SG_ BATTSIM_SUPPLY_CURRENT : 24|16@1+ (0.001,0) [0|65.535] "A" LABCONTROL
+ SG_ FW_VERSION_MAJOR : 40|8@1+ (1,0) [0|255] "" LABCONTROL
+ SG_ FW_VERSION_MINOR : 48|8@1+ (1,0) [0|255] "" LABCONTROL
+ SG_ FW_VERSION_PATCH : 56|8@1+ (1,0) [0|255] "" LABCONTROL
+
 
 
 CM_ SG_ 305 DYNCELLSIM_OCV_SET "Zellspannungs-Vorgabe";
@@ -199,6 +219,24 @@ CM_ SG_ 257 CELL04_VOLTAGE_SET "Zellspannungs-Vorgabe";
 CM_ SG_ 256 CELL03_VOLTAGE_SET "Zellspannungs-Vorgabe";
 CM_ SG_ 256 CELL02_VOLTAGE_SET "Zellspannungs-Vorgabe";
 CM_ SG_ 256 CELL01_VOLTAGE_SET "Zellspannungs-Vorgabe";
+CM_ SG_ 289 ALIVE_STATUS_BATTSIM_EXT "Lebenszeichen, +1 je Senden";
+CM_ SG_ 289 BATTSIM_OVERLOAD "Ueberlast 48 V";
+CM_ SG_ 289 BATTSIM_LIMIT "LIMIT-Leitung";
+CM_ SG_ 289 BATTSIM_CONTROLLER_ON "Regler ein (bis Stufe C fest 0)";
+CM_ SG_ 289 BATTSIM_FAIL_REASON "Grund des FAIL-Zustands";
+CM_ SG_ 289 QLF_CONTROL_CELL01_02_03 "Qualifier CONTROL_CELL01_02_03: 1 = gueltig (Timeout nicht abgelaufen)";
+CM_ SG_ 289 QLF_CONTROL_CELL04_05_06 "Qualifier CONTROL_CELL04_05_06: 1 = gueltig (Timeout nicht abgelaufen)";
+CM_ SG_ 289 QLF_CONTROL_CELL07_08_09 "Qualifier CONTROL_CELL07_08_09: 1 = gueltig (Timeout nicht abgelaufen)";
+CM_ SG_ 289 QLF_CONTROL_CELL10_11_12 "Qualifier CONTROL_CELL10_11_12: 1 = gueltig (Timeout nicht abgelaufen)";
+CM_ SG_ 289 QLF_CONTROL_CELL13_14_15 "Qualifier CONTROL_CELL13_14_15: 1 = gueltig (Timeout nicht abgelaufen)";
+CM_ SG_ 289 QLF_CONTROL_CELL16 "Qualifier CONTROL_CELL16: 1 = gueltig (Timeout nicht abgelaufen)";
+CM_ SG_ 289 QLF_CONTROL_BATTSIM "Qualifier CONTROL_BATTSIM: 1 = gueltig (Timeout nicht abgelaufen)";
+CM_ SG_ 289 QLF_CONTROL_DYNCELLSIM1 "Qualifier CONTROL_DYNCELLSIM1: 1 = gueltig (Timeout nicht abgelaufen)";
+CM_ SG_ 289 QLF_CONTROL_DYNCELLSIM2 "Qualifier CONTROL_DYNCELLSIM2: 1 = gueltig (Timeout nicht abgelaufen)";
+CM_ SG_ 289 BATTSIM_SUPPLY_CURRENT "Strom der 48-V-Versorgung";
+CM_ SG_ 289 FW_VERSION_MAJOR "Firmware-Version Major";
+CM_ SG_ 289 FW_VERSION_MINOR "Firmware-Version Minor";
+CM_ SG_ 289 FW_VERSION_PATCH "Firmware-Version Patch";
 BA_DEF_  "BusType" STRING ;
 BA_DEF_ BO_  "GenMsgCycleTime" INT 0 65535;
 BA_DEF_DEF_  "BusType" "CAN";
@@ -219,6 +257,7 @@ BA_ "GenMsgCycleTime" BO_ 259 1000;
 BA_ "GenMsgCycleTime" BO_ 258 1000;
 BA_ "GenMsgCycleTime" BO_ 257 1000;
 BA_ "GenMsgCycleTime" BO_ 256 1000;
+BA_ "GenMsgCycleTime" BO_ 289 100;
 VAL_ 304 BATTSIM_REMOTE_CONTROL 3 "signal invalid" 2 "Remote-Control-Mode" 1 "Standalone-Mode" 0 "no signal" ;
 VAL_ 304 BATTSIM_OUTPUT_CONTROL 3 "signal invalid" 2 "enable all outputs" 1 "disable all output" 0 "no signal" ;
 VAL_ 304 BATTSIM_MODE_CONTROL 7 "signal invalid" 3 "DYNAMIC_CELL_SIM" 2 "ON" 1 "STANDBY" 0 "no value" ;
@@ -256,4 +295,5 @@ VAL_ 257 CELL04_ENABLE 3 "signal invalid" 2 "enable" 1 "disable" 0 "no value" ;
 VAL_ 256 CELL03_ENABLE 3 "signal invalid" 2 "enable" 1 "disable" 0 "no value" ;
 VAL_ 256 CELL02_ENABLE 3 "signal invalid" 2 "enable" 1 "disable" 0 "no value" ;
 VAL_ 256 CELL01_ENABLE 3 "signal invalid" 2 "enable" 1 "disable" 0 "no value" ;
+VAL_ 289 BATTSIM_FAIL_REASON 15 "unbekannt" 4 "Watchdog/Safety-Reset" 3 "Ueberlast 48 V" 2 "Alive 0x130 falsch" 1 "Timeout 0x130" 0 "keiner" ;
 
