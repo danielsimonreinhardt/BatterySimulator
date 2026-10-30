@@ -614,6 +614,23 @@ parameters:
   - name: OverVoltTime_cycles
     type: uint8
     runnables: [CellTask10ms]
+  - name: OutputFloor_V
+    type: float32
+    unit: "V"
+    min: 0
+    max: 2.0
+    description: "Pegelboden der Endstufe ohne Last"
+    runnables: [CellTask10ms]
+  - name: StepThreshold_V
+    type: float32
+    unit: "V"
+    min: 0
+    max: 5.0
+    description: "Sollwertsprung, der den Regler anhaelt"
+    runnables: [CellTask10ms]
+  - name: StepHold_cycles
+    type: uint8
+    runnables: [CellTask10ms]
   - name: VoltageSenseFilter
     type: float32
     runnables: [CellTask10ms]

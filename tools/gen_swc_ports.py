@@ -108,8 +108,8 @@ for v, msg in zip(vnames, QLF_MSGS):
 for part in ("Major", "Minor", "Patch"):
     port(c, f"FwVersion{part}", "out", "uint8", f"can.tx.STATUS_BATTSIM_EXT.FW_VERSION_{part.upper()}")
 param(c, "VersionMajor", "uint8", [0], "firmware version of 0x121")
-param(c, "VersionMinor", "uint8", [3], "firmware version of 0x121 (0.3.0: stage C, calibration, regulator and diagnosis; 0.2.0 was stage B)")
-param(c, "VersionPatch", "uint8", [0], "firmware version of 0x121")
+param(c, "VersionMinor", "uint8", [3], "firmware version of 0x121 (0.3.1: stage C, calibration, regulator and diagnosis, level floor and regulator hold; 0.2.0 was stage B)")
+param(c, "VersionPatch", "uint8", [1], "firmware version of 0x121")
 param(c, "ButtonDebounce_cycles", "uint8", [3], "[10 ms] a key level counts after this many equal samples")
 
 # ------------------------------------------------------------------ CellCal (stage C)
@@ -182,6 +182,11 @@ param(c, "SetpointLimit_V", "float32", [5.0], "[V]    upper setpoint limit, boun
 param(c, "OverVoltThd_V", "float32", [0.2], "[V]    overvoltage: the calibrated actual value (sample, not low-passed) is this far above the setpoint (review C-2: 0.2 V)",
       unit="V", min=0.1, max=1.0, description="Schwelle der Ueberspannungserkennung")
 param(c, "OverVoltTime_cycles", "uint8", [10], "[10 ms] number of samples in a row above the threshold that count as overvoltage (10 = 100 ms, review C-2)")
+param(c, "OutputFloor_V", "float32", [0.7], "[V]    level floor of the output stage without load (measured 0.70 V, 30.10.2026): the overvoltage comparison uses max(setpoint, floor) + OverVoltThd_V, a setpoint below it gets status 4 (review C-2c); to be measured again with a load at the first run with a test object",
+      unit="V", min=0, max=2.0, description="Pegelboden der Endstufe ohne Last")
+param(c, "StepThreshold_V", "float32", [0.2], "[V]    a change of the (limited) setpoint of a channel larger than this stops its regulator for StepHold_cycles (review R-1)",
+      unit="V", min=0, max=5.0, description="Sollwertsprung, der den Regler anhaelt")
+param(c, "StepHold_cycles", "uint8", [30], "[10 ms] hold time of the regulator after a setpoint step, until the low-passed actual value has settled (30 = 300 ms, review R-1; low-pass time constant about 95 ms)")
 param(c, "VoltageSenseFilter", "float32", [0.1], "[-]    low-pass weight of the actual value per 10 ms (time constant about 95 ms)")
 param(c, "CtrlKp", "float32", [0.2], "[V/V]  proportional gain of the regulator of a channel (start value, to be tuned at the device)",
       unit="-", min=0, max=2.0, description="Proportionalanteil des Reglers")

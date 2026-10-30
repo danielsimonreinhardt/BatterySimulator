@@ -3,6 +3,6 @@
 % in MATLAB by swc_load_data. Written by tools/gen_swc_ports.py.
 
 VersionMajor = 0;   % firmware version of 0x121
-VersionMinor = 3;   % firmware version of 0x121 (0.3.0: stage C, calibration, regulator and diagnosis; 0.2.0 was stage B)
-VersionPatch = 0;   % firmware version of 0x121
+VersionMinor = 3;   % firmware version of 0x121 (0.3.1: stage C, calibration, regulator and diagnosis, level floor and regulator hold; 0.2.0 was stage B)
+VersionPatch = 1;   % firmware version of 0x121
 ButtonDebounce_cycles = 3;   % [10 ms] a key level counts after this many equal samples

@@ -39,21 +39,23 @@ void CellTask10ms(void)                /* Explicit Task: CellTask10ms */
   sint32 i;
   sint32 k;
   uint32 rtb_TmpSignalConversionAtSFunctionInport3[14];
-  uint32 rtb_TmpSignalConversionAtSFunctionInport3_0;
+  uint32 qY;
   uint16 duty[14];
   uint8 rtb_TmpSignalConversionAtSFunctionInport2[14];
   uint8 rtb_TmpSignalConversionAtSFunctionInport4[14];
   uint8 state[14];
   uint8 tmpRead_1;
   boolean en[14];
+  boolean below;
+  boolean below_tmp;
   boolean clipped;
   boolean commanded;
   boolean ctrlActive;
   boolean exitg1;
+  boolean holding;
   boolean tmp;
   boolean tmpRead;
   boolean tmpRead_0;
-  boolean working;
 
   /* SignalConversion generated from: '<S2>/ SFunction ' incorporates:
    *  Inport: '<Root>/UCell14Qlf'
@@ -436,9 +438,12 @@ void CellTask10ms(void)                /* Explicit Task: CellTask10ms */
    *  Constant: '<S1>/CtrlKi_per_s_Const'
    *  Constant: '<S1>/CtrlKp_Const'
    *  Constant: '<S1>/CtrlLimit_V_Const'
+   *  Constant: '<S1>/OutputFloor_V_Const'
    *  Constant: '<S1>/OverVoltThd_V_Const'
    *  Constant: '<S1>/QLF_OK_Const'
    *  Constant: '<S1>/SetpointLimit_V_Const'
+   *  Constant: '<S1>/StepHold_cycles_Const'
+   *  Constant: '<S1>/StepThreshold_V_Const'
    *  Constant: '<S1>/VoltageSenseFilter_Const'
    *  Constant: '<S1>/VoltageSenseMeas_Ax_Const'
    *  Constant: '<S1>/VoltageSenseValue_T_Const'
@@ -461,8 +466,34 @@ void CellTask10ms(void)                /* Explicit Task: CellTask10ms */
       v = 0.0F;
     }
 
+    below_tmp = !clipped;
+    below = (commanded && (v > 0.0F) && (v < Rte_Prm_CalPrm_OutputFloor_V()) &&
+             below_tmp);
+    if (fabsf(v - CellChannels_ARID_DEF.prevV[k]) >
+        Rte_Prm_CalPrm_StepThreshold_V()) {
+      CellChannels_ARID_DEF.holdCnt[k] = Rte_Prm_CalPrm_StepHold_cycles();
+    }
+
+    CellChannels_ARID_DEF.prevV[k] = v;
+    tmpRead_1 = CellChannels_ARID_DEF.holdCnt[k];
+    holding = (tmpRead_1 > 0);
+    if (holding) {
+      /* MW:begin MISRA2012:D4.1 CERT-C:INT30-C 'Justifying MISRA CPP rule violation' */
+      qY = tmpRead_1 - 1U;
+
+      /* MW:end MISRA2012:D4.1 CERT-C:INT30-C */
+      if (tmpRead_1 - 1U > tmpRead_1) {
+        qY = 0U;
+      }
+
+      CellChannels_ARID_DEF.holdCnt[k] = (uint8)qY;
+    }
+
     /* Reshape: '<S1>/CalSetGain_r' incorporates:
+     *  Constant: '<S1>/OutputFloor_V_Const'
      *  Constant: '<S1>/SetpointLimit_V_Const'
+     *  Constant: '<S1>/StepHold_cycles_Const'
+     *  Constant: '<S1>/StepThreshold_V_Const'
      */
     tmpRead_6 = tmpRead_3[k];
 
@@ -507,21 +538,18 @@ void CellTask10ms(void)                /* Explicit Task: CellTask10ms */
     }
 
     if (rtb_TmpSignalConversionAtSFunctionInport4[k] == 1) {
-      rtb_TmpSignalConversionAtSFunctionInport3_0 =
-        rtb_TmpSignalConversionAtSFunctionInport3[k];
+      qY = rtb_TmpSignalConversionAtSFunctionInport3[k];
       e = (Rte_Prm_CalPrm_VoltageSenseValue_T())[5];
-      if (rtb_TmpSignalConversionAtSFunctionInport3_0 <=
-          (Rte_Prm_CalPrm_VoltageSenseMeas_Ax())[0]) {
+      if (qY <= (Rte_Prm_CalPrm_VoltageSenseMeas_Ax())[0]) {
         e = (Rte_Prm_CalPrm_VoltageSenseValue_T())[0];
       } else {
         i = 0;
         exitg1 = FALSE;
         while ((!exitg1) && (i < 5)) {
           mv = (Rte_Prm_CalPrm_VoltageSenseMeas_Ax())[i + 1];
-          if (rtb_TmpSignalConversionAtSFunctionInport3_0 <= mv) {
+          if (qY <= mv) {
             e = ((Rte_Prm_CalPrm_VoltageSenseValue_T())[i + 1] -
-                 (Rte_Prm_CalPrm_VoltageSenseValue_T())[i]) * ((float32)
-              rtb_TmpSignalConversionAtSFunctionInport3_0 -
+                 (Rte_Prm_CalPrm_VoltageSenseValue_T())[i]) * ((float32)qY -
               (Rte_Prm_CalPrm_VoltageSenseMeas_Ax())[i]) / (mv -
               (Rte_Prm_CalPrm_VoltageSenseMeas_Ax())[i]) +
               (Rte_Prm_CalPrm_VoltageSenseValue_T())[i];
@@ -533,10 +561,15 @@ void CellTask10ms(void)                /* Explicit Task: CellTask10ms */
       }
 
       mv = tmpRead_8 * e + tmpRead_9;
-      if (tmpRead && commanded && (mv - v > Rte_Prm_CalPrm_OverVoltThd_V())) {
-        tmpRead_1 = CellChannels_ARID_DEF.ovCnt[k];
-        if (tmpRead_1 < 255) {
-          CellChannels_ARID_DEF.ovCnt[k] = (uint8)(tmpRead_1 + 1U);
+      if (tmpRead && commanded) {
+        if (mv - fmaxf(v, Rte_Prm_CalPrm_OutputFloor_V()) >
+            Rte_Prm_CalPrm_OverVoltThd_V()) {
+          tmpRead_1 = CellChannels_ARID_DEF.ovCnt[k];
+          if (tmpRead_1 < 255) {
+            CellChannels_ARID_DEF.ovCnt[k] = (uint8)(tmpRead_1 + 1U);
+          }
+        } else {
+          CellChannels_ARID_DEF.ovCnt[k] = 0U;
         }
       } else {
         CellChannels_ARID_DEF.ovCnt[k] = 0U;
@@ -560,19 +593,20 @@ void CellTask10ms(void)                /* Explicit Task: CellTask10ms */
     }
 
     mv = 0.0F;
-    if (ctrlActive && tmpRead && commanded && (!clipped) && (v > 0.0F)) {
+    if (ctrlActive && tmpRead && commanded && below_tmp && (v > 0.0F) && (!below))
+    {
       if (rtb_TmpSignalConversionAtSFunctionInport4[k] == 1) {
-        working = CellChannels_ARID_DEF.seen[k];
+        below_tmp = CellChannels_ARID_DEF.seen[k];
       } else {
-        working = FALSE;
+        below_tmp = FALSE;
       }
     } else {
-      working = FALSE;
+      below_tmp = FALSE;
     }
 
-    if (working && tmpRead_0) {
+    if (below_tmp && (tmpRead_0 || holding)) {
       mv = CellChannels_ARID_DEF.corrHold[k];
-    } else if (working) {
+    } else if (below_tmp) {
       e = v - e;
       mv = fminf(fmaxf(Rte_Prm_CalPrm_CtrlKi_per_s() * 0.01F * e +
                        CellChannels_ARID_DEF.integ[k],
@@ -621,6 +655,8 @@ void CellTask10ms(void)                /* Explicit Task: CellTask10ms */
       state[k] = 1U;
     } else if (clipped) {
       state[k] = 3U;
+    } else if (below) {
+      state[k] = 4U;
     } else {
       state[k] = 2U;
     }

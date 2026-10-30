@@ -66,34 +66,34 @@ BO_ 288 STATUS_BATTSIM: 8 BATTSIM
 
 BO_ 277 STATUS_CELL16: 4 BATTSIM
  SG_ CELL16_VOLTAGE_ACT : 8|16@1+ (0.0001,0) [0|6.5535] "V" LABCONTROL
- SG_ CELL16_STATUS : 4|3@1+ (1,0) [0|3] "" LABCONTROL
+ SG_ CELL16_STATUS : 4|3@1+ (1,0) [0|7] "" LABCONTROL
  SG_ ALIVE_STATUS_CELL16 : 0|4@1+ (1,0) [0|15] "" LABCONTROL
 
 BO_ 276 STATUS_CELL13_14_15: 8 BATTSIM
  SG_ CELL15_VOLTAGE_ACT : 48|16@1+ (0.0001,0) [0|6.5535] "V" LABCONTROL
  SG_ CELL14_VOLTAGE_ACT : 32|16@1+ (0.0001,0) [0|6.5535] "V" LABCONTROL
  SG_ CELL13_VOLTAGE_ACT : 16|16@1+ (0.0001,0) [0|6.5535] "V" LABCONTROL
- SG_ CELL15_STATUS : 11|3@1+ (1,0) [0|3] "" LABCONTROL
- SG_ CELL14_STATUS : 8|3@1+ (1,0) [0|3] "" LABCONTROL
- SG_ CELL13_STATUS : 4|3@1+ (1,0) [0|3] "" LABCONTROL
+ SG_ CELL15_STATUS : 11|3@1+ (1,0) [0|7] "" LABCONTROL
+ SG_ CELL14_STATUS : 8|3@1+ (1,0) [0|7] "" LABCONTROL
+ SG_ CELL13_STATUS : 4|3@1+ (1,0) [0|7] "" LABCONTROL
  SG_ ALIVE_STATUS_CELL13_14_15 : 0|4@1+ (1,0) [0|15] "" LABCONTROL
 
 BO_ 275 STATUS_CELL10_11_12: 8 BATTSIM
  SG_ CELL12_VOLTAGE_ACT : 48|16@1+ (0.0001,0) [0|6.5535] "V" LABCONTROL
- SG_ CELL12_STATUS : 11|3@1+ (1,0) [0|3] "" LABCONTROL
+ SG_ CELL12_STATUS : 11|3@1+ (1,0) [0|7] "" LABCONTROL
  SG_ CELL11_VOLTAGE_ACT : 32|16@1+ (0.0001,0) [0|6.5535] "V" LABCONTROL
- SG_ CELL11_STATUS : 8|3@1+ (1,0) [0|3] "" LABCONTROL
+ SG_ CELL11_STATUS : 8|3@1+ (1,0) [0|7] "" LABCONTROL
  SG_ CELL10_VOLTAGE_ACT : 16|16@1+ (0.0001,0) [0|6.5535] "V" LABCONTROL
- SG_ CELL10_STATUS : 4|3@1+ (1,0) [0|3] "" LABCONTROL
+ SG_ CELL10_STATUS : 4|3@1+ (1,0) [0|7] "" LABCONTROL
  SG_ ALIVE_STATUS_CELL10_11_12 : 0|4@1+ (1,0) [0|15] "" LABCONTROL
 
 BO_ 274 STATUS_CELL07_08_09: 8 BATTSIM
  SG_ CELL09_VOLTAGE_ACT : 48|16@1+ (0.0001,0) [0|6.5535] "V" LABCONTROL
  SG_ CELL08_VOLTAGE_ACT : 32|16@1+ (0.0001,0) [0|6.5535] "V" LABCONTROL
  SG_ CELL07_VOLTAGE_ACT : 16|16@1+ (0.0001,0) [0|6.5535] "V" LABCONTROL
- SG_ CELL09_STATUS : 11|3@1+ (1,0) [0|3] "" LABCONTROL
- SG_ CELL08_STATUS : 8|3@1+ (1,0) [0|3] "" LABCONTROL
- SG_ CELL07_STATUS : 4|3@1+ (1,0) [0|3] "" LABCONTROL
+ SG_ CELL09_STATUS : 11|3@1+ (1,0) [0|7] "" LABCONTROL
+ SG_ CELL08_STATUS : 8|3@1+ (1,0) [0|7] "" LABCONTROL
+ SG_ CELL07_STATUS : 4|3@1+ (1,0) [0|7] "" LABCONTROL
  SG_ ALIVE_STATUS_CELL07_08_09 : 0|4@1+ (1,0) [0|15] "" LABCONTROL
 
 BO_ 273 STATUS_CELL04_05_06: 8 BATTSIM
@@ -101,17 +101,17 @@ BO_ 273 STATUS_CELL04_05_06: 8 BATTSIM
  SG_ CELL06_VOLTAGE_ACT : 48|16@1+ (0.0001,0) [0|6.5535] "V" LABCONTROL
  SG_ CELL05_VOLTAGE_ACT : 32|16@1+ (0.0001,0) [0|6.5535] "V" LABCONTROL
  SG_ CELL04_VOLTAGE_ACT : 16|16@1+ (0.0001,0) [0|6.5535] "V" LABCONTROL
- SG_ CELL06_STATUS : 11|3@1+ (1,0) [0|3] "" LABCONTROL
- SG_ CELL05_STATUS : 8|3@1+ (1,0) [0|3] "" LABCONTROL
- SG_ CELL04_STATUS : 4|3@1+ (1,0) [0|3] "" LABCONTROL
+ SG_ CELL06_STATUS : 11|3@1+ (1,0) [0|7] "" LABCONTROL
+ SG_ CELL05_STATUS : 8|3@1+ (1,0) [0|7] "" LABCONTROL
+ SG_ CELL04_STATUS : 4|3@1+ (1,0) [0|7] "" LABCONTROL
 
 BO_ 272 STATUS_CELL01_02_03: 8 BATTSIM
  SG_ CELL03_VOLTAGE_ACT : 48|16@1+ (0.0001,0) [0|6.5535] "V" LABCONTROL
  SG_ CELL02_VOLTAGE_ACT : 32|16@1+ (0.0001,0) [0|6.5535] "V" LABCONTROL
  SG_ CELL01_VOLTAGE_ACT : 16|16@1+ (0.0001,0) [0|6.5535] "V" LABCONTROL
- SG_ CELL03_STATUS : 11|3@1+ (1,0) [0|3] "" LABCONTROL
- SG_ CELL02_STATUS : 8|3@1+ (1,0) [0|3] "" LABCONTROL
- SG_ CELL01_STATUS : 4|3@1+ (1,0) [0|3] "" LABCONTROL
+ SG_ CELL03_STATUS : 11|3@1+ (1,0) [0|7] "" LABCONTROL
+ SG_ CELL02_STATUS : 8|3@1+ (1,0) [0|7] "" LABCONTROL
+ SG_ CELL01_STATUS : 4|3@1+ (1,0) [0|7] "" LABCONTROL
  SG_ ALIVE_STATUS_CELL01_02_03 : 0|4@1+ (1,0) [0|15] "" LABCONTROL
 
 BO_ 261 CONTROL_CELL16: 4 LABCONTROL
@@ -263,22 +263,22 @@ VAL_ 304 BATTSIM_OUTPUT_CONTROL 3 "signal invalid" 2 "enable all outputs" 1 "dis
 VAL_ 304 BATTSIM_MODE_CONTROL 7 "signal invalid" 3 "DYNAMIC_CELL_SIM" 2 "ON" 1 "STANDBY" 0 "no value" ;
 VAL_ 288 BATTSIM_OUTPUT_STATUS 3 "signal invalid" 2 "Output enabled" 1 "Output disabled" 0 "no signal" ;
 VAL_ 288 BATTSIM_STATUS 7 "signal invalid" 6 "reserved" 5 "FAIL" 4 "ON_DynamicCellSim" 3 "ON_RemoteControl" 2 "ON_Standalone" 1 "STANDBY" 0 "no signal" ;
-VAL_ 277 CELL16_STATUS 7 "signal invalid" 6 "reserved" 5 "reserved" 4 "reserved" 3 "setpoint error" 2 "enabled" 1 "disabled" 0 "no value" ;
-VAL_ 276 CELL15_STATUS 7 "signal invalid" 6 "reserved" 5 "reserved" 4 "reserved" 3 "setpoint error" 2 "enabled" 1 "disabled" 0 "no value" ;
-VAL_ 276 CELL14_STATUS 7 "signal invalid" 6 "reserved" 5 "reserved" 4 "reserved" 3 "setpoint error" 2 "enabled" 1 "disabled" 0 "no value" ;
-VAL_ 276 CELL13_STATUS 7 "signal invalid" 6 "reserved" 5 "reserved" 4 "reserved" 3 "setpoint error" 2 "enabled" 1 "disabled" 0 "no value" ;
-VAL_ 275 CELL12_STATUS 7 "signal invalid" 6 "reserved" 5 "reserved" 4 "reserved" 3 "setpoint error" 2 "enabled" 1 "disabled" 0 "no value" ;
-VAL_ 275 CELL11_STATUS 7 "signal invalid" 6 "reserved" 5 "reserved" 4 "reserved" 3 "setpoint error" 2 "enabled" 1 "disabled" 0 "no value" ;
-VAL_ 275 CELL10_STATUS 7 "signal invalid" 6 "reserved" 5 "reserved" 4 "reserved" 3 "setpoint error" 2 "enabled" 1 "disabled" 0 "no value" ;
-VAL_ 274 CELL09_STATUS 7 "signal invalid" 6 "reserved" 5 "reserved" 4 "reserved" 3 "setpoint error" 2 "enabled" 1 "disabled" 0 "no value" ;
-VAL_ 274 CELL08_STATUS 7 "signal invalid" 6 "reserved" 5 "reserved" 4 "reserved" 3 "setpoint error" 2 "enabled" 1 "disabled" 0 "no value" ;
-VAL_ 274 CELL07_STATUS 7 "signal invalid" 6 "reserved" 5 "reserved" 4 "reserved" 3 "setpoint error" 2 "enabled" 1 "disabled" 0 "no value" ;
-VAL_ 273 CELL06_STATUS 7 "signal invalid" 6 "reserved" 5 "reserved" 4 "reserved" 3 "setpoint error" 2 "enabled" 1 "disabled" 0 "no value" ;
-VAL_ 273 CELL05_STATUS 7 "signal invalid" 6 "reserved" 5 "reserved" 4 "reserved" 3 "setpoint error" 2 "enabled" 1 "disabled" 0 "no value" ;
-VAL_ 273 CELL04_STATUS 7 "signal invalid" 6 "reserved" 5 "reserved" 4 "reserved" 3 "setpoint error" 2 "enabled" 1 "disabled" 0 "no value" ;
-VAL_ 272 CELL03_STATUS 7 "signal invalid" 6 "reserved" 5 "reserved" 4 "reserved" 3 "setpoint error" 2 "enabled" 1 "disabled" 0 "no value" ;
-VAL_ 272 CELL02_STATUS 7 "signal invalid" 6 "reserved" 5 "reserved" 4 "reserved" 3 "setpoint error" 2 "enabled" 1 "disabled" 0 "no value" ;
-VAL_ 272 CELL01_STATUS 7 "signal invalid" 6 "reserved" 5 "reserved" 4 "reserved" 3 "setpoint error" 2 "enabled" 1 "disabled" 0 "no value" ;
+VAL_ 277 CELL16_STATUS 7 "signal invalid" 6 "reserved" 5 "reserved" 4 "setpoint below level floor" 3 "setpoint error" 2 "enabled" 1 "disabled" 0 "no value" ;
+VAL_ 276 CELL15_STATUS 7 "signal invalid" 6 "reserved" 5 "reserved" 4 "setpoint below level floor" 3 "setpoint error" 2 "enabled" 1 "disabled" 0 "no value" ;
+VAL_ 276 CELL14_STATUS 7 "signal invalid" 6 "reserved" 5 "reserved" 4 "setpoint below level floor" 3 "setpoint error" 2 "enabled" 1 "disabled" 0 "no value" ;
+VAL_ 276 CELL13_STATUS 7 "signal invalid" 6 "reserved" 5 "reserved" 4 "setpoint below level floor" 3 "setpoint error" 2 "enabled" 1 "disabled" 0 "no value" ;
+VAL_ 275 CELL12_STATUS 7 "signal invalid" 6 "reserved" 5 "reserved" 4 "setpoint below level floor" 3 "setpoint error" 2 "enabled" 1 "disabled" 0 "no value" ;
+VAL_ 275 CELL11_STATUS 7 "signal invalid" 6 "reserved" 5 "reserved" 4 "setpoint below level floor" 3 "setpoint error" 2 "enabled" 1 "disabled" 0 "no value" ;
+VAL_ 275 CELL10_STATUS 7 "signal invalid" 6 "reserved" 5 "reserved" 4 "setpoint below level floor" 3 "setpoint error" 2 "enabled" 1 "disabled" 0 "no value" ;
+VAL_ 274 CELL09_STATUS 7 "signal invalid" 6 "reserved" 5 "reserved" 4 "setpoint below level floor" 3 "setpoint error" 2 "enabled" 1 "disabled" 0 "no value" ;
+VAL_ 274 CELL08_STATUS 7 "signal invalid" 6 "reserved" 5 "reserved" 4 "setpoint below level floor" 3 "setpoint error" 2 "enabled" 1 "disabled" 0 "no value" ;
+VAL_ 274 CELL07_STATUS 7 "signal invalid" 6 "reserved" 5 "reserved" 4 "setpoint below level floor" 3 "setpoint error" 2 "enabled" 1 "disabled" 0 "no value" ;
+VAL_ 273 CELL06_STATUS 7 "signal invalid" 6 "reserved" 5 "reserved" 4 "setpoint below level floor" 3 "setpoint error" 2 "enabled" 1 "disabled" 0 "no value" ;
+VAL_ 273 CELL05_STATUS 7 "signal invalid" 6 "reserved" 5 "reserved" 4 "setpoint below level floor" 3 "setpoint error" 2 "enabled" 1 "disabled" 0 "no value" ;
+VAL_ 273 CELL04_STATUS 7 "signal invalid" 6 "reserved" 5 "reserved" 4 "setpoint below level floor" 3 "setpoint error" 2 "enabled" 1 "disabled" 0 "no value" ;
+VAL_ 272 CELL03_STATUS 7 "signal invalid" 6 "reserved" 5 "reserved" 4 "setpoint below level floor" 3 "setpoint error" 2 "enabled" 1 "disabled" 0 "no value" ;
+VAL_ 272 CELL02_STATUS 7 "signal invalid" 6 "reserved" 5 "reserved" 4 "setpoint below level floor" 3 "setpoint error" 2 "enabled" 1 "disabled" 0 "no value" ;
+VAL_ 272 CELL01_STATUS 7 "signal invalid" 6 "reserved" 5 "reserved" 4 "setpoint below level floor" 3 "setpoint error" 2 "enabled" 1 "disabled" 0 "no value" ;
 VAL_ 261 CELL16_ENABLE 3 "signal invalid" 2 "enable" 1 "disable" 0 "no value" ;
 VAL_ 260 CELL15_ENABLE 3 "signal invalid" 2 "enable" 1 "disable" 0 "no value" ;
 VAL_ 260 CELL14_ENABLE 3 "signal invalid" 2 "enable" 1 "disable" 0 "no value" ;

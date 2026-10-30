@@ -32,6 +32,14 @@ function CellChannels_create()
 %       and cannot cause it. An invalid sample neither counts nor clears; a channel that is not released or an output that
 %       is off clears the count. BattSimMode switches off in RUN (FAIL reason 6), one 10 ms step later because CellChannels
 %       runs after it. It uses the measuring chain of the regulator: an ADC channel that reads too low hides the fault.
+%       Review C-2c: the reference is max(setpoint, OutputFloor_V) + OverVoltThd_V. Without load the output stage does not go below
+%       about 0.70 V (measured 30.10.2026), so for a setpoint below that the comparison against setpoint + 0.2 V would shut
+%       everything off for a harmless level. A real overvoltage below max(setpoint, floor) + 0.2 V (0.9 V) stays undetected.
+%     - A released channel with a setpoint above 0 V and below OutputFloor_V reports status 4 "setpoint below the level floor" (no
+%       FAIL); its regulator does not work (the setpoint is not reachable).
+%     - Review R-1: a change of the limited setpoint of a channel larger than StepThreshold_V (0.2 V), in either direction, stops
+%       its regulator for StepHold_cycles (30 = 300 ms): correction and integral part stand still (as at LIMIT), because the
+%       low-passed actual value (about 95 ms) lags the step and the regulator would push to its limit (-0.1 V after 4.8 V -> 1.0 V).
 here = fileparts(mfilename('fullpath'));
 root = fileparts(fileparts(fileparts(fileparts(here))));
 addpath(fullfile(root, 'nextbsw', 'tools', 'swc'), fileparts(here));
@@ -52,7 +60,8 @@ swc_core(sub, 'CellCore', coreScript(), ...
     {{'VoltageSetValue_Ax', 'single'}, {'VoltageSetPwm_T', 'single'}, {'VoltageSenseMeas_Ax', 'single'}, ...
      {'VoltageSenseValue_T', 'single'}, {'SetpointLimit_V', 'single'}, {'VoltageSenseFilter', 'single'}, ...
      {'CtrlKp', 'single'}, {'CtrlKi_per_s', 'single'}, {'CtrlLimit_V', 'single'}, ...
-     {'OverVoltThd_V', 'single'}, {'OverVoltTime_cycles', 'uint8'}, {'QLF_OK', 'uint8'}}, ...
+     {'OverVoltThd_V', 'single'}, {'OverVoltTime_cycles', 'uint8'}, {'OutputFloor_V', 'single'}, ...
+     {'StepThreshold_V', 'single'}, {'StepHold_cycles', 'uint8'}, {'QLF_OK', 'uint8'}}, ...
     {{'demux', names('En%02d')}, {'demux', names('Cell%02dVoltAct_V')}, {'demux', names('Cell%02dState')}, ...
      {'demux', names('Duty%02d')}, 'ControllerOn', 'ControllerOffAct', 'OverVoltage'});
 % channels 15 and 16 are not fitted: status "disabled" (voltage 0 is the placeholder of the port), as the old firmware
@@ -66,16 +75,18 @@ end
 function code = coreScript()
 lines = {
 'function [en, vAct, state, duty, ctrlOn, ctrlOffAct, overVolt] = CellCore(setV, enable, mV, qlf, outEn, limitActive, ctrlOffReq, ...'
-'    calSO, calSG, calMO, calMG, setAx, setT, senseAx, senseT, limitV, filt, kp, kiPerS, ctrlLim, ovThd, ovN, QlfOk)'
+'    calSO, calSG, calMO, calMG, setAx, setT, senseAx, senseT, limitV, filt, kp, kiPerS, ctrlLim, ovThd, ovN, floorV, stepThd, stepN, QlfOk)'
 '%CELLCORE 14 cell channels: setpoint -> duty, release, actual value, regulator, status (see CellChannels_create.m).'
 '%#codegen'
-'persistent y seen integ corrHold ovCnt'
+'persistent y seen integ corrHold ovCnt prevV holdCnt'
 'if isempty(y)'
 '    y = zeros(14, 1, ''single'');'
 '    seen = false(14, 1);'
 '    integ = zeros(14, 1, ''single'');'
 '    corrHold = zeros(14, 1, ''single'');'
 '    ovCnt = zeros(14, 1, ''uint8'');      % samples in a row above setpoint + threshold'
+'    prevV = zeros(14, 1, ''single'');     % limited setpoint of the previous step'
+'    holdCnt = zeros(14, 1, ''uint8'');    % regulator hold after a setpoint step'
 'end'
 'en = false(14, 1);'
 'vAct = zeros(14, 1, ''single'');'
@@ -95,12 +106,21 @@ lines = {
 '    if ~(v > single(0))'
 '        v = single(0);'
 '    end'
+'    below = commanded && (v > single(0)) && (v < floorV) && ~clipped;'
+'    if abs(v - prevV(k)) > stepThd'
+'        holdCnt(k) = stepN;'
+'    end'
+'    prevV(k) = v;'
+'    holding = holdCnt(k) > uint8(0);'
+'    if holding'
+'        holdCnt(k) = holdCnt(k) - uint8(1);'
+'    end'
 '    [sg, so] = plausible(calSG(k), calSO(k));'
 '    [mg, mo] = plausible(calMG(k), calMO(k));'
 '    % actual value: curve, calibration, low-pass'
 '    if qlf(k) == QlfOk'
 '        mv = mg * interp1d(senseAx, senseT, single(mV(k))) + mo;'
-'        if outEn && commanded && (mv - v > ovThd)'
+'        if outEn && commanded && (mv - max(v, floorV) > ovThd)'
 '            if ovCnt(k) < uint8(255)'
 '                ovCnt(k) = ovCnt(k) + uint8(1);'
 '            end'
@@ -120,9 +140,9 @@ lines = {
 '    end'
 '    % regulator: PI on the actual value, correction limited, integral part clamped (anti-windup)'
 '    corr = single(0);'
-'    working = ctrlActive && outEn && commanded && ~clipped && (v > single(0)) && (qlf(k) == QlfOk) && seen(k);'
-'    if working && limitActive'
-'        corr = corrHold(k);                % supply at its limit: stand still'
+'    working = ctrlActive && outEn && commanded && ~clipped && (v > single(0)) && ~below && (qlf(k) == QlfOk) && seen(k);'
+'    if working && (limitActive || holding)'
+'        corr = corrHold(k);                % LIMIT of the supply or setpoint step: stand still'
 '    elseif working'
 '        e = v - y(k);'
 '        iNew = integ(k) + kiPerS * ts * e;'
@@ -147,6 +167,8 @@ lines = {
 '        state(k) = uint8(1);'
 '    elseif clipped'
 '        state(k) = uint8(3);'
+'    elseif below'
+'        state(k) = uint8(4);'
 '    else'
 '        state(k) = uint8(2);'
 '    end'
