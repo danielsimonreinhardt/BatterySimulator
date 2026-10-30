@@ -79,3 +79,56 @@ Beschreibung und Datenfluss: `stufe-c-kalibrierung-regler.md`. Fuer die Safety-B
 * Verlust der gespeicherten Kalibrierung gibt kein FAIL: die Genauigkeit sinkt, Grenzen und Schutzfunktionen bleiben.
 * Der Regler arbeitet mit +-0,1 V Eingriff und steht bei LIMIT der Versorgung.
 * Die FlexNVM-Partition ist nicht ausgefuehrt, die NvM-Bloecke laufen bis dahin im RAM: die Kalibrierung geht bei jedem Reset verloren.
+
+## 6. Geraeteteil Stufe C (30.10.2026, J-Link, CANcaseXL Ch2, PicoScope an Zelle 1, Firmware 5a23104)
+
+Aufbau: Nutzer bestaetigte J-Link, EDU-Lizenz, CANcaseXL Ch2 und PicoScope A an Zelle 1; **kein Pruefling** (AoU S-1 a). Freigaben im
+Board: `bs-stufec-flexnvm` a (Partition mit 20 Schluesselplaetzen, kein LOAD_KEY, kein Schreibschutz), `bs-stufec-geraet` a.
+
+### 6.1 Sicherung, Partition, Flash
+
+* Gesichert (`%LOCALAPPDATA%/NeXtBSW/battsim_backup/2026-10-30/`): P-Flash 1 MB (SHA-256 `cb1f88f3...1ab0`, gleich der Werkssicherung vom 27.10.),
+  D-Flash 64 KB (komplett 0xFF). FlexRAM liess sich als RAM nicht lesen (Bus-Fehler), nicht gesichert. Der IFR ist auf dem S32K1 weder per Software noch per
+  Debugger lesbar (kein Read Resource, `nextbsw/doc/hardware/s32k1xx/flexnvm-partition-state.md`); sichtbar ist nur, was der Reset daraus laedt.
+  Vorher: SIM_FCFG1 0xFF32F000 (DEPART 0xF), SIM_FCFG2 0x40080000, FTFC FSTAT 0x80, FCNFG 0x02, FSEC 0xFE, FOPT 0x7F.
+* Partition: der Master hat keine Konsole, deshalb per J-Link die Registerfolge von `FlexNvmPartition`/`EepromDriver` (FCCOB0..5 =
+  0x80 0x03 0x00 0x00 0x02 0x0B, entspricht `PGMPART-3-0-0-2-B`), vorher ein Trockenlauf ohne Start. FSTAT danach 0x80 (kein ACCERR, FPVIOL, MGSTAT0), kein
+  SETRAM. Nach dem Reset: SIM_FCFG1 0xFF32B000 (**DEPART 0xB**, EEERAMSIZE 2), SIM_FCFG2 0x40040000, FCNFG 0x01 (**EEERDY 1**), FSEC 0xFE unveraendert.
+  **Nicht umkehrbar**: Mit Schluesselraum verweigert der Chip ein Mass Erase, bis LOAD_KEY und DBG_CHAL/DBG_AUTH gelaufen sind.
+* Flash: `bootloader.hex` und `app.ecu.hex` + `app.ecu.record.hex` mit den generierten Skripten (kein Erase/Unlock). Rueckgelesener P-Flash: 0 Abweichungen
+  gegen die drei Hex, FCF unveraendert (FSEC 0xFE), ausserhalb nur Reste der Werksfirmware in 0x3000..0x7FFF (wie Stufe B). UDS: Bootloader 0.3.14, App 1.0.0.
+
+### 6.2 Funktion und Abschaltzeit (S-2)
+
+* `check_battsim.py --hardware` lesend und mit `--remote` (3,7 V, Ausgang ein, Zelle 5 aus, Ausgang aus): Alles ok.
+* Abschaltzeit, acht Laeufe mit Hardware-Zeitstempeln (Timeout von 0x130, alle Zellen 3,7 V): FAIL-Entscheidung nach der letzten 0x130 zwischen
+  **299,8 und 303,7 ms** (Stufe B: 299,7 bis 308,4 ms). Analoger Abfall an Zelle 1 (PicoScope, 10:1): von 3,69 V auf < 0,5 V in 4,2 ms. Summe
+  304 bis 308 ms, Grenze 310 ms (S-2) eingehalten.
+
+### 6.3 Regler und Genauigkeit an Zelle 1
+
+* Teilerfaktor des Tastkopfs 10 (3,0 V Sollwert: 0,30 V am Scope mit Einstellung 1:1), Messung mit 10:1 und +-10 V.
+* Istwert im Status (ADC, kalibriert, Regler an) gegen Sollwert: 1,0 V 0,9994, 2,0 V 1,9994, 3,0 V 3,0005, 3,7 V 3,7005, 4,8 V 4,8006 V (Mittel aus je 80 Werten,
+  Streuung +-5 mV). Das PicoScope (8 Bit, Quantisierung 0,08 V im Bereich 10 V) zeigte 0,97...1,0 / 1,96 / 3,02 / 3,67 V; feiner laesst sich der echte
+  Ausgang mit diesem Aufbau nicht aufloesen.
+* Nach einem grossen Sprung nach unten (4,8 V auf 1,0 V) unterschwingt der Ausgang: der gefilterte Istwert (95 ms) haengt nach, der Regler schiebt bis an
+  seine Grenze (-0,1 V) und holt es mit Ki 1,0/s erst nach etwa einer Sekunde zurueck (Scope-Mittel 0,86 bis 0,91 V bis 0,8 s, ADC 0,913 V nach 0,5 s).
+  Befund fuer die Abstimmung, noch nicht geaendert.
+
+### 6.4 C-2b: Sprung von 4,8 V nach 0,5 V ohne Last, und Pegelboden der Endstufe
+
+* Sprung 4,8 V auf 0,5 V: der Ausgang faellt in 47 ms von 4,0 V auf 0,7 V (5 ms geglaettet), bleibt dann bei **0,70 V**, und C-2 schaltet nach etwa
+  100 ms ab (FAIL Grund 6, `BATTSIM_STATUS` 5, alle Ausgaenge aus; Abfall auf 0 V etwa 85 ms nach dem Trigger bei 2,5 V).
+* Ursache: die Endstufe hat ohne Last einen **Pegelboden von etwa 0,70 V**. Gemessen im Sprung auf 0,3 V: Plateau 0,70 V; auf 0,5 V: 0,70 V (C-2 loest aus);
+  auf 0,6 V: 0,70 V (kein Ausloesen, Abstand 0,1 V); auf 1,0 V: folgt dem Sollwert. Auch das Einschalten mit 0,5 V Sollwert aus dem Stillstand loest C-2 aus.
+* Folge: Mit Schwelle 0,2 V sind Sollwerte bis etwa 0,5 V ohne Last nicht betreibbar (FAIL Grund 6 nach 100 ms); ab 0,6 V gibt es keine Ausloesung.
+  Dies ist der Befund zum Nachtrags-Review C-2b. Schwelle und Zeit wurden nicht geaendert.
+* Zeit bis unter Sollwert + 0,2 V nach dem Sprung (vom Abfallbeginn, 4,0 V): 1,0 V Sollwert 43 ms (unter 1,2 V bei +31,5 ms nach dem Trigger bei 2,5 V, Abfallbeginn
+  -11,8 ms); 0,5 V Sollwert: 0,7 V nach 47 ms, bleibt dort an der Schwelle.
+
+### 6.5 Offen
+
+* Schritt 5 (Kalibrierung per UDS schreiben, Routine 0x0200, Erhalt nach Reset) ist nicht gelaufen: Das Geraet ist nicht provisioniert (kein Key-Record im Key-Sektor),
+  `27 01` antwortet NRC 0x22. Es gibt keinen Master-Key `battsim_master_v1` im Schluesselspeicher. Entscheidung im Board `battsim-provisionierung`
+  (keygen und provision.py). Bis dahin laeuft Stufe C mit Werks-Kalibrierung (22 0210 = 1 STORED, die Werkswerte hat der NvM nach der Partition
+  aufgenommen und ueber Resets behalten).
