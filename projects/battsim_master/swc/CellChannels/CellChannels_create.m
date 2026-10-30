@@ -38,7 +38,7 @@ function CellChannels_create()
 %     - A released channel with a setpoint above 0 V and below OutputFloor_V reports status 4 "setpoint below the level floor" (no
 %       FAIL); its regulator does not work (the setpoint is not reachable).
 %     - Review R-1: a change of the limited setpoint of a channel larger than StepThreshold_V (0.2 V), in either direction, stops
-%       its regulator for StepHold_cycles (30 = 300 ms): correction and integral part stand still (as at LIMIT), because the
+%       its regulator for StepHold_cycles (50 = 500 ms; 30 in 0.3.1): correction and integral part stand still (as at LIMIT), because the
 %       low-passed actual value (about 95 ms) lags the step and the regulator would push to its limit (-0.1 V after 4.8 V -> 1.0 V).
 here = fileparts(mfilename('fullpath'));
 root = fileparts(fileparts(fileparts(fileparts(here))));

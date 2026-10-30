@@ -108,8 +108,8 @@ for v, msg in zip(vnames, QLF_MSGS):
 for part in ("Major", "Minor", "Patch"):
     port(c, f"FwVersion{part}", "out", "uint8", f"can.tx.STATUS_BATTSIM_EXT.FW_VERSION_{part.upper()}")
 param(c, "VersionMajor", "uint8", [0], "firmware version of 0x121")
-param(c, "VersionMinor", "uint8", [3], "firmware version of 0x121 (0.3.1: stage C, calibration, regulator and diagnosis, level floor and regulator hold; 0.2.0 was stage B)")
-param(c, "VersionPatch", "uint8", [1], "firmware version of 0x121")
+param(c, "VersionMinor", "uint8", [3], "firmware version of 0x121 (0.3.2: stage C, calibration, regulator and diagnosis, level floor, regulator hold 500 ms; 0.3.1 had 300 ms; 0.2.0 was stage B)")
+param(c, "VersionPatch", "uint8", [2], "firmware version of 0x121")
 param(c, "ButtonDebounce_cycles", "uint8", [3], "[10 ms] a key level counts after this many equal samples")
 
 # ------------------------------------------------------------------ CellCal (stage C)
@@ -186,7 +186,7 @@ param(c, "OutputFloor_V", "float32", [0.7], "[V]    level floor of the output st
       unit="V", min=0, max=2.0, description="Pegelboden der Endstufe ohne Last")
 param(c, "StepThreshold_V", "float32", [0.2], "[V]    a change of the (limited) setpoint of a channel larger than this stops its regulator for StepHold_cycles (review R-1)",
       unit="V", min=0, max=5.0, description="Sollwertsprung, der den Regler anhaelt")
-param(c, "StepHold_cycles", "uint8", [30], "[10 ms] hold time of the regulator after a setpoint step, until the low-passed actual value has settled (30 = 300 ms, review R-1; low-pass time constant about 95 ms)")
+param(c, "StepHold_cycles", "uint8", [50], "[10 ms] hold time of the regulator after a setpoint step, until the low-passed actual value has settled (50 = 500 ms, board bs-haltezeit-500 a; 30 = 300 ms in 0.3.1 left -0.035 V at the device after 4.8 V -> 1.0 V; review R-1; low-pass time constant about 95 ms)")
 param(c, "VoltageSenseFilter", "float32", [0.1], "[-]    low-pass weight of the actual value per 10 ms (time constant about 95 ms)")
 param(c, "CtrlKp", "float32", [0.2], "[V/V]  proportional gain of the regulator of a channel (start value, to be tuned at the device)",
       unit="-", min=0, max=2.0, description="Proportionalanteil des Reglers")

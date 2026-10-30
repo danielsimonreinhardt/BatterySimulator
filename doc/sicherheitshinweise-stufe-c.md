@@ -162,7 +162,7 @@ diese Aenderung: nur Sollwerte ab 0,6 V verwenden (F-1 a).
 
 ### 7.2 R-1: Regler nach Sollwertsprung anhalten
 
-* Aendert sich der begrenzte Sollwert eines Kanals um mehr als `StepThreshold_V` (0,2 V, in beiden Richtungen), **steht sein Regler `StepHold_cycles` (30, also 300 ms)**:
+* Aendert sich der begrenzte Sollwert eines Kanals um mehr als `StepThreshold_V` (0,2 V, in beiden Richtungen), **steht sein Regler `StepHold_cycles` (50, also 500 ms; in 0.3.1 30, also 300 ms)**:
   Korrektur und Integralanteil bleiben wie sie waren (wie bei LIMIT). Danach arbeitet er normal.
 * SIL (Strecke mit 20 ms, Istwert gefiltert 95 ms): Sprung 4,8 V auf 1,0 V gibt **ohne Haltezeit ein Minimum von 0,900 V (-0,10 V, wie am Geraet)**, mit 300 ms 0,970 V (-0,03 V):
   nach 300 ms haengt der gefilterte Istwert noch 0,16 V nach. Die Haltezeit ist ein Parameter; Nachmessung beim naechsten Termin am Geraet, dort ist gegebenenfalls laenger (bis etwa 600 ms) zu waehlen.
@@ -170,7 +170,8 @@ diese Aenderung: nur Sollwerte ab 0,6 V verwenden (F-1 a).
 
 ### 7.3 F-1 und Version
 
-Firmware-Stand fuer 0x121: **0.3.1** (0.3.0 war 5a23104). Geflasht wird dieser Stand erst nach einer eigenen Freigabe.
+Firmware-Stand fuer 0x121: **0.3.1** (0.3.0 war 5a23104) ist am 30.10.2026 geflasht und nachgemessen (Abschnitt 8). **0.3.2** (Haltezeit 500 ms, Abschnitt 9) ist im Zweig, aber
+noch nicht geflasht: das geschieht beim naechsten Geraetetermin mit eigener Freigabe.
 
 ## 8. Geraeteteil 0.3.1 (30.10.2026, Board `bs-stufec-flash-031` a, Zweig-Stand 419eb99)
 
@@ -191,3 +192,14 @@ Aufbau unveraendert (Nutzer: "Der Aufbau steht noch so"): J-Link, CANcaseXL Ch2,
   **Vorschlag (nicht umgesetzt):** `StepHold_cycles` 50 (500 ms); SIL-Strecke: Minimum 0,970 V (30), **0,997 V (50)**, 0,999 V (60). Aenderung ohne weitere Logik nur ueber den Parameter, braucht eine neue Freigabe zum Flashen.
 
 Das Geraet ist im Standby, die Ausgaenge sind aus, das PicoScope ist freigegeben.
+
+## 9. Haltezeit 500 ms (Version 0.3.2, Board `bs-haltezeit-500` a, 30.10.2026)
+
+`StepHold_cycles` von 30 auf **50** (500 ms); Firmware-Version in 0x121 **0.3.2**. Es ist nur der Parameter; die Logik von R-1 (Abschnitt 7.2) ist unveraendert, die Schutzabschaltungen C-1 und C-2 haengen
+nicht vom Regler ab. Waehrend der Haltezeit regelt der Kanal nicht, er folgt nur der Kennlinie und der Kalibrierung (mit der Korrektur, die er vor dem Sprung hatte).
+
+* Begruendung: Am Geraet blieb mit 300 ms ein Unterschwingen von -0,035 V (Abschnitt 8); nach 300 ms liegt der gefilterte Istwert noch etwa 0,2 V ueber dem neuen Sollwert.
+* SIL (Strecke 20 ms, Istwert gefiltert 95 ms, Sprung 4,8 V auf 1,0 V): Minimum 0,900 V ohne Haltezeit, 0,970 V mit 300 ms, **0,997 V mit 500 ms**, 0,999 V mit 600 ms. Der SIL-Test verlangt jetzt
+  mehr als 0,99 V (vorher mehr als 0,95 V) und prueft das Stillstehen des Tastgrads ueber alle 50 Zyklen.
+* **Nicht geflasht.** Das passiert beim naechsten Geraetetermin mit eigener Freigabe, zusammen mit den Messungen mit Last. Offen bleiben dort: Pegelboden und Schwellen mit Last, C-1 und C-2 am Geraet
+  ausloesen (bisher nur im SIL-Test), analoge Abschaltzeit mit der neuen Firmware, Nachmessung R-1 mit 500 ms, C-7 (Pull-ups an SET/EN und wiederholte Reset-Messung).

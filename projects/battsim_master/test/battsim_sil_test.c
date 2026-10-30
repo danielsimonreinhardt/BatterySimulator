@@ -216,7 +216,7 @@ static void startIsStandbyWithWatchdogReason(void)
     CHECK(MODE(FailReason) == FAIL_WATCHDOG);
     CHECK(outputsOff());
     CHECK(MODE(LedRemote) == 0U);
-    CHECK(MODE(FwVersionMajor) == 0U && MODE(FwVersionMinor) == 3U && MODE(FwVersionPatch) == 1U);
+    CHECK(MODE(FwVersionMajor) == 0U && MODE(FwVersionMinor) == 3U && MODE(FwVersionPatch) == 2U);
     /* the held setpoints of the CAN buffers do not act in STANDBY (FW-16) */
     setpointFrame123(ENABLE_ON, 3.7, ENABLE_ON, 3.7, ENABLE_ON, 3.7);
     cycles(5);
@@ -638,7 +638,7 @@ static void statusExtensionFrame(void)
     CHECK((data[0] & 0x20U) != 0U);           /* LIMIT */
     CHECK((data[0] & 0x40U) == 0U);           /* regulator switched off by the diagnosis (ControllerOffReq = 1 here) */
     CHECK((data[1] & 0x0FU) == 0U);           /* FAIL reason none */
-    CHECK(data[5] == 0U && data[6] == 3U && data[7] == 1U); /* version 0.3.0 */
+    CHECK(data[5] == 0U && data[6] == 3U && data[7] == 2U); /* version 0.3.0 */
     uint16_t current = (uint16_t)(data[3] | (data[4] << 8U));
     CHECK(current > 480U && current < 510U);   /* 0.5 A in 0.001 A */
     *controlQlf[5] = QLF_OK;
@@ -1226,7 +1226,7 @@ static void regulatorHoldsAfterASetpointStep(void)
        correction it had), afterwards it works again; the undershoot of the output stays small */
     setpointFrame123(ENABLE_ON, 1.0, 0U, 0.0, 0U, 0.0);
     double minV = 10.0;
-    for (int i = 0; i < 30; ++i) /* StepHold_cycles = 30: the step cycle and the 29 after it */
+    for (int i = 0; i < 50; ++i) /* StepHold_cycles = 50: the step cycle and the 49 after it */
     {
         cycle();
         plantStep();
@@ -1246,9 +1246,9 @@ static void regulatorHoldsAfterASetpointStep(void)
         }
     }
     printf("  R-1: Unterschwingen nach 4.8 V -> 1.0 V: Minimum %.4f V\n", minV);
-    /* without the hold the output goes down to 0.90 V (-0.10 V, as at the device); after 300 ms the low-passed value still lags by 0.16 V,
-       which leaves -0.03 V */
-    CHECK(minV > 1.0 - 0.05);
+    /* without the hold the output goes down to 0.90 V (-0.10 V, as at the device); after 300 ms the low-passed value still lags by 0.16 V
+       (-0.03 V, -0.035 V at the device with 0.3.1); after 500 ms by 0.02 V, which leaves -0.003 V */
+    CHECK(minV > 1.0 - 0.01);
     CHECK(fabs(plantV - 1.0) < 0.005);
     /* a step of 0.1 V is below the threshold: the regulator keeps working (a disturbance of -0.08 V is answered within 10 cycles) */
     runPlant(1000);
@@ -1258,7 +1258,7 @@ static void regulatorHoldsAfterASetpointStep(void)
     CHECK(*dutyOut[0] > (uint16)(dutyFor(1.1) + 8));
     runPlant(1500);
     CHECK(fabs(plantV - 1.1) < 0.005);
-    /* a step up of 2 V holds as well: the duty stands still for the 30 cycles */
+    /* a step up of 2 V holds as well: the duty stands still for the 50 cycles */
     plantOffset = -0.05;
     runPlant(1500);
     setpointFrame123(ENABLE_ON, 3.1, 0U, 0.0, 0U, 0.0);
@@ -1266,7 +1266,7 @@ static void regulatorHoldsAfterASetpointStep(void)
     plantStep();
     int const heldDuty = *dutyOut[0];
     CHECK(heldDuty > dutyFor(3.1)); /* it still carries the held correction of the old operating point */
-    for (int i = 1; i < 30; ++i)
+    for (int i = 1; i < 50; ++i)
     {
         cycle();
         plantStep();

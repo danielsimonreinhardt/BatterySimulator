@@ -11,7 +11,7 @@ OverVoltThd_V = 0.2;   % [V]    overvoltage: the calibrated actual value (sample
 OverVoltTime_cycles = 10;   % [10 ms] number of samples in a row above the threshold that count as overvoltage (10 = 100 ms, review C-2)
 OutputFloor_V = 0.7;   % [V]    level floor of the output stage without load (measured 0.70 V, 30.10.2026): the overvoltage comparison uses max(setpoint, floor) + OverVoltThd_V, a setpoint below it gets status 4 (review C-2c); to be measured again with a load at the first run with a test object
 StepThreshold_V = 0.2;   % [V]    a change of the (limited) setpoint of a channel larger than this stops its regulator for StepHold_cycles (review R-1)
-StepHold_cycles = 30;   % [10 ms] hold time of the regulator after a setpoint step, until the low-passed actual value has settled (30 = 300 ms, review R-1; low-pass time constant about 95 ms)
+StepHold_cycles = 50;   % [10 ms] hold time of the regulator after a setpoint step, until the low-passed actual value has settled (50 = 500 ms, board bs-haltezeit-500 a; 30 = 300 ms in 0.3.1 left -0.035 V at the device after 4.8 V -> 1.0 V; review R-1; low-pass time constant about 95 ms)
 VoltageSenseFilter = 0.1;   % [-]    low-pass weight of the actual value per 10 ms (time constant about 95 ms)
 CtrlKp = 0.2;   % [V/V]  proportional gain of the regulator of a channel (start value, to be tuned at the device)
 CtrlKi_per_s = 1.0;   % [1/s]  integral gain of the regulator (start value, to be tuned at the device)

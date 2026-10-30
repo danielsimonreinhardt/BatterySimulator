@@ -3,14 +3,14 @@
 Auto generated XML Component Description for model CellChannels
 Model version                : 1.2
 Simulink Coder version       : Simulink Coder 24.1 (R2024a) 19-Nov-2023
-Model Checksum               : 3977197720 142160631 328796500 969512024
+Model Checksum               : 69251920 1489302587 2798598443 4050540345
 -->
 <AUTOSAR xmlns="http://autosar.org/schema/r4.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://autosar.org/schema/r4.0 AUTOSAR_00051.xsd">
     <AR-PACKAGES>
         <AR-PACKAGE>
             <SHORT-NAME>DataTypes</SHORT-NAME>
             <ELEMENTS>
-                <IMPLEMENTATION-DATA-TYPE UUID="6a6187d9-f1cb-539e-dbc7-709db7db5af3">
+                <IMPLEMENTATION-DATA-TYPE UUID="55edbb6b-a88e-5588-f2eb-f974c4b7ae01">
                     <SHORT-NAME>boolean</SHORT-NAME>
                     <CATEGORY>VALUE</CATEGORY>
                     <SW-DATA-DEF-PROPS>
@@ -22,7 +22,7 @@ Model Checksum               : 3977197720 142160631 328796500 969512024
                         </SW-DATA-DEF-PROPS-VARIANTS>
                     </SW-DATA-DEF-PROPS>
                 </IMPLEMENTATION-DATA-TYPE>
-                <IMPLEMENTATION-DATA-TYPE UUID="d82a6b7e-14a8-5396-6a18-30e17cfda529">
+                <IMPLEMENTATION-DATA-TYPE UUID="7395de7e-0a7b-54dc-6fae-adb22dbc3e82">
                     <SHORT-NAME>uint8</SHORT-NAME>
                     <CATEGORY>VALUE</CATEGORY>
                     <SW-DATA-DEF-PROPS>
@@ -33,7 +33,7 @@ Model Checksum               : 3977197720 142160631 328796500 969512024
                         </SW-DATA-DEF-PROPS-VARIANTS>
                     </SW-DATA-DEF-PROPS>
                 </IMPLEMENTATION-DATA-TYPE>
-                <IMPLEMENTATION-DATA-TYPE UUID="a36ed7da-ecc9-5c22-7767-434ba089baeb">
+                <IMPLEMENTATION-DATA-TYPE UUID="37f3c2eb-5507-5882-c142-b9dd04b69d01">
                     <SHORT-NAME>float32</SHORT-NAME>
                     <CATEGORY>VALUE</CATEGORY>
                     <SW-DATA-DEF-PROPS>
@@ -44,11 +44,11 @@ Model Checksum               : 3977197720 142160631 328796500 969512024
                         </SW-DATA-DEF-PROPS-VARIANTS>
                     </SW-DATA-DEF-PROPS>
                 </IMPLEMENTATION-DATA-TYPE>
-                <IMPLEMENTATION-DATA-TYPE UUID="6b434a94-6b00-5970-3a3b-091ae5929049">
+                <IMPLEMENTATION-DATA-TYPE UUID="8b3a6da8-613c-52f8-8015-dea573875ebb">
                     <SHORT-NAME>rt_Array_float32_CellCount</SHORT-NAME>
                     <CATEGORY>ARRAY</CATEGORY>
                     <SUB-ELEMENTS>
-                        <IMPLEMENTATION-DATA-TYPE-ELEMENT UUID="9106e44b-a487-5adf-3295-be8356227802">
+                        <IMPLEMENTATION-DATA-TYPE-ELEMENT UUID="30715aa8-6a4f-552a-32f3-19fe1a74f7a2">
                             <SHORT-NAME>rt_Array_float32_CellCount</SHORT-NAME>
                             <CATEGORY>TYPE_REFERENCE</CATEGORY>
                             <ARRAY-SIZE BINDING-TIME="PRE-COMPILE-TIME"><SYSC-REF DEST="SW-SYSTEMCONST">/DataTypes/SystemConstants/CellCount</SYSC-REF></ARRAY-SIZE>
@@ -63,7 +63,7 @@ Model Checksum               : 3977197720 142160631 328796500 969512024
                         </IMPLEMENTATION-DATA-TYPE-ELEMENT>
                     </SUB-ELEMENTS>
                 </IMPLEMENTATION-DATA-TYPE>
-                <IMPLEMENTATION-DATA-TYPE UUID="2e17a189-ed0d-5e2e-3832-099c6d7a4762">
+                <IMPLEMENTATION-DATA-TYPE UUID="364a6080-06f0-5c5a-c5af-c5735a9a6a7c">
                     <SHORT-NAME>uint32</SHORT-NAME>
                     <CATEGORY>VALUE</CATEGORY>
                     <SW-DATA-DEF-PROPS>
@@ -74,7 +74,7 @@ Model Checksum               : 3977197720 142160631 328796500 969512024
                         </SW-DATA-DEF-PROPS-VARIANTS>
                     </SW-DATA-DEF-PROPS>
                 </IMPLEMENTATION-DATA-TYPE>
-                <IMPLEMENTATION-DATA-TYPE UUID="7763476f-9d27-5d54-c9d9-2005636d3569">
+                <IMPLEMENTATION-DATA-TYPE UUID="49be93a3-7a97-505f-2f17-f374bce7e38a">
                     <SHORT-NAME>uint16</SHORT-NAME>
                     <CATEGORY>VALUE</CATEGORY>
                     <SW-DATA-DEF-PROPS>
@@ -85,11 +85,11 @@ Model Checksum               : 3977197720 142160631 328796500 969512024
                         </SW-DATA-DEF-PROPS-VARIANTS>
                     </SW-DATA-DEF-PROPS>
                 </IMPLEMENTATION-DATA-TYPE>
-                <IMPLEMENTATION-DATA-TYPE UUID="2ec9ca26-9235-5196-ac2c-e7338aae276b">
+                <IMPLEMENTATION-DATA-TYPE UUID="603ed9b4-8d06-5d95-6512-df42e9a2e6cb">
                     <SHORT-NAME>rt_Array_float32_6</SHORT-NAME>
                     <CATEGORY>ARRAY</CATEGORY>
                     <SUB-ELEMENTS>
-                        <IMPLEMENTATION-DATA-TYPE-ELEMENT UUID="5e448379-5dd7-507c-d6b1-f6614c7ccd0c">
+                        <IMPLEMENTATION-DATA-TYPE-ELEMENT UUID="43cf736d-b764-5169-29cb-561e9d8b3d63">
                             <SHORT-NAME>rt_Array_float32_6</SHORT-NAME>
                             <CATEGORY>TYPE_REFERENCE</CATEGORY>
                             <ARRAY-SIZE>6</ARRAY-SIZE>
@@ -109,7 +109,7 @@ Model Checksum               : 3977197720 142160631 328796500 969512024
                 <AR-PACKAGE>
                     <SHORT-NAME>CompuMethods</SHORT-NAME>
                     <ELEMENTS>
-                        <COMPU-METHOD UUID="96487d1e-0e90-55e9-6031-415260e03f0f">
+                        <COMPU-METHOD UUID="e9a6cc69-b548-5bd8-5df0-2f86842ad77d">
                             <SHORT-NAME>COMPU_boolean</SHORT-NAME>
                             <CATEGORY>TEXTTABLE</CATEGORY>
                             <UNIT-REF DEST="UNIT">/DataTypes/Units/NoUnit</UNIT-REF>
@@ -137,15 +137,15 @@ Model Checksum               : 3977197720 142160631 328796500 969512024
                 <AR-PACKAGE>
                     <SHORT-NAME>SwAddrMethods</SHORT-NAME>
                     <ELEMENTS>
-                        <SW-ADDR-METHOD UUID="fe639c98-67ce-5dbf-187b-c0f1a4e2168d">
+                        <SW-ADDR-METHOD UUID="9da9d89f-32b6-5eba-b6f8-1ea57f542acc">
                             <SHORT-NAME>CODE</SHORT-NAME>
                             <SECTION-TYPE>CODE</SECTION-TYPE>
                         </SW-ADDR-METHOD>
-                        <SW-ADDR-METHOD UUID="314718c2-99ba-5790-1056-246f80217769">
+                        <SW-ADDR-METHOD UUID="9bdd94f6-eca8-5d61-2850-f9814d7bb7c6">
                             <SHORT-NAME>CONST</SHORT-NAME>
                             <SECTION-TYPE>CONST</SECTION-TYPE>
                         </SW-ADDR-METHOD>
-                        <SW-ADDR-METHOD UUID="b5b51adf-0f11-53fb-1320-e959e9b744b3">
+                        <SW-ADDR-METHOD UUID="749c9fa6-af2a-5f30-71ad-75d97360a331">
                             <SHORT-NAME>VAR</SHORT-NAME>
                             <SECTION-TYPE>VAR</SECTION-TYPE>
                         </SW-ADDR-METHOD>
@@ -154,35 +154,35 @@ Model Checksum               : 3977197720 142160631 328796500 969512024
                 <AR-PACKAGE>
                     <SHORT-NAME>SwBaseTypes</SHORT-NAME>
                     <ELEMENTS>
-                        <SW-BASE-TYPE UUID="fab81a21-9ff1-581d-07ff-bd6b87647dec">
+                        <SW-BASE-TYPE UUID="5a5f137a-2b31-5490-2a93-c45dd354fedb">
                             <SHORT-NAME>boolean</SHORT-NAME>
                             <CATEGORY>FIXED_LENGTH</CATEGORY>
                             <BASE-TYPE-SIZE>8</BASE-TYPE-SIZE>
                             <BASE-TYPE-ENCODING>BOOLEAN</BASE-TYPE-ENCODING>
                             <NATIVE-DECLARATION>boolean</NATIVE-DECLARATION>
                         </SW-BASE-TYPE>
-                        <SW-BASE-TYPE UUID="59857f5e-242f-5e6a-010f-3ab6749a0d02">
+                        <SW-BASE-TYPE UUID="380015f2-fd12-58f1-a0f6-ff6254e4353d">
                             <SHORT-NAME>uint8</SHORT-NAME>
                             <CATEGORY>FIXED_LENGTH</CATEGORY>
                             <BASE-TYPE-SIZE>8</BASE-TYPE-SIZE>
                             <BASE-TYPE-ENCODING>NONE</BASE-TYPE-ENCODING>
                             <NATIVE-DECLARATION>uint8</NATIVE-DECLARATION>
                         </SW-BASE-TYPE>
-                        <SW-BASE-TYPE UUID="09740457-5d0c-50b0-8a09-a0127b5729eb">
+                        <SW-BASE-TYPE UUID="255db33c-83d1-57f9-32c0-73ff2d1ab4aa">
                             <SHORT-NAME>float32</SHORT-NAME>
                             <CATEGORY>FIXED_LENGTH</CATEGORY>
                             <BASE-TYPE-SIZE>32</BASE-TYPE-SIZE>
                             <BASE-TYPE-ENCODING>IEEE754</BASE-TYPE-ENCODING>
                             <NATIVE-DECLARATION>float32</NATIVE-DECLARATION>
                         </SW-BASE-TYPE>
-                        <SW-BASE-TYPE UUID="280f9290-73e4-5f67-fc0a-57c4c383bca1">
+                        <SW-BASE-TYPE UUID="dc6bd958-6486-5423-cca2-52457445f8fd">
                             <SHORT-NAME>uint32</SHORT-NAME>
                             <CATEGORY>FIXED_LENGTH</CATEGORY>
                             <BASE-TYPE-SIZE>32</BASE-TYPE-SIZE>
                             <BASE-TYPE-ENCODING>NONE</BASE-TYPE-ENCODING>
                             <NATIVE-DECLARATION>uint32</NATIVE-DECLARATION>
                         </SW-BASE-TYPE>
-                        <SW-BASE-TYPE UUID="0681b02e-f017-56d9-2c2a-dac4acbb4cda">
+                        <SW-BASE-TYPE UUID="087578d7-e393-5e01-b78e-924aac28abb2">
                             <SHORT-NAME>uint16</SHORT-NAME>
                             <CATEGORY>FIXED_LENGTH</CATEGORY>
                             <BASE-TYPE-SIZE>16</BASE-TYPE-SIZE>
@@ -194,10 +194,10 @@ Model Checksum               : 3977197720 142160631 328796500 969512024
                 <AR-PACKAGE>
                     <SHORT-NAME>SystemConstants</SHORT-NAME>
                     <ELEMENTS>
-                        <SW-SYSTEMCONST UUID="1e5f8952-7776-50ff-a758-c5b77d71b834">
+                        <SW-SYSTEMCONST UUID="849bcb69-32ca-5503-32c6-9229b6707bf4">
                             <SHORT-NAME>CellCount</SHORT-NAME>
                         </SW-SYSTEMCONST>
-                        <SW-SYSTEMCONSTANT-VALUE-SET UUID="2c695133-0634-5c2f-b6c0-d6d0a0bc709b">
+                        <SW-SYSTEMCONSTANT-VALUE-SET UUID="f82a7262-5b1d-59c5-5f26-3d6ed62bf76f">
                             <SHORT-NAME>SystemConstantValueSet</SHORT-NAME>
                             <SW-SYSTEMCONSTANT-VALUES>
                                 <SW-SYSTEMCONST-VALUE>
@@ -211,7 +211,7 @@ Model Checksum               : 3977197720 142160631 328796500 969512024
                 <AR-PACKAGE>
                     <SHORT-NAME>Units</SHORT-NAME>
                     <ELEMENTS>
-                        <UNIT UUID="15eb083e-99b7-554f-5a28-f9102447e811">
+                        <UNIT UUID="076ec8b6-18fe-52e1-8483-307869d703ea">
                             <SHORT-NAME>NoUnit</SHORT-NAME>
                             <FACTOR-SI-TO-UNIT>1</FACTOR-SI-TO-UNIT>
                             <OFFSET-SI-TO-UNIT>0</OFFSET-SI-TO-UNIT>
