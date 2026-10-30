@@ -37,7 +37,7 @@ function CellChannels_create()
 %       Review C-2c: the reference is max(setpoint, OutputFloor_V) + OverVoltThd_V. Without load the output stage does not go below
 %       about 0.70 V (measured 30.10.2026), so for a setpoint below that the comparison against setpoint + 0.2 V would shut
 %       everything off for a harmless level. A real overvoltage below max(setpoint, floor) + 0.2 V (0.9 V) stays undetected.
-%     - A released channel with a setpoint above 0 V and below OutputFloor_V reports status 4 "setpoint below the level floor" (no
+%     - A released channel with a setpoint above 0 V and below OutputFloor_V reports status 4 "OL" (open load: setpoint below the level floor without load) (no
 %       FAIL); its regulator does not work (the setpoint is not reachable).
 %     - Review R-1, T-3 (0.3.3): a change of the limited setpoint of a channel larger than StepThreshold_V (0.2 V), in either direction,
 %       stops its regulator for StepHold_cycles (50 = 500 ms; 30 in 0.3.1): correction AND integral part are cleared and held at 0

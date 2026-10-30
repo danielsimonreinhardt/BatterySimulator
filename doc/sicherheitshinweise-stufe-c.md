@@ -154,7 +154,7 @@ diese Aenderung: nur Sollwerte ab 0,6 V verwenden (F-1 a).
 
 * Der Vergleich der Ueberspannungserkennung (Abschnitt 3) geht gegen **max(Sollwert, `OutputFloor_V`) + `OverVoltThd_V`**. `OutputFloor_V` ist ein Parameter, Vorgabe **0,7 V** (gemessen
   **ohne Last**, Abschnitt 6.4). Der Boden tritt nur ohne aeussere Last auf (Abschnitt 10.3, Review T-1: bleibt 0,7 V); mit dem Pruefling ist er nachzumessen.
-* Ein freigegebener Kanal mit Sollwert groesser 0 V und kleiner als der Boden meldet im Kanalstatus **4 "setpoint below level floor"** (`CELLn_STATUS`, DBC: Wert 4 neu, das Feld
+* Ein freigegebener Kanal mit Sollwert groesser 0 V und kleiner als der Boden meldet im Kanalstatus **4 "OL"** (open load, Sollwert unter dem Pegelboden ohne Last; `CELLn_STATUS`, DBC: Wert 4 neu, das Feld
   hat 3 Bit und war bis 3 begrenzt, jetzt 0..7); es gibt **kein FAIL**. Sein Regler arbeitet nicht (der Sollwert ist nicht erreichbar, Korrektur 0).
 * Restrisiko: Eine echte Ueberspannung unter max(Sollwert, Boden) + 0,2 V, also bis 0,9 V bei kleinem Sollwert, bleibt unentdeckt. Das ist weit unter der Grenze von 5,0 V; ein Pruefling
   sieht dann hoechstens 0,9 V statt des kleinen Sollwerts. Mit Last kann der Boden niedriger liegen; dann ist der Vergleich bei zu hohem Boden unempfindlich (der Boden ist der Parameter, der nachzumessen ist).
@@ -238,7 +238,7 @@ verrutscht (Scope zeigte 0 V); die Messung wurde nach dem Anschliessen wiederhol
 | 4,8 V | 4,801 | 4,801 / 4,510 | 4,801 / 4,732 |
 
 * **Der Pegelboden von 0,70 V tritt nur ohne Last auf.** Schon mit 1 kOhm (0,3 bis 5 mA) folgt der Ausgang dem Sollwert bis 0,3 V. Der Boden ist ein Befund der unbelasteten Endstufe; mit Last kann er nur sinken.
-  C-2 loeste mit keiner Last bei keinem Sollwert aus, Status 4 meldet unter 0,7 V weiter "Sollwert unter Pegelboden", auch wenn die Spannung stimmt (Hinweis, kein FAIL).
+  C-2 loeste mit keiner Last bei keinem Sollwert aus, Status 4 meldet unter 0,7 V weiter "OL", auch wenn die Spannung stimmt (Hinweis, kein FAIL).
 * **Spannungsabfall zwischen ADC-Abgriff und Klemmen:** Die Klemmenspannung liegt unter Last unter dem ADC-Wert (und damit unter dem Sollwert, auf den der Regler den ADC-Wert ausregelt): 0,03 bis 0,06 V bei 3 bis 7 mA, 0,11 bis 0,14 V bei
   10 bis 20 mA, 0,25 V bei 37 mA, 0,29 V bei 48 mA, entsprechend etwa 5 bis 7 Ohm (Scope-Fehler von etwa 0,03 V eingerechnet). Mit 1 kOhm: 0,02 bis 0,03 V (0,5 bis 0,7 mA), 0,07 V (4 bis 5 mA). Der Regler sieht diesen Abfall nicht.
   Fuer einen Pruefling mit Eingangsstrom im uA- bis mA-Bereich bleibt die Abweichung unter etwa 0,05 V.
@@ -311,7 +311,7 @@ Empfehlung: Weg 1, weil er den Produktionscode unveraendert laesst. Beide Wege w
 
 Entscheidungen im Review "Termin 0.3.2" (Board `bs-termin-032-review`): **T-1 a, T-2 a, T-3 a, T-4 a.** Umgesetzt im Zweig `stufe-c-strommessung-plausibel` zusammen mit der Plausibilitaet der Strommessung (Abschnitt 11), Version **0.3.3**, nicht geflasht.
 
-* **T-1 (Pegelboden): `OutputFloor_V` bleibt 0,7 V.** Der Boden tritt nur ohne aeussere Last auf (Abschnitt 10.3); Status 4 ("Sollwert unter Pegelboden") ist ein Hinweis, kein Fehler. Eingetragen ist das als "ohne Last" im
+* **T-1 (Pegelboden): `OutputFloor_V` bleibt 0,7 V.** Der Boden tritt nur ohne aeussere Last auf (Abschnitt 10.3); Status 4 ("OL", ab Abschnitt 14 so benannt) ist ein Hinweis, kein Fehler. Eingetragen ist das als "ohne Last" im
   Parameterkommentar (`tools/gen_swc_ports.py`, `swc.yaml`, `CellChannels_data.m`), als Signalkommentar der 16 `CELLnn_STATUS` in `BattSimV2.dbc` und in Abschnitt 7.1. Der LabControl-Treiber hat eine Kopie der DBC (das Kommentar wirkt dort erst
   mit der naechsten Kopie).
 * **T-2 (Spannungsabfall): Kennwert der Genauigkeit.** Abweichung an der Klemme **etwa Laststrom mal 6 Ohm**, gemessen 5 bis 7 Ohm (Abschnitt 10.3); aufgenommen in `stufe-c-kalibrierung-regler.md`. Keine Codeaenderung; der Regler regelt den ADC-Wert.
@@ -341,3 +341,13 @@ Aufbau unveraendert (Nutzer: "Ja der Aufbau steht noch"): J-Link, CANcaseXL Ch2,
   Damit ist der Pfad "Abtastwert unter Schwelle - Zaehler - FAIL 5 - Ausgaenge aus" am Geraet nachgewiesen; nicht der Qualifier-Pfad und kein echter offener Shunt (Abschnitt 11.4).
 * **Zurueck auf 0.3.3:** Produktionsstand erneut geflasht (nur App und Record), Rueckgelesen 0 Abweichungen, Key-Sektor und FCF unveraendert, `check_battsim --hardware --remote` Alles ok, 0x121 Firmware 0.3.3, Kalibrierung Werkswerte (`22 0201` = 0000 2710 0000 2710, `22 0210` = 1), Regler an, Standby, Ausgaenge aus.
   Auf dem Geraet laeuft **0.3.3**; es ist noch nicht auf `main` (Zweig `stufe-c-strommessung-plausibel`, 3afeaa6).
+
+## 14. Anzeigetext des Status 4: "OL" (Zweig `status4-ol`, 30.10.2026)
+
+* Der Nutzer fand "Sollwert unter Pegelboden" (DBC: "setpoint below level floor") unverstaendlich und zu lang. Der Wert 4 von `CELLnn_STATUS` heisst jetzt **"OL"** (open load, Sollwert unter
+  dem Pegelboden ohne Last). Geaendert sind nur Texte: die 16 Wertetabellen und Signalkommentare in `BattSimV2.dbc`, der Parameterkommentar von `OutputFloor_V` (`tools/gen_swc_ports.py`,
+  `CellChannels_data.m`) und der Kopfkommentar von `CellChannels_create.m`. Die Erklaerung steht im LabControl-Handbuch (Abschnitt Batterie-Simulator), nicht in der Anzeige.
+* **Verhalten unveraendert:** Wert 4 bleibt "freigegebener Kanal mit 0 V < Sollwert < `OutputFloor_V`", Hinweis, kein FAIL, Regler nicht wirksam. Der erzeugte Code (rtegen-Ausgabe, `CanDb.c/.h`,
+  `Rte_*`, `RteCalibration.json`, `RteDiag.h`) ist vorher und nachher **byte-identisch** (SHA-256 aller Dateien verglichen, ausser dem Identitaets-Manifest `identity/rtegen.sha256`, dessen Eingangs-Hash
+  sich wegen DBC und `_data.m` aendert, und den Pfaden in `rte_components.cmake`); die Simulink-Modelle und `swc.yaml` sind unberuehrt. Deshalb **keine neue Firmware-Version** (0.3.3 bleibt).
+* Nicht geflasht, kein Geraetezugriff.
