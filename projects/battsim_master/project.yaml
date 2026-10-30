@@ -75,3 +75,24 @@ safety:
   safe_state_output: LED1
   locked_pin: LED2
   test_pin: PTE13
+
+# Non-volatile memory (stage C, FW-06): the calibration of the 14 cell channels lives in four NvM blocks (one value per channel,
+# integrity asil_b = two copies with CRC-32, a defective copy is repaired from the other). The blocks are written some
+# seconds after a change (ApplyCalibration), so a power cut right after the calibration loses at most that much.
+# PARTITION: the emulated EEPROM needs the one-time FlexNVM partition of the chip (PGMPART), which only a complete erase
+# undoes. It is NOT done by this file: it needs its own release of the user and the J-Link run with a backup beforehand (stage C,
+# device part). The values below are the proposal for that release (same split as the eval board: 4 KB EEPROM, 32 KB D-flash,
+# 32 KB backup, 20 CSEc key slots - the key space cannot be added later). Without the partition the blocks stay in RAM and
+# start from their defaults.
+nvm:
+  partition:
+    eeprom_bytes: 4096
+    data_flash_bytes: 0x8000
+    partition_code: 0xB
+    load_on_reset: true
+    key_slots: 20
+  blocks:
+    CalSetOffset:  {type: sint16, length: 14, integrity: asil_b, write: change, min_interval_ms: 2000}
+    CalSetGain:    {type: uint16, length: 14, integrity: asil_b, write: change, min_interval_ms: 2000}
+    CalMeasOffset: {type: sint16, length: 14, integrity: asil_b, write: change, min_interval_ms: 2000}
+    CalMeasGain:   {type: uint16, length: 14, integrity: asil_b, write: change, min_interval_ms: 2000}

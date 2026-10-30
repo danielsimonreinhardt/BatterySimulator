@@ -25,6 +25,8 @@
 /* PublicStructure Variables for Internal Data, for system '<Root>' */
 typedef struct {
   float32 y[14];                       /* '<S1>/CellCore' */
+  float32 integ[14];                   /* '<S1>/CellCore' */
+  float32 corrHold[14];                /* '<S1>/CellCore' */
   boolean seen[14];                    /* '<S1>/CellCore' */
 } ARID_DEF_CellChannels_T;
 

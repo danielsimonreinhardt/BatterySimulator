@@ -14,6 +14,22 @@
 
 #ifndef CellChannels_types_h_
 #define CellChannels_types_h_
+
+/* Includes for objects with custom storage classes */
+#include "Rte_Cfg.h"
+
+/*
+ * Registered constraints for dimension variants
+ */
+/* Constraint 'Rte_SysCon_CellCount == 14' registered by:
+ * '<S1>/CalMeasGain_r'
+ * '<S1>/CalMeasOffset_V_r'
+ * '<S1>/CalSetGain_r'
+ * '<S1>/CalSetOffset_V_r'
+ */
+#if Rte_SysCon_CellCount != 14
+# error "The preprocessor definition 'Rte_SysCon_CellCount' must be equal to '14'"
+#endif
 #endif                                 /* CellChannels_types_h_ */
 
 /*

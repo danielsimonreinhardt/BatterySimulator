@@ -1,9 +1,9 @@
 # SPDX-License-Identifier: Apache-2.0
 # Description of CellChannels: the model CellChannels.slx is the master (made by CellChannels_create.m); this file is the
-# description it matches, and tools/rtegen compares it with the generated ARXML. Written by stufeb_gen.py.
+# description it matches, and tools/rtegen compares it with the generated ARXML. Written by tools/gen_swc_ports.py.
 version: 1
 name: CellChannels
-description: "14 Zellkanaele: Sollwert auf Tastgrad, Freigabe, Istwert und Status"
+description: "14 Zellkanaele: Sollwert auf Tastgrad, Freigabe, Istwert, Kalibrierung, Regler und Status"
 implementation: simulink
 runnables:
   - name: CellTask10ms
@@ -12,6 +12,34 @@ ports:
   - name: OutputEnable
     direction: in
     type: boolean
+    runnables: [CellTask10ms]
+  - name: LimitActive           # LIMIT line of the 48 V supply: the regulator stands still
+    direction: in
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: ControllerOffReq           # 1 = regulator switched off by the diagnosis (0 after every start: on)
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: CalSetOffset_V           # from CellCal
+    direction: in
+    type: float32
+    dimension: CellCount
+    runnables: [CellTask10ms]
+  - name: CalSetGain           # from CellCal
+    direction: in
+    type: float32
+    dimension: CellCount
+    runnables: [CellTask10ms]
+  - name: CalMeasOffset_V           # from CellCal
+    direction: in
+    type: float32
+    dimension: CellCount
+    runnables: [CellTask10ms]
+  - name: CalMeasGain           # from CellCal
+    direction: in
+    type: float32
+    dimension: CellCount
     runnables: [CellTask10ms]
   - name: Cell01VoltSet_V
     direction: in
@@ -517,6 +545,14 @@ ports:
     direction: out
     type: uint16
     runnables: [CellTask10ms]
+  - name: ControllerOn           # regulator active (not switched off)
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: ControllerOffAct           # request of the diagnosis as the model uses it
+    direction: out
+    type: uint8
+    runnables: [CellTask10ms]
   - name: Cell15State           # not fitted: disabled
     direction: out
     type: uint8
@@ -534,6 +570,13 @@ ports:
     type: float32
     runnables: [CellTask10ms]
 parameters:
+  - name: CellCount
+    kind: constant
+    type: sint32
+    min: 14
+    max: 14
+    description: "Anzahl der Zellkanaele (Dimension der Vektorports)"
+    value: 14
   - name: VoltageSetValue_Ax
     type: float32
     dim: 6
@@ -552,7 +595,32 @@ parameters:
     runnables: [CellTask10ms]
   - name: SetpointLimit_V
     type: float32
+    unit: "V"
+    min: 0
+    max: 5.0
+    description: "Obere Grenze jedes Sollwerts"
     runnables: [CellTask10ms]
   - name: VoltageSenseFilter
     type: float32
+    runnables: [CellTask10ms]
+  - name: CtrlKp
+    type: float32
+    unit: "-"
+    min: 0
+    max: 2.0
+    description: "Proportionalanteil des Reglers"
+    runnables: [CellTask10ms]
+  - name: CtrlKi_per_s
+    type: float32
+    unit: "1/s"
+    min: 0
+    max: 10.0
+    description: "Integralanteil des Reglers"
+    runnables: [CellTask10ms]
+  - name: CtrlLimit_V
+    type: float32
+    unit: "V"
+    min: 0
+    max: 0.1
+    description: "Begrenzung der Reglerkorrektur"
     runnables: [CellTask10ms]

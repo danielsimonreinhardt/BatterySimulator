@@ -17,8 +17,20 @@ components:
     path: swc/SupplyMonitor
   - name: BattSimMode
     path: swc/BattSimMode
+  - name: BattSimParams       # parameter component (RTE-47): the values that several components read
+    path: swc/BattSimParams
+  - name: CellCal             # calibration of the channels (stage C): staged by the diagnosis, held in the NvM
+    path: swc/CellCal
   - name: CellChannels
     path: swc/CellChannels
+
+# Global values (RTE-47/RTE-48, stage C): <Component>.<Parameter>: <ParameterComponent>.<Name>. The number of cell channels is a
+# constant of the build (the dimension of the vector ports of CellCal and CellChannels, min = max = 14); the setpoint limit is
+# a calibration value that CellChannels reads from the parameter component.
+parameters:
+  CellCal.CellCount: BattSimParams.CellCount
+  CellChannels.CellCount: BattSimParams.CellCount
+  CellChannels.SetpointLimit_V: BattSimParams.CellVoltLimit_V
 
 # CAN matrix of the simulator (Stufe A): BattSimV1 content unchanged (LabControl driver stays valid) plus nodes, cycle
 # times and 0x121 STATUS_BATTSIM_EXT; sender BATTSIM = this ECU, counterpart LABCONTROL (Board battsim-knoten-gegenseite).
@@ -130,7 +142,142 @@ connections:
   BattSimMode.FwVersionMajor.FwVersionMajor: can.tx.STATUS_BATTSIM_EXT.FW_VERSION_MAJOR
   BattSimMode.FwVersionMinor.FwVersionMinor: can.tx.STATUS_BATTSIM_EXT.FW_VERSION_MINOR
   BattSimMode.FwVersionPatch.FwVersionPatch: can.tx.STATUS_BATTSIM_EXT.FW_VERSION_PATCH
+  CellCal.OutputsOn.OutputsOn: BattSimMode.OutputEnable.OutputEnable
+  CellCal.ApplyRequest.ApplyRequest: routine.ApplyCalibration.start
+  CellCal.StSetOffset01.StSetOffset01: did.CalCh01.SetOffset
+  CellCal.StSetOffset02.StSetOffset02: did.CalCh02.SetOffset
+  CellCal.StSetOffset03.StSetOffset03: did.CalCh03.SetOffset
+  CellCal.StSetOffset04.StSetOffset04: did.CalCh04.SetOffset
+  CellCal.StSetOffset05.StSetOffset05: did.CalCh05.SetOffset
+  CellCal.StSetOffset06.StSetOffset06: did.CalCh06.SetOffset
+  CellCal.StSetOffset07.StSetOffset07: did.CalCh07.SetOffset
+  CellCal.StSetOffset08.StSetOffset08: did.CalCh08.SetOffset
+  CellCal.StSetOffset09.StSetOffset09: did.CalCh09.SetOffset
+  CellCal.StSetOffset10.StSetOffset10: did.CalCh10.SetOffset
+  CellCal.StSetOffset11.StSetOffset11: did.CalCh11.SetOffset
+  CellCal.StSetOffset12.StSetOffset12: did.CalCh12.SetOffset
+  CellCal.StSetOffset13.StSetOffset13: did.CalCh13.SetOffset
+  CellCal.StSetOffset14.StSetOffset14: did.CalCh14.SetOffset
+  CellCal.NvSetOffsetIn.NvSetOffsetIn: nvm.CalSetOffset
+  CellCal.NvSetOffsetQlf.NvSetOffsetQlf: nvm.qlf.CalSetOffset
+  CellCal.StSetGain01.StSetGain01: did.CalCh01.SetGain
+  CellCal.StSetGain02.StSetGain02: did.CalCh02.SetGain
+  CellCal.StSetGain03.StSetGain03: did.CalCh03.SetGain
+  CellCal.StSetGain04.StSetGain04: did.CalCh04.SetGain
+  CellCal.StSetGain05.StSetGain05: did.CalCh05.SetGain
+  CellCal.StSetGain06.StSetGain06: did.CalCh06.SetGain
+  CellCal.StSetGain07.StSetGain07: did.CalCh07.SetGain
+  CellCal.StSetGain08.StSetGain08: did.CalCh08.SetGain
+  CellCal.StSetGain09.StSetGain09: did.CalCh09.SetGain
+  CellCal.StSetGain10.StSetGain10: did.CalCh10.SetGain
+  CellCal.StSetGain11.StSetGain11: did.CalCh11.SetGain
+  CellCal.StSetGain12.StSetGain12: did.CalCh12.SetGain
+  CellCal.StSetGain13.StSetGain13: did.CalCh13.SetGain
+  CellCal.StSetGain14.StSetGain14: did.CalCh14.SetGain
+  CellCal.NvSetGainIn.NvSetGainIn: nvm.CalSetGain
+  CellCal.NvSetGainQlf.NvSetGainQlf: nvm.qlf.CalSetGain
+  CellCal.StMeasOffset01.StMeasOffset01: did.CalCh01.MeasOffset
+  CellCal.StMeasOffset02.StMeasOffset02: did.CalCh02.MeasOffset
+  CellCal.StMeasOffset03.StMeasOffset03: did.CalCh03.MeasOffset
+  CellCal.StMeasOffset04.StMeasOffset04: did.CalCh04.MeasOffset
+  CellCal.StMeasOffset05.StMeasOffset05: did.CalCh05.MeasOffset
+  CellCal.StMeasOffset06.StMeasOffset06: did.CalCh06.MeasOffset
+  CellCal.StMeasOffset07.StMeasOffset07: did.CalCh07.MeasOffset
+  CellCal.StMeasOffset08.StMeasOffset08: did.CalCh08.MeasOffset
+  CellCal.StMeasOffset09.StMeasOffset09: did.CalCh09.MeasOffset
+  CellCal.StMeasOffset10.StMeasOffset10: did.CalCh10.MeasOffset
+  CellCal.StMeasOffset11.StMeasOffset11: did.CalCh11.MeasOffset
+  CellCal.StMeasOffset12.StMeasOffset12: did.CalCh12.MeasOffset
+  CellCal.StMeasOffset13.StMeasOffset13: did.CalCh13.MeasOffset
+  CellCal.StMeasOffset14.StMeasOffset14: did.CalCh14.MeasOffset
+  CellCal.NvMeasOffsetIn.NvMeasOffsetIn: nvm.CalMeasOffset
+  CellCal.NvMeasOffsetQlf.NvMeasOffsetQlf: nvm.qlf.CalMeasOffset
+  CellCal.StMeasGain01.StMeasGain01: did.CalCh01.MeasGain
+  CellCal.StMeasGain02.StMeasGain02: did.CalCh02.MeasGain
+  CellCal.StMeasGain03.StMeasGain03: did.CalCh03.MeasGain
+  CellCal.StMeasGain04.StMeasGain04: did.CalCh04.MeasGain
+  CellCal.StMeasGain05.StMeasGain05: did.CalCh05.MeasGain
+  CellCal.StMeasGain06.StMeasGain06: did.CalCh06.MeasGain
+  CellCal.StMeasGain07.StMeasGain07: did.CalCh07.MeasGain
+  CellCal.StMeasGain08.StMeasGain08: did.CalCh08.MeasGain
+  CellCal.StMeasGain09.StMeasGain09: did.CalCh09.MeasGain
+  CellCal.StMeasGain10.StMeasGain10: did.CalCh10.MeasGain
+  CellCal.StMeasGain11.StMeasGain11: did.CalCh11.MeasGain
+  CellCal.StMeasGain12.StMeasGain12: did.CalCh12.MeasGain
+  CellCal.StMeasGain13.StMeasGain13: did.CalCh13.MeasGain
+  CellCal.StMeasGain14.StMeasGain14: did.CalCh14.MeasGain
+  CellCal.NvMeasGainIn.NvMeasGainIn: nvm.CalMeasGain
+  CellCal.NvMeasGainQlf.NvMeasGainQlf: nvm.qlf.CalMeasGain
+  CellCal.NvSetOffsetOut.NvSetOffsetOut: nvm.CalSetOffset
+  CellCal.AcSetOffset01.AcSetOffset01: [rte, did.CalCh01.SetOffset]
+  CellCal.AcSetOffset02.AcSetOffset02: [rte, did.CalCh02.SetOffset]
+  CellCal.AcSetOffset03.AcSetOffset03: [rte, did.CalCh03.SetOffset]
+  CellCal.AcSetOffset04.AcSetOffset04: [rte, did.CalCh04.SetOffset]
+  CellCal.AcSetOffset05.AcSetOffset05: [rte, did.CalCh05.SetOffset]
+  CellCal.AcSetOffset06.AcSetOffset06: [rte, did.CalCh06.SetOffset]
+  CellCal.AcSetOffset07.AcSetOffset07: [rte, did.CalCh07.SetOffset]
+  CellCal.AcSetOffset08.AcSetOffset08: [rte, did.CalCh08.SetOffset]
+  CellCal.AcSetOffset09.AcSetOffset09: [rte, did.CalCh09.SetOffset]
+  CellCal.AcSetOffset10.AcSetOffset10: [rte, did.CalCh10.SetOffset]
+  CellCal.AcSetOffset11.AcSetOffset11: [rte, did.CalCh11.SetOffset]
+  CellCal.AcSetOffset12.AcSetOffset12: [rte, did.CalCh12.SetOffset]
+  CellCal.AcSetOffset13.AcSetOffset13: [rte, did.CalCh13.SetOffset]
+  CellCal.AcSetOffset14.AcSetOffset14: [rte, did.CalCh14.SetOffset]
+  CellCal.NvSetGainOut.NvSetGainOut: nvm.CalSetGain
+  CellCal.AcSetGain01.AcSetGain01: [rte, did.CalCh01.SetGain]
+  CellCal.AcSetGain02.AcSetGain02: [rte, did.CalCh02.SetGain]
+  CellCal.AcSetGain03.AcSetGain03: [rte, did.CalCh03.SetGain]
+  CellCal.AcSetGain04.AcSetGain04: [rte, did.CalCh04.SetGain]
+  CellCal.AcSetGain05.AcSetGain05: [rte, did.CalCh05.SetGain]
+  CellCal.AcSetGain06.AcSetGain06: [rte, did.CalCh06.SetGain]
+  CellCal.AcSetGain07.AcSetGain07: [rte, did.CalCh07.SetGain]
+  CellCal.AcSetGain08.AcSetGain08: [rte, did.CalCh08.SetGain]
+  CellCal.AcSetGain09.AcSetGain09: [rte, did.CalCh09.SetGain]
+  CellCal.AcSetGain10.AcSetGain10: [rte, did.CalCh10.SetGain]
+  CellCal.AcSetGain11.AcSetGain11: [rte, did.CalCh11.SetGain]
+  CellCal.AcSetGain12.AcSetGain12: [rte, did.CalCh12.SetGain]
+  CellCal.AcSetGain13.AcSetGain13: [rte, did.CalCh13.SetGain]
+  CellCal.AcSetGain14.AcSetGain14: [rte, did.CalCh14.SetGain]
+  CellCal.NvMeasOffsetOut.NvMeasOffsetOut: nvm.CalMeasOffset
+  CellCal.AcMeasOffset01.AcMeasOffset01: [rte, did.CalCh01.MeasOffset]
+  CellCal.AcMeasOffset02.AcMeasOffset02: [rte, did.CalCh02.MeasOffset]
+  CellCal.AcMeasOffset03.AcMeasOffset03: [rte, did.CalCh03.MeasOffset]
+  CellCal.AcMeasOffset04.AcMeasOffset04: [rte, did.CalCh04.MeasOffset]
+  CellCal.AcMeasOffset05.AcMeasOffset05: [rte, did.CalCh05.MeasOffset]
+  CellCal.AcMeasOffset06.AcMeasOffset06: [rte, did.CalCh06.MeasOffset]
+  CellCal.AcMeasOffset07.AcMeasOffset07: [rte, did.CalCh07.MeasOffset]
+  CellCal.AcMeasOffset08.AcMeasOffset08: [rte, did.CalCh08.MeasOffset]
+  CellCal.AcMeasOffset09.AcMeasOffset09: [rte, did.CalCh09.MeasOffset]
+  CellCal.AcMeasOffset10.AcMeasOffset10: [rte, did.CalCh10.MeasOffset]
+  CellCal.AcMeasOffset11.AcMeasOffset11: [rte, did.CalCh11.MeasOffset]
+  CellCal.AcMeasOffset12.AcMeasOffset12: [rte, did.CalCh12.MeasOffset]
+  CellCal.AcMeasOffset13.AcMeasOffset13: [rte, did.CalCh13.MeasOffset]
+  CellCal.AcMeasOffset14.AcMeasOffset14: [rte, did.CalCh14.MeasOffset]
+  CellCal.NvMeasGainOut.NvMeasGainOut: nvm.CalMeasGain
+  CellCal.AcMeasGain01.AcMeasGain01: [rte, did.CalCh01.MeasGain]
+  CellCal.AcMeasGain02.AcMeasGain02: [rte, did.CalCh02.MeasGain]
+  CellCal.AcMeasGain03.AcMeasGain03: [rte, did.CalCh03.MeasGain]
+  CellCal.AcMeasGain04.AcMeasGain04: [rte, did.CalCh04.MeasGain]
+  CellCal.AcMeasGain05.AcMeasGain05: [rte, did.CalCh05.MeasGain]
+  CellCal.AcMeasGain06.AcMeasGain06: [rte, did.CalCh06.MeasGain]
+  CellCal.AcMeasGain07.AcMeasGain07: [rte, did.CalCh07.MeasGain]
+  CellCal.AcMeasGain08.AcMeasGain08: [rte, did.CalCh08.MeasGain]
+  CellCal.AcMeasGain09.AcMeasGain09: [rte, did.CalCh09.MeasGain]
+  CellCal.AcMeasGain10.AcMeasGain10: [rte, did.CalCh10.MeasGain]
+  CellCal.AcMeasGain11.AcMeasGain11: [rte, did.CalCh11.MeasGain]
+  CellCal.AcMeasGain12.AcMeasGain12: [rte, did.CalCh12.MeasGain]
+  CellCal.AcMeasGain13.AcMeasGain13: [rte, did.CalCh13.MeasGain]
+  CellCal.AcMeasGain14.AcMeasGain14: [rte, did.CalCh14.MeasGain]
+  CellCal.ApplyResult.ApplyResult: [rte, routine.ApplyCalibration.results.result]
+  CellCal.ApplyBadChannel.ApplyBadChannel: [rte, routine.ApplyCalibration.results.badChannel]
+  CellCal.CalState.CalState: [rte, did.CalibrationState.state]
   CellChannels.OutputEnable.OutputEnable: BattSimMode.OutputEnable.OutputEnable
+  CellChannels.LimitActive.LimitActive: SupplyMonitor.LimitActive.LimitActive
+  CellChannels.ControllerOffReq.ControllerOffReq: did.ControllerControl.controllerOff
+  CellChannels.CalSetOffset_V.CalSetOffset_V: CellCal.CalSetOffset_V.CalSetOffset_V
+  CellChannels.CalSetGain.CalSetGain: CellCal.CalSetGain.CalSetGain
+  CellChannels.CalMeasOffset_V.CalMeasOffset_V: CellCal.CalMeasOffset_V.CalMeasOffset_V
+  CellChannels.CalMeasGain.CalMeasGain: CellCal.CalMeasGain.CalMeasGain
   CellChannels.Cell01VoltSet_V.Cell01VoltSet_V: can.rx.CONTROL_CELL01_02_03.CELL01_VOLTAGE_SET
   CellChannels.Cell01Enable.Cell01Enable: can.rx.CONTROL_CELL01_02_03.CELL01_ENABLE
   CellChannels.UCell01_mV.UCell01_mV: adc.mv.U_CELL_01
@@ -257,6 +404,8 @@ connections:
   CellChannels.Cell14VoltAct_V.Cell14VoltAct_V: can.tx.STATUS_CELL13_14_15.CELL14_VOLTAGE_ACT
   CellChannels.Cell14State.Cell14State: can.tx.STATUS_CELL13_14_15.CELL14_STATUS
   CellChannels.Duty14.Duty14: pwm.SET_14
+  CellChannels.ControllerOn.ControllerOn: can.tx.STATUS_BATTSIM_EXT.BATTSIM_CONTROLLER_ON
+  CellChannels.ControllerOffAct.ControllerOffAct: [rte, did.ControllerControl.controllerOff]
   CellChannels.Cell15State.Cell15State: can.tx.STATUS_CELL13_14_15.CELL15_STATUS
   CellChannels.Cell15VoltAct_V.Cell15VoltAct_V: can.tx.STATUS_CELL13_14_15.CELL15_VOLTAGE_ACT
   CellChannels.Cell16State.Cell16State: can.tx.STATUS_CELL16.CELL16_STATUS

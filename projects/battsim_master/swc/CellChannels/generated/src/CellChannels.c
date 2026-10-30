@@ -15,6 +15,7 @@
 #include "CellChannels.h"
 #include <math.h>
 #include "Platform_Types.h"
+#include "Rte_Cfg.h"
 
 /* PublicStructure Variables for Internal Data */
 ARID_DEF_CellChannels_T CellChannels_ARID_DEF;/* '<S1>/CellCore' */
@@ -23,10 +24,18 @@ ARID_DEF_CellChannels_T CellChannels_ARID_DEF;/* '<S1>/CellCore' */
 void CellTask10ms(void)                /* Explicit Task: CellTask10ms */
 {
   float32 rtb_TmpSignalConversionAtSFunctionInport1[14];
+  float32 tmpRead_2[Rte_SysCon_CellCount];
+  float32 tmpRead_3[Rte_SysCon_CellCount];
+  float32 tmpRead_4[Rte_SysCon_CellCount];
+  float32 tmpRead_5[Rte_SysCon_CellCount];
   float32 vAct[14];
-  float32 tmp;
+  float32 corr;
+  float32 e;
+  float32 tmpRead_6;
+  float32 tmpRead_7;
+  float32 tmpRead_8;
+  float32 tmpRead_9;
   float32 v;
-  float32 y;
   sint32 i;
   sint32 k;
   uint32 rtb_TmpSignalConversionAtSFunctionInport3[14];
@@ -35,11 +44,15 @@ void CellTask10ms(void)                /* Explicit Task: CellTask10ms */
   uint8 rtb_TmpSignalConversionAtSFunctionInport2[14];
   uint8 rtb_TmpSignalConversionAtSFunctionInport4[14];
   uint8 state[14];
+  uint8 tmpRead_1;
   boolean en[14];
   boolean clipped;
   boolean commanded;
+  boolean ctrlActive;
   boolean exitg1;
   boolean tmpRead;
+  boolean tmpRead_0;
+  boolean working;
 
   /* SignalConversion generated from: '<S2>/ SFunction ' incorporates:
    *  Inport: '<Root>/UCell14Qlf'
@@ -377,13 +390,51 @@ void CellTask10ms(void)                /* Explicit Task: CellTask10ms */
   (void)Rte_Read_Cell01VoltSet_V_Cell01VoltSet_V
     (&rtb_TmpSignalConversionAtSFunctionInport1[0]);
 
+  /* Inport: '<Root>/CalMeasGain' */
+  (void)Rte_Read_CalMeasGain_CalMeasGain(tmpRead_5);
+
+  /* Inport: '<Root>/CalMeasOffset_V' */
+  (void)Rte_Read_CalMeasOffset_V_CalMeasOffset_V(tmpRead_4);
+
+  /* Inport: '<Root>/CalSetGain' */
+  (void)Rte_Read_CalSetGain_CalSetGain(tmpRead_3);
+
+  /* Inport: '<Root>/CalSetOffset_V' */
+  (void)Rte_Read_CalSetOffset_V_CalSetOffset_V(tmpRead_2);
+
+  /* Inport: '<Root>/ControllerOffReq' */
+  (void)Rte_Read_ControllerOffReq_ControllerOffReq(&tmpRead_1);
+
+  /* Inport: '<Root>/LimitActive' */
+  (void)Rte_Read_LimitActive_LimitActive(&tmpRead_0);
+
   /* Inport: '<Root>/OutputEnable' */
   (void)Rte_Read_OutputEnable_OutputEnable(&tmpRead);
 
   /* RootInportFunctionCallGenerator generated from: '<Root>/CellTask10ms' incorporates:
    *  SubSystem: '<Root>/CellChannels_task10ms'
    */
+  /* MATLAB Function: '<S1>/CellCore' */
+  for (i = 0; i < 14; i++) {
+    duty[i] = 0U;
+  }
+
+  ctrlActive = (tmpRead_1 == 0);
+
+  /* Outport: '<Root>/ControllerOn' incorporates:
+   *  MATLAB Function: '<S1>/CellCore'
+   */
+  (void)Rte_Write_ControllerOn_ControllerOn(ctrlActive);
+
+  /* Outport: '<Root>/ControllerOffAct' incorporates:
+   *  MATLAB Function: '<S1>/CellCore'
+   */
+  (void)Rte_Write_ControllerOffAct_ControllerOffAct((uint8)(tmpRead_1 != 0));
+
   /* MATLAB Function: '<S1>/CellCore' incorporates:
+   *  Constant: '<S1>/CtrlKi_per_s_Const'
+   *  Constant: '<S1>/CtrlKp_Const'
+   *  Constant: '<S1>/CtrlLimit_V_Const'
    *  Constant: '<S1>/QLF_OK_Const'
    *  Constant: '<S1>/SetpointLimit_V_Const'
    *  Constant: '<S1>/VoltageSenseFilter_Const'
@@ -391,9 +442,12 @@ void CellTask10ms(void)                /* Explicit Task: CellTask10ms */
    *  Constant: '<S1>/VoltageSenseValue_T_Const'
    *  Constant: '<S1>/VoltageSetPwm_T_Const'
    *  Constant: '<S1>/VoltageSetValue_Ax_Const'
+   *  Reshape: '<S1>/CalMeasGain_r'
+   *  Reshape: '<S1>/CalMeasOffset_V_r'
+   *  Reshape: '<S1>/CalSetGain_r'
+   *  Reshape: '<S1>/CalSetOffset_V_r'
    */
   for (k = 0; k < 14; k++) {
-    duty[k] = 0U;
     commanded = (rtb_TmpSignalConversionAtSFunctionInport2[k] == 2);
     v = rtb_TmpSignalConversionAtSFunctionInport1[k];
     clipped = (v > Rte_Prm_CalPrm_SetpointLimit_V());
@@ -405,49 +459,68 @@ void CellTask10ms(void)                /* Explicit Task: CellTask10ms */
       v = 0.0F;
     }
 
-    if (tmpRead) {
-      y = (Rte_Prm_CalPrm_VoltageSetPwm_T())[5];
-      if (v <= (Rte_Prm_CalPrm_VoltageSetValue_Ax())[0]) {
-        y = (Rte_Prm_CalPrm_VoltageSetPwm_T())[0];
-      } else {
-        i = 0;
-        exitg1 = FALSE;
-        while ((!exitg1) && (i < 5)) {
-          tmp = (Rte_Prm_CalPrm_VoltageSetValue_Ax())[i + 1];
-          if (v <= tmp) {
-            y = ((Rte_Prm_CalPrm_VoltageSetPwm_T())[i + 1] -
-                 (Rte_Prm_CalPrm_VoltageSetPwm_T())[i]) * (v -
-              (Rte_Prm_CalPrm_VoltageSetValue_Ax())[i]) / (tmp -
-              (Rte_Prm_CalPrm_VoltageSetValue_Ax())[i]) +
-              (Rte_Prm_CalPrm_VoltageSetPwm_T())[i];
-            exitg1 = TRUE;
-          } else {
-            i++;
-          }
-        }
-      }
+    /* Reshape: '<S1>/CalSetGain_r' incorporates:
+     *  Constant: '<S1>/SetpointLimit_V_Const'
+     */
+    tmpRead_6 = tmpRead_3[k];
 
-      duty[k] = (uint16)floorf(fminf(fmaxf(y * 10000.0F, 0.0F), 10000.0F) + 0.5F);
+    /* Reshape: '<S1>/CalSetOffset_V_r' */
+    tmpRead_7 = tmpRead_2[k];
+    if (tmpRead_6 >= 0.5F) {
+      if (tmpRead_6 <= 1.5F) {
+        working = (fabsf(tmpRead_7) <= 0.5F);
+      } else {
+        working = FALSE;
+      }
+    } else {
+      working = FALSE;
     }
 
-    en[k] = (tmpRead && commanded);
+    if (!working) {
+      tmpRead_6 = 1.0F;
+      tmpRead_7 = 0.0F;
+    }
+
+    /* Reshape: '<S1>/CalMeasGain_r' incorporates:
+     *  Reshape: '<S1>/CalSetGain_r'
+     *  Reshape: '<S1>/CalSetOffset_V_r'
+     */
+    tmpRead_8 = tmpRead_5[k];
+
+    /* Reshape: '<S1>/CalMeasOffset_V_r' */
+    tmpRead_9 = tmpRead_4[k];
+    if (tmpRead_8 >= 0.5F) {
+      if (tmpRead_8 <= 1.5F) {
+        working = (fabsf(tmpRead_9) <= 0.5F);
+      } else {
+        working = FALSE;
+      }
+    } else {
+      working = FALSE;
+    }
+
+    if (!working) {
+      tmpRead_8 = 1.0F;
+      tmpRead_9 = 0.0F;
+    }
+
     if (rtb_TmpSignalConversionAtSFunctionInport4[k] == 1) {
       rtb_TmpSignalConversionAtSFunctionInport3_0 =
         rtb_TmpSignalConversionAtSFunctionInport3[k];
-      v = (Rte_Prm_CalPrm_VoltageSenseValue_T())[5];
+      e = (Rte_Prm_CalPrm_VoltageSenseValue_T())[5];
       if (rtb_TmpSignalConversionAtSFunctionInport3_0 <=
           (Rte_Prm_CalPrm_VoltageSenseMeas_Ax())[0]) {
-        v = (Rte_Prm_CalPrm_VoltageSenseValue_T())[0];
+        e = (Rte_Prm_CalPrm_VoltageSenseValue_T())[0];
       } else {
         i = 0;
         exitg1 = FALSE;
         while ((!exitg1) && (i < 5)) {
-          tmp = (Rte_Prm_CalPrm_VoltageSenseMeas_Ax())[i + 1];
-          if (rtb_TmpSignalConversionAtSFunctionInport3_0 <= tmp) {
-            v = ((Rte_Prm_CalPrm_VoltageSenseValue_T())[i + 1] -
+          corr = (Rte_Prm_CalPrm_VoltageSenseMeas_Ax())[i + 1];
+          if (rtb_TmpSignalConversionAtSFunctionInport3_0 <= corr) {
+            e = ((Rte_Prm_CalPrm_VoltageSenseValue_T())[i + 1] -
                  (Rte_Prm_CalPrm_VoltageSenseValue_T())[i]) * ((float32)
               rtb_TmpSignalConversionAtSFunctionInport3_0 -
-              (Rte_Prm_CalPrm_VoltageSenseMeas_Ax())[i]) / (tmp -
+              (Rte_Prm_CalPrm_VoltageSenseMeas_Ax())[i]) / (corr -
               (Rte_Prm_CalPrm_VoltageSenseMeas_Ax())[i]) +
               (Rte_Prm_CalPrm_VoltageSenseValue_T())[i];
             exitg1 = TRUE;
@@ -458,16 +531,75 @@ void CellTask10ms(void)                /* Explicit Task: CellTask10ms */
       }
 
       if (CellChannels_ARID_DEF.seen[k]) {
-        y = CellChannels_ARID_DEF.y[k];
-        CellChannels_ARID_DEF.y[k] = (v - y) * Rte_Prm_CalPrm_VoltageSenseFilter
-          () + y;
+        corr = CellChannels_ARID_DEF.y[k];
+        CellChannels_ARID_DEF.y[k] = ((tmpRead_8 * e + tmpRead_9) - corr) *
+          Rte_Prm_CalPrm_VoltageSenseFilter() + corr;
       } else {
-        CellChannels_ARID_DEF.y[k] = v;
+        CellChannels_ARID_DEF.y[k] = tmpRead_8 * e + tmpRead_9;
         CellChannels_ARID_DEF.seen[k] = TRUE;
       }
     }
 
-    vAct[k] = CellChannels_ARID_DEF.y[k];
+    e = CellChannels_ARID_DEF.y[k];
+    vAct[k] = e;
+    corr = 0.0F;
+    if (ctrlActive && tmpRead && commanded && (!clipped) && (v > 0.0F)) {
+      if (rtb_TmpSignalConversionAtSFunctionInport4[k] == 1) {
+        working = CellChannels_ARID_DEF.seen[k];
+      } else {
+        working = FALSE;
+      }
+    } else {
+      working = FALSE;
+    }
+
+    if (working && tmpRead_0) {
+      corr = CellChannels_ARID_DEF.corrHold[k];
+    } else if (working) {
+      e = v - e;
+      corr = fminf(fmaxf(Rte_Prm_CalPrm_CtrlKi_per_s() * 0.01F * e +
+                         CellChannels_ARID_DEF.integ[k],
+                         -Rte_Prm_CalPrm_CtrlLimit_V()),
+                   Rte_Prm_CalPrm_CtrlLimit_V());
+      CellChannels_ARID_DEF.integ[k] = corr;
+      corr = fminf(fmaxf(Rte_Prm_CalPrm_CtrlKp() * e + corr,
+                         -Rte_Prm_CalPrm_CtrlLimit_V()),
+                   Rte_Prm_CalPrm_CtrlLimit_V());
+      CellChannels_ARID_DEF.corrHold[k] = corr;
+    } else {
+      CellChannels_ARID_DEF.integ[k] = 0.0F;
+      CellChannels_ARID_DEF.corrHold[k] = 0.0F;
+    }
+
+    if (tmpRead && (v > 0.0F)) {
+      v = fminf(fmaxf(v + corr, 0.0F), Rte_Prm_CalPrm_SetpointLimit_V()) *
+        tmpRead_6 + tmpRead_7;
+      tmpRead_6 = (Rte_Prm_CalPrm_VoltageSetPwm_T())[5];
+      if (v <= (Rte_Prm_CalPrm_VoltageSetValue_Ax())[0]) {
+        tmpRead_6 = (Rte_Prm_CalPrm_VoltageSetPwm_T())[0];
+      } else {
+        i = 0;
+        exitg1 = FALSE;
+        while ((!exitg1) && (i < 5)) {
+          corr = (Rte_Prm_CalPrm_VoltageSetValue_Ax())[i + 1];
+          if (v <= corr) {
+            tmpRead_6 = ((Rte_Prm_CalPrm_VoltageSetPwm_T())[i + 1] -
+                         (Rte_Prm_CalPrm_VoltageSetPwm_T())[i]) * (v -
+              (Rte_Prm_CalPrm_VoltageSetValue_Ax())[i]) / (corr -
+              (Rte_Prm_CalPrm_VoltageSetValue_Ax())[i]) +
+              (Rte_Prm_CalPrm_VoltageSetPwm_T())[i];
+            exitg1 = TRUE;
+          } else {
+            i++;
+          }
+        }
+      }
+
+      duty[k] = (uint16)floorf(fminf(fmaxf(tmpRead_6 * 10000.0F, 0.0F), 10000.0F)
+        + 0.5F);
+    }
+
+    en[k] = (tmpRead && commanded);
     if (!commanded) {
       state[k] = 1U;
     } else if (clipped) {
@@ -476,8 +608,6 @@ void CellTask10ms(void)                /* Explicit Task: CellTask10ms */
       state[k] = 2U;
     }
   }
-
-  /* End of MATLAB Function: '<S1>/CellCore' */
 
   /* Outport: '<Root>/Cell02State' incorporates:
    *  SignalConversion generated from: '<S1>/Cell02State'

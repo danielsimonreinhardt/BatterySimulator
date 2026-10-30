@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 # Description of BattSimMode: the model BattSimMode.slx is the master (made by BattSimMode_create.m); this file is the
-# description it matches, and tools/rtegen compares it with the generated ARXML. Written by stufeb_gen.py.
+# description it matches, and tools/rtegen compares it with the generated ARXML. Written by tools/gen_swc_ports.py.
 version: 1
 name: BattSimMode
 description: "Betriebsarten (Standby, Fernsteuerung, FAIL), Ausgang ein/aus, Tasten, Lebenszeichen und Statusbotschaft 0x121"

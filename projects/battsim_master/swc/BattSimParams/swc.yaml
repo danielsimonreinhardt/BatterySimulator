@@ -1,0 +1,26 @@
+# SPDX-License-Identifier: Apache-2.0
+# Parameter component of battsim_master (Stufe C, RTE-47/RTE-48): the values that more than one component reads, defined
+# once. The readers bind their parameters to them in rte.yaml (parameters:). No model, no code.
+version: 1
+name: BattSimParams
+kind: parameter
+description: "Gemeinsame Werte des Batterie-Simulators: Zellzahl und Zellgrenzspannung"
+parameters:
+  # Number of cell channels with a vector in the software (calibration data per channel). A constant of the build: it sizes
+  # the vector ports of CellCal and CellChannels. The cores of the two models loop over 14 channels, so the value is
+  # fixed to 14 by min = max (a project cannot bind another number without a new model).
+  - name: CellCount
+    kind: constant
+    type: sint32
+    min: 14
+    max: 14
+    value: 14
+    description: "Anzahl der Zellkanaele mit Kalibrierung und Regler (Hardware: 14 Karten, Kanal 15 und 16 nicht bestueckt)"
+  # Upper limit of every setpoint (FW-06 concept): above it a channel reports status 3 and the setpoint is limited. The
+  # 4.30 V limit of the LabControl driver stays in LabControl. A calibration value, not a constant: the Pruefling decides.
+  - name: CellVoltLimit_V
+    type: float32
+    unit: V
+    min: 0
+    max: 5.0
+    description: "Obere Grenze jedes Zell-Sollwerts (Vorgabe 5,0 V)"

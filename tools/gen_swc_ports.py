@@ -1,0 +1,295 @@
+# SPDX-License-Identifier: Apache-2.0
+"""swc.yaml, <Swc>_data.m and the connections of rte.yaml of battsim_master from one port table (BattSimFW).
+
+The 14 cell channels have one port per signal (CAN signal, ADC channel, pin), and the calibration of the channels has
+one scalar port per value for the diagnosis (a data identifier element serves one scalar port, rtegen _diag_scalar):
+that is hundreds of lines of the same shape. This script writes them, so that the table below is the one place that says
+what a channel has. The models (<Swc>_create.m) and the diagnostic description (diag.yaml, between the markers) follow it.
+
+    python tools/gen_swc_ports.py     # rewrites the four swc.yaml, the data files, the connections of rte.yaml and the
+                                      # calibration identifiers of diag.yaml
+
+Stage B wrote SupplyMonitor, BattSimMode and CellChannels; stage C (this version) adds CellCal and the regulator,
+calibration and limit ports of CellChannels. BattSimParams (parameter component) is written by hand.
+"""
+import json
+import re
+from pathlib import Path
+
+REPO = Path(__file__).resolve().parents[1]
+PROJECT = REPO / "projects" / "battsim_master"
+SWC = PROJECT / "swc"
+CH = range(1, 15)
+GROUPS = {1: "01_02_03", 2: "01_02_03", 3: "01_02_03", 4: "04_05_06", 5: "04_05_06", 6: "04_05_06",
+          7: "07_08_09", 8: "07_08_09", 9: "07_08_09", 10: "10_11_12", 11: "10_11_12", 12: "10_11_12",
+          13: "13_14_15", 14: "13_14_15"}
+GLIST = ["01_02_03", "04_05_06", "07_08_09", "10_11_12", "13_14_15"]
+ALIVE = {"AliveStatusBattSim": "STATUS_BATTSIM"}
+for g in GLIST:
+    ALIVE[f"AliveStatusCells{g.replace('_', '')}"] = f"STATUS_CELL{g}"
+ALIVE["AliveStatusCell16"] = "STATUS_CELL16"
+ALIVE["AliveStatusBattSimExt"] = "STATUS_BATTSIM_EXT"
+QLF_MSGS = ["CONTROL_CELL01_02_03", "CONTROL_CELL04_05_06", "CONTROL_CELL07_08_09", "CONTROL_CELL10_11_12",
+            "CONTROL_CELL13_14_15", "CONTROL_CELL16", "CONTROL_BATTSIM", "CONTROL_DYNCELLSIM1", "CONTROL_DYNCELLSIM2"]
+
+# Calibration of a channel (stage C, FW-06/FW-07): y = gain * x + offset, once for the setpoint ("Set") and once for the
+# actual value ("Meas"). On the wire and in the NvM blocks the integer codes: offset sint16 in 0.1 mV, gain uint16 in
+# 1e-4 (10000 = 1.0000); the limits are checked by the diagnosis (min/max of the element) and again by CellCal.
+CAL = [  # (key, port stem, wire type, element label, factor, min, max, default code, unit)
+    ("SetOffset", "SetOffset", "int16", "Offset of the setpoint (command = gain * setpoint + offset)", 0.0001, -0.2, 0.2, 0, "V"),
+    ("SetGain", "SetGain", "uint16", "Gain of the setpoint", 0.0001, 0.9, 1.1, 10000, ""),
+    ("MeasOffset", "MeasOffset", "int16", "Offset of the actual value (value = gain * measured + offset)", 0.0001, -0.2, 0.2, 0, "V"),
+    ("MeasGain", "MeasGain", "uint16", "Gain of the actual value", 0.0001, 0.9, 1.1, 10000, ""),
+]
+PORT_TYPE = {"int16": "sint16", "uint16": "uint16"}
+PHYS = {"SetOffset": "CalSetOffset_V", "SetGain": "CalSetGain", "MeasOffset": "CalMeasOffset_V", "MeasGain": "CalMeasGain"}
+CAL_DID_BASE = 0x0200          # 0x0201 .. 0x020E: channel 1 .. 14
+
+components = {}     # name -> dict(description, runnable, ports, params)
+connections = {}    # "Comp.Port.Port" -> target (string or list)
+
+
+def port(comp, name, direction, ptype, target=None, comment=None, **extra):
+    components[comp]["ports"].append((name, direction, ptype, comment, extra))
+    if target:
+        connections[f"{comp}.{name}.{name}"] = target
+
+
+def param(comp, name, ptype, values, comment, dim=None, **extra):
+    components[comp]["params"].append((name, ptype, values, comment, dim, extra))
+
+
+# ------------------------------------------------------------------ SupplyMonitor
+c = "SupplyMonitor"
+components[c] = dict(description="48-V-Versorgung: Strom filtern, Ueberlast mit Hysterese, LIMIT-Leitung",
+                     runnable="SupplyTask10ms", ports=[], params=[])
+port(c, "ISupply_mV", "in", "uint32", "adc.mv.I_SUPPLY")
+port(c, "ISupplyQlf", "in", "uint8", "adc.qlf.I_SUPPLY")
+port(c, "Limit", "in", "boolean", "dio.in.LIMIT")
+port(c, "Overload", "out", "boolean", "can.tx.STATUS_BATTSIM_EXT.BATTSIM_OVERLOAD")
+port(c, "SupplyCurrent_A", "out", "float32", "can.tx.STATUS_BATTSIM_EXT.BATTSIM_SUPPLY_CURRENT")
+port(c, "LimitActive", "out", "boolean", "can.tx.STATUS_BATTSIM_EXT.BATTSIM_LIMIT")
+param(c, "SupplyCurrentFilter", "float32", [0.0078125], "[-]   low-pass weight per 10 ms (1/128, exact in single): time constant about 1.3 s, as 0.08 per 100 ms of the old firmware")
+param(c, "SupplyCurrentGain", "float32", [1.0], "[mA/mV] INA181A1 on 50 mOhm: 1 V per A, i.e. 1 mA per mV at the ADC pin")
+param(c, "OverloadThd_mA", "float32", [1280], "[mA]  overload above this current (IRM-60-48: 1.25 A continuous)")
+param(c, "OverloadHyst_mA", "float32", [200], "[mA]  overload ends below OverloadThd_mA - this value (1.08 A)")
+
+# ------------------------------------------------------------------ BattSimMode
+c = "BattSimMode"
+components[c] = dict(description="Betriebsarten (Standby, Fernsteuerung, FAIL), Ausgang ein/aus, Tasten, Lebenszeichen und Statusbotschaft 0x121",
+                     runnable="ModeTask10ms", ports=[], params=[])
+port(c, "RemoteControl", "in", "uint8", "can.rx.CONTROL_BATTSIM.BATTSIM_REMOTE_CONTROL")
+port(c, "ModeControl", "in", "uint8", "can.rx.CONTROL_BATTSIM.BATTSIM_MODE_CONTROL")
+port(c, "OutputControl", "in", "uint8", "can.rx.CONTROL_BATTSIM.BATTSIM_OUTPUT_CONTROL")
+qnames = ["ControlCell010203Qlf", "ControlCell040506Qlf", "ControlCell070809Qlf", "ControlCell101112Qlf",
+          "ControlCell131415Qlf", "ControlCell16Qlf", "ControlBattSimQlf", "ControlDynCellSim1Qlf", "ControlDynCellSim2Qlf"]
+vnames = ["ValidCell010203", "ValidCell040506", "ValidCell070809", "ValidCell101112", "ValidCell131415",
+          "ValidCell16", "ValidBattSim", "ValidDynCellSim1", "ValidDynCellSim2"]
+for q, msg in zip(qnames, QLF_MSGS):
+    port(c, q, "in", "uint8", f"can.qlf.{msg}")
+port(c, "BtnAllOnOff", "in", "boolean", "dio.in.BTN_ALL_ON_OFF")
+port(c, "BtnRemote", "in", "boolean", "dio.in.BTN_REMOTE")
+port(c, "Overload", "in", "boolean", "SupplyMonitor.Overload.Overload")
+port(c, "ResetWatchdog", "in", "boolean", "bsw.reset.watchdog")
+port(c, "ResetQlf", "in", "uint8", "bsw.reset.qlf")
+port(c, "BattSimStatus", "out", "uint8", "can.tx.STATUS_BATTSIM.BATTSIM_STATUS")
+port(c, "OutputStatus", "out", "uint8", "can.tx.STATUS_BATTSIM.BATTSIM_OUTPUT_STATUS")
+port(c, "LedRemote", "out", "boolean", "dio.out.LED_REMOTE")
+port(c, "OutputEnable", "out", "boolean")
+port(c, "FailReason", "out", "uint8", "can.tx.STATUS_BATTSIM_EXT.BATTSIM_FAIL_REASON")
+for p, msg in ALIVE.items():
+    port(c, p, "out", "uint8", f"can.tx.{msg}.ALIVE_{msg}")
+for v, msg in zip(vnames, QLF_MSGS):
+    port(c, v, "out", "boolean", f"can.tx.STATUS_BATTSIM_EXT.QLF_{msg}")
+for part in ("Major", "Minor", "Patch"):
+    port(c, f"FwVersion{part}", "out", "uint8", f"can.tx.STATUS_BATTSIM_EXT.FW_VERSION_{part.upper()}")
+param(c, "VersionMajor", "uint8", [0], "firmware version of 0x121")
+param(c, "VersionMinor", "uint8", [3], "firmware version of 0x121 (0.3.0: stage C, calibration, regulator and diagnosis; 0.2.0 was stage B)")
+param(c, "VersionPatch", "uint8", [0], "firmware version of 0x121")
+param(c, "ButtonDebounce_cycles", "uint8", [3], "[10 ms] a key level counts after this many equal samples")
+
+# ------------------------------------------------------------------ CellCal (stage C)
+c = "CellCal"
+components[c] = dict(description="Kalibrierung der Zellkanaele: Werte per Diagnose uebernehmen (nur bei Ausgang aus), im NvM halten, an CellChannels geben",
+                     runnable="CalTask10ms", ports=[], params=[])
+port(c, "OutputsOn", "in", "boolean", "BattSimMode.OutputEnable.OutputEnable", "outputs enabled (a port of another name than CellChannels.OutputEnable: RTE-49, same-named required ports of two components collide in the headers)")
+port(c, "ApplyRequest", "in", "uint8", "routine.ApplyCalibration.start", "counts the requests of the routine ApplyCalibration (31 01)")
+for key, stem, wire, label, factor, lo, hi, default, unit in CAL:
+    ptype = PORT_TYPE[wire]
+    for n in CH:
+        nn = f"{n:02d}"
+        port(c, f"St{stem}{nn}", "in", ptype, f"did.CalCh{nn}.{key}", "staged value written by the tester (2E)")
+    port(c, f"Nv{stem}In", "in", ptype, f"nvm.Cal{stem}", "stored value", dimension="CellCount")
+    port(c, f"Nv{stem}Qlf", "in", "uint8", f"nvm.qlf.Cal{stem}")
+for key, stem, wire, label, factor, lo, hi, default, unit in CAL:
+    ptype = PORT_TYPE[wire]
+    port(c, f"Nv{stem}Out", "out", ptype, f"nvm.Cal{stem}", "value to store", dimension="CellCount")
+    for n in CH:
+        nn = f"{n:02d}"
+        port(c, f"Ac{stem}{nn}", "out", ptype, ["rte", f"did.CalCh{nn}.{key}"], "value in use (read back by the tester, 22)")
+    port(c, PHYS[key], "out", "float32", None, "value in use, physical, for CellChannels", dimension="CellCount")
+port(c, "ApplyResult", "out", "uint8", ["rte", "routine.ApplyCalibration.results.result"])
+port(c, "ApplyBadChannel", "out", "uint8", ["rte", "routine.ApplyCalibration.results.badChannel"])
+port(c, "CalState", "out", "uint8", ["rte", "did.CalibrationState.state"])
+param(c, "CellCount", "sint32", [14], "dimension of the vector ports, bound to BattSimParams.CellCount in rte.yaml", kind="constant",
+      min=14, max=14, description="Anzahl der Zellkanaele (Dimension der Vektorports)")
+param(c, "OffsetLimit_code", "uint16", [2000], "[0.1 mV] largest offset the component accepts (0.2 V); the diagnosis checks the same range",
+      description="Grenze des Offsets in 0,1-mV-Schritten")
+param(c, "GainMin_code", "uint16", [9000], "[1e-4] smallest gain the component accepts (0.9)", description="kleinste Steigung")
+param(c, "GainMax_code", "uint16", [11000], "[1e-4] largest gain the component accepts (1.1)", description="groesste Steigung")
+
+# ------------------------------------------------------------------ CellChannels
+c = "CellChannels"
+components[c] = dict(description="14 Zellkanaele: Sollwert auf Tastgrad, Freigabe, Istwert, Kalibrierung, Regler und Status",
+                     runnable="CellTask10ms", ports=[], params=[])
+port(c, "OutputEnable", "in", "boolean", "BattSimMode.OutputEnable.OutputEnable")
+port(c, "LimitActive", "in", "boolean", "SupplyMonitor.LimitActive.LimitActive", "LIMIT line of the 48 V supply: the regulator stands still")
+port(c, "ControllerOffReq", "in", "uint8", "did.ControllerControl.controllerOff", "1 = regulator switched off by the diagnosis (0 after every start: on)")
+for key, stem, wire, label, factor, lo, hi, default, unit in CAL:
+    port(c, PHYS[key], "in", "float32", f"CellCal.{PHYS[key]}.{PHYS[key]}", "from CellCal", dimension="CellCount")
+for n in CH:
+    nn, g = f"{n:02d}", GROUPS[n]
+    port(c, f"Cell{nn}VoltSet_V", "in", "float32", f"can.rx.CONTROL_CELL{g}.CELL{nn}_VOLTAGE_SET")
+    port(c, f"Cell{nn}Enable", "in", "uint8", f"can.rx.CONTROL_CELL{g}.CELL{nn}_ENABLE")
+    port(c, f"UCell{nn}_mV", "in", "uint32", f"adc.mv.U_CELL_{nn}")
+    port(c, f"UCell{nn}Qlf", "in", "uint8", f"adc.qlf.U_CELL_{nn}")
+    port(c, f"En{nn}", "out", "boolean", f"dio.out.EN_{nn}")
+    port(c, f"Sel{nn}", "out", "boolean", f"dio.out.SEL_{nn}", "SELECT LED of the card, hand mode of stage D")
+    port(c, f"Cell{nn}VoltAct_V", "out", "float32", f"can.tx.STATUS_CELL{g}.CELL{nn}_VOLTAGE_ACT")
+    port(c, f"Cell{nn}State", "out", "uint8", f"can.tx.STATUS_CELL{g}.CELL{nn}_STATUS")
+    port(c, f"Duty{nn}", "out", "uint16", f"pwm.SET_{nn}", "duty in 0.01 %")
+port(c, "ControllerOn", "out", "boolean", "can.tx.STATUS_BATTSIM_EXT.BATTSIM_CONTROLLER_ON", "regulator active (not switched off)")
+port(c, "ControllerOffAct", "out", "uint8", ["rte", "did.ControllerControl.controllerOff"], "request of the diagnosis as the model uses it")
+port(c, "Cell15State", "out", "uint8", "can.tx.STATUS_CELL13_14_15.CELL15_STATUS", "not fitted: disabled")
+port(c, "Cell15VoltAct_V", "out", "float32", "can.tx.STATUS_CELL13_14_15.CELL15_VOLTAGE_ACT", "not fitted: 0 V")
+port(c, "Cell16State", "out", "uint8", "can.tx.STATUS_CELL16.CELL16_STATUS", "not fitted: disabled")
+port(c, "Cell16VoltAct_V", "out", "float32", "can.tx.STATUS_CELL16.CELL16_VOLTAGE_ACT", "not fitted: 0 V")
+SENSE_RAW = [0, 796, 1591, 2391, 3192, 3991]
+SENSE_MV = [round(r * 2048 / 4095, 1) for r in SENSE_RAW]
+param(c, "CellCount", "sint32", [14], "dimension of the vector ports, bound to BattSimParams.CellCount in rte.yaml", kind="constant",
+      min=14, max=14, description="Anzahl der Zellkanaele (Dimension der Vektorports)")
+param(c, "VoltageSetValue_Ax", "float32", [0, 1, 2, 3, 4, 5], "[V]    setpoint breakpoints (VoltageSetValue_Ax of the old firmware)", 6)
+param(c, "VoltageSetPwm_T", "float32", [0, 0.185875, 0.378085, 0.570892, 0.763797, 0.9566], "[-]    duty (share of the period) at the breakpoints (VoltageSetPwm_T, 5 V = 0.9566)", 6)
+param(c, "VoltageSenseMeas_Ax", "float32", SENSE_MV, "[mV]   ADC pin voltage at the breakpoints: counts [0 796 1591 2391 3192 3991] of the old firmware (12 bit) x 2048 mV / 4095", 6)
+param(c, "VoltageSenseValue_T", "float32", [0, 1, 2, 3, 4, 5], "[V]    cell voltage at the breakpoints (VoltageSenseValue_T)", 6)
+param(c, "SetpointLimit_V", "float32", [5.0], "[V]    upper setpoint limit, bound to BattSimParams.CellVoltLimit_V in rte.yaml (default 5.0 V; the 4.30 V limit stays in LabControl)",
+      unit="V", min=0, max=5.0, description="Obere Grenze jedes Sollwerts")
+param(c, "VoltageSenseFilter", "float32", [0.1], "[-]    low-pass weight of the actual value per 10 ms (time constant about 95 ms)")
+param(c, "CtrlKp", "float32", [0.2], "[V/V]  proportional gain of the regulator of a channel (start value, to be tuned at the device)",
+      unit="-", min=0, max=2.0, description="Proportionalanteil des Reglers")
+param(c, "CtrlKi_per_s", "float32", [1.0], "[1/s]  integral gain of the regulator (start value, to be tuned at the device)",
+      unit="1/s", min=0, max=10.0, description="Integralanteil des Reglers")
+param(c, "CtrlLimit_V", "float32", [0.1], "[V]    the regulator corrects by at most this much in both directions (FW-07: 0.1 V)",
+      unit="V", min=0, max=0.1, description="Begrenzung der Reglerkorrektur")
+
+
+def fmt(v):
+    return repr(float(v)) if isinstance(v, float) else str(v)
+
+
+def yaml_scalar(v):
+    if isinstance(v, str):
+        return json.dumps(v, ensure_ascii=False)
+    return fmt(v)
+
+
+for comp, d in components.items():
+    r = d["runnable"]
+    lines = ["# SPDX-License-Identifier: Apache-2.0",
+             "# Description of " + comp + ": the model " + comp + ".slx is the master (made by " + comp + "_create.m); this file is the",
+             "# description it matches, and tools/rtegen compares it with the generated ARXML. Written by tools/gen_swc_ports.py.",
+             "version: 1", f"name: {comp}", "description: " + json.dumps(d["description"], ensure_ascii=False),
+             "implementation: simulink", "runnables:", f"  - name: {r}", "    period_ms: 10", "ports:"]
+    for name, direction, ptype, comment, extra in d["ports"]:
+        lines.append(f"  - name: {name}" + (f"           # {comment}" if comment else ""))
+        lines += [f"    direction: {direction}", f"    type: {ptype}"]
+        if "dimension" in extra:
+            lines.append(f"    dimension: {extra['dimension']}")
+        lines.append(f"    runnables: [{r}]")
+    lines.append("parameters:")
+    data = ["% SPDX-License-Identifier: Apache-2.0",
+            f"% Calibration values of {comp} (RTE-03), the only place of these numbers. Read without MATLAB by tools/swc/mdata.py,",
+            "% in MATLAB by swc_load_data. Written by tools/gen_swc_ports.py.", ""]
+    for name, ptype, values, comment, dim, extra in d["params"]:
+        lines.append(f"  - name: {name}")
+        if extra.get("kind"):
+            lines.append(f"    kind: {extra['kind']}")
+        lines.append(f"    type: {ptype}")
+        if dim:
+            lines.append(f"    dim: {dim}")
+        for key in ("unit", "min", "max", "description"):
+            if key in extra:
+                lines.append(f"    {key}: {yaml_scalar(extra[key])}")
+        if extra.get("kind") == "constant":
+            lines.append(f"    value: {fmt(values[0])}")
+        else:
+            lines.append(f"    runnables: [{r}]")
+            rhs = fmt(values[0]) if len(values) == 1 else "[" + " ".join(fmt(v) for v in values) + "]"
+            data.append(f"{name} = {rhs};   % {comment}")
+    (SWC / comp).mkdir(exist_ok=True)
+    (SWC / comp / "swc.yaml").write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
+    (SWC / comp / f"{comp}_data.m").write_text("\n".join(data) + "\n", encoding="utf-8", newline="\n")
+    print(comp, len(d["ports"]), "ports", len(d["params"]), "parameters")
+
+# ------------------------------------------------------------------ connections of rte.yaml
+# key: the port that is connected; value: its source (required port) or its targets (provided port with a CAN signal,
+# a pin, a data identifier, ...). A provided port that only feeds components has no line.
+order = ["SupplyMonitor", "BattSimMode", "CellCal", "CellChannels"]
+out = ["connections:"]
+for comp in order:
+    for key, target in connections.items():
+        if key.startswith(comp + "."):
+            value = target if isinstance(target, str) else "[" + ", ".join(target) + "]"
+            out.append(f"  {key}: {value}")
+conn_text = "\n".join(out) + "\n"
+rte = PROJECT / "rte.yaml"
+t = rte.read_bytes().decode("utf-8")
+nl = "\r\n" if "\r\n" in t else "\n"
+t = t.replace("\r\n", "\n")
+head = t[:t.index("connections:")]
+rte.write_bytes((head + conn_text).replace("\n", nl).encode("utf-8"))
+print("connections", len(out) - 1)
+
+# ------------------------------------------------------------------ data identifiers of the calibration in diag.yaml
+BEGIN = "  # ---- begin generated by tools/gen_swc_ports.py: calibration of the cell channels (stage C) ----"
+END = "  # ---- end generated by tools/gen_swc_ports.py ----"
+did = [BEGIN]
+for n in CH:
+    nn = f"{n:02d}"
+    did += [
+        f"  - identifier: 0x{CAL_DID_BASE + n:04X}",
+        f"    name: CalCh{nn}",
+        f"    label: Calibration of cell channel {n}",
+        "    description: >-",
+        f"      Offset and gain for the setpoint and for the actual value of channel {n} (y = gain * x + offset). Reading gives",
+        "      the values in use; writing stages new values, which take effect only with the routine ApplyCalibration",
+        "      (outputs off).",
+        "    group: calibration",
+        "    read: true",
+        "    read_sessions: [Default, Extended]",
+        "    write: true",
+        "    write_sessions: [Extended]",
+        "    write_security: Application",
+        "    data:"]
+    for key, stem, wire, label, factor, lo, hi, default, unit in CAL:
+        did += [f"      - name: {key}",
+                f"        label: {label}",
+                f"        type: {wire}",
+                f"        factor: {factor}"]
+        if unit:
+            did.append(f"        unit: {unit}")
+        did += [f"        min: {lo}",
+                f"        max: {hi}",
+                f"        source: {{port: CellCal.Ac{stem}{nn}.Ac{stem}{nn}}}"]
+did += [END]
+diag = PROJECT / "diag.yaml"
+text = diag.read_bytes().decode("utf-8")
+nl = "\r\n" if "\r\n" in text else "\n"
+text = text.replace("\r\n", "\n")
+block = "\n".join(did) + "\n"
+if BEGIN in text:
+    text = re.sub(re.escape(BEGIN) + r".*?" + re.escape(END) + "\n", lambda m: block, text, flags=re.S)
+    diag.write_bytes(text.replace("\n", nl).encode("utf-8"))
+    print("diag.yaml: block replaced")
+else:
+    print("diag.yaml: markers missing; add the begin and end line inside data_identifiers: and run again")
