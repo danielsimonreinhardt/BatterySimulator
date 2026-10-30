@@ -351,3 +351,19 @@ Aufbau unveraendert (Nutzer: "Ja der Aufbau steht noch"): J-Link, CANcaseXL Ch2,
   `Rte_*`, `RteCalibration.json`, `RteDiag.h`) ist vorher und nachher **byte-identisch** (SHA-256 aller Dateien verglichen, ausser dem Identitaets-Manifest `identity/rtegen.sha256`, dessen Eingangs-Hash
   sich wegen DBC und `_data.m` aendert, und den Pfaden in `rte_components.cmake`); die Simulink-Modelle und `swc.yaml` sind unberuehrt. Deshalb **keine neue Firmware-Version** (0.3.3 bleibt).
 * Nicht geflasht, kein Geraetezugriff.
+
+## 15. Anfangswerte der Kalibrierung (RTE-56, Version 0.3.4, 30.10.2026)
+
+* **Aenderung:** Bis 0.3.3 war der Standardwert eines nie geschriebenen NvM-Blocks 0 (Embedded Coder schreibt `INIT-VALUE` 0), und `CellCal` setzte fuer `QLF_NOT_AVAILABLE`
+  selbst die Werkswerte. Mit neXtBSW ffdf5aa7 (RTE-56) steht der Anfangswert in `swc.yaml` (`ports[].init`): 10000 an `NvSetGainOut`/`NvMeasGainOut` und `AcSetGainNN`/`AcMeasGainNN`,
+  1.0 an `CalSetGain`/`CalMeasGain`. rtegen nimmt ihn in den RTE-Puffer und den NvM-Standardwert. Nicht an `StSetGainNN`/`StMeasGainNN` (0 = nie geschrieben).
+  Der Ausgleich in `CellCal` ist entfernt.
+* **Was gleich bleibt (Schutz):** die Grenzpruefung der Steigungen (0,9 .. 1,1) und Offsets (+-0,2 V) beim Start, die Ersetzung durch den Werkswert des Kanals mit Zustand 2, der defekte
+  Block (anderer Qualifier als OK und NOT_AVAILABLE) mit Werkswerten und Zustand 2, `CellChannels` mit Werkswerten ausserhalb 0,5 .. 1,5 bzw. +-0,5 V, die Diagnose-Grenzen (NRC 0x31),
+  Zustandsanzeige 0x0210.
+* **Neu abgesichert:** Faellt der Anfangswert aus (Port ohne `init`, etwa nach einem Rueckfall auf einen alten Pin), ist der Standardwert 0, die Steigung liegt ausserhalb der Grenzen und `CellCal` meldet
+  Zustand 2 mit Werkswerten. Das ist nicht mehr "stillschweigend richtig" wie mit dem Ausgleich, sondern sichtbar.
+* **Tests (SIL, `battsim-sil`, 980 Pruefungen, 0 Fehler):** die generierten RTE-Puffer starten mit Steigung 10000 (`NvSetGainOut`, `NvMeasGainOut`), 1,0 (`CalSetGain`, `CalMeasGain`) und
+  `AcSetGain` 10000, Offsets und bereitgelegte Werte 0; ein nie geschriebener Block (Standard aus dem generierten RTE) startet mit 1,0000, Zustand 0; ein Standardwert 0 (Anfangswert fehlt)
+  gibt Werkswerte und Zustand 2. Alle anderen Tests starten nun mit dem Standardwert aus dem RTE statt mit 0.
+* Version 0.3.4; Groesse, Anzahl und Kennungen der NvM-Bloecke und die Diagnosekennungen unveraendert. Dass gespeicherte Werte aus 0.3.3 nach dem Flashen gueltig bleiben, ist am Geraet noch nicht geprueft (naechster Geraetetermin). **Nicht geflasht.**

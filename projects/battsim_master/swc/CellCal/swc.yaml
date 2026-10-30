@@ -347,67 +347,83 @@ ports:
     direction: out
     type: uint16
     dimension: CellCount
+    init: 10000
     runnables: [CalTask10ms]
   - name: AcSetGain01           # value in use (read back by the tester, 22)
     direction: out
     type: uint16
+    init: 10000
     runnables: [CalTask10ms]
   - name: AcSetGain02           # value in use (read back by the tester, 22)
     direction: out
     type: uint16
+    init: 10000
     runnables: [CalTask10ms]
   - name: AcSetGain03           # value in use (read back by the tester, 22)
     direction: out
     type: uint16
+    init: 10000
     runnables: [CalTask10ms]
   - name: AcSetGain04           # value in use (read back by the tester, 22)
     direction: out
     type: uint16
+    init: 10000
     runnables: [CalTask10ms]
   - name: AcSetGain05           # value in use (read back by the tester, 22)
     direction: out
     type: uint16
+    init: 10000
     runnables: [CalTask10ms]
   - name: AcSetGain06           # value in use (read back by the tester, 22)
     direction: out
     type: uint16
+    init: 10000
     runnables: [CalTask10ms]
   - name: AcSetGain07           # value in use (read back by the tester, 22)
     direction: out
     type: uint16
+    init: 10000
     runnables: [CalTask10ms]
   - name: AcSetGain08           # value in use (read back by the tester, 22)
     direction: out
     type: uint16
+    init: 10000
     runnables: [CalTask10ms]
   - name: AcSetGain09           # value in use (read back by the tester, 22)
     direction: out
     type: uint16
+    init: 10000
     runnables: [CalTask10ms]
   - name: AcSetGain10           # value in use (read back by the tester, 22)
     direction: out
     type: uint16
+    init: 10000
     runnables: [CalTask10ms]
   - name: AcSetGain11           # value in use (read back by the tester, 22)
     direction: out
     type: uint16
+    init: 10000
     runnables: [CalTask10ms]
   - name: AcSetGain12           # value in use (read back by the tester, 22)
     direction: out
     type: uint16
+    init: 10000
     runnables: [CalTask10ms]
   - name: AcSetGain13           # value in use (read back by the tester, 22)
     direction: out
     type: uint16
+    init: 10000
     runnables: [CalTask10ms]
   - name: AcSetGain14           # value in use (read back by the tester, 22)
     direction: out
     type: uint16
+    init: 10000
     runnables: [CalTask10ms]
   - name: CalSetGain           # value in use, physical, for CellChannels
     direction: out
     type: float32
     dimension: CellCount
+    init: 1.0
     runnables: [CalTask10ms]
   - name: NvMeasOffsetOut           # value to store
     direction: out
@@ -479,67 +495,83 @@ ports:
     direction: out
     type: uint16
     dimension: CellCount
+    init: 10000
     runnables: [CalTask10ms]
   - name: AcMeasGain01           # value in use (read back by the tester, 22)
     direction: out
     type: uint16
+    init: 10000
     runnables: [CalTask10ms]
   - name: AcMeasGain02           # value in use (read back by the tester, 22)
     direction: out
     type: uint16
+    init: 10000
     runnables: [CalTask10ms]
   - name: AcMeasGain03           # value in use (read back by the tester, 22)
     direction: out
     type: uint16
+    init: 10000
     runnables: [CalTask10ms]
   - name: AcMeasGain04           # value in use (read back by the tester, 22)
     direction: out
     type: uint16
+    init: 10000
     runnables: [CalTask10ms]
   - name: AcMeasGain05           # value in use (read back by the tester, 22)
     direction: out
     type: uint16
+    init: 10000
     runnables: [CalTask10ms]
   - name: AcMeasGain06           # value in use (read back by the tester, 22)
     direction: out
     type: uint16
+    init: 10000
     runnables: [CalTask10ms]
   - name: AcMeasGain07           # value in use (read back by the tester, 22)
     direction: out
     type: uint16
+    init: 10000
     runnables: [CalTask10ms]
   - name: AcMeasGain08           # value in use (read back by the tester, 22)
     direction: out
     type: uint16
+    init: 10000
     runnables: [CalTask10ms]
   - name: AcMeasGain09           # value in use (read back by the tester, 22)
     direction: out
     type: uint16
+    init: 10000
     runnables: [CalTask10ms]
   - name: AcMeasGain10           # value in use (read back by the tester, 22)
     direction: out
     type: uint16
+    init: 10000
     runnables: [CalTask10ms]
   - name: AcMeasGain11           # value in use (read back by the tester, 22)
     direction: out
     type: uint16
+    init: 10000
     runnables: [CalTask10ms]
   - name: AcMeasGain12           # value in use (read back by the tester, 22)
     direction: out
     type: uint16
+    init: 10000
     runnables: [CalTask10ms]
   - name: AcMeasGain13           # value in use (read back by the tester, 22)
     direction: out
     type: uint16
+    init: 10000
     runnables: [CalTask10ms]
   - name: AcMeasGain14           # value in use (read back by the tester, 22)
     direction: out
     type: uint16
+    init: 10000
     runnables: [CalTask10ms]
   - name: CalMeasGain           # value in use, physical, for CellChannels
     direction: out
     type: float32
     dimension: CellCount
+    init: 1.0
     runnables: [CalTask10ms]
   - name: ApplyResult
     direction: out

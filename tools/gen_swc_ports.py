@@ -112,8 +112,8 @@ for v, msg in zip(vnames, QLF_MSGS):
 for part in ("Major", "Minor", "Patch"):
     port(c, f"FwVersion{part}", "out", "uint8", f"can.tx.STATUS_BATTSIM_EXT.FW_VERSION_{part.upper()}")
 param(c, "VersionMajor", "uint8", [0], "firmware version of 0x121")
-param(c, "VersionMinor", "uint8", [3], "firmware version of 0x121 (0.3.3: stage C, plausibility check of the current measurement; 0.3.2: regulator hold 500 ms; 0.2.0 was stage B)")
-param(c, "VersionPatch", "uint8", [3], "firmware version of 0x121")
+param(c, "VersionMinor", "uint8", [3], "firmware version of 0x121 (0.3.4: initial values of the calibration ports, RTE-56; 0.3.3: stage C, plausibility check of the current measurement; 0.3.2: regulator hold 500 ms; 0.2.0 was stage B)")
+param(c, "VersionPatch", "uint8", [4], "firmware version of 0x121")
 param(c, "ButtonDebounce_cycles", "uint8", [3], "[10 ms] a key level counts after this many equal samples")
 
 # ------------------------------------------------------------------ CellCal (stage C)
@@ -131,11 +131,17 @@ for key, stem, wire, label, factor, lo, hi, default, unit in CAL:
     port(c, f"Nv{stem}Qlf", "in", "uint8", f"nvm.qlf.Cal{stem}")
 for key, stem, wire, label, factor, lo, hi, default, unit in CAL:
     ptype = PORT_TYPE[wire]
-    port(c, f"Nv{stem}Out", "out", ptype, f"nvm.Cal{stem}", "value to store", dimension="CellCount")
+    # RTE-56: the initial value of a port reaches the RTE buffer and the NvM default, so a block that was never written starts
+    # with the factory value (a gain 1.0000 = code 10000), not with 0. Only the written ports (Nv...Out) and the ones read back
+    # (Ac...) get it; the staged values (St...) keep 0, which means "never written" there.
+    init_code = {"init": default} if default else {}
+    init_phys = {"init": round(default * factor, 6)} if default else {}
+    port(c, f"Nv{stem}Out", "out", ptype, f"nvm.Cal{stem}", "value to store", dimension="CellCount", **init_code)
     for n in CH:
         nn = f"{n:02d}"
-        port(c, f"Ac{stem}{nn}", "out", ptype, ["rte", f"did.CalCh{nn}.{key}"], "value in use (read back by the tester, 22)")
-    port(c, PHYS[key], "out", "float32", None, "value in use, physical, for CellChannels", dimension="CellCount")
+        port(c, f"Ac{stem}{nn}", "out", ptype, ["rte", f"did.CalCh{nn}.{key}"], "value in use (read back by the tester, 22)",
+             **init_code)
+    port(c, PHYS[key], "out", "float32", None, "value in use, physical, for CellChannels", dimension="CellCount", **init_phys)
 port(c, "ApplyResult", "out", "uint8", ["rte", "routine.ApplyCalibration.results.result"])
 port(c, "ApplyBadChannel", "out", "uint8", ["rte", "routine.ApplyCalibration.results.badChannel"])
 port(c, "CalState", "out", "uint8", ["rte", "did.CalibrationState.state"])
@@ -223,6 +229,8 @@ for comp, d in components.items():
         lines += [f"    direction: {direction}", f"    type: {ptype}"]
         if "dimension" in extra:
             lines.append(f"    dimension: {extra['dimension']}")
+        if "init" in extra:
+            lines.append(f"    init: {fmt(extra['init'])}")
         lines.append(f"    runnables: [{r}]")
     lines.append("parameters:")
     data = ["% SPDX-License-Identifier: Apache-2.0",

@@ -135,8 +135,12 @@ starten mit den Standardwerten: die Kalibrierung geht bei jedem Reset verloren, 
 2. **Symbolische Dimension und MATLAB-Function-Block:** Embedded Coder bricht mit "does not support symbolic dimensions propagation" ab, wenn ein Vektorport mit
    `dimension: CellCount` direkt in einen MATLAB-Function-Block fuehrt. Umgehung hier: ein Reshape-Block vor und hinter dem Kern (`swc/swc_vec.m`), die
    Konstante ist per `min = max = 14` an die Schleifenlaenge des Modells gebunden. Ein Projekt kann keine andere Zahl binden.
-3. **Anfangswert eines Vektor-Provided-Ports:** der "Initial output" des Outports kommt nicht in die ARXML (`DefaultInitValue` 0), also ist der NvM-Standardwert
-   eines Blocks immer 0. Gewollt waere 10000 fuer die Steigungen. Hier gleicht `CellCal` das aus (nie geschriebener Block = Werkswerte).
+3. **Anfangswert eines Vektor-Provided-Ports (erledigt mit RTE-56, Firmware 0.3.4):** der "Initial output" des Outports kommt nicht in die ARXML
+   (`DefaultInitValue` 0), also war der NvM-Standardwert eines Blocks immer 0, gewollt ist 10000 fuer die Steigungen. Bis 0.3.3 glich `CellCal` das aus
+   (nie geschriebener Block = Werkswerte). Seit dem Pin ffdf5aa7 gibt es `ports[].init` in `swc.yaml`: `NvSetGainOut`/`NvMeasGainOut` und `AcSetGainNN`/`AcMeasGainNN`
+   haben `init: 10000`, `CalSetGain`/`CalMeasGain` `init: 1.0`; rtegen nimmt es in den RTE-Puffer und den NvM-Standardwert. Die bereitgelegten Werte
+   (`StSetGainNN`, `StMeasGainNN`) behalten 0 = nie geschrieben. `CellCal` nimmt den Wert eines nie geschriebenen Blocks jetzt, wie er kommt, und prueft ihn
+   gegen die Grenzen (Abschnitt 15 der Sicherheitshinweise).
 4. **RTE-49 (gleichnamige Ports):** `CellCal` und `CellChannels` hatten beide einen Required-Port `OutputEnable`; die beiden Header definieren dasselbe
    Makro verschieden, der Bau bricht ab. `CellCal.OutputsOn` heisst jetzt anders.
 5. **RTE-54** (rtegen-Cast bei Eingangsports mit Konstanten-Dimension und mehreren Lesern, GCC 14) ist hier nicht aufgetreten: jeder Vektor hat genau einen Leser, und

@@ -217,7 +217,7 @@ static void startIsStandbyWithWatchdogReason(void)
     CHECK(MODE(FailReason) == FAIL_WATCHDOG);
     CHECK(outputsOff());
     CHECK(MODE(LedRemote) == 0U);
-    CHECK(MODE(FwVersionMajor) == 0U && MODE(FwVersionMinor) == 3U && MODE(FwVersionPatch) == 3U);
+    CHECK(MODE(FwVersionMajor) == 0U && MODE(FwVersionMinor) == 3U && MODE(FwVersionPatch) == 4U);
     /* the held setpoints of the CAN buffers do not act in STANDBY (FW-16) */
     setpointFrame123(ENABLE_ON, 3.7, ENABLE_ON, 3.7, ENABLE_ON, 3.7);
     cycles(5);
@@ -643,7 +643,7 @@ static void statusExtensionFrame(void)
     CHECK((data[0] & 0x20U) != 0U);           /* LIMIT */
     CHECK((data[0] & 0x40U) == 0U);           /* regulator switched off by the diagnosis (ControllerOffReq = 1 here) */
     CHECK((data[1] & 0x0FU) == 0U);           /* FAIL reason none */
-    CHECK(data[5] == 0U && data[6] == 3U && data[7] == 3U); /* version 0.3.0 */
+    CHECK(data[5] == 0U && data[6] == 3U && data[7] == 4U); /* version 0.3.4 */
     uint16_t current = (uint16_t)(data[3] | (data[4] << 8U));
     CHECK(current > 480U && current < 510U);   /* 0.5 A in 0.001 A */
     *controlQlf[5] = QLF_OK;
@@ -719,7 +719,29 @@ static void nvmRestore(uint8 qlf, const sint16* setOff, const uint16* setGain, c
 }
 
 static sint16 zeroOff[14];
-static uint16 zeroGain[14]; /* the default of an NvM block written by the model: 0 */
+static uint16 zeroGain[14]; /* the default of an NvM block before RTE-56 (the initial value did not reach the RTE): 0 */
+static sint16 initOff[14];  /* the RTE buffers as the generated Rte.c initialises them (RTE-56): the default of a never written */
+static uint16 initGain[14]; /* NvM block, with the gains 1.0000 (10000); taken at the start of the program */
+
+/* RTE-56: ports[].init of swc.yaml reaches the RTE buffers before the first step: a never written block starts with the factory
+ * values (gain 1.0000), the staged values (St...) stay 0 = never written */
+static void rteStartsWithTheFactoryValues(void)
+{
+    int ok = 1;
+    for (int k = 0; k < 14; ++k)
+    {
+        ok = ok && (CAL(NvSetOffsetOut)[k] == 0) && (CAL(NvSetGainOut)[k] == 10000U) && (CAL(NvMeasOffsetOut)[k] == 0) &&
+             (CAL(NvMeasGainOut)[k] == 10000U);
+        ok = ok && (CAL(CalSetOffset_V)[k] == 0.0f) && (CAL(CalSetGain)[k] == 1.0f) && (CAL(CalMeasOffset_V)[k] == 0.0f) &&
+             (CAL(CalMeasGain)[k] == 1.0f);
+        ok = ok && (*acSetOff[k] == 0) && (*acSetGain[k] == 10000U) && (*acMeasOff[k] == 0) && (*acMeasGain[k] == 10000U);
+        ok = ok && (*stSetOff[k] == 0) && (*stSetGain[k] == 0U) && (*stMeasOff[k] == 0) && (*stMeasGain[k] == 0U);
+    }
+    CHECK(ok);
+    (void)memcpy(initOff, CAL(NvSetOffsetOut), sizeof(initOff));
+    (void)memcpy(initGain, CAL(NvSetGainOut), sizeof(initGain));
+    CHECK(memcmp(initOff, CAL(NvMeasOffsetOut), sizeof(initOff)) == 0 && memcmp(initGain, CAL(NvMeasGainOut), sizeof(initGain)) == 0);
+}
 
 static void startCalibration(uint8 qlf, const sint16* setOff, const uint16* setGain, const sint16* measOff,
                              const uint16* measGain)
@@ -758,12 +780,18 @@ static void applyCalibration(void) /* routine ApplyCalibration: the request coun
 
 static void calibrationStartStates(void)
 {
-    /* never written block (QLF_NOT_AVAILABLE, default 0): factory values, state 0 */
-    startCalibration(QLF_NOT_AVAILABLE, zeroOff, zeroGain, zeroOff, zeroGain);
+    /* never written block (QLF_NOT_AVAILABLE; the NvM delivers its default, the initial value of the port: gain 1.0000): the model
+     * takes it as it comes - factory values, state 0 (RTE-56; before, the model substituted the factory values itself) */
+    startCalibration(QLF_NOT_AVAILABLE, initOff, initGain, initOff, initGain);
     CHECK(allFactory());
     CHECK(CAL(CalState) == 0U);
-    CHECK(CAL(CalSetGain)[0] == 1.0f && CAL(CalSetOffset_V)[0] == 0.0f);
+    CHECK(CAL(CalSetGain)[0] == 1.0f && CAL(CalSetOffset_V)[0] == 0.0f && CAL(CalMeasGain)[13] == 1.0f);
     CHECK(CAL(NvSetGainOut)[5] == 10000U); /* the model writes the factory value, the NvM stores it on change */
+    /* the initial value would be missing (default 0 as before RTE-56): the limit check catches it, factory values of the channel, state 2 */
+    startCalibration(QLF_NOT_AVAILABLE, zeroOff, zeroGain, zeroOff, zeroGain);
+    CHECK(allFactory());
+    CHECK(CAL(CalState) == 2U);
+    CHECK(CAL(CalSetGain)[0] == 1.0f && CAL(CalMeasGain)[13] == 1.0f);
     /* stored values, state 1: channel 3 and channel 14 */
     sint16 so[14], mo[14];
     uint16 sg[14], mg[14];
@@ -800,12 +828,12 @@ static void calibrationStartStates(void)
     startCalibration(QLF_ERROR, so, sg, mo, mg);
     CHECK(*acSetOff[2] == 0 && *acSetGain[2] == 10000U);
     CHECK(CAL(CalState) == 2U);
-    startCalibration(QLF_NOT_AVAILABLE, zeroOff, zeroGain, zeroOff, zeroGain);
+    startCalibration(QLF_NOT_AVAILABLE, initOff, initGain, initOff, initGain);
 }
 
 static void stagedValuesAreTakenOverOnRequestWithOutputsOff(void)
 {
-    startCalibration(QLF_NOT_AVAILABLE, zeroOff, zeroGain, zeroOff, zeroGain);
+    startCalibration(QLF_NOT_AVAILABLE, initOff, initGain, initOff, initGain);
     cycles(2);
     /* outputs on: refused, nothing changes */
     setpointFrame123(ENABLE_ON, 3.7, ENABLE_ON, 3.7, ENABLE_ON, 3.7);
@@ -923,7 +951,7 @@ static void runPlant(int n)
 static void regulatorCorrectsWithinItsAuthority(void)
 {
     /* factory calibration, so the duty is the table duty */
-    startCalibration(QLF_NOT_AVAILABLE, zeroOff, zeroGain, zeroOff, zeroGain);
+    startCalibration(QLF_NOT_AVAILABLE, initOff, initGain, initOff, initGain);
     *adcQlfIn[0] = QLF_OK;
     plantV       = 0.0;
     plantGain    = 0.99;
@@ -1019,7 +1047,7 @@ static uint8 failReasonOnTheBus(void) /* BATTSIM_FAIL_REASON as the generated pa
 
 static void invalidCurrentMeasurementSwitchesOffInRun(void)
 {
-    startCalibration(QLF_NOT_AVAILABLE, zeroOff, zeroGain, zeroOff, zeroGain);
+    startCalibration(QLF_NOT_AVAILABLE, initOff, initGain, initOff, initGain);
     setpointFrame123(ENABLE_ON, 3.0, 0U, 0.0, 0U, 0.0);
     SUPPLY(ISupplyQlf) = QLF_OK;
     goToRun();
@@ -1214,7 +1242,7 @@ static void levelFloorMovesTheOvervoltageReference(void)
 
 static void regulatorHoldsAfterASetpointStep(void)
 {
-    startCalibration(QLF_NOT_AVAILABLE, zeroOff, zeroGain, zeroOff, zeroGain);
+    startCalibration(QLF_NOT_AVAILABLE, initOff, initGain, initOff, initGain);
     *adcQlfIn[0] = QLF_OK;
     plantGain    = 1.0;
     plantOffset  = 0.0;
@@ -1293,7 +1321,7 @@ static void regulatorHoldsAfterASetpointStep(void)
 
 static void implausiblyLowCurrentSwitchesOffInRun(void)
 {
-    startCalibration(QLF_NOT_AVAILABLE, zeroOff, zeroGain, zeroOff, zeroGain);
+    startCalibration(QLF_NOT_AVAILABLE, initOff, initGain, initOff, initGain);
     CELL(ControllerOffReq) = 1U;
     SUPPLY(ISupplyQlf)     = QLF_OK;
     SUPPLY(ISupply_mV)     = QUIESCENT_MV;
@@ -1380,7 +1408,7 @@ static void implausiblyLowCurrentSwitchesOffInRun(void)
    error like the card of channel 1 (+0.6 %): the correction at 4.8 V is about -0.03 V, at 1.0 V only -0.006 V. */
 static void stepClearsTheCorrectionOfTheOldOperatingPoint(void)
 {
-    startCalibration(QLF_NOT_AVAILABLE, zeroOff, zeroGain, zeroOff, zeroGain);
+    startCalibration(QLF_NOT_AVAILABLE, initOff, initGain, initOff, initGain);
     *adcQlfIn[0] = QLF_OK;
     plantGain    = 1.00625;
     plantOffset  = 0.0;
@@ -1435,8 +1463,9 @@ static void stepClearsTheCorrectionOfTheOldOperatingPoint(void)
 
 int main(void)
 {
+    rteStartsWithTheFactoryValues(); /* before anything has run */
     BattSimMode_Init();
-    nvmRestore(QLF_NOT_AVAILABLE, zeroOff, zeroGain, zeroOff, zeroGain);
+    nvmRestore(QLF_NOT_AVAILABLE, initOff, initGain, initOff, initGain);
     CELL(ControllerOffReq) = 1U; /* the stage B checks run without the regulator */
     startIsStandbyWithWatchdogReason();
     setpointFrameBecomesDuty();

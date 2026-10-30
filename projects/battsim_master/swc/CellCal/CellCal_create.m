@@ -10,9 +10,12 @@ function CellCal_create()
 %     - In the model the values are integer codes as on the wire: offset sint16 in 0.1 mV, gain uint16 in 1e-4 (10000 = 1.0).
 %       CellChannels gets them as float32 (V and ratio).
 %     - Start: the values in use are the stored ones (NvM blocks, one per kind, one value per channel). A block that was
-%       never written (QLF_NOT_AVAILABLE; its default is 0, the Outport initial value does not reach the ARXML) gives the
-%       factory values (offset 0, gain 1), which the model writes and the NvM then stores; a defective block (any other
-%       qualifier) too, state 2; a stored value outside the limits is replaced by the factory value of its channel, state 2.
+%       never written (QLF_NOT_AVAILABLE) delivers its default, and that is the factory value (offset 0, gain 1.0000 = 10000):
+%       swc.yaml gives the gain ports the initial value 10000 (ports[].init, RTE-56), rtegen takes it to the RTE buffer and the
+%       NvM default. The model takes the value as it comes and checks it against the limits as for a stored one (state 0 as
+%       long as it is the default). A defective block (any other qualifier) gives the factory values, state 2; a value outside
+%       the limits (also a default of 0 if the initial value were missing) is replaced by the factory value of its channel,
+%       state 2.
 %     - A tester stages values per channel with 2E (CalChNN); nothing changes until the routine ApplyCalibration (31 01 0200,
 %       a counter that changes). Then, in the same 10 ms step: outputs on -> refused (result 1); a staged channel is "new" when
 %       it differs from the value in use and is not all zero (all zero = never written since the start); one new channel with
@@ -115,11 +118,13 @@ lines = {
 'state = st;'
 ''
 'function [v, s] = loadOffsets(inV, q, lim, QlfOk, QlfNa)'
-'% stored offsets; the factory value 0 for a never written or defective block, or a value outside the limit'
+'% stored offsets (a never written block delivers its default 0); the factory value 0 for a defective block or a value outside the limit'
 'v = zeros(14, 1, ''int16'');'
 's = uint8(0);'
-'if q == QlfOk'
-'    s = uint8(1);'
+'if (q == QlfOk) || (q == QlfNa)'
+'    if q == QlfOk'
+'        s = uint8(1);'
+'    end'
 '    for k = 1:14'
 '        if abs(int32(inV(k))) <= int32(lim)'
 '            v(k) = inV(k);'
@@ -132,11 +137,14 @@ lines = {
 'end'
 ''
 'function [v, s] = loadGains(inV, q, lo, hi, QlfOk, QlfNa)'
-'% stored gains; the factory value 1.0000 (code 10000) for a never written or defective block, or a value outside the limits'
+'% stored gains (a never written block delivers its default 1.0000, code 10000, from the initial value of the port); the factory value'
+'% 1.0000 for a defective block or a value outside the limits'
 'v = uint16(10000) * ones(14, 1, ''uint16'');'
 's = uint8(0);'
-'if q == QlfOk'
-'    s = uint8(1);'
+'if (q == QlfOk) || (q == QlfNa)'
+'    if q == QlfOk'
+'        s = uint8(1);'
+'    end'
 '    for k = 1:14'
 '        if (inV(k) >= lo) && (inV(k) <= hi)'
 '            v(k) = inV(k);'

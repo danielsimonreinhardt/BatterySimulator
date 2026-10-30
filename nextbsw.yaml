@@ -9,7 +9,7 @@
 # Zweig, nxconfig migrate, Bericht unter doc/nextbsw-updates/, Review (customer-project.md 5.5).
 #
 # Quelle des Untermoduls: https://github.com/danielsimonreinhardt/neXtBSW_development.git
-# ENTWICKLUNGS-PIN: Das Untermodul steht auf dem Commit e70ea7b8e0dce1974414fedc478c67e05ccdd55c, auf den **kein**
+# ENTWICKLUNGS-PIN: Das Untermodul steht auf dem Commit ffdf5aa7756b00d879242c6192761c12bbab6b1f, auf den **kein**
 #   Release-Tag v1.0.0 zeigt. Erlaubt, solange entwickelt wird (customer-project.md 4.4,
 #   Frage Q8); fuer eine Serienauslieferung gehoert hier ein annotierter Tag auf master (SYS-68),
 #   und `tools/ci run --release` weist einen Entwicklungs-Pin ab.

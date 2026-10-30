@@ -20,8 +20,46 @@
 ARID_DEF_CellCal_T CellCal_ARID_DEF;   /* '<Root>/CalSetOffset_V' */
 
 /* Forward declaration for local functions */
+static void CellCal_loadOffsets(const sint16 inV[14], uint8 q, uint16 lim, uint8
+  QlfOk, uint8 QlfNa, sint16 v[14], uint8 *s);
 static void CellCal_loadGains(const uint16 inV[14], uint8 q, uint16 lo, uint16
   hi, uint8 QlfOk, uint8 QlfNa, uint16 v[14], uint8 *s);
+
+/* Function for MATLAB Function: '<S1>/CalCore' */
+static void CellCal_loadOffsets(const sint16 inV[14], uint8 q, uint16 lim, uint8
+  QlfOk, uint8 QlfNa, sint16 v[14], uint8 *s)
+{
+  sint32 i;
+  for (i = 0; i < 14; i++) {
+    v[i] = 0;
+  }
+
+  *s = 0U;
+  if ((q == QlfOk) || (q == QlfNa)) {
+    if (q == QlfOk) {
+      *s = 1U;
+    }
+
+    for (i = 0; i < 14; i++) {
+      sint32 tmp;
+      sint16 inV_0;
+      inV_0 = inV[i];
+      if (inV_0 < 0) {
+        tmp = -inV_0;
+      } else {
+        tmp = inV_0;
+      }
+
+      if (tmp <= lim) {
+        v[i] = inV_0;
+      } else {
+        *s = 2U;
+      }
+    }
+  } else if (q != QlfNa) {
+    *s = 2U;
+  }
+}
 
 /* Function for MATLAB Function: '<S1>/CalCore' */
 static void CellCal_loadGains(const uint16 inV[14], uint8 q, uint16 lo, uint16
@@ -33,8 +71,11 @@ static void CellCal_loadGains(const uint16 inV[14], uint8 q, uint16 lo, uint16
   }
 
   *s = 0U;
-  if (q == QlfOk) {
-    *s = 1U;
+  if ((q == QlfOk) || (q == QlfNa)) {
+    if (q == QlfOk) {
+      *s = 1U;
+    }
+
     for (i = 0; i < 14; i++) {
       uint16 inV_0;
       inV_0 = inV[i];
@@ -63,7 +104,7 @@ void CalTask10ms(void)                 /* Explicit Task: CalTask10ms */
   sint16 tmpRead_1[Rte_SysCon_CellCount];
   sint16 tmpRead_5[Rte_SysCon_CellCount];
   sint16 aSO;
-  sint16 tmpRead_9;
+  sint16 rtb_TmpSignalConversionAtSFunctionInport3_0;
   uint16 rtb_TmpSignalConversionAtSFunctionInport4[14];
   uint16 rtb_TmpSignalConversionAtSFunctionInport6[14];
   uint16 tmpRead_3[Rte_SysCon_CellCount];
@@ -296,64 +337,18 @@ void CalTask10ms(void)                 /* Explicit Task: CalTask10ms */
    *  Reshape: '<S1>/NvSetOffsetIn_r'
    */
   if (!CellCal_ARID_DEF.started_not_empty) {
-    CellCal_ARID_DEF.started_not_empty = TRUE;
-    for (i = 0; i < 14; i++) {
-      CellCal_ARID_DEF.aSO[i] = 0;
-    }
-
-    x = 0U;
-    (void)Rte_Read_NvSetOffsetQlf_NvSetOffsetQlf(&tmpRead_2);
-    if (tmpRead_2 == 1) {
-      x = 1U;
-      for (k = 0; k < 14; k++) {
-        tmpRead_9 = tmpRead_1[k];
-        if (tmpRead_9 < 0) {
-          i = -tmpRead_9;
-        } else {
-          i = tmpRead_9;
-        }
-
-        if (i <= Rte_Prm_CalPrm_OffsetLimit_code()) {
-          CellCal_ARID_DEF.aSO[k] = tmpRead_9;
-        } else {
-          x = 2U;
-        }
-      }
-    } else if (tmpRead_2 != 64) {
-      x = 2U;
-    }
-
+    (void)Rte_Read_NvMeasGainQlf_NvMeasGainQlf(&tmpRead_8);
+    (void)Rte_Read_NvMeasOffsetQlf_NvMeasOffsetQlf(&tmpRead_6);
     (void)Rte_Read_NvSetGainQlf_NvSetGainQlf(&tmpRead_4);
+    (void)Rte_Read_NvSetOffsetQlf_NvSetOffsetQlf(&tmpRead_2);
+    CellCal_ARID_DEF.started_not_empty = TRUE;
+    CellCal_loadOffsets(tmpRead_1, tmpRead_2, Rte_Prm_CalPrm_OffsetLimit_code(),
+                        1, 64, CellCal_ARID_DEF.aSO, &x);
     CellCal_loadGains(tmpRead_3, tmpRead_4, Rte_Prm_CalPrm_GainMin_code(),
                       Rte_Prm_CalPrm_GainMax_code(), 1, 64, CellCal_ARID_DEF.aSG,
                       &tmpRead_2);
-    for (i = 0; i < 14; i++) {
-      CellCal_ARID_DEF.aMO[i] = 0;
-    }
-
-    tmpRead_4 = 0U;
-    (void)Rte_Read_NvMeasOffsetQlf_NvMeasOffsetQlf(&tmpRead_6);
-    if (tmpRead_6 == 1) {
-      tmpRead_4 = 1U;
-      for (k = 0; k < 14; k++) {
-        tmpRead_9 = tmpRead_5[k];
-        if (tmpRead_9 < 0) {
-          i = -tmpRead_9;
-        } else {
-          i = tmpRead_9;
-        }
-
-        if (i <= Rte_Prm_CalPrm_OffsetLimit_code()) {
-          CellCal_ARID_DEF.aMO[k] = tmpRead_9;
-        } else {
-          tmpRead_4 = 2U;
-        }
-      }
-    } else if (tmpRead_6 != 64) {
-      tmpRead_4 = 2U;
-    }
-
-    (void)Rte_Read_NvMeasGainQlf_NvMeasGainQlf(&tmpRead_8);
+    CellCal_loadOffsets(tmpRead_5, tmpRead_6, Rte_Prm_CalPrm_OffsetLimit_code(),
+                        1, 64, CellCal_ARID_DEF.aMO, &tmpRead_4);
     CellCal_loadGains(tmpRead_7, tmpRead_8, Rte_Prm_CalPrm_GainMin_code(),
                       Rte_Prm_CalPrm_GainMax_code(), 1, 64, CellCal_ARID_DEF.aMG,
                       &CellCal_ARID_DEF.st);
@@ -382,8 +377,9 @@ void CalTask10ms(void)                 /* Explicit Task: CalTask10ms */
     } else {
       for (k = 0; k < 14; k++) {
         req[k] = FALSE;
-        tmpRead_9 = rtb_TmpSignalConversionAtSFunctionInport3[k];
-        if (tmpRead_9 != 0) {
+        rtb_TmpSignalConversionAtSFunctionInport3_0 =
+          rtb_TmpSignalConversionAtSFunctionInport3[k];
+        if (rtb_TmpSignalConversionAtSFunctionInport3_0 != 0) {
           tmpRead = TRUE;
         } else if (rtb_TmpSignalConversionAtSFunctionInport4[k] != 0) {
           tmpRead = TRUE;
@@ -393,7 +389,8 @@ void CalTask10ms(void)                 /* Explicit Task: CalTask10ms */
           tmpRead = (rtb_TmpSignalConversionAtSFunctionInport6[k] != 0);
         }
 
-        if (tmpRead_9 != CellCal_ARID_DEF.aSO[k]) {
+        if (rtb_TmpSignalConversionAtSFunctionInport3_0 !=
+            CellCal_ARID_DEF.aSO[k]) {
           differs = TRUE;
         } else if (rtb_TmpSignalConversionAtSFunctionInport4[k] !=
                    CellCal_ARID_DEF.aSG[k]) {
@@ -408,18 +405,19 @@ void CalTask10ms(void)                 /* Explicit Task: CalTask10ms */
 
         if (tmpRead && differs) {
           req[k] = TRUE;
-          if (tmpRead_9 < 0) {
-            i = -tmpRead_9;
+          if (rtb_TmpSignalConversionAtSFunctionInport3_0 < 0) {
+            i = -rtb_TmpSignalConversionAtSFunctionInport3_0;
           } else {
-            i = tmpRead_9;
+            i = rtb_TmpSignalConversionAtSFunctionInport3_0;
           }
 
           if (i <= Rte_Prm_CalPrm_OffsetLimit_code()) {
-            tmpRead_9 = rtb_TmpSignalConversionAtSFunctionInport5[k];
-            if (tmpRead_9 < 0) {
-              i = -tmpRead_9;
+            rtb_TmpSignalConversionAtSFunctionInport3_0 =
+              rtb_TmpSignalConversionAtSFunctionInport5[k];
+            if (rtb_TmpSignalConversionAtSFunctionInport3_0 < 0) {
+              i = -rtb_TmpSignalConversionAtSFunctionInport3_0;
             } else {
-              i = tmpRead_9;
+              i = rtb_TmpSignalConversionAtSFunctionInport3_0;
             }
 
             if (i <= Rte_Prm_CalPrm_OffsetLimit_code()) {
@@ -458,28 +456,28 @@ void CalTask10ms(void)                 /* Explicit Task: CalTask10ms */
         CellCal_ARID_DEF.res = 2U;
       } else {
         tmpRead = FALSE;
-        i = 0;
+        k = 0;
         exitg1 = FALSE;
-        while ((!exitg1) && (i < 14)) {
-          if (req[i]) {
+        while ((!exitg1) && (k < 14)) {
+          if (req[k]) {
             tmpRead = TRUE;
             exitg1 = TRUE;
           } else {
-            i++;
+            k++;
           }
         }
 
         if (tmpRead) {
-          for (i = 0; i < 14; i++) {
-            if (req[i]) {
-              CellCal_ARID_DEF.aSO[i] =
-                rtb_TmpSignalConversionAtSFunctionInport3[i];
-              CellCal_ARID_DEF.aSG[i] =
-                rtb_TmpSignalConversionAtSFunctionInport4[i];
-              CellCal_ARID_DEF.aMO[i] =
-                rtb_TmpSignalConversionAtSFunctionInport5[i];
-              CellCal_ARID_DEF.aMG[i] =
-                rtb_TmpSignalConversionAtSFunctionInport6[i];
+          for (k = 0; k < 14; k++) {
+            if (req[k]) {
+              CellCal_ARID_DEF.aSO[k] =
+                rtb_TmpSignalConversionAtSFunctionInport3[k];
+              CellCal_ARID_DEF.aSG[k] =
+                rtb_TmpSignalConversionAtSFunctionInport4[k];
+              CellCal_ARID_DEF.aMO[k] =
+                rtb_TmpSignalConversionAtSFunctionInport5[k];
+              CellCal_ARID_DEF.aMG[k] =
+                rtb_TmpSignalConversionAtSFunctionInport6[k];
             }
           }
 
@@ -518,13 +516,14 @@ void CalTask10ms(void)                 /* Explicit Task: CalTask10ms */
       rtb_TmpSignalConversionAtSFunctionInport4_0 * 0.0001F;
 
     /* MATLAB Function: '<S1>/CalCore' */
-    tmpRead_9 = CellCal_ARID_DEF.aMO[i];
+    rtb_TmpSignalConversionAtSFunctionInport3_0 = CellCal_ARID_DEF.aMO[i];
 
     /* Outport: '<Root>/CalMeasOffset_V' incorporates:
      *  MATLAB Function: '<S1>/CalCore'
      *  Reshape: '<S1>/CalMeasOffset_V_r'
      */
-    CellCal_ARID_DEF.CalMeasOffset_V[i] = (float32)tmpRead_9 * 0.0001F;
+    CellCal_ARID_DEF.CalMeasOffset_V[i] = (float32)
+      rtb_TmpSignalConversionAtSFunctionInport3_0 * 0.0001F;
 
     /* MATLAB Function: '<S1>/CalCore' */
     aSG = CellCal_ARID_DEF.aSG[i];
@@ -555,7 +554,8 @@ void CalTask10ms(void)                 /* Explicit Task: CalTask10ms */
      *  MATLAB Function: '<S1>/CalCore'
      *  Reshape: '<S1>/NvMeasOffsetOut_r'
      */
-    CellCal_ARID_DEF.NvMeasOffsetOut[i] = tmpRead_9;
+    CellCal_ARID_DEF.NvMeasOffsetOut[i] =
+      rtb_TmpSignalConversionAtSFunctionInport3_0;
 
     /* Outport: '<Root>/NvSetGainOut' incorporates:
      *  MATLAB Function: '<S1>/CalCore'
