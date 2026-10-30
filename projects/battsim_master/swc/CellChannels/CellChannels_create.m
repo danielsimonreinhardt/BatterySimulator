@@ -39,9 +39,11 @@ function CellChannels_create()
 %       everything off for a harmless level. A real overvoltage below max(setpoint, floor) + 0.2 V (0.9 V) stays undetected.
 %     - A released channel with a setpoint above 0 V and below OutputFloor_V reports status 4 "setpoint below the level floor" (no
 %       FAIL); its regulator does not work (the setpoint is not reachable).
-%     - Review R-1: a change of the limited setpoint of a channel larger than StepThreshold_V (0.2 V), in either direction, stops
-%       its regulator for StepHold_cycles (50 = 500 ms; 30 in 0.3.1): correction and integral part stand still (as at LIMIT), because the
-%       low-passed actual value (about 95 ms) lags the step and the regulator would push to its limit (-0.1 V after 4.8 V -> 1.0 V).
+%     - Review R-1, T-3 (0.3.3): a change of the limited setpoint of a channel larger than StepThreshold_V (0.2 V), in either direction,
+%       stops its regulator for StepHold_cycles (50 = 500 ms; 30 in 0.3.1): correction AND integral part are cleared and held at 0
+%       (in 0.3.1/0.3.2 they stood still): the low-passed actual value (about 95 ms) lags the step and the regulator would push to
+%       its limit, and the correction of the old operating point (about -0.03 V at 4.8 V on channel 1) does not fit the new one:
+%       0.3.2 at the device: -0.03 V after 4.8 V -> 1.0 V, independent of the hold time (300 or 500 ms).
 here = fileparts(mfilename('fullpath'));
 root = fileparts(fileparts(fileparts(fileparts(here))));
 addpath(fullfile(root, 'nextbsw', 'tools', 'swc'), fileparts(here));
@@ -143,8 +145,11 @@ lines = {
 '    % regulator: PI on the actual value, correction limited, integral part clamped (anti-windup)'
 '    corr = single(0);'
 '    working = ctrlActive && outEn && commanded && ~clipped && (v > single(0)) && ~below && (qlf(k) == QlfOk) && seen(k);'
-'    if working && (limitActive || holding)'
-'        corr = corrHold(k);                % LIMIT of the supply or setpoint step: stand still'
+'    if holding'
+'        integ(k) = single(0);              % setpoint step: correction and integral part 0, held at 0 for the hold time'
+'        corrHold(k) = single(0);'
+'    elseif working && limitActive'
+'        corr = corrHold(k);                % LIMIT of the supply: stand still'
 '    elseif working'
 '        e = v - y(k);'
 '        iNew = integ(k) + kiPerS * ts * e;'

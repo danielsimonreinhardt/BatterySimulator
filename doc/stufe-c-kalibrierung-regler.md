@@ -81,6 +81,10 @@ Die Korrektur und der Integralanteil sind auf +-`CtrlLimit_V` (0,1 V) geklemmt (
 Sonst ist die Korrektur 0 und der Integralanteil geloescht. Meldet die Versorgung LIMIT, **steht** der Regler: die Korrektur bleibt, der
 Integralanteil bewegt sich nicht. 0x121 `BATTSIM_CONTROLLER_ON` zeigt, ob der Regler nicht abgeschaltet ist.
 
+Genauigkeit unter Last (Review T-2, Kennwert, keine Codeaenderung): Der Regler regelt den **ADC-Wert** auf den Sollwert; zwischen ADC-Abgriff und Klemmen liegt ein Spannungsabfall. Die
+Abweichung an der Klemme ist **etwa Laststrom mal 6 Ohm** (gemessen 5 bis 7 Ohm: 0,29 V bei 48 mA, 0,25 V bei 37 mA, 0,07 V bei 4 bis 5 mA, 0,02 bis 0,03 V bei 0,5 bis 0,7 mA, Scope-Fehler etwa 0,03 V). Fuer einen Pruefling mit Eingangsstrom im
+uA- bis mA-Bereich bleibt sie unter etwa 0,05 V. Der Pegelboden von 0,7 V tritt nur **ohne aeussere Last** auf; Status 4 ist ein Hinweis. Messungen: `sicherheitshinweise-stufe-c.md` Abschnitt 10.3.
+
 Nachtrag Geraetebefund (Review C-2c, R-1): Nach einem Sollwertsprung groesser 0,2 V steht der Regler dieses Kanals 500 ms (seit 0.3.2, vorher 300 ms; Parameter `StepThreshold_V`, `StepHold_cycles`), und bei einem
 Sollwert unter dem Pegelboden `OutputFloor_V` (0,7 V, ohne Last gemessen) arbeitet er nicht; der Kanalstatus ist dann 4. Dazu `sicherheitshinweise-stufe-c.md` Abschnitt 7.
 

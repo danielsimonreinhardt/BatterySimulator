@@ -604,7 +604,10 @@ void CellTask10ms(void)                /* Explicit Task: CellTask10ms */
       below_tmp = FALSE;
     }
 
-    if (below_tmp && (tmpRead_0 || holding)) {
+    if (holding) {
+      CellChannels_ARID_DEF.integ[k] = 0.0F;
+      CellChannels_ARID_DEF.corrHold[k] = 0.0F;
+    } else if (below_tmp && tmpRead_0) {
       mv = CellChannels_ARID_DEF.corrHold[k];
     } else if (below_tmp) {
       e = v - e;

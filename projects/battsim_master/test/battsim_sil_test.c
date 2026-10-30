@@ -1263,14 +1263,14 @@ static void regulatorHoldsAfterASetpointStep(void)
     CHECK(*dutyOut[0] > (uint16)(dutyFor(1.1) + 8));
     runPlant(1500);
     CHECK(fabs(plantV - 1.1) < 0.005);
-    /* a step up of 2 V holds as well: the duty stands still for the 50 cycles */
+    /* a step up of 2 V holds as well: the correction is 0 and the duty stands still for the 50 cycles */
     plantOffset = -0.05;
     runPlant(1500);
     setpointFrame123(ENABLE_ON, 3.1, 0U, 0.0, 0U, 0.0);
     cycle();
     plantStep();
     int const heldDuty = *dutyOut[0];
-    CHECK(heldDuty > dutyFor(3.1)); /* it still carries the held correction of the old operating point */
+    CHECK(near(heldDuty, dutyFor(3.1), 1)); /* T-3: the correction of the old operating point is cleared, the duty is the table duty */
     for (int i = 1; i < 50; ++i)
     {
         cycle();
@@ -1375,6 +1375,64 @@ static void implausiblyLowCurrentSwitchesOffInRun(void)
     CHECK(MODE(BattSimStatus) == STATUS_STANDBY);
 }
 
+/* Review T-3: at a setpoint step the correction and the integral part are cleared and held at 0 for the hold time. The old
+   operating point's correction would act on the new one (device 0.3.2: -0.03 V after 4.8 V -> 1.0 V). The plant has a gain
+   error like the card of channel 1 (+0.6 %): the correction at 4.8 V is about -0.03 V, at 1.0 V only -0.006 V. */
+static void stepClearsTheCorrectionOfTheOldOperatingPoint(void)
+{
+    startCalibration(QLF_NOT_AVAILABLE, zeroOff, zeroGain, zeroOff, zeroGain);
+    *adcQlfIn[0] = QLF_OK;
+    plantGain    = 1.00625;
+    plantOffset  = 0.0;
+    plantTau     = 0.02;
+    CELL(ControllerOffReq) = 0U;
+    setpointFrame123(ENABLE_ON, 4.8, 0U, 0.0, 0U, 0.0);
+    plantV = 0.0;
+    goToRun();
+    runPlant(1500);
+    CHECK(fabs(plantV - 4.8) < 0.005);
+    CHECK(*dutyOut[0] < (uint16)(dutyFor(4.8) - 40)); /* the regulator holds a correction of about -0.03 V (duty about -58) */
+    setpointFrame123(ENABLE_ON, 1.0, 0U, 0.0, 0U, 0.0);
+    double minV = 10.0;
+    for (int i = 0; i < 50; ++i)  /* hold: no correction at all, the duty is the table duty */
+    {
+        cycle();
+        plantStep();
+        if (plantV < minV)
+        {
+            minV = plantV;
+        }
+        CHECK(near(*dutyOut[0], dutyFor(1.0), 1));
+    }
+    for (int i = 0; i < 1500; ++i)
+    {
+        cycle();
+        plantStep();
+        if (plantV < minV)
+        {
+            minV = plantV;
+        }
+    }
+    printf("  T-3: Unterschwingen nach 4.8 V -> 1.0 V mit Verstaerkungsfehler: Minimum %.4f V\n", minV);
+    CHECK(minV > 1.0 - 0.01);          /* 0.3.2 logic: about 0.97 V */
+    CHECK(fabs(plantV - 1.0) < 0.004);
+    /* a step up of 2 V: the same, no correction carried over */
+    setpointFrame123(ENABLE_ON, 3.1, 0U, 0.0, 0U, 0.0);
+    for (int i = 0; i < 50; ++i)
+    {
+        cycle();
+        plantStep();
+        CHECK(near(*dutyOut[0], dutyFor(3.1), 1));
+    }
+    runPlant(1500);
+    CHECK(fabs(plantV - 3.1) < 0.004);
+    backToStandby();
+    plantGain              = 1.0;
+    plantTau               = 0.25;
+    *adcIn[0]              = 0U;
+    CELL(ControllerOffReq) = 1U;
+}
+
 int main(void)
 {
     BattSimMode_Init();
@@ -1401,6 +1459,7 @@ int main(void)
     overvoltageOfAChannelSwitchesOffEverything();
     levelFloorMovesTheOvervoltageReference();
     regulatorHoldsAfterASetpointStep();
+    stepClearsTheCorrectionOfTheOldOperatingPoint();
     printf("%d checks, %d failures\n", checks, failures);
     return (failures == 0) ? 0 : 1;
 }

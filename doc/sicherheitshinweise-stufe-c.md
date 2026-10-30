@@ -153,7 +153,7 @@ diese Aenderung: nur Sollwerte ab 0,6 V verwenden (F-1 a).
 ### 7.1 C-2c: Pegelboden
 
 * Der Vergleich der Ueberspannungserkennung (Abschnitt 3) geht gegen **max(Sollwert, `OutputFloor_V`) + `OverVoltThd_V`**. `OutputFloor_V` ist ein Parameter, Vorgabe **0,7 V** (gemessen
-  ohne Last, Abschnitt 6.4). Der Boden ist **beim ersten Betrieb mit Pruefling mit Last nachzumessen**.
+  **ohne Last**, Abschnitt 6.4). Der Boden tritt nur ohne aeussere Last auf (Abschnitt 10.3, Review T-1: bleibt 0,7 V); mit dem Pruefling ist er nachzumessen.
 * Ein freigegebener Kanal mit Sollwert groesser 0 V und kleiner als der Boden meldet im Kanalstatus **4 "setpoint below level floor"** (`CELLn_STATUS`, DBC: Wert 4 neu, das Feld
   hat 3 Bit und war bis 3 begrenzt, jetzt 0..7); es gibt **kein FAIL**. Sein Regler arbeitet nicht (der Sollwert ist nicht erreichbar, Korrektur 0).
 * Restrisiko: Eine echte Ueberspannung unter max(Sollwert, Boden) + 0,2 V, also bis 0,9 V bei kleinem Sollwert, bleibt unentdeckt. Das ist weit unter der Grenze von 5,0 V; ein Pruefling
@@ -306,3 +306,22 @@ Die Messung selbst laesst sich am Geraet nicht verfaelschen (kein Eingriff in de
    in den Produktionscode, nicht nur eine Testfunktion, und eine neue Diagnosekennung.
 
 Empfehlung: Weg 1, weil er den Produktionscode unveraendert laesst. Beide Wege weisen den Pfad "Abtastwert unter Schwelle -> Zaehler -> FAIL 5 -> Ausgaenge aus" am Geraet nach (Zaehler, ChannelsReleased, Mode); den Qualifier-Pfad und einen echten offenen Shunt weisen sie nicht nach.
+
+## 12. Review Termin 0.3.2 (T-1 bis T-4, 30.10.2026, alle a) und Regler-Aenderung (Version 0.3.3)
+
+Entscheidungen im Review "Termin 0.3.2" (Board `bs-termin-032-review`): **T-1 a, T-2 a, T-3 a, T-4 a.** Umgesetzt im Zweig `stufe-c-strommessung-plausibel` zusammen mit der Plausibilitaet der Strommessung (Abschnitt 11), Version **0.3.3**, nicht geflasht.
+
+* **T-1 (Pegelboden): `OutputFloor_V` bleibt 0,7 V.** Der Boden tritt nur ohne aeussere Last auf (Abschnitt 10.3); Status 4 ("Sollwert unter Pegelboden") ist ein Hinweis, kein Fehler. Eingetragen ist das als "ohne Last" im
+  Parameterkommentar (`tools/gen_swc_ports.py`, `swc.yaml`, `CellChannels_data.m`), als Signalkommentar der 16 `CELLnn_STATUS` in `BattSimV2.dbc` und in Abschnitt 7.1. Der LabControl-Treiber hat eine Kopie der DBC (das Kommentar wirkt dort erst
+  mit der naechsten Kopie).
+* **T-2 (Spannungsabfall): Kennwert der Genauigkeit.** Abweichung an der Klemme **etwa Laststrom mal 6 Ohm**, gemessen 5 bis 7 Ohm (Abschnitt 10.3); aufgenommen in `stufe-c-kalibrierung-regler.md`. Keine Codeaenderung; der Regler regelt den ADC-Wert.
+* **T-3 (Regler beim Sprung auf 0):** Aendert sich der begrenzte Sollwert eines Kanals um mehr als `StepThreshold_V` (0,2 V), werden **Korrektur und Integralanteil auf 0 gesetzt und fuer `StepHold_cycles` (50, 500 ms) auf 0 gehalten**
+  (0.3.1 und 0.3.2: sie blieben stehen). Das Regelverhalten danach ist unveraendert (PI, +-`CtrlLimit_V`).
+  * Begruendung: Am Geraet blieb das Unterschwingen nach 4,8 V auf 1,0 V mit 300 ms und mit 500 ms Haltezeit gleich (-0,035 V und -0,029 V, Abschnitt 10.4): Die Korrektur des alten Arbeitspunktes (rund -0,03 V bei 4,8 V auf Kanal 1) wirkt waehrend der
+    Haltezeit auf den neuen Sollwert. Die Strecke ist ohne Regler genau genug (3,0 V Soll, ADC 3,0001 V ohne Regler, Abschnitt 6.3).
+  * SIL-Test `stepClearsTheCorrectionOfTheOldOperatingPoint`: Strecke mit Verstaerkungsfehler +0,6 % (Korrektur bei 4,8 V etwa -0,03 V, bei 1,0 V nur -0,006 V), wie der Befund am Geraet. Sprung 4,8 V auf 1,0 V: **mit der Logik von 0.3.2 Minimum 0,977 V
+    (-0,023 V, wie am Geraet), mit 0.3.3 Minimum > 0,99 V**; waehrend der Haltezeit entspricht der Tastgrad der Kennlinie (Korrektur 0), nach 2 V Sprung nach oben ebenso. Der bisherige R-1-Test prueft jetzt auch, dass nach einem Sprung nach oben der Tastgrad
+    der Kennlinie entspricht.
+  * Nachmessung am Geraet (Sprung 4,8 V auf 1,0 V, ADC-Minimum und Scope) beim naechsten Termin; die Erwartung ist ein Minimum nahe 1,0 V.
+* **T-4 (Abschaltzeit): Der Kennwert 315 ms (S-2 a) gilt weiter.** Die Messung mit 0.3.2 bestaetigt ihn: FAIL-Entscheidung 299,8 bis 307,4 ms nach der letzten 0x130 (28 Laeufe) plus analoger Abfall 4,1 ms (4,06 und 4,17 ms) gibt eine Summe von hoechstens
+  311,5 ms, unter den 315 ms. Die 310 ms der Konzeptgrenze (Timeout 300 ms plus ein 10-ms-Schritt) sind damit nicht strikt belegt, der Kennwert 315 ms ist es.
