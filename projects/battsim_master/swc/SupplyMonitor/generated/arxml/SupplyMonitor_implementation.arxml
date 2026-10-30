@@ -3,7 +3,7 @@
 Auto generated XML Component Description for model SupplyMonitor
 Model version                : 1.2
 Simulink Coder version       : Simulink Coder 24.1 (R2024a) 19-Nov-2023
-Model Checksum               : 1177443849 507097898 2899082614 2434188553
+Model Checksum               : 803794953 3354118039 1078393614 3990172034
 -->
 <AUTOSAR xmlns="http://autosar.org/schema/r4.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://autosar.org/schema/r4.0 AUTOSAR_00051.xsd">
     <AR-PACKAGES>
@@ -14,7 +14,7 @@ Model Checksum               : 1177443849 507097898 2899082614 2434188553
                 <AR-PACKAGE>
                     <SHORT-NAME>SwcImplementations</SHORT-NAME>
                     <ELEMENTS>
-                        <SWC-IMPLEMENTATION UUID="27f755b2-daec-5935-0795-22e86ab29b31">
+                        <SWC-IMPLEMENTATION UUID="1d5c8eef-1a46-51e5-669d-b0bb8373aab0">
                             <SHORT-NAME>SupplyMonitor_Impl</SHORT-NAME>
                             <CODE-DESCRIPTORS>
                                 <CODE>

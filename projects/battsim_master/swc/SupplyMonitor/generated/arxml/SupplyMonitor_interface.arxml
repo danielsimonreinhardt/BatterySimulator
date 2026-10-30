@@ -3,18 +3,18 @@
 Auto generated XML Component Description for model SupplyMonitor
 Model version                : 1.2
 Simulink Coder version       : Simulink Coder 24.1 (R2024a) 19-Nov-2023
-Model Checksum               : 1177443849 507097898 2899082614 2434188553
+Model Checksum               : 803794953 3354118039 1078393614 3990172034
 -->
 <AUTOSAR xmlns="http://autosar.org/schema/r4.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://autosar.org/schema/r4.0 AUTOSAR_00051.xsd">
     <AR-PACKAGES>
         <AR-PACKAGE>
             <SHORT-NAME>Interfaces</SHORT-NAME>
             <ELEMENTS>
-                <SENDER-RECEIVER-INTERFACE UUID="18bee4cd-4482-5192-2039-f2aeb9c87273">
+                <SENDER-RECEIVER-INTERFACE UUID="e8d55636-90f7-5c12-4423-566e28d09fd3">
                     <SHORT-NAME>ISupply_mV</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="5d62d6de-d3a1-5a3e-a991-cdbed300212a">
+                        <VARIABLE-DATA-PROTOTYPE UUID="aad44064-cc0e-5b45-03a9-0e0ce751f136">
                             <SHORT-NAME>ISupply_mV</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -29,11 +29,11 @@ Model Checksum               : 1177443849 507097898 2899082614 2434188553
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="76ac9155-ddf9-5bf0-66ed-f6153a0f90b8">
+                <SENDER-RECEIVER-INTERFACE UUID="47831f32-63b1-5d8f-2b07-cb8e2d49cc87">
                     <SHORT-NAME>ISupplyQlf</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="f446728e-fba2-5467-7d48-d5c3a2c6df6a">
+                        <VARIABLE-DATA-PROTOTYPE UUID="479612b8-77d5-5fa6-a1b8-fabc884b36d5">
                             <SHORT-NAME>ISupplyQlf</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -48,11 +48,11 @@ Model Checksum               : 1177443849 507097898 2899082614 2434188553
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="d4ea807f-a6de-5262-b8e4-a53d9d078231">
+                <SENDER-RECEIVER-INTERFACE UUID="8dce7eb5-d6dc-5715-6b5e-5135dbfd3635">
                     <SHORT-NAME>Limit</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="12d69c4d-df3e-54d7-38de-0174461e1c84">
+                        <VARIABLE-DATA-PROTOTYPE UUID="271ce8af-2d2a-543b-b69b-211d42c5085a">
                             <SHORT-NAME>Limit</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -67,11 +67,11 @@ Model Checksum               : 1177443849 507097898 2899082614 2434188553
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="5b253da8-46ee-5373-a305-a513f682dcae">
+                <SENDER-RECEIVER-INTERFACE UUID="76a98c6f-787b-5c46-174f-da8434a71379">
                     <SHORT-NAME>Overload</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="b38b01c1-d99f-567a-fe4e-283b7725e0c4">
+                        <VARIABLE-DATA-PROTOTYPE UUID="b6871d3d-5bca-5fdd-0c73-cb3607ebedfd">
                             <SHORT-NAME>Overload</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -86,11 +86,11 @@ Model Checksum               : 1177443849 507097898 2899082614 2434188553
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="bf822fc6-e440-5359-20e8-33500a8e1bdd">
+                <SENDER-RECEIVER-INTERFACE UUID="6d4c56e5-9b9f-5550-bfb9-c0ce4aaf820f">
                     <SHORT-NAME>SupplyCurrent_A</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="db0c80fd-d089-5d56-c5e1-452680bad929">
+                        <VARIABLE-DATA-PROTOTYPE UUID="a9f2d085-a254-590a-d5f7-b526ed3979bd">
                             <SHORT-NAME>SupplyCurrent_A</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -105,11 +105,11 @@ Model Checksum               : 1177443849 507097898 2899082614 2434188553
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="c2e73a8a-c393-59e7-839b-9fb48e95c1d0">
+                <SENDER-RECEIVER-INTERFACE UUID="18fd8570-18cd-5fd8-b345-8a07e7d2b8fa">
                     <SHORT-NAME>LimitActive</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="18fc3960-8a41-5f73-77cc-3eace561e1a6">
+                        <VARIABLE-DATA-PROTOTYPE UUID="722cf44f-1294-5ca9-295d-39e5834fe782">
                             <SHORT-NAME>LimitActive</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -124,11 +124,30 @@ Model Checksum               : 1177443849 507097898 2899082614 2434188553
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <PARAMETER-INTERFACE UUID="913cd324-608e-50e7-acd0-67c86df50d83">
+                <SENDER-RECEIVER-INTERFACE UUID="f2bbe25c-3551-5a11-65a5-e455491bc86d">
+                    <SHORT-NAME>CurrentInvalid</SHORT-NAME>
+                    <IS-SERVICE>false</IS-SERVICE>
+                    <DATA-ELEMENTS>
+                        <VARIABLE-DATA-PROTOTYPE UUID="3f91411f-f133-5c06-413a-876b6eec9799">
+                            <SHORT-NAME>CurrentInvalid</SHORT-NAME>
+                            <CATEGORY>VALUE</CATEGORY>
+                            <SW-DATA-DEF-PROPS>
+                                <SW-DATA-DEF-PROPS-VARIANTS>
+                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
+                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
+                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
+                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
+                                </SW-DATA-DEF-PROPS-VARIANTS>
+                            </SW-DATA-DEF-PROPS>
+                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/boolean</TYPE-TREF>
+                        </VARIABLE-DATA-PROTOTYPE>
+                    </DATA-ELEMENTS>
+                </SENDER-RECEIVER-INTERFACE>
+                <PARAMETER-INTERFACE UUID="0d47a901-7f1b-5609-29d1-a426dcfd6337">
                     <SHORT-NAME>CalPrm</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <PARAMETERS>
-                        <PARAMETER-DATA-PROTOTYPE UUID="028caf91-9688-5846-f6ee-a924b2e3fde6">
+                        <PARAMETER-DATA-PROTOTYPE UUID="e13dac0f-eab0-5b2c-e230-d18d2db4ff8d">
                             <SHORT-NAME>SupplyCurrentFilter</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -141,7 +160,7 @@ Model Checksum               : 1177443849 507097898 2899082614 2434188553
                             </SW-DATA-DEF-PROPS>
                             <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/float32</TYPE-TREF>
                         </PARAMETER-DATA-PROTOTYPE>
-                        <PARAMETER-DATA-PROTOTYPE UUID="18126cce-88ac-5d82-6238-29457aaa1d20">
+                        <PARAMETER-DATA-PROTOTYPE UUID="ea150759-5afe-5f72-0426-12bd9e94d266">
                             <SHORT-NAME>SupplyCurrentGain</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -154,7 +173,7 @@ Model Checksum               : 1177443849 507097898 2899082614 2434188553
                             </SW-DATA-DEF-PROPS>
                             <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/float32</TYPE-TREF>
                         </PARAMETER-DATA-PROTOTYPE>
-                        <PARAMETER-DATA-PROTOTYPE UUID="423becda-0289-5af0-f029-5064048c0f7c">
+                        <PARAMETER-DATA-PROTOTYPE UUID="92866ce5-cabb-5371-f270-358e1b2631c9">
                             <SHORT-NAME>OverloadThd_mA</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -167,7 +186,7 @@ Model Checksum               : 1177443849 507097898 2899082614 2434188553
                             </SW-DATA-DEF-PROPS>
                             <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/float32</TYPE-TREF>
                         </PARAMETER-DATA-PROTOTYPE>
-                        <PARAMETER-DATA-PROTOTYPE UUID="da25b78b-216d-5d84-864f-e74df0870918">
+                        <PARAMETER-DATA-PROTOTYPE UUID="714770c4-7f25-54d3-8b0b-ed4606ab3ce5">
                             <SHORT-NAME>OverloadHyst_mA</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -179,6 +198,19 @@ Model Checksum               : 1177443849 507097898 2899082614 2434188553
                                 </SW-DATA-DEF-PROPS-VARIANTS>
                             </SW-DATA-DEF-PROPS>
                             <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/float32</TYPE-TREF>
+                        </PARAMETER-DATA-PROTOTYPE>
+                        <PARAMETER-DATA-PROTOTYPE UUID="dfdf3f2a-c104-5dae-2bb4-98a961ee94dc">
+                            <SHORT-NAME>CurrentInvalid_cycles</SHORT-NAME>
+                            <CATEGORY>VALUE</CATEGORY>
+                            <SW-DATA-DEF-PROPS>
+                                <SW-DATA-DEF-PROPS-VARIANTS>
+                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
+                                        <SW-CALIBRATION-ACCESS>READ-WRITE</SW-CALIBRATION-ACCESS>
+                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
+                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
+                                </SW-DATA-DEF-PROPS-VARIANTS>
+                            </SW-DATA-DEF-PROPS>
+                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint8</TYPE-TREF>
                         </PARAMETER-DATA-PROTOTYPE>
                     </PARAMETERS>
                 </PARAMETER-INTERFACE>

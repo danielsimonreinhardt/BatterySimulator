@@ -69,6 +69,14 @@ ports:
     direction: in
     type: boolean
     runnables: [ModeTask10ms]
+  - name: CurrentInvalid           # current measurement failed (C-1): FAIL reason 5 in RUN
+    direction: in
+    type: boolean
+    runnables: [ModeTask10ms]
+  - name: OverVoltage           # a channel is above its setpoint for too long (C-2): FAIL reason 6 in RUN
+    direction: in
+    type: boolean
+    runnables: [ModeTask10ms]
   - name: ResetWatchdog
     direction: in
     type: boolean

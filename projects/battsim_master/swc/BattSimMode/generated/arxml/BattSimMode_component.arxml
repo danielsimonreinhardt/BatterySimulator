@@ -3,17 +3,17 @@
 Auto generated XML Component Description for model BattSimMode
 Model version                : 1.2
 Simulink Coder version       : Simulink Coder 24.1 (R2024a) 19-Nov-2023
-Model Checksum               : 2671318750 2732806489 3344024602 2223781413
+Model Checksum               : 854476546 102260625 4031213291 3224415845
 -->
 <AUTOSAR xmlns="http://autosar.org/schema/r4.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://autosar.org/schema/r4.0 AUTOSAR_00051.xsd">
     <AR-PACKAGES>
         <AR-PACKAGE>
             <SHORT-NAME>Components</SHORT-NAME>
             <ELEMENTS>
-                <APPLICATION-SW-COMPONENT-TYPE UUID="d81786c3-48f2-5b71-2498-828b8866d1ea">
+                <APPLICATION-SW-COMPONENT-TYPE UUID="50b88a0f-69bb-57a4-a31e-ad99b504c626">
                     <SHORT-NAME>BattSimMode</SHORT-NAME>
                     <PORTS>
-                        <R-PORT-PROTOTYPE UUID="2d4afaf0-e1e7-59cf-c379-ec584cc080bf">
+                        <R-PORT-PROTOTYPE UUID="c0e98215-59d6-526d-e39b-144d134b8cb7">
                             <SHORT-NAME>RemoteControl</SHORT-NAME>
                             <REQUIRED-COM-SPECS>
                                 <NONQUEUED-RECEIVER-COM-SPEC>
@@ -34,7 +34,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </REQUIRED-COM-SPECS>
                             <REQUIRED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/RemoteControl</REQUIRED-INTERFACE-TREF>
                         </R-PORT-PROTOTYPE>
-                        <R-PORT-PROTOTYPE UUID="7bc4894a-201b-5f27-b1f5-dacc8be9f442">
+                        <R-PORT-PROTOTYPE UUID="e7efbd6f-2756-564f-7995-52769051579a">
                             <SHORT-NAME>ModeControl</SHORT-NAME>
                             <REQUIRED-COM-SPECS>
                                 <NONQUEUED-RECEIVER-COM-SPEC>
@@ -55,7 +55,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </REQUIRED-COM-SPECS>
                             <REQUIRED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/ModeControl</REQUIRED-INTERFACE-TREF>
                         </R-PORT-PROTOTYPE>
-                        <R-PORT-PROTOTYPE UUID="8538b706-3ab8-5e5f-04a8-5e835175f7e4">
+                        <R-PORT-PROTOTYPE UUID="1d84a4a1-cd38-5ff2-693c-d5ec84a5b269">
                             <SHORT-NAME>OutputControl</SHORT-NAME>
                             <REQUIRED-COM-SPECS>
                                 <NONQUEUED-RECEIVER-COM-SPEC>
@@ -76,7 +76,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </REQUIRED-COM-SPECS>
                             <REQUIRED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/OutputControl</REQUIRED-INTERFACE-TREF>
                         </R-PORT-PROTOTYPE>
-                        <R-PORT-PROTOTYPE UUID="b50c4701-aa2a-5186-502a-f0d160918c11">
+                        <R-PORT-PROTOTYPE UUID="c23bf904-a918-57ba-362a-dd877b05de47">
                             <SHORT-NAME>ControlCell010203Qlf</SHORT-NAME>
                             <REQUIRED-COM-SPECS>
                                 <NONQUEUED-RECEIVER-COM-SPEC>
@@ -97,7 +97,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </REQUIRED-COM-SPECS>
                             <REQUIRED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/ControlCell010203Qlf</REQUIRED-INTERFACE-TREF>
                         </R-PORT-PROTOTYPE>
-                        <R-PORT-PROTOTYPE UUID="edde4112-b0ae-585f-fc24-7e4249400029">
+                        <R-PORT-PROTOTYPE UUID="0248d7a7-0743-563d-8609-bb33030d2a8b">
                             <SHORT-NAME>ControlCell040506Qlf</SHORT-NAME>
                             <REQUIRED-COM-SPECS>
                                 <NONQUEUED-RECEIVER-COM-SPEC>
@@ -118,7 +118,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </REQUIRED-COM-SPECS>
                             <REQUIRED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/ControlCell040506Qlf</REQUIRED-INTERFACE-TREF>
                         </R-PORT-PROTOTYPE>
-                        <R-PORT-PROTOTYPE UUID="9cb01697-eaf9-5c0e-797a-4eb4d46add11">
+                        <R-PORT-PROTOTYPE UUID="dec584ea-3497-5755-fc10-41878fc73289">
                             <SHORT-NAME>ControlCell070809Qlf</SHORT-NAME>
                             <REQUIRED-COM-SPECS>
                                 <NONQUEUED-RECEIVER-COM-SPEC>
@@ -139,7 +139,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </REQUIRED-COM-SPECS>
                             <REQUIRED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/ControlCell070809Qlf</REQUIRED-INTERFACE-TREF>
                         </R-PORT-PROTOTYPE>
-                        <R-PORT-PROTOTYPE UUID="24f50620-c883-57ac-f9fe-363d8625e60c">
+                        <R-PORT-PROTOTYPE UUID="79f9ea4f-bfc0-575e-4ea7-a10b2b598787">
                             <SHORT-NAME>ControlCell101112Qlf</SHORT-NAME>
                             <REQUIRED-COM-SPECS>
                                 <NONQUEUED-RECEIVER-COM-SPEC>
@@ -160,7 +160,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </REQUIRED-COM-SPECS>
                             <REQUIRED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/ControlCell101112Qlf</REQUIRED-INTERFACE-TREF>
                         </R-PORT-PROTOTYPE>
-                        <R-PORT-PROTOTYPE UUID="8912258b-bcb7-5c13-b473-e290ef91cd25">
+                        <R-PORT-PROTOTYPE UUID="89dca3bd-1195-56aa-f2dd-1f12275f098d">
                             <SHORT-NAME>ControlCell131415Qlf</SHORT-NAME>
                             <REQUIRED-COM-SPECS>
                                 <NONQUEUED-RECEIVER-COM-SPEC>
@@ -181,7 +181,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </REQUIRED-COM-SPECS>
                             <REQUIRED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/ControlCell131415Qlf</REQUIRED-INTERFACE-TREF>
                         </R-PORT-PROTOTYPE>
-                        <R-PORT-PROTOTYPE UUID="df6910d6-0527-5229-3ebc-220c9c215df5">
+                        <R-PORT-PROTOTYPE UUID="e56960df-ff33-51e5-65fd-aad063ef7ce2">
                             <SHORT-NAME>ControlCell16Qlf</SHORT-NAME>
                             <REQUIRED-COM-SPECS>
                                 <NONQUEUED-RECEIVER-COM-SPEC>
@@ -202,7 +202,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </REQUIRED-COM-SPECS>
                             <REQUIRED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/ControlCell16Qlf</REQUIRED-INTERFACE-TREF>
                         </R-PORT-PROTOTYPE>
-                        <R-PORT-PROTOTYPE UUID="16102e5d-6362-5899-28a6-56be6601bec3">
+                        <R-PORT-PROTOTYPE UUID="7b7f0fba-f7fe-584b-0653-cb60919a1351">
                             <SHORT-NAME>ControlBattSimQlf</SHORT-NAME>
                             <REQUIRED-COM-SPECS>
                                 <NONQUEUED-RECEIVER-COM-SPEC>
@@ -223,7 +223,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </REQUIRED-COM-SPECS>
                             <REQUIRED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/ControlBattSimQlf</REQUIRED-INTERFACE-TREF>
                         </R-PORT-PROTOTYPE>
-                        <R-PORT-PROTOTYPE UUID="3a8f737b-739a-59a1-b9ad-fa4fddbe3c08">
+                        <R-PORT-PROTOTYPE UUID="1462eb12-e542-5151-66ce-762f6d340002">
                             <SHORT-NAME>ControlDynCellSim1Qlf</SHORT-NAME>
                             <REQUIRED-COM-SPECS>
                                 <NONQUEUED-RECEIVER-COM-SPEC>
@@ -244,7 +244,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </REQUIRED-COM-SPECS>
                             <REQUIRED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/ControlDynCellSim1Qlf</REQUIRED-INTERFACE-TREF>
                         </R-PORT-PROTOTYPE>
-                        <R-PORT-PROTOTYPE UUID="cc4e4d33-bdf8-5ee6-99e4-9286366bf52f">
+                        <R-PORT-PROTOTYPE UUID="5797f7b9-9d67-5b51-7715-948ce43be0f5">
                             <SHORT-NAME>ControlDynCellSim2Qlf</SHORT-NAME>
                             <REQUIRED-COM-SPECS>
                                 <NONQUEUED-RECEIVER-COM-SPEC>
@@ -265,7 +265,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </REQUIRED-COM-SPECS>
                             <REQUIRED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/ControlDynCellSim2Qlf</REQUIRED-INTERFACE-TREF>
                         </R-PORT-PROTOTYPE>
-                        <R-PORT-PROTOTYPE UUID="03912158-2648-5395-3e27-9800c50f3e55">
+                        <R-PORT-PROTOTYPE UUID="0b167157-ab32-581a-dac1-c3c097a91d4d">
                             <SHORT-NAME>BtnAllOnOff</SHORT-NAME>
                             <REQUIRED-COM-SPECS>
                                 <NONQUEUED-RECEIVER-COM-SPEC>
@@ -286,7 +286,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </REQUIRED-COM-SPECS>
                             <REQUIRED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/BtnAllOnOff</REQUIRED-INTERFACE-TREF>
                         </R-PORT-PROTOTYPE>
-                        <R-PORT-PROTOTYPE UUID="cef98a78-b590-5081-7425-b81ec0b337bb">
+                        <R-PORT-PROTOTYPE UUID="00253321-c8d0-50b9-9ffb-64dbdc650d07">
                             <SHORT-NAME>BtnRemote</SHORT-NAME>
                             <REQUIRED-COM-SPECS>
                                 <NONQUEUED-RECEIVER-COM-SPEC>
@@ -307,7 +307,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </REQUIRED-COM-SPECS>
                             <REQUIRED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/BtnRemote</REQUIRED-INTERFACE-TREF>
                         </R-PORT-PROTOTYPE>
-                        <R-PORT-PROTOTYPE UUID="e4b4dd46-2b06-5a14-e834-d63a2ed100cf">
+                        <R-PORT-PROTOTYPE UUID="7ce0e7c2-16e8-5ef6-8221-2462884cf05c">
                             <SHORT-NAME>Overload</SHORT-NAME>
                             <REQUIRED-COM-SPECS>
                                 <NONQUEUED-RECEIVER-COM-SPEC>
@@ -328,7 +328,49 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </REQUIRED-COM-SPECS>
                             <REQUIRED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/Overload</REQUIRED-INTERFACE-TREF>
                         </R-PORT-PROTOTYPE>
-                        <R-PORT-PROTOTYPE UUID="a3b5d89c-28f2-5d0e-b602-ce54c0b31176">
+                        <R-PORT-PROTOTYPE UUID="c3d4f831-47fb-5620-9d1a-16e005171562">
+                            <SHORT-NAME>CurrentInvalid</SHORT-NAME>
+                            <REQUIRED-COM-SPECS>
+                                <NONQUEUED-RECEIVER-COM-SPEC>
+                                    <DATA-ELEMENT-REF DEST="VARIABLE-DATA-PROTOTYPE">/Interfaces/CurrentInvalid/CurrentInvalid</DATA-ELEMENT-REF>
+                                    <HANDLE-OUT-OF-RANGE>NONE</HANDLE-OUT-OF-RANGE>
+                                    <USES-END-TO-END-PROTECTION>false</USES-END-TO-END-PROTECTION>
+                                    <ALIVE-TIMEOUT>0</ALIVE-TIMEOUT>
+                                    <ENABLE-UPDATE>false</ENABLE-UPDATE>
+                                    <HANDLE-NEVER-RECEIVED>false</HANDLE-NEVER-RECEIVED>
+                                    <HANDLE-TIMEOUT-TYPE>NONE</HANDLE-TIMEOUT-TYPE>
+                                    <INIT-VALUE>
+                                        <NUMERICAL-VALUE-SPECIFICATION>
+                                            <SHORT-LABEL>DefaultInitValue_boolean</SHORT-LABEL>
+                                            <VALUE>0</VALUE>
+                                        </NUMERICAL-VALUE-SPECIFICATION>
+                                    </INIT-VALUE>
+                                </NONQUEUED-RECEIVER-COM-SPEC>
+                            </REQUIRED-COM-SPECS>
+                            <REQUIRED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/CurrentInvalid</REQUIRED-INTERFACE-TREF>
+                        </R-PORT-PROTOTYPE>
+                        <R-PORT-PROTOTYPE UUID="b5e6ed46-18f2-5e3d-b6cb-c8c89616afc7">
+                            <SHORT-NAME>OverVoltage</SHORT-NAME>
+                            <REQUIRED-COM-SPECS>
+                                <NONQUEUED-RECEIVER-COM-SPEC>
+                                    <DATA-ELEMENT-REF DEST="VARIABLE-DATA-PROTOTYPE">/Interfaces/OverVoltage/OverVoltage</DATA-ELEMENT-REF>
+                                    <HANDLE-OUT-OF-RANGE>NONE</HANDLE-OUT-OF-RANGE>
+                                    <USES-END-TO-END-PROTECTION>false</USES-END-TO-END-PROTECTION>
+                                    <ALIVE-TIMEOUT>0</ALIVE-TIMEOUT>
+                                    <ENABLE-UPDATE>false</ENABLE-UPDATE>
+                                    <HANDLE-NEVER-RECEIVED>false</HANDLE-NEVER-RECEIVED>
+                                    <HANDLE-TIMEOUT-TYPE>NONE</HANDLE-TIMEOUT-TYPE>
+                                    <INIT-VALUE>
+                                        <NUMERICAL-VALUE-SPECIFICATION>
+                                            <SHORT-LABEL>DefaultInitValue_boolean</SHORT-LABEL>
+                                            <VALUE>0</VALUE>
+                                        </NUMERICAL-VALUE-SPECIFICATION>
+                                    </INIT-VALUE>
+                                </NONQUEUED-RECEIVER-COM-SPEC>
+                            </REQUIRED-COM-SPECS>
+                            <REQUIRED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/OverVoltage</REQUIRED-INTERFACE-TREF>
+                        </R-PORT-PROTOTYPE>
+                        <R-PORT-PROTOTYPE UUID="29bb1a01-584d-532a-3eec-63fb11bb0fb8">
                             <SHORT-NAME>ResetWatchdog</SHORT-NAME>
                             <REQUIRED-COM-SPECS>
                                 <NONQUEUED-RECEIVER-COM-SPEC>
@@ -349,7 +391,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </REQUIRED-COM-SPECS>
                             <REQUIRED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/ResetWatchdog</REQUIRED-INTERFACE-TREF>
                         </R-PORT-PROTOTYPE>
-                        <R-PORT-PROTOTYPE UUID="6d509783-d8b8-5167-c544-9b6b5dc7f36b">
+                        <R-PORT-PROTOTYPE UUID="2f5db773-961c-5f86-dc1e-788232b40758">
                             <SHORT-NAME>ResetQlf</SHORT-NAME>
                             <REQUIRED-COM-SPECS>
                                 <NONQUEUED-RECEIVER-COM-SPEC>
@@ -370,7 +412,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </REQUIRED-COM-SPECS>
                             <REQUIRED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/ResetQlf</REQUIRED-INTERFACE-TREF>
                         </R-PORT-PROTOTYPE>
-                        <P-PORT-PROTOTYPE UUID="b1f55d33-5e71-52af-f5c9-f00f2c00da01">
+                        <P-PORT-PROTOTYPE UUID="cf940a3d-dfd9-5479-bc86-dfac18093d53">
                             <SHORT-NAME>BattSimStatus</SHORT-NAME>
                             <PROVIDED-COM-SPECS>
                                 <NONQUEUED-SENDER-COM-SPEC>
@@ -387,7 +429,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </PROVIDED-COM-SPECS>
                             <PROVIDED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/BattSimStatus</PROVIDED-INTERFACE-TREF>
                         </P-PORT-PROTOTYPE>
-                        <P-PORT-PROTOTYPE UUID="0a4430a3-dfc9-540e-4176-000a6dcef409">
+                        <P-PORT-PROTOTYPE UUID="474f2e17-a793-51c3-cfa9-7b4392f91b55">
                             <SHORT-NAME>OutputStatus</SHORT-NAME>
                             <PROVIDED-COM-SPECS>
                                 <NONQUEUED-SENDER-COM-SPEC>
@@ -404,7 +446,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </PROVIDED-COM-SPECS>
                             <PROVIDED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/OutputStatus</PROVIDED-INTERFACE-TREF>
                         </P-PORT-PROTOTYPE>
-                        <P-PORT-PROTOTYPE UUID="0df96655-db05-5809-56af-184588e0b309">
+                        <P-PORT-PROTOTYPE UUID="0557567d-016f-5d9e-cffb-533d54762b0a">
                             <SHORT-NAME>LedRemote</SHORT-NAME>
                             <PROVIDED-COM-SPECS>
                                 <NONQUEUED-SENDER-COM-SPEC>
@@ -421,7 +463,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </PROVIDED-COM-SPECS>
                             <PROVIDED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/LedRemote</PROVIDED-INTERFACE-TREF>
                         </P-PORT-PROTOTYPE>
-                        <P-PORT-PROTOTYPE UUID="7e801167-99a2-5058-6223-16ddeec49d6f">
+                        <P-PORT-PROTOTYPE UUID="bcccf6a4-2638-56b4-bb31-9f5ffade8c86">
                             <SHORT-NAME>OutputEnable</SHORT-NAME>
                             <PROVIDED-COM-SPECS>
                                 <NONQUEUED-SENDER-COM-SPEC>
@@ -438,7 +480,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </PROVIDED-COM-SPECS>
                             <PROVIDED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/OutputEnable</PROVIDED-INTERFACE-TREF>
                         </P-PORT-PROTOTYPE>
-                        <P-PORT-PROTOTYPE UUID="addbf6d1-06bb-5487-e7ca-ffbd96056546">
+                        <P-PORT-PROTOTYPE UUID="68f175a9-aeb6-5b57-80a6-fad19d92f8f9">
                             <SHORT-NAME>FailReason</SHORT-NAME>
                             <PROVIDED-COM-SPECS>
                                 <NONQUEUED-SENDER-COM-SPEC>
@@ -455,7 +497,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </PROVIDED-COM-SPECS>
                             <PROVIDED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/FailReason</PROVIDED-INTERFACE-TREF>
                         </P-PORT-PROTOTYPE>
-                        <P-PORT-PROTOTYPE UUID="e2f159fa-bf81-51ff-fc1e-4c3fab59a5fa">
+                        <P-PORT-PROTOTYPE UUID="11422298-6534-5ad0-4abf-64312e61c93b">
                             <SHORT-NAME>AliveStatusBattSim</SHORT-NAME>
                             <PROVIDED-COM-SPECS>
                                 <NONQUEUED-SENDER-COM-SPEC>
@@ -472,7 +514,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </PROVIDED-COM-SPECS>
                             <PROVIDED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/AliveStatusBattSim</PROVIDED-INTERFACE-TREF>
                         </P-PORT-PROTOTYPE>
-                        <P-PORT-PROTOTYPE UUID="60a91fb0-3768-56e4-d4e9-69ce1405d3c6">
+                        <P-PORT-PROTOTYPE UUID="58bc6f0e-c885-5f06-0b6a-4e1eecb0be67">
                             <SHORT-NAME>AliveStatusCells010203</SHORT-NAME>
                             <PROVIDED-COM-SPECS>
                                 <NONQUEUED-SENDER-COM-SPEC>
@@ -489,7 +531,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </PROVIDED-COM-SPECS>
                             <PROVIDED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/AliveStatusCells010203</PROVIDED-INTERFACE-TREF>
                         </P-PORT-PROTOTYPE>
-                        <P-PORT-PROTOTYPE UUID="57a4e566-a0a4-548e-ff8f-d33fd9d8b93e">
+                        <P-PORT-PROTOTYPE UUID="07965152-e65c-523f-a11f-e26a96ce25bc">
                             <SHORT-NAME>AliveStatusCells040506</SHORT-NAME>
                             <PROVIDED-COM-SPECS>
                                 <NONQUEUED-SENDER-COM-SPEC>
@@ -506,7 +548,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </PROVIDED-COM-SPECS>
                             <PROVIDED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/AliveStatusCells040506</PROVIDED-INTERFACE-TREF>
                         </P-PORT-PROTOTYPE>
-                        <P-PORT-PROTOTYPE UUID="c685052f-0668-5377-5774-32523621ec5e">
+                        <P-PORT-PROTOTYPE UUID="497ff5e7-dbe2-503a-2877-aefec61d7f9e">
                             <SHORT-NAME>AliveStatusCells070809</SHORT-NAME>
                             <PROVIDED-COM-SPECS>
                                 <NONQUEUED-SENDER-COM-SPEC>
@@ -523,7 +565,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </PROVIDED-COM-SPECS>
                             <PROVIDED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/AliveStatusCells070809</PROVIDED-INTERFACE-TREF>
                         </P-PORT-PROTOTYPE>
-                        <P-PORT-PROTOTYPE UUID="937c54f9-9896-5255-d5b0-f927528c5247">
+                        <P-PORT-PROTOTYPE UUID="913bdda4-603a-579c-a048-8be8d6c8ddb8">
                             <SHORT-NAME>AliveStatusCells101112</SHORT-NAME>
                             <PROVIDED-COM-SPECS>
                                 <NONQUEUED-SENDER-COM-SPEC>
@@ -540,7 +582,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </PROVIDED-COM-SPECS>
                             <PROVIDED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/AliveStatusCells101112</PROVIDED-INTERFACE-TREF>
                         </P-PORT-PROTOTYPE>
-                        <P-PORT-PROTOTYPE UUID="79b3aaff-94dc-58e1-81cd-4090db4c103e">
+                        <P-PORT-PROTOTYPE UUID="dc0d135d-261d-5d10-8372-a1719fd14b23">
                             <SHORT-NAME>AliveStatusCells131415</SHORT-NAME>
                             <PROVIDED-COM-SPECS>
                                 <NONQUEUED-SENDER-COM-SPEC>
@@ -557,7 +599,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </PROVIDED-COM-SPECS>
                             <PROVIDED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/AliveStatusCells131415</PROVIDED-INTERFACE-TREF>
                         </P-PORT-PROTOTYPE>
-                        <P-PORT-PROTOTYPE UUID="e48dae2c-7872-54ed-4a80-b4569cfaca46">
+                        <P-PORT-PROTOTYPE UUID="9fbd9d6a-ccfe-55bc-e9d9-3321d42b34af">
                             <SHORT-NAME>AliveStatusCell16</SHORT-NAME>
                             <PROVIDED-COM-SPECS>
                                 <NONQUEUED-SENDER-COM-SPEC>
@@ -574,7 +616,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </PROVIDED-COM-SPECS>
                             <PROVIDED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/AliveStatusCell16</PROVIDED-INTERFACE-TREF>
                         </P-PORT-PROTOTYPE>
-                        <P-PORT-PROTOTYPE UUID="bf9ab416-232a-5ff9-810d-a852cf9a9602">
+                        <P-PORT-PROTOTYPE UUID="1924786b-0595-5651-ca26-970c194f8a6c">
                             <SHORT-NAME>AliveStatusBattSimExt</SHORT-NAME>
                             <PROVIDED-COM-SPECS>
                                 <NONQUEUED-SENDER-COM-SPEC>
@@ -591,7 +633,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </PROVIDED-COM-SPECS>
                             <PROVIDED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/AliveStatusBattSimExt</PROVIDED-INTERFACE-TREF>
                         </P-PORT-PROTOTYPE>
-                        <P-PORT-PROTOTYPE UUID="3e9a3d06-2dd9-59ff-31be-51cfad7d85d5">
+                        <P-PORT-PROTOTYPE UUID="b23b4be4-8290-5291-a4b6-9a9f7599dc6e">
                             <SHORT-NAME>ValidCell010203</SHORT-NAME>
                             <PROVIDED-COM-SPECS>
                                 <NONQUEUED-SENDER-COM-SPEC>
@@ -608,7 +650,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </PROVIDED-COM-SPECS>
                             <PROVIDED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/ValidCell010203</PROVIDED-INTERFACE-TREF>
                         </P-PORT-PROTOTYPE>
-                        <P-PORT-PROTOTYPE UUID="bb58bac1-ac98-5a17-fd70-4054b591c4a3">
+                        <P-PORT-PROTOTYPE UUID="db73ab38-265e-573c-f0ab-8248ed1c8bbe">
                             <SHORT-NAME>ValidCell040506</SHORT-NAME>
                             <PROVIDED-COM-SPECS>
                                 <NONQUEUED-SENDER-COM-SPEC>
@@ -625,7 +667,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </PROVIDED-COM-SPECS>
                             <PROVIDED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/ValidCell040506</PROVIDED-INTERFACE-TREF>
                         </P-PORT-PROTOTYPE>
-                        <P-PORT-PROTOTYPE UUID="d1ad36b5-f5c9-5db9-bf69-b478792e3aef">
+                        <P-PORT-PROTOTYPE UUID="0070e25f-ac53-50f9-5ae0-436bdf60ca33">
                             <SHORT-NAME>ValidCell070809</SHORT-NAME>
                             <PROVIDED-COM-SPECS>
                                 <NONQUEUED-SENDER-COM-SPEC>
@@ -642,7 +684,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </PROVIDED-COM-SPECS>
                             <PROVIDED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/ValidCell070809</PROVIDED-INTERFACE-TREF>
                         </P-PORT-PROTOTYPE>
-                        <P-PORT-PROTOTYPE UUID="9a4cbf1a-120c-57c6-24e6-cfb1d3102808">
+                        <P-PORT-PROTOTYPE UUID="3239b482-f75b-51fd-6daa-cb145383d50d">
                             <SHORT-NAME>ValidCell101112</SHORT-NAME>
                             <PROVIDED-COM-SPECS>
                                 <NONQUEUED-SENDER-COM-SPEC>
@@ -659,7 +701,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </PROVIDED-COM-SPECS>
                             <PROVIDED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/ValidCell101112</PROVIDED-INTERFACE-TREF>
                         </P-PORT-PROTOTYPE>
-                        <P-PORT-PROTOTYPE UUID="e1ac5f1d-dedc-5f66-420c-4c3f704b07ad">
+                        <P-PORT-PROTOTYPE UUID="8e51274a-1280-5663-3ae1-efa5c96a143a">
                             <SHORT-NAME>ValidCell131415</SHORT-NAME>
                             <PROVIDED-COM-SPECS>
                                 <NONQUEUED-SENDER-COM-SPEC>
@@ -676,7 +718,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </PROVIDED-COM-SPECS>
                             <PROVIDED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/ValidCell131415</PROVIDED-INTERFACE-TREF>
                         </P-PORT-PROTOTYPE>
-                        <P-PORT-PROTOTYPE UUID="80b4860b-3046-5d66-26ae-976899ea2b12">
+                        <P-PORT-PROTOTYPE UUID="0f4f5e4c-eeaa-58fc-b338-203a03a9a4a2">
                             <SHORT-NAME>ValidCell16</SHORT-NAME>
                             <PROVIDED-COM-SPECS>
                                 <NONQUEUED-SENDER-COM-SPEC>
@@ -693,7 +735,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </PROVIDED-COM-SPECS>
                             <PROVIDED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/ValidCell16</PROVIDED-INTERFACE-TREF>
                         </P-PORT-PROTOTYPE>
-                        <P-PORT-PROTOTYPE UUID="1a2fc6fc-48ba-5503-4f33-5a3d40f35b3f">
+                        <P-PORT-PROTOTYPE UUID="4b201097-cb69-57ff-3f8a-57bbb958c4b7">
                             <SHORT-NAME>ValidBattSim</SHORT-NAME>
                             <PROVIDED-COM-SPECS>
                                 <NONQUEUED-SENDER-COM-SPEC>
@@ -710,7 +752,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </PROVIDED-COM-SPECS>
                             <PROVIDED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/ValidBattSim</PROVIDED-INTERFACE-TREF>
                         </P-PORT-PROTOTYPE>
-                        <P-PORT-PROTOTYPE UUID="85d96bb1-77cf-5e13-6752-e0a3822c01d2">
+                        <P-PORT-PROTOTYPE UUID="a34cb4d5-1252-55fe-338c-f3aa68400aed">
                             <SHORT-NAME>ValidDynCellSim1</SHORT-NAME>
                             <PROVIDED-COM-SPECS>
                                 <NONQUEUED-SENDER-COM-SPEC>
@@ -727,7 +769,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </PROVIDED-COM-SPECS>
                             <PROVIDED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/ValidDynCellSim1</PROVIDED-INTERFACE-TREF>
                         </P-PORT-PROTOTYPE>
-                        <P-PORT-PROTOTYPE UUID="9ac3e4c1-964e-50e1-aee8-f9eb1a98da67">
+                        <P-PORT-PROTOTYPE UUID="0b69efe0-3caf-59c3-0c8b-29ebedcce99a">
                             <SHORT-NAME>ValidDynCellSim2</SHORT-NAME>
                             <PROVIDED-COM-SPECS>
                                 <NONQUEUED-SENDER-COM-SPEC>
@@ -744,7 +786,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </PROVIDED-COM-SPECS>
                             <PROVIDED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/ValidDynCellSim2</PROVIDED-INTERFACE-TREF>
                         </P-PORT-PROTOTYPE>
-                        <P-PORT-PROTOTYPE UUID="23561acf-253e-5830-fef3-909f0b29c1fe">
+                        <P-PORT-PROTOTYPE UUID="5b45b4e3-9245-5c6d-cc1d-225eee322e3a">
                             <SHORT-NAME>FwVersionMajor</SHORT-NAME>
                             <PROVIDED-COM-SPECS>
                                 <NONQUEUED-SENDER-COM-SPEC>
@@ -761,7 +803,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </PROVIDED-COM-SPECS>
                             <PROVIDED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/FwVersionMajor</PROVIDED-INTERFACE-TREF>
                         </P-PORT-PROTOTYPE>
-                        <P-PORT-PROTOTYPE UUID="e0ec919e-669b-560b-5d09-17347571db3d">
+                        <P-PORT-PROTOTYPE UUID="a9dc8a6d-a7d8-5468-c807-19d079d1c734">
                             <SHORT-NAME>FwVersionMinor</SHORT-NAME>
                             <PROVIDED-COM-SPECS>
                                 <NONQUEUED-SENDER-COM-SPEC>
@@ -778,7 +820,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </PROVIDED-COM-SPECS>
                             <PROVIDED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/FwVersionMinor</PROVIDED-INTERFACE-TREF>
                         </P-PORT-PROTOTYPE>
-                        <P-PORT-PROTOTYPE UUID="73bbff1a-e149-55f8-f96e-6f5ba1a296c4">
+                        <P-PORT-PROTOTYPE UUID="a204f535-052f-505c-5fa3-0d72b2353293">
                             <SHORT-NAME>FwVersionPatch</SHORT-NAME>
                             <PROVIDED-COM-SPECS>
                                 <NONQUEUED-SENDER-COM-SPEC>
@@ -795,7 +837,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </PROVIDED-COM-SPECS>
                             <PROVIDED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/FwVersionPatch</PROVIDED-INTERFACE-TREF>
                         </P-PORT-PROTOTYPE>
-                        <R-PORT-PROTOTYPE UUID="a254e23d-71ac-5879-367e-8ef22717b005">
+                        <R-PORT-PROTOTYPE UUID="a5a67f2b-923b-5e59-f7ed-4dd665124e82">
                             <SHORT-NAME>CalPrm</SHORT-NAME>
                             <REQUIRED-COM-SPECS>
                                 <PARAMETER-REQUIRE-COM-SPEC>
@@ -820,7 +862,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                     <INIT-VALUE>
                                         <NUMERICAL-VALUE-SPECIFICATION>
                                             <SHORT-LABEL>CalPrm_VersionMinor</SHORT-LABEL>
-                                            <VALUE>2</VALUE>
+                                            <VALUE>3</VALUE>
                                         </NUMERICAL-VALUE-SPECIFICATION>
                                     </INIT-VALUE>
                                     <PARAMETER-REF DEST="PARAMETER-DATA-PROTOTYPE">/Interfaces/CalPrm/VersionMinor</PARAMETER-REF>
@@ -839,10 +881,10 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                         </R-PORT-PROTOTYPE>
                     </PORTS>
                     <INTERNAL-BEHAVIORS>
-                        <SWC-INTERNAL-BEHAVIOR UUID="160f1401-df6d-583a-8d70-02c4897d61b4">
+                        <SWC-INTERNAL-BEHAVIOR UUID="7c0b30fa-4a3c-5b02-7271-34d348657fdb">
                             <SHORT-NAME>BattSimMode_IB</SHORT-NAME>
                             <EVENTS>
-                                <TIMING-EVENT UUID="37a6b471-2b47-592b-1711-51816432ac59">
+                                <TIMING-EVENT UUID="c50cc369-ab89-5631-ef0a-f692b71103c1">
                                     <SHORT-NAME>Event_ModeTask10ms</SHORT-NAME>
                                     <START-ON-EVENT-REF DEST="RUNNABLE-ENTITY">/Components/BattSimMode/BattSimMode_IB/ModeTask10ms</START-ON-EVENT-REF>
                                     <PERIOD>0.01</PERIOD>
@@ -850,12 +892,12 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                             </EVENTS>
                             <HANDLE-TERMINATION-AND-RESTART>NO-SUPPORT</HANDLE-TERMINATION-AND-RESTART>
                             <RUNNABLES>
-                                <RUNNABLE-ENTITY UUID="17ce31bc-256d-5801-043b-8941a2c5b13e">
+                                <RUNNABLE-ENTITY UUID="cee35d7a-1937-5e01-e274-86becc7460dd">
                                     <SHORT-NAME>BattSimMode_Init</SHORT-NAME>
                                     <MINIMUM-START-INTERVAL>0</MINIMUM-START-INTERVAL>
                                     <CAN-BE-INVOKED-CONCURRENTLY>false</CAN-BE-INVOKED-CONCURRENTLY>
                                     <DATA-SEND-POINTS>
-                                        <VARIABLE-ACCESS UUID="4935a94f-614f-562c-e43f-100a74f96ed9">
+                                        <VARIABLE-ACCESS UUID="8b628f6e-fca2-5b84-1e11-9d4ffee9cf50">
                                             <SHORT-NAME>OUT_FwVersionMajor_FwVersionMajor</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -864,7 +906,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="688c42bc-2d17-54de-9865-1c205839e5bd">
+                                        <VARIABLE-ACCESS UUID="c59b16b6-7701-53d6-d8c2-d0969ad7a5b9">
                                             <SHORT-NAME>OUT_FwVersionMinor_FwVersionMinor</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -873,7 +915,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="f2b32e7a-784e-5ce7-0dc3-b59e2d54f37a">
+                                        <VARIABLE-ACCESS UUID="e6a1a13f-622d-5cc5-e7dc-7c4941c6b643">
                                             <SHORT-NAME>OUT_FwVersionPatch_FwVersionPatch</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -884,7 +926,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                         </VARIABLE-ACCESS>
                                     </DATA-SEND-POINTS>
                                     <PARAMETER-ACCESSS>
-                                        <PARAMETER-ACCESS UUID="b544e240-58f5-54ac-5532-a8cb586188e6">
+                                        <PARAMETER-ACCESS UUID="3d8a94d8-3311-54a8-6f6c-b82c4fdad171">
                                             <SHORT-NAME>CALPRM_CalPrm_VersionMajor</SHORT-NAME>
                                             <ACCESSED-PARAMETER>
                                                 <AUTOSAR-PARAMETER-IREF>
@@ -893,7 +935,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-PARAMETER-IREF>
                                             </ACCESSED-PARAMETER>
                                         </PARAMETER-ACCESS>
-                                        <PARAMETER-ACCESS UUID="7e3b4cea-68f5-5578-e276-09a1fa21dc74">
+                                        <PARAMETER-ACCESS UUID="29d37cde-e8af-575c-06c7-3d980f4d1b79">
                                             <SHORT-NAME>CALPRM_CalPrm_VersionMinor</SHORT-NAME>
                                             <ACCESSED-PARAMETER>
                                                 <AUTOSAR-PARAMETER-IREF>
@@ -902,7 +944,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-PARAMETER-IREF>
                                             </ACCESSED-PARAMETER>
                                         </PARAMETER-ACCESS>
-                                        <PARAMETER-ACCESS UUID="d0cb74b6-55b8-5457-c90c-a33b8b8a15a4">
+                                        <PARAMETER-ACCESS UUID="93176f72-afba-56e4-144a-29ef4df3441a">
                                             <SHORT-NAME>CALPRM_CalPrm_VersionPatch</SHORT-NAME>
                                             <ACCESSED-PARAMETER>
                                                 <AUTOSAR-PARAMETER-IREF>
@@ -914,12 +956,12 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                     </PARAMETER-ACCESSS>
                                     <SYMBOL>BattSimMode_Init</SYMBOL>
                                 </RUNNABLE-ENTITY>
-                                <RUNNABLE-ENTITY UUID="ebe82269-9137-513d-dca7-9562b3df100f">
+                                <RUNNABLE-ENTITY UUID="0ce9bdc2-45ac-5120-bc81-1ba484a07ae3">
                                     <SHORT-NAME>ModeTask10ms</SHORT-NAME>
                                     <MINIMUM-START-INTERVAL>0</MINIMUM-START-INTERVAL>
                                     <CAN-BE-INVOKED-CONCURRENTLY>false</CAN-BE-INVOKED-CONCURRENTLY>
                                     <DATA-RECEIVE-POINT-BY-ARGUMENTS>
-                                        <VARIABLE-ACCESS UUID="86a54a8b-9d54-5f3b-e91f-142119dd89e2">
+                                        <VARIABLE-ACCESS UUID="ed808501-2363-5da4-4671-f159c1fa3552">
                                             <SHORT-NAME>IN_BtnAllOnOff_BtnAllOnOff</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -928,7 +970,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="12cf40fd-0382-5f78-6ca4-529c907a9764">
+                                        <VARIABLE-ACCESS UUID="f210cddf-5794-5754-ab79-ef71c9764086">
                                             <SHORT-NAME>IN_BtnRemote_BtnRemote</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -937,7 +979,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="52a54f55-acfc-5b12-9e96-7460bc17edc6">
+                                        <VARIABLE-ACCESS UUID="427705d6-a312-527e-53df-d8c91013d83a">
                                             <SHORT-NAME>IN_ControlBattSimQlf_ControlBattSimQlf</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -946,7 +988,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="7dba51aa-7340-5708-8b76-6f5fcc63170d">
+                                        <VARIABLE-ACCESS UUID="45dad5af-c206-501d-9960-28d9285acded">
                                             <SHORT-NAME>IN_ControlCell010203Qlf_ControlCell010203Qlf</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -955,7 +997,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="9dbf4161-6569-5525-26a4-f88bc342cf0c">
+                                        <VARIABLE-ACCESS UUID="232313f4-8e4a-519b-b316-b9fc7caa3662">
                                             <SHORT-NAME>IN_ControlCell040506Qlf_ControlCell040506Qlf</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -964,7 +1006,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="ad3a650e-6a90-5a9d-9822-14ca5cc4dca3">
+                                        <VARIABLE-ACCESS UUID="541875a0-7e7f-5ed9-b9ea-9c2c9e0f47fb">
                                             <SHORT-NAME>IN_ControlCell070809Qlf_ControlCell070809Qlf</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -973,7 +1015,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="0d108fce-f571-5286-ec80-b67db9cc6b35">
+                                        <VARIABLE-ACCESS UUID="d1ab6362-d0bf-5208-720c-bcaca02b8688">
                                             <SHORT-NAME>IN_ControlCell101112Qlf_ControlCell101112Qlf</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -982,7 +1024,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="a617dab6-62ff-562e-0312-37236ad44dd7">
+                                        <VARIABLE-ACCESS UUID="67f15cfe-d2d3-5d0d-8e02-5e9dd6c6cff9">
                                             <SHORT-NAME>IN_ControlCell131415Qlf_ControlCell131415Qlf</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -991,7 +1033,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="cfacd7d4-2660-58a2-493c-b55e0403bea6">
+                                        <VARIABLE-ACCESS UUID="fb1e7aab-441e-5fd3-3c1d-a82251305558">
                                             <SHORT-NAME>IN_ControlCell16Qlf_ControlCell16Qlf</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -1000,7 +1042,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="382c9e30-8416-52a4-79a9-8ce9f316e898">
+                                        <VARIABLE-ACCESS UUID="a7769580-b164-52dc-0cb0-d43c21c3812a">
                                             <SHORT-NAME>IN_ControlDynCellSim1Qlf_ControlDynCellSim1Qlf</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -1009,7 +1051,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="767c750a-a478-5d67-92ed-7777d7cdfb33">
+                                        <VARIABLE-ACCESS UUID="5b33b26c-3a96-5741-c499-dbd624becb3d">
                                             <SHORT-NAME>IN_ControlDynCellSim2Qlf_ControlDynCellSim2Qlf</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -1018,7 +1060,16 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="f5fca91a-ff7a-538f-c4b8-455baa2cb9d2">
+                                        <VARIABLE-ACCESS UUID="077e2c60-2fcf-5afa-62d0-7078f8848dc2">
+                                            <SHORT-NAME>IN_CurrentInvalid_CurrentInvalid</SHORT-NAME>
+                                            <ACCESSED-VARIABLE>
+                                                <AUTOSAR-VARIABLE-IREF>
+                                                    <PORT-PROTOTYPE-REF DEST="R-PORT-PROTOTYPE">/Components/BattSimMode/CurrentInvalid</PORT-PROTOTYPE-REF>
+                                                    <TARGET-DATA-PROTOTYPE-REF DEST="VARIABLE-DATA-PROTOTYPE">/Interfaces/CurrentInvalid/CurrentInvalid</TARGET-DATA-PROTOTYPE-REF>
+                                                </AUTOSAR-VARIABLE-IREF>
+                                            </ACCESSED-VARIABLE>
+                                        </VARIABLE-ACCESS>
+                                        <VARIABLE-ACCESS UUID="fecd4113-4b44-59de-6038-bb5dee04f0f0">
                                             <SHORT-NAME>IN_ModeControl_ModeControl</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -1027,7 +1078,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="87df93f5-77e5-5074-c7e8-e9a8039bbd2d">
+                                        <VARIABLE-ACCESS UUID="00fb2431-b0c4-5c5e-0390-75c7bbe2f6e6">
                                             <SHORT-NAME>IN_OutputControl_OutputControl</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -1036,7 +1087,16 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="df179f93-6f2c-59f6-0b18-dcbc0afae08f">
+                                        <VARIABLE-ACCESS UUID="51934821-b3ba-5dc0-936d-ac8c558e3de6">
+                                            <SHORT-NAME>IN_OverVoltage_OverVoltage</SHORT-NAME>
+                                            <ACCESSED-VARIABLE>
+                                                <AUTOSAR-VARIABLE-IREF>
+                                                    <PORT-PROTOTYPE-REF DEST="R-PORT-PROTOTYPE">/Components/BattSimMode/OverVoltage</PORT-PROTOTYPE-REF>
+                                                    <TARGET-DATA-PROTOTYPE-REF DEST="VARIABLE-DATA-PROTOTYPE">/Interfaces/OverVoltage/OverVoltage</TARGET-DATA-PROTOTYPE-REF>
+                                                </AUTOSAR-VARIABLE-IREF>
+                                            </ACCESSED-VARIABLE>
+                                        </VARIABLE-ACCESS>
+                                        <VARIABLE-ACCESS UUID="720db9dd-bf5e-59c4-8072-8cbac6333356">
                                             <SHORT-NAME>IN_Overload_Overload</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -1045,7 +1105,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="d011006e-0761-58f3-4779-72c292ca73f6">
+                                        <VARIABLE-ACCESS UUID="c166bd98-d04e-5993-206c-513aba4503bd">
                                             <SHORT-NAME>IN_RemoteControl_RemoteControl</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -1054,7 +1114,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="4c79fc92-7818-5206-d287-f6768ba0b9cf">
+                                        <VARIABLE-ACCESS UUID="2ce8ac57-1796-508f-6010-5af80091e27b">
                                             <SHORT-NAME>IN_ResetQlf_ResetQlf</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -1063,7 +1123,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="8618b0ab-18f4-5801-bfe5-9be2c1c42628">
+                                        <VARIABLE-ACCESS UUID="56dcc2f9-2aa3-523c-6e4b-6f5d2d052ed3">
                                             <SHORT-NAME>IN_ResetWatchdog_ResetWatchdog</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -1074,7 +1134,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                         </VARIABLE-ACCESS>
                                     </DATA-RECEIVE-POINT-BY-ARGUMENTS>
                                     <DATA-SEND-POINTS>
-                                        <VARIABLE-ACCESS UUID="e66d3f9b-52d0-5c51-fb23-77ec75a5ca0b">
+                                        <VARIABLE-ACCESS UUID="84cc1098-5487-54f0-c515-534ad91ab856">
                                             <SHORT-NAME>OUT_BattSimStatus_BattSimStatus</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -1083,7 +1143,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="fa05ad49-7925-533d-136f-812691ecec80">
+                                        <VARIABLE-ACCESS UUID="4858479d-95a7-5a05-72d4-272a2044ee6b">
                                             <SHORT-NAME>OUT_OutputStatus_OutputStatus</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -1092,7 +1152,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="e5f6b52c-eff1-5413-e3d1-a7073aa27740">
+                                        <VARIABLE-ACCESS UUID="a106f2b1-30c1-5c13-60d7-bfcb3e5ba307">
                                             <SHORT-NAME>OUT_LedRemote_LedRemote</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -1101,7 +1161,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="79f8ad10-63ca-5914-3f2c-6178209e54ce">
+                                        <VARIABLE-ACCESS UUID="4b5fb063-b2f5-55a3-d7f9-f12983135eeb">
                                             <SHORT-NAME>OUT_OutputEnable_OutputEnable</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -1110,7 +1170,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="33a19864-413d-5f7a-d2bb-14a01674421f">
+                                        <VARIABLE-ACCESS UUID="30752e34-6ea4-58cd-84db-114f42336665">
                                             <SHORT-NAME>OUT_FailReason_FailReason</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -1119,7 +1179,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="55bb9c12-b4ff-5b7f-fa86-457bae9e0bd5">
+                                        <VARIABLE-ACCESS UUID="5cee122e-28c5-5c6e-0d0c-ed4b8a05e145">
                                             <SHORT-NAME>OUT_AliveStatusBattSim_AliveStatusBattSim</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -1128,7 +1188,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="a496f221-f4ec-52cf-5c52-2d52190247e2">
+                                        <VARIABLE-ACCESS UUID="62becd02-785e-5341-ee76-8685790b8e57">
                                             <SHORT-NAME>OUT_AliveStatusCells010203_AliveStatusCells010203</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -1137,7 +1197,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="119948e5-1939-5ab7-43c4-9f14e501aac2">
+                                        <VARIABLE-ACCESS UUID="df72a3e1-b3d3-52d8-f705-2a0ad7f4c3e3">
                                             <SHORT-NAME>OUT_AliveStatusCells040506_AliveStatusCells040506</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -1146,7 +1206,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="c2443870-8ce8-5dfe-ac91-cbd81c758a71">
+                                        <VARIABLE-ACCESS UUID="dce9f6f3-1717-5e31-0861-51d6411b5ec0">
                                             <SHORT-NAME>OUT_AliveStatusCells070809_AliveStatusCells070809</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -1155,7 +1215,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="2712ec51-26e2-59e4-abe6-8e9b4550089c">
+                                        <VARIABLE-ACCESS UUID="ce8559df-2d05-534e-ee4f-ca2a4b79bf1c">
                                             <SHORT-NAME>OUT_AliveStatusCells101112_AliveStatusCells101112</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -1164,7 +1224,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="18b21405-1ee7-5455-2d47-9401a053d062">
+                                        <VARIABLE-ACCESS UUID="5f051588-5dd5-580d-5c82-75897930dba7">
                                             <SHORT-NAME>OUT_AliveStatusCells131415_AliveStatusCells131415</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -1173,7 +1233,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="da56c057-6170-5ee4-3677-20772a9f67e7">
+                                        <VARIABLE-ACCESS UUID="ea43f16c-473d-5171-1e82-33f522415d8f">
                                             <SHORT-NAME>OUT_AliveStatusCell16_AliveStatusCell16</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -1182,7 +1242,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="afd9366b-ec4c-5995-10c8-45fd4aa30318">
+                                        <VARIABLE-ACCESS UUID="9c6a2727-15d2-5536-0724-0a47ad22a94c">
                                             <SHORT-NAME>OUT_AliveStatusBattSimExt_AliveStatusBattSimExt</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -1191,7 +1251,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="436a09aa-af52-5e08-bed4-5e88127831a9">
+                                        <VARIABLE-ACCESS UUID="a43973ef-81cb-5575-8485-33f1212a52ff">
                                             <SHORT-NAME>OUT_ValidCell010203_ValidCell010203</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -1200,7 +1260,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="d949dcc6-ec52-506a-b699-101be2292868">
+                                        <VARIABLE-ACCESS UUID="acfdbe7a-7923-5853-af9d-968c213a4575">
                                             <SHORT-NAME>OUT_ValidCell040506_ValidCell040506</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -1209,7 +1269,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="a0e372df-d453-5131-1e13-dfcb592fad00">
+                                        <VARIABLE-ACCESS UUID="e0d83dff-6222-5dae-412f-bbb19d992ee7">
                                             <SHORT-NAME>OUT_ValidCell070809_ValidCell070809</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -1218,7 +1278,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="8e52004c-bf6d-594e-19e0-7ce59e676337">
+                                        <VARIABLE-ACCESS UUID="792804da-14c1-5120-9cc5-a640fe4d2834">
                                             <SHORT-NAME>OUT_ValidCell101112_ValidCell101112</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -1227,7 +1287,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="4feab67c-95b8-5d08-b4d2-208ad484c8f4">
+                                        <VARIABLE-ACCESS UUID="39df3a13-33f0-506f-c293-fa23aed38c12">
                                             <SHORT-NAME>OUT_ValidCell131415_ValidCell131415</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -1236,7 +1296,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="c6c632e4-02cc-54ed-427f-5956ff73592b">
+                                        <VARIABLE-ACCESS UUID="6fd2aa0b-633c-5f27-eda2-542b5f745584">
                                             <SHORT-NAME>OUT_ValidCell16_ValidCell16</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -1245,7 +1305,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="4edb2e6b-a06a-58f4-ed24-5d06a80a1e8f">
+                                        <VARIABLE-ACCESS UUID="2beb613c-b172-5df4-cc33-3027ace2993f">
                                             <SHORT-NAME>OUT_ValidBattSim_ValidBattSim</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -1254,7 +1314,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="b19f28c6-4751-5e1f-e099-827d6b00bf24">
+                                        <VARIABLE-ACCESS UUID="a2934b40-aead-563e-16ba-c01f9f798063">
                                             <SHORT-NAME>OUT_ValidDynCellSim1_ValidDynCellSim1</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -1263,7 +1323,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="94b86b96-6cb2-5747-cc9d-6186f6c88d09">
+                                        <VARIABLE-ACCESS UUID="b5015398-b601-50ba-108d-b94f030d4cb5">
                                             <SHORT-NAME>OUT_ValidDynCellSim2_ValidDynCellSim2</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -1272,7 +1332,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="8a173e3e-22b2-5683-f3b4-ef7f265831f3">
+                                        <VARIABLE-ACCESS UUID="44e3e34f-3d86-5d12-8e33-702ea83e87ac">
                                             <SHORT-NAME>OUT_FwVersionMajor_FwVersionMajor</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -1281,7 +1341,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="39b15da4-d425-54b5-52bb-6e2df9d5e732">
+                                        <VARIABLE-ACCESS UUID="fb133d9f-8ffd-532b-3a44-9bb2a4ee4a3d">
                                             <SHORT-NAME>OUT_FwVersionMinor_FwVersionMinor</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -1290,7 +1350,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="771ca11a-e78b-5bb3-bc09-95ae0d9ed3a3">
+                                        <VARIABLE-ACCESS UUID="256cdcd6-1542-55f8-b09e-3fa5bb3d33d7">
                                             <SHORT-NAME>OUT_FwVersionPatch_FwVersionPatch</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -1301,7 +1361,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                         </VARIABLE-ACCESS>
                                     </DATA-SEND-POINTS>
                                     <PARAMETER-ACCESSS>
-                                        <PARAMETER-ACCESS UUID="129f591f-c82e-5857-300b-be8303b21e81">
+                                        <PARAMETER-ACCESS UUID="c134a21b-baa6-512f-2408-e6e7733c98d2">
                                             <SHORT-NAME>CALPRM_CalPrm_ButtonDebounce_cycles</SHORT-NAME>
                                             <ACCESSED-PARAMETER>
                                                 <AUTOSAR-PARAMETER-IREF>
@@ -1310,7 +1370,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-PARAMETER-IREF>
                                             </ACCESSED-PARAMETER>
                                         </PARAMETER-ACCESS>
-                                        <PARAMETER-ACCESS UUID="cc96c5fc-34c4-5eaa-f2fd-d0c3eea2ba23">
+                                        <PARAMETER-ACCESS UUID="aa85f65f-b398-5504-c433-7c2a9a5b3b95">
                                             <SHORT-NAME>CALPRM_CalPrm_VersionMajor</SHORT-NAME>
                                             <ACCESSED-PARAMETER>
                                                 <AUTOSAR-PARAMETER-IREF>
@@ -1319,7 +1379,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-PARAMETER-IREF>
                                             </ACCESSED-PARAMETER>
                                         </PARAMETER-ACCESS>
-                                        <PARAMETER-ACCESS UUID="8cf69f55-6a82-5907-4767-4bcfc535213e">
+                                        <PARAMETER-ACCESS UUID="142d1126-bdaa-59ec-67cf-7fe5d3e51458">
                                             <SHORT-NAME>CALPRM_CalPrm_VersionMinor</SHORT-NAME>
                                             <ACCESSED-PARAMETER>
                                                 <AUTOSAR-PARAMETER-IREF>
@@ -1328,7 +1388,7 @@ Model Checksum               : 2671318750 2732806489 3344024602 2223781413
                                                 </AUTOSAR-PARAMETER-IREF>
                                             </ACCESSED-PARAMETER>
                                         </PARAMETER-ACCESS>
-                                        <PARAMETER-ACCESS UUID="dcc4a2b0-0497-5082-6463-00433b5802b3">
+                                        <PARAMETER-ACCESS UUID="f0966c77-e696-572c-2b6c-902bf8093904">
                                             <SHORT-NAME>CALPRM_CalPrm_VersionPatch</SHORT-NAME>
                                             <ACCESSED-PARAMETER>
                                                 <AUTOSAR-PARAMETER-IREF>

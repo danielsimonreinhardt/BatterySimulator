@@ -13,13 +13,19 @@ function BattSimMode_create()
 %       RUN     -> STOP   OUTPUT=1, or the ALL ON/OFF key
 %       STOP/RUN -> STANDBY  REMOTE=1, REMOTE=2 and MODE=1, or the REMOTE key
 %       any     -> FAIL   Overload (reason 3); in RUN the qualifier of 0x130 reports a timeout or bus error (reason 1) or
-%                         an alive error (reason 2) - in the same 10 ms step, the outputs are off with OutputEnable
+%                         an alive error (reason 2) - in the same 10 ms step, the outputs are off with OutputEnable;
+%                         in RUN CurrentInvalid (current measurement invalid for 200 ms, review C-1, reason 5) or OverVoltage
+%                         (a released channel 100 ms above its setpoint + 0.2 V, review C-2, reason 6). CurrentInvalid comes
+%                         from the SupplyMonitor of the same step (outputs off in that step; when it is already true on the way
+%                         from STOP to RUN, the step goes to FAIL and the outputs never come on); OverVoltage comes from CellChannels, which runs after this component:
+%                         the outputs are off one step later.
 %       FAIL    -> STANDBY  REMOTE=2 and MODE=1, or the ALL ON/OFF key, only while Overload is not active
 %     No FAIL in STOP when 0x130 fails (as before). An invalid 0x130 counts as REMOTE=3, MODE=7, OUTPUT=3: no transition.
 %     Keys are debounced (ButtonDebounce_cycles of 10 ms) and act on the press.
 %     BATTSIM_STATUS 1 STANDBY, 3 REMOTE, 5 FAIL; BATTSIM_OUTPUT_STATUS 2 in RUN, otherwise 1. LED_REMOTE: on in REMOTE,
 %     blinking (200 ms) in FAIL. FAIL reason (0x121): 0 none, 1 timeout 0x130, 2 alive 0x130, 3 overload, 4 watchdog
-%     reset (shown in STANDBY after the start until the first state change).
+%     reset (shown in STANDBY after the start until the first state change), 5 current measurement invalid, 6 overvoltage
+%     of a channel.
 %     Alive of the status messages: 1..14 as the old firmware, +1 per 100 ms, one counter for all messages.
 %     0x121 qualifier bits: 1 when the qualifier of the control message is QLF_OK.
 here = fileparts(mfilename('fullpath'));
@@ -40,7 +46,7 @@ alive = {'AliveStatusBattSim', 'AliveStatusCells010203', 'AliveStatusCells040506
          'AliveStatusCells101112', 'AliveStatusCells131415', 'AliveStatusCell16', 'AliveStatusBattSimExt'};
 swc_core(sub, 'ModeCore', coreScript(), ...
     {'RemoteControl', 'ModeControl', 'OutputControl', {'mux', qin}, 'BtnAllOnOff', 'BtnRemote', 'Overload', ...
-     'ResetWatchdog', 'ResetQlf'}, ...
+     'CurrentInvalid', 'OverVoltage', 'ResetWatchdog', 'ResetQlf'}, ...
     {{'ButtonDebounce_cycles', 'uint8'}, {'QLF_OK', 'uint8'}, {'QLF_ERROR_ALIVE', 'uint8'}, ...
      {'QLF_ERROR_TIMEOUT', 'uint8'}, {'QLF_ERROR', 'uint8'}}, ...
     {'BattSimStatus', 'OutputStatus', 'LedRemote', 'OutputEnable', 'FailReason', {'fan', alive}, {'demux', qout}});
@@ -56,7 +62,7 @@ end
 function code = coreScript()
 lines = {
 'function [status, outStatus, ledRemote, outEnable, failReason, alive, qlfOk] = ModeCore(remote, mode, output, qlf, ...'
-'    btnAll, btnRem, ovl, wdReset, resetQlf, debounceN, QlfOk, QlfAlive, QlfTimeout, QlfBus)'
+'    btnAll, btnRem, ovl, curInv, overV, wdReset, resetQlf, debounceN, QlfOk, QlfAlive, QlfTimeout, QlfBus)'
 '%MODECORE Operating modes of the battery simulator, one call per 10 ms (see BattSimMode_create.m).'
 '%#codegen'
 'persistent st reason aliveCnt tick outBlock levA cntA levR cntR wdDone'
@@ -110,6 +116,12 @@ lines = {
 'elseif st == uint8(2) && ~valid && (bitand(q, QlfAlive) ~= uint8(0))'
 '    st = uint8(3);'
 '    reason = uint8(2);'
+'elseif st == uint8(2) && curInv'
+'    st = uint8(3);'
+'    reason = uint8(5);'
+'elseif st == uint8(2) && overV'
+'    st = uint8(3);'
+'    reason = uint8(6);'
 'else'
 '    switch st'
 '        case uint8(0)'
@@ -123,7 +135,12 @@ lines = {
 '            if pressRem || standbyCmd'
 '                st = uint8(0);'
 '            elseif o == uint8(2) && ~outBlock'
-'                st = uint8(2);'
+'                if curInv'
+'                    st = uint8(3);         % RUN is refused: the overload shut-off would be blind'
+'                    reason = uint8(5);'
+'                else'
+'                    st = uint8(2);'
+'                end'
 '            end'
 '        case uint8(2)'
 '            if pressRem || standbyCmd'

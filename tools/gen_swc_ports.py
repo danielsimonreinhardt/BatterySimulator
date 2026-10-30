@@ -69,10 +69,12 @@ port(c, "Limit", "in", "boolean", "dio.in.LIMIT")
 port(c, "Overload", "out", "boolean", "can.tx.STATUS_BATTSIM_EXT.BATTSIM_OVERLOAD")
 port(c, "SupplyCurrent_A", "out", "float32", "can.tx.STATUS_BATTSIM_EXT.BATTSIM_SUPPLY_CURRENT")
 port(c, "LimitActive", "out", "boolean", "can.tx.STATUS_BATTSIM_EXT.BATTSIM_LIMIT")
+port(c, "CurrentInvalid", "out", "boolean", None, "the current measurement was invalid for CurrentInvalid_cycles samples in a row (C-1): BattSimMode switches off in RUN, FAIL reason 5")
 param(c, "SupplyCurrentFilter", "float32", [0.0078125], "[-]   low-pass weight per 10 ms (1/128, exact in single): time constant about 1.3 s, as 0.08 per 100 ms of the old firmware")
 param(c, "SupplyCurrentGain", "float32", [1.0], "[mA/mV] INA181A1 on 50 mOhm: 1 V per A, i.e. 1 mA per mV at the ADC pin")
 param(c, "OverloadThd_mA", "float32", [1280], "[mA]  overload above this current (IRM-60-48: 1.25 A continuous)")
 param(c, "OverloadHyst_mA", "float32", [200], "[mA]  overload ends below OverloadThd_mA - this value (1.08 A)")
+param(c, "CurrentInvalid_cycles", "uint8", [20], "[10 ms] number of invalid samples of the current measurement in a row that count as a failure (20 = 200 ms, review C-1)")
 
 # ------------------------------------------------------------------ BattSimMode
 c = "BattSimMode"
@@ -90,6 +92,8 @@ for q, msg in zip(qnames, QLF_MSGS):
 port(c, "BtnAllOnOff", "in", "boolean", "dio.in.BTN_ALL_ON_OFF")
 port(c, "BtnRemote", "in", "boolean", "dio.in.BTN_REMOTE")
 port(c, "Overload", "in", "boolean", "SupplyMonitor.Overload.Overload")
+port(c, "CurrentInvalid", "in", "boolean", "SupplyMonitor.CurrentInvalid.CurrentInvalid", "current measurement failed (C-1): FAIL reason 5 in RUN")
+port(c, "OverVoltage", "in", "boolean", "CellChannels.OverVoltage.OverVoltage", "a channel is above its setpoint for too long (C-2): FAIL reason 6 in RUN")
 port(c, "ResetWatchdog", "in", "boolean", "bsw.reset.watchdog")
 port(c, "ResetQlf", "in", "uint8", "bsw.reset.qlf")
 port(c, "BattSimStatus", "out", "uint8", "can.tx.STATUS_BATTSIM.BATTSIM_STATUS")
@@ -160,6 +164,7 @@ for n in CH:
     port(c, f"Duty{nn}", "out", "uint16", f"pwm.SET_{nn}", "duty in 0.01 %")
 port(c, "ControllerOn", "out", "boolean", "can.tx.STATUS_BATTSIM_EXT.BATTSIM_CONTROLLER_ON", "regulator active (not switched off)")
 port(c, "ControllerOffAct", "out", "uint8", ["rte", "did.ControllerControl.controllerOff"], "request of the diagnosis as the model uses it")
+port(c, "OverVoltage", "out", "boolean", None, "a released channel was above setpoint + OverVoltThd_V for OverVoltTime_cycles samples (C-2): BattSimMode switches off in RUN, FAIL reason 6")
 port(c, "Cell15State", "out", "uint8", "can.tx.STATUS_CELL13_14_15.CELL15_STATUS", "not fitted: disabled")
 port(c, "Cell15VoltAct_V", "out", "float32", "can.tx.STATUS_CELL13_14_15.CELL15_VOLTAGE_ACT", "not fitted: 0 V")
 port(c, "Cell16State", "out", "uint8", "can.tx.STATUS_CELL16.CELL16_STATUS", "not fitted: disabled")
@@ -174,6 +179,9 @@ param(c, "VoltageSenseMeas_Ax", "float32", SENSE_MV, "[mV]   ADC pin voltage at 
 param(c, "VoltageSenseValue_T", "float32", [0, 1, 2, 3, 4, 5], "[V]    cell voltage at the breakpoints (VoltageSenseValue_T)", 6)
 param(c, "SetpointLimit_V", "float32", [5.0], "[V]    upper setpoint limit, bound to BattSimParams.CellVoltLimit_V in rte.yaml (default 5.0 V; the 4.30 V limit stays in LabControl)",
       unit="V", min=0, max=5.0, description="Obere Grenze jedes Sollwerts")
+param(c, "OverVoltThd_V", "float32", [0.2], "[V]    overvoltage: the calibrated actual value (sample, not low-passed) is this far above the setpoint (review C-2: 0.2 V)",
+      unit="V", min=0.1, max=1.0, description="Schwelle der Ueberspannungserkennung")
+param(c, "OverVoltTime_cycles", "uint8", [10], "[10 ms] number of samples in a row above the threshold that count as overvoltage (10 = 100 ms, review C-2)")
 param(c, "VoltageSenseFilter", "float32", [0.1], "[-]    low-pass weight of the actual value per 10 ms (time constant about 95 ms)")
 param(c, "CtrlKp", "float32", [0.2], "[V/V]  proportional gain of the regulator of a channel (start value, to be tuned at the device)",
       unit="-", min=0, max=2.0, description="Proportionalanteil des Reglers")

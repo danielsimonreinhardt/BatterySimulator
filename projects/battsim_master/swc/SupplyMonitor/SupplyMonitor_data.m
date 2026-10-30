@@ -6,3 +6,4 @@ SupplyCurrentFilter = 0.0078125;   % [-]   low-pass weight per 10 ms (1/128, exa
 SupplyCurrentGain = 1.0;   % [mA/mV] INA181A1 on 50 mOhm: 1 V per A, i.e. 1 mA per mV at the ADC pin
 OverloadThd_mA = 1280;   % [mA]  overload above this current (IRM-60-48: 1.25 A continuous)
 OverloadHyst_mA = 200;   % [mA]  overload ends below OverloadThd_mA - this value (1.08 A)
+CurrentInvalid_cycles = 20;   % [10 ms] number of invalid samples of the current measurement in a row that count as a failure (20 = 200 ms, review C-1)

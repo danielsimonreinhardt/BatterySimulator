@@ -32,6 +32,8 @@ void ModeTask10ms(void)                /* Explicit Task: ModeTask10ms */
   boolean tmpRead_0;
   boolean tmpRead_1;
   boolean tmpRead_2;
+  boolean tmpRead_3;
+  boolean tmpRead_4;
   boolean valid;
 
   /* SignalConversion generated from: '<S2>/ SFunction ' incorporates:
@@ -87,14 +89,14 @@ void ModeTask10ms(void)                /* Explicit Task: ModeTask10ms */
    */
   if ((!BattSimMode_ARID_DEF.wdDone) && (r == 1)) {
     BattSimMode_ARID_DEF.wdDone = TRUE;
-    (void)Rte_Read_ResetWatchdog_ResetWatchdog(&tmpRead_2);
-    if (tmpRead_2 && (BattSimMode_ARID_DEF.st == 0) &&
+    (void)Rte_Read_ResetWatchdog_ResetWatchdog(&tmpRead_4);
+    if (tmpRead_4 && (BattSimMode_ARID_DEF.st == 0) &&
         (BattSimMode_ARID_DEF.reason == 0)) {
       BattSimMode_ARID_DEF.reason = 4U;
     }
   }
 
-  tmpRead_2 = FALSE;
+  tmpRead_4 = FALSE;
 
   /* End of Outputs for RootInportFunctionCallGenerator generated from: '<Root>/ModeTask10ms' */
 
@@ -117,7 +119,7 @@ void ModeTask10ms(void)                /* Explicit Task: ModeTask10ms */
     if ((uint8)i >= Rte_Prm_CalPrm_ButtonDebounce_cycles()) {
       BattSimMode_ARID_DEF.levA = tmpRead_0;
       BattSimMode_ARID_DEF.cntA = 0U;
-      tmpRead_2 = tmpRead_0;
+      tmpRead_4 = tmpRead_0;
     }
   } else {
     BattSimMode_ARID_DEF.cntA = 0U;
@@ -178,7 +180,10 @@ void ModeTask10ms(void)                /* Explicit Task: ModeTask10ms */
   /* RootInportFunctionCallGenerator generated from: '<Root>/ModeTask10ms' incorporates:
    *  SubSystem: '<Root>/BattSimMode_task10ms'
    */
-  /* MATLAB Function: '<S1>/ModeCore' */
+  /* MATLAB Function: '<S1>/ModeCore' incorporates:
+   *  Inport: '<Root>/CurrentInvalid'
+   *  Inport: '<Root>/OverVoltage'
+   */
   if (tmpRead_1 && (BattSimMode_ARID_DEF.st != 3)) {
     BattSimMode_ARID_DEF.st = 3U;
     BattSimMode_ARID_DEF.reason = 3U;
@@ -191,41 +196,58 @@ void ModeTask10ms(void)                /* Explicit Task: ModeTask10ms */
       BattSimMode_ARID_DEF.st = 3U;
       BattSimMode_ARID_DEF.reason = 2U;
     } else {
-      switch (BattSimMode_ARID_DEF.st) {
-       case 0U:
-        if (tmpRead_0 || ((r == 2) && (m == 2))) {
-          BattSimMode_ARID_DEF.st = 1U;
-          if (BattSimMode_ARID_DEF.reason == 4) {
-            BattSimMode_ARID_DEF.reason = 0U;
+      (void)Rte_Read_CurrentInvalid_CurrentInvalid(&tmpRead_2);
+      if ((BattSimMode_ARID_DEF.st == 2) && tmpRead_2) {
+        BattSimMode_ARID_DEF.st = 3U;
+        BattSimMode_ARID_DEF.reason = 5U;
+      } else {
+        (void)Rte_Read_OverVoltage_OverVoltage(&tmpRead_3);
+        if ((BattSimMode_ARID_DEF.st == 2) && tmpRead_3) {
+          BattSimMode_ARID_DEF.st = 3U;
+          BattSimMode_ARID_DEF.reason = 6U;
+        } else {
+          switch (BattSimMode_ARID_DEF.st) {
+           case 0U:
+            if (tmpRead_0 || ((r == 2) && (m == 2))) {
+              BattSimMode_ARID_DEF.st = 1U;
+              if (BattSimMode_ARID_DEF.reason == 4) {
+                BattSimMode_ARID_DEF.reason = 0U;
+              }
+            }
+            break;
+
+           case 1U:
+            if (tmpRead_0 || ((r == 1) || ((r == 2) && (m == 1)))) {
+              BattSimMode_ARID_DEF.st = 0U;
+            } else if ((o == 2) && (!BattSimMode_ARID_DEF.outBlock)) {
+              if (tmpRead_2) {
+                BattSimMode_ARID_DEF.st = 3U;
+                BattSimMode_ARID_DEF.reason = 5U;
+              } else {
+                BattSimMode_ARID_DEF.st = 2U;
+              }
+            }
+            break;
+
+           case 2U:
+            if (tmpRead_0 || ((r == 1) || ((r == 2) && (m == 1)))) {
+              BattSimMode_ARID_DEF.st = 0U;
+            } else if (tmpRead_4) {
+              BattSimMode_ARID_DEF.st = 1U;
+              BattSimMode_ARID_DEF.outBlock = TRUE;
+            } else if (o == 1) {
+              BattSimMode_ARID_DEF.st = 1U;
+            }
+            break;
+
+           default:
+            if ((!tmpRead_1) && (((r == 2) && (m == 1)) || tmpRead_4)) {
+              BattSimMode_ARID_DEF.st = 0U;
+              BattSimMode_ARID_DEF.reason = 0U;
+            }
+            break;
           }
         }
-        break;
-
-       case 1U:
-        if (tmpRead_0 || ((r == 1) || ((r == 2) && (m == 1)))) {
-          BattSimMode_ARID_DEF.st = 0U;
-        } else if ((o == 2) && (!BattSimMode_ARID_DEF.outBlock)) {
-          BattSimMode_ARID_DEF.st = 2U;
-        }
-        break;
-
-       case 2U:
-        if (tmpRead_0 || ((r == 1) || ((r == 2) && (m == 1)))) {
-          BattSimMode_ARID_DEF.st = 0U;
-        } else if (tmpRead_2) {
-          BattSimMode_ARID_DEF.st = 1U;
-          BattSimMode_ARID_DEF.outBlock = TRUE;
-        } else if (o == 1) {
-          BattSimMode_ARID_DEF.st = 1U;
-        }
-        break;
-
-       default:
-        if ((!tmpRead_1) && (((r == 2) && (m == 1)) || tmpRead_2)) {
-          BattSimMode_ARID_DEF.st = 0U;
-          BattSimMode_ARID_DEF.reason = 0U;
-        }
-        break;
       }
     }
   }

@@ -7,6 +7,8 @@ VoltageSetPwm_T = [0 0.185875 0.378085 0.570892 0.763797 0.9566];   % [-]    dut
 VoltageSenseMeas_Ax = [0.0 398.1 795.7 1195.8 1596.4 1996.0];   % [mV]   ADC pin voltage at the breakpoints: counts [0 796 1591 2391 3192 3991] of the old firmware (12 bit) x 2048 mV / 4095
 VoltageSenseValue_T = [0 1 2 3 4 5];   % [V]    cell voltage at the breakpoints (VoltageSenseValue_T)
 SetpointLimit_V = 5.0;   % [V]    upper setpoint limit, bound to BattSimParams.CellVoltLimit_V in rte.yaml (default 5.0 V; the 4.30 V limit stays in LabControl)
+OverVoltThd_V = 0.2;   % [V]    overvoltage: the calibrated actual value (sample, not low-passed) is this far above the setpoint (review C-2: 0.2 V)
+OverVoltTime_cycles = 10;   % [10 ms] number of samples in a row above the threshold that count as overvoltage (10 = 100 ms, review C-2)
 VoltageSenseFilter = 0.1;   % [-]    low-pass weight of the actual value per 10 ms (time constant about 95 ms)
 CtrlKp = 0.2;   % [V/V]  proportional gain of the regulator of a channel (start value, to be tuned at the device)
 CtrlKi_per_s = 1.0;   % [1/s]  integral gain of the regulator (start value, to be tuned at the device)

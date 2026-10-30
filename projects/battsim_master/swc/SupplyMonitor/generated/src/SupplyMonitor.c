@@ -58,6 +58,9 @@ void SupplyTask10ms(void)              /* Explicit Task: SupplyTask10ms */
     SupplyMonitor_ARID_DEF.y += ((float32)tmpRead *
       Rte_Prm_CalPrm_SupplyCurrentGain() - SupplyMonitor_ARID_DEF.y) *
       Rte_Prm_CalPrm_SupplyCurrentFilter();
+    SupplyMonitor_ARID_DEF.bad = 0U;
+  } else if (SupplyMonitor_ARID_DEF.bad < 255) {
+    SupplyMonitor_ARID_DEF.bad++;
   }
 
   SupplyMonitor_ARID_DEF.ovl = ((SupplyMonitor_ARID_DEF.y >
@@ -80,6 +83,13 @@ void SupplyTask10ms(void)              /* Explicit Task: SupplyTask10ms */
    *  MATLAB Function: '<S1>/SupplyCore'
    */
   (void)Rte_Write_SupplyCurrent_A_SupplyCurrent_A(c);
+
+  /* Outport: '<Root>/CurrentInvalid' incorporates:
+   *  Constant: '<S1>/CurrentInvalid_cycles_Const'
+   *  MATLAB Function: '<S1>/SupplyCore'
+   */
+  (void)Rte_Write_CurrentInvalid_CurrentInvalid(SupplyMonitor_ARID_DEF.bad >=
+    Rte_Prm_CalPrm_CurrentInvalid_cycles());
 
   /* End of Outputs for RootInportFunctionCallGenerator generated from: '<Root>/SupplyTask10ms' */
 }

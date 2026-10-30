@@ -29,8 +29,8 @@ void CellTask10ms(void)                /* Explicit Task: CellTask10ms */
   float32 tmpRead_4[Rte_SysCon_CellCount];
   float32 tmpRead_5[Rte_SysCon_CellCount];
   float32 vAct[14];
-  float32 corr;
   float32 e;
+  float32 mv;
   float32 tmpRead_6;
   float32 tmpRead_7;
   float32 tmpRead_8;
@@ -50,6 +50,7 @@ void CellTask10ms(void)                /* Explicit Task: CellTask10ms */
   boolean commanded;
   boolean ctrlActive;
   boolean exitg1;
+  boolean tmp;
   boolean tmpRead;
   boolean tmpRead_0;
   boolean working;
@@ -435,6 +436,7 @@ void CellTask10ms(void)                /* Explicit Task: CellTask10ms */
    *  Constant: '<S1>/CtrlKi_per_s_Const'
    *  Constant: '<S1>/CtrlKp_Const'
    *  Constant: '<S1>/CtrlLimit_V_Const'
+   *  Constant: '<S1>/OverVoltThd_V_Const'
    *  Constant: '<S1>/QLF_OK_Const'
    *  Constant: '<S1>/SetpointLimit_V_Const'
    *  Constant: '<S1>/VoltageSenseFilter_Const'
@@ -468,15 +470,15 @@ void CellTask10ms(void)                /* Explicit Task: CellTask10ms */
     tmpRead_7 = tmpRead_2[k];
     if (tmpRead_6 >= 0.5F) {
       if (tmpRead_6 <= 1.5F) {
-        working = (fabsf(tmpRead_7) <= 0.5F);
+        tmp = (fabsf(tmpRead_7) <= 0.5F);
       } else {
-        working = FALSE;
+        tmp = FALSE;
       }
     } else {
-      working = FALSE;
+      tmp = FALSE;
     }
 
-    if (!working) {
+    if (!tmp) {
       tmpRead_6 = 1.0F;
       tmpRead_7 = 0.0F;
     }
@@ -491,15 +493,15 @@ void CellTask10ms(void)                /* Explicit Task: CellTask10ms */
     tmpRead_9 = tmpRead_4[k];
     if (tmpRead_8 >= 0.5F) {
       if (tmpRead_8 <= 1.5F) {
-        working = (fabsf(tmpRead_9) <= 0.5F);
+        tmp = (fabsf(tmpRead_9) <= 0.5F);
       } else {
-        working = FALSE;
+        tmp = FALSE;
       }
     } else {
-      working = FALSE;
+      tmp = FALSE;
     }
 
-    if (!working) {
+    if (!tmp) {
       tmpRead_8 = 1.0F;
       tmpRead_9 = 0.0F;
     }
@@ -515,12 +517,12 @@ void CellTask10ms(void)                /* Explicit Task: CellTask10ms */
         i = 0;
         exitg1 = FALSE;
         while ((!exitg1) && (i < 5)) {
-          corr = (Rte_Prm_CalPrm_VoltageSenseMeas_Ax())[i + 1];
-          if (rtb_TmpSignalConversionAtSFunctionInport3_0 <= corr) {
+          mv = (Rte_Prm_CalPrm_VoltageSenseMeas_Ax())[i + 1];
+          if (rtb_TmpSignalConversionAtSFunctionInport3_0 <= mv) {
             e = ((Rte_Prm_CalPrm_VoltageSenseValue_T())[i + 1] -
                  (Rte_Prm_CalPrm_VoltageSenseValue_T())[i]) * ((float32)
               rtb_TmpSignalConversionAtSFunctionInport3_0 -
-              (Rte_Prm_CalPrm_VoltageSenseMeas_Ax())[i]) / (corr -
+              (Rte_Prm_CalPrm_VoltageSenseMeas_Ax())[i]) / (mv -
               (Rte_Prm_CalPrm_VoltageSenseMeas_Ax())[i]) +
               (Rte_Prm_CalPrm_VoltageSenseValue_T())[i];
             exitg1 = TRUE;
@@ -530,19 +532,34 @@ void CellTask10ms(void)                /* Explicit Task: CellTask10ms */
         }
       }
 
-      if (CellChannels_ARID_DEF.seen[k]) {
-        corr = CellChannels_ARID_DEF.y[k];
-        CellChannels_ARID_DEF.y[k] = ((tmpRead_8 * e + tmpRead_9) - corr) *
-          Rte_Prm_CalPrm_VoltageSenseFilter() + corr;
+      mv = tmpRead_8 * e + tmpRead_9;
+      if (tmpRead && commanded && (mv - v > Rte_Prm_CalPrm_OverVoltThd_V())) {
+        tmpRead_1 = CellChannels_ARID_DEF.ovCnt[k];
+        if (tmpRead_1 < 255) {
+          CellChannels_ARID_DEF.ovCnt[k] = (uint8)(tmpRead_1 + 1U);
+        }
       } else {
-        CellChannels_ARID_DEF.y[k] = tmpRead_8 * e + tmpRead_9;
+        CellChannels_ARID_DEF.ovCnt[k] = 0U;
+      }
+
+      if (CellChannels_ARID_DEF.seen[k]) {
+        e = CellChannels_ARID_DEF.y[k];
+        CellChannels_ARID_DEF.y[k] = (mv - e) *
+          Rte_Prm_CalPrm_VoltageSenseFilter() + e;
+      } else {
+        CellChannels_ARID_DEF.y[k] = mv;
         CellChannels_ARID_DEF.seen[k] = TRUE;
       }
     }
 
     e = CellChannels_ARID_DEF.y[k];
     vAct[k] = e;
-    corr = 0.0F;
+    tmp = !commanded;
+    if ((!tmpRead) || tmp) {
+      CellChannels_ARID_DEF.ovCnt[k] = 0U;
+    }
+
+    mv = 0.0F;
     if (ctrlActive && tmpRead && commanded && (!clipped) && (v > 0.0F)) {
       if (rtb_TmpSignalConversionAtSFunctionInport4[k] == 1) {
         working = CellChannels_ARID_DEF.seen[k];
@@ -554,25 +571,25 @@ void CellTask10ms(void)                /* Explicit Task: CellTask10ms */
     }
 
     if (working && tmpRead_0) {
-      corr = CellChannels_ARID_DEF.corrHold[k];
+      mv = CellChannels_ARID_DEF.corrHold[k];
     } else if (working) {
       e = v - e;
-      corr = fminf(fmaxf(Rte_Prm_CalPrm_CtrlKi_per_s() * 0.01F * e +
-                         CellChannels_ARID_DEF.integ[k],
-                         -Rte_Prm_CalPrm_CtrlLimit_V()),
-                   Rte_Prm_CalPrm_CtrlLimit_V());
-      CellChannels_ARID_DEF.integ[k] = corr;
-      corr = fminf(fmaxf(Rte_Prm_CalPrm_CtrlKp() * e + corr,
-                         -Rte_Prm_CalPrm_CtrlLimit_V()),
-                   Rte_Prm_CalPrm_CtrlLimit_V());
-      CellChannels_ARID_DEF.corrHold[k] = corr;
+      mv = fminf(fmaxf(Rte_Prm_CalPrm_CtrlKi_per_s() * 0.01F * e +
+                       CellChannels_ARID_DEF.integ[k],
+                       -Rte_Prm_CalPrm_CtrlLimit_V()),
+                 Rte_Prm_CalPrm_CtrlLimit_V());
+      CellChannels_ARID_DEF.integ[k] = mv;
+      mv = fminf(fmaxf(Rte_Prm_CalPrm_CtrlKp() * e + mv,
+                       -Rte_Prm_CalPrm_CtrlLimit_V()),
+                 Rte_Prm_CalPrm_CtrlLimit_V());
+      CellChannels_ARID_DEF.corrHold[k] = mv;
     } else {
       CellChannels_ARID_DEF.integ[k] = 0.0F;
       CellChannels_ARID_DEF.corrHold[k] = 0.0F;
     }
 
     if (tmpRead && (v > 0.0F)) {
-      v = fminf(fmaxf(v + corr, 0.0F), Rte_Prm_CalPrm_SetpointLimit_V()) *
+      v = fminf(fmaxf(v + mv, 0.0F), Rte_Prm_CalPrm_SetpointLimit_V()) *
         tmpRead_6 + tmpRead_7;
       tmpRead_6 = (Rte_Prm_CalPrm_VoltageSetPwm_T())[5];
       if (v <= (Rte_Prm_CalPrm_VoltageSetValue_Ax())[0]) {
@@ -581,11 +598,11 @@ void CellTask10ms(void)                /* Explicit Task: CellTask10ms */
         i = 0;
         exitg1 = FALSE;
         while ((!exitg1) && (i < 5)) {
-          corr = (Rte_Prm_CalPrm_VoltageSetValue_Ax())[i + 1];
-          if (v <= corr) {
+          mv = (Rte_Prm_CalPrm_VoltageSetValue_Ax())[i + 1];
+          if (v <= mv) {
             tmpRead_6 = ((Rte_Prm_CalPrm_VoltageSetPwm_T())[i + 1] -
                          (Rte_Prm_CalPrm_VoltageSetPwm_T())[i]) * (v -
-              (Rte_Prm_CalPrm_VoltageSetValue_Ax())[i]) / (corr -
+              (Rte_Prm_CalPrm_VoltageSetValue_Ax())[i]) / (mv -
               (Rte_Prm_CalPrm_VoltageSetValue_Ax())[i]) +
               (Rte_Prm_CalPrm_VoltageSetPwm_T())[i];
             exitg1 = TRUE;
@@ -600,12 +617,30 @@ void CellTask10ms(void)                /* Explicit Task: CellTask10ms */
     }
 
     en[k] = (tmpRead && commanded);
-    if (!commanded) {
+    if (tmp) {
       state[k] = 1U;
     } else if (clipped) {
       state[k] = 3U;
     } else {
       state[k] = 2U;
+    }
+  }
+
+  /* Outport: '<Root>/OverVoltage' incorporates:
+   *  MATLAB Function: '<S1>/CellCore'
+   */
+  (void)Rte_Write_OverVoltage_OverVoltage(FALSE);
+
+  /* MATLAB Function: '<S1>/CellCore' */
+  k = 0;
+  exitg1 = FALSE;
+  while ((!exitg1) && (k < 14)) {
+    if (CellChannels_ARID_DEF.ovCnt[k] >= Rte_Prm_CalPrm_OverVoltTime_cycles())
+    {
+      (void)Rte_Write_OverVoltage_OverVoltage(TRUE);
+      exitg1 = TRUE;
+    } else {
+      k++;
     }
   }
 

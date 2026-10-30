@@ -116,6 +116,8 @@ connections:
   BattSimMode.BtnAllOnOff.BtnAllOnOff: dio.in.BTN_ALL_ON_OFF
   BattSimMode.BtnRemote.BtnRemote: dio.in.BTN_REMOTE
   BattSimMode.Overload.Overload: SupplyMonitor.Overload.Overload
+  BattSimMode.CurrentInvalid.CurrentInvalid: SupplyMonitor.CurrentInvalid.CurrentInvalid
+  BattSimMode.OverVoltage.OverVoltage: CellChannels.OverVoltage.OverVoltage
   BattSimMode.ResetWatchdog.ResetWatchdog: bsw.reset.watchdog
   BattSimMode.ResetQlf.ResetQlf: bsw.reset.qlf
   BattSimMode.BattSimStatus.BattSimStatus: can.tx.STATUS_BATTSIM.BATTSIM_STATUS

@@ -25,6 +25,7 @@
 /* PublicStructure Variables for Internal Data, for system '<Root>' */
 typedef struct {
   float32 y;                           /* '<S1>/SupplyCore' */
+  uint8 bad;                           /* '<S1>/SupplyCore' */
   boolean ovl;                         /* '<S1>/SupplyCore' */
 } ARID_DEF_SupplyMonitor_T;
 

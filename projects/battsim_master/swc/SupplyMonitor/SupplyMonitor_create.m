@@ -13,6 +13,9 @@ function SupplyMonitor_create()
 %       firmware). The component reports the condition; BattSimMode latches it as FAIL and the reset needs the current
 %       to be below the lower threshold.
 %     - SupplyCurrent_A for the status message 0x121 and LimitActive (the shared LIMIT line of the cards) for 0x121.
+%     - CurrentInvalid (review C-1, stage C): set when the ADC qualifier of the current measurement was not valid for
+%       CurrentInvalid_cycles samples in a row (20 = 200 ms); a valid sample clears it. Without a valid measurement the
+%       overload shut-off is blind (the filter keeps its last value); BattSimMode switches off in RUN with FAIL reason 5.
 here = fileparts(mfilename('fullpath'));
 root = fileparts(fileparts(fileparts(fileparts(here))));
 addpath(fullfile(root, 'nextbsw', 'tools', 'swc'), fileparts(here));
@@ -25,22 +28,26 @@ sub = swc_runnable_subsystem(mdl, 'SupplyTask10ms');
 swc_core(sub, 'SupplyCore', coreScript(), ...
     {'ISupply_mV', 'ISupplyQlf', 'Limit'}, ...
     {{'SupplyCurrentFilter', 'single'}, {'SupplyCurrentGain', 'single'}, {'OverloadThd_mA', 'single'}, ...
-     {'OverloadHyst_mA', 'single'}, {'QLF_OK', 'uint8'}}, ...
-    {'Overload', 'SupplyCurrent_A', 'LimitActive'});
+     {'OverloadHyst_mA', 'single'}, {'CurrentInvalid_cycles', 'uint8'}, {'QLF_OK', 'uint8'}}, ...
+    {'Overload', 'SupplyCurrent_A', 'LimitActive', 'CurrentInvalid'});
 end
 
 function code = coreScript()
 lines = {
-'function [overload, current_A, limitActive] = SupplyCore(mV, qlf, limit, filt, gain, thd, hyst, QlfOk)'
+'function [overload, current_A, limitActive, curInvalid] = SupplyCore(mV, qlf, limit, filt, gain, thd, hyst, invN, QlfOk)'
 '%SUPPLYCORE 48 V supply current filter, overload with hysteresis (see SupplyMonitor_create.m).'
 '%#codegen'
-'persistent y ovl'
+'persistent y ovl bad'
 'if isempty(y)'
 '    y = single(0);      % filtered current [mA]'
 '    ovl = false;'
+'    bad = uint8(0);     % invalid samples in a row (saturating)'
 'end'
 'if qlf == QlfOk'
 '    y = y + filt * (single(mV) * gain - y);'
+'    bad = uint8(0);'
+'elseif bad < uint8(255)'
+'    bad = bad + uint8(1);'
 'end'
 'if y > thd'
 '    ovl = true;'
@@ -54,6 +61,7 @@ lines = {
 'end'
 'current_A = c;'
 'limitActive = limit;'
+'curInvalid = (bad >= invN);'
 };
 code = strjoin(lines, newline);
 end

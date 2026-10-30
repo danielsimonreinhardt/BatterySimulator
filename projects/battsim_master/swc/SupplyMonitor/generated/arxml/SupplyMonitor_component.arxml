@@ -3,17 +3,17 @@
 Auto generated XML Component Description for model SupplyMonitor
 Model version                : 1.2
 Simulink Coder version       : Simulink Coder 24.1 (R2024a) 19-Nov-2023
-Model Checksum               : 1177443849 507097898 2899082614 2434188553
+Model Checksum               : 803794953 3354118039 1078393614 3990172034
 -->
 <AUTOSAR xmlns="http://autosar.org/schema/r4.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://autosar.org/schema/r4.0 AUTOSAR_00051.xsd">
     <AR-PACKAGES>
         <AR-PACKAGE>
             <SHORT-NAME>Components</SHORT-NAME>
             <ELEMENTS>
-                <APPLICATION-SW-COMPONENT-TYPE UUID="ff813f87-27c4-5b6d-92b0-e8f05162ea41">
+                <APPLICATION-SW-COMPONENT-TYPE UUID="c2ca779e-d944-5d58-7af1-f0ca4f330935">
                     <SHORT-NAME>SupplyMonitor</SHORT-NAME>
                     <PORTS>
-                        <R-PORT-PROTOTYPE UUID="cc177e15-7f14-5498-8ad5-a161b9612bb4">
+                        <R-PORT-PROTOTYPE UUID="7a9e7f64-941f-569c-c648-3f09fe4a1106">
                             <SHORT-NAME>ISupply_mV</SHORT-NAME>
                             <REQUIRED-COM-SPECS>
                                 <NONQUEUED-RECEIVER-COM-SPEC>
@@ -34,7 +34,7 @@ Model Checksum               : 1177443849 507097898 2899082614 2434188553
                             </REQUIRED-COM-SPECS>
                             <REQUIRED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/ISupply_mV</REQUIRED-INTERFACE-TREF>
                         </R-PORT-PROTOTYPE>
-                        <R-PORT-PROTOTYPE UUID="3eef07cb-4fc6-55d9-73d3-48e1691add93">
+                        <R-PORT-PROTOTYPE UUID="15610490-7757-54a0-86c2-4b309b35c835">
                             <SHORT-NAME>ISupplyQlf</SHORT-NAME>
                             <REQUIRED-COM-SPECS>
                                 <NONQUEUED-RECEIVER-COM-SPEC>
@@ -55,7 +55,7 @@ Model Checksum               : 1177443849 507097898 2899082614 2434188553
                             </REQUIRED-COM-SPECS>
                             <REQUIRED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/ISupplyQlf</REQUIRED-INTERFACE-TREF>
                         </R-PORT-PROTOTYPE>
-                        <R-PORT-PROTOTYPE UUID="eec56dde-4ec2-54ab-9757-25d87aef973d">
+                        <R-PORT-PROTOTYPE UUID="f36e99af-1e12-5aec-618d-8b285eab5a51">
                             <SHORT-NAME>Limit</SHORT-NAME>
                             <REQUIRED-COM-SPECS>
                                 <NONQUEUED-RECEIVER-COM-SPEC>
@@ -76,7 +76,7 @@ Model Checksum               : 1177443849 507097898 2899082614 2434188553
                             </REQUIRED-COM-SPECS>
                             <REQUIRED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/Limit</REQUIRED-INTERFACE-TREF>
                         </R-PORT-PROTOTYPE>
-                        <P-PORT-PROTOTYPE UUID="2a200ae3-f529-598a-bb76-d46a1affaa5f">
+                        <P-PORT-PROTOTYPE UUID="fd752ac5-1ba6-5096-fc51-5c735a38e453">
                             <SHORT-NAME>Overload</SHORT-NAME>
                             <PROVIDED-COM-SPECS>
                                 <NONQUEUED-SENDER-COM-SPEC>
@@ -93,7 +93,7 @@ Model Checksum               : 1177443849 507097898 2899082614 2434188553
                             </PROVIDED-COM-SPECS>
                             <PROVIDED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/Overload</PROVIDED-INTERFACE-TREF>
                         </P-PORT-PROTOTYPE>
-                        <P-PORT-PROTOTYPE UUID="92806855-d427-5a8f-ac64-a92a48265a83">
+                        <P-PORT-PROTOTYPE UUID="c6df7dfa-bdeb-5b62-0e1d-c15538a675f1">
                             <SHORT-NAME>SupplyCurrent_A</SHORT-NAME>
                             <PROVIDED-COM-SPECS>
                                 <NONQUEUED-SENDER-COM-SPEC>
@@ -110,7 +110,7 @@ Model Checksum               : 1177443849 507097898 2899082614 2434188553
                             </PROVIDED-COM-SPECS>
                             <PROVIDED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/SupplyCurrent_A</PROVIDED-INTERFACE-TREF>
                         </P-PORT-PROTOTYPE>
-                        <P-PORT-PROTOTYPE UUID="6cf90825-e759-5553-4099-70abc5929140">
+                        <P-PORT-PROTOTYPE UUID="4768f4d6-1fc7-5016-e940-49103e7e30aa">
                             <SHORT-NAME>LimitActive</SHORT-NAME>
                             <PROVIDED-COM-SPECS>
                                 <NONQUEUED-SENDER-COM-SPEC>
@@ -127,7 +127,24 @@ Model Checksum               : 1177443849 507097898 2899082614 2434188553
                             </PROVIDED-COM-SPECS>
                             <PROVIDED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/LimitActive</PROVIDED-INTERFACE-TREF>
                         </P-PORT-PROTOTYPE>
-                        <R-PORT-PROTOTYPE UUID="663baf73-21df-58d8-19ae-6b9be64b3ea4">
+                        <P-PORT-PROTOTYPE UUID="238b3574-b645-5dff-f57b-819f7253930d">
+                            <SHORT-NAME>CurrentInvalid</SHORT-NAME>
+                            <PROVIDED-COM-SPECS>
+                                <NONQUEUED-SENDER-COM-SPEC>
+                                    <DATA-ELEMENT-REF DEST="VARIABLE-DATA-PROTOTYPE">/Interfaces/CurrentInvalid/CurrentInvalid</DATA-ELEMENT-REF>
+                                    <HANDLE-OUT-OF-RANGE>NONE</HANDLE-OUT-OF-RANGE>
+                                    <USES-END-TO-END-PROTECTION>false</USES-END-TO-END-PROTECTION>
+                                    <INIT-VALUE>
+                                        <NUMERICAL-VALUE-SPECIFICATION>
+                                            <SHORT-LABEL>DefaultInitValue_boolean</SHORT-LABEL>
+                                            <VALUE>0</VALUE>
+                                        </NUMERICAL-VALUE-SPECIFICATION>
+                                    </INIT-VALUE>
+                                </NONQUEUED-SENDER-COM-SPEC>
+                            </PROVIDED-COM-SPECS>
+                            <PROVIDED-INTERFACE-TREF DEST="SENDER-RECEIVER-INTERFACE">/Interfaces/CurrentInvalid</PROVIDED-INTERFACE-TREF>
+                        </P-PORT-PROTOTYPE>
+                        <R-PORT-PROTOTYPE UUID="c326a167-0a84-51a9-3786-891997fb43d6">
                             <SHORT-NAME>CalPrm</SHORT-NAME>
                             <REQUIRED-COM-SPECS>
                                 <PARAMETER-REQUIRE-COM-SPEC>
@@ -166,15 +183,24 @@ Model Checksum               : 1177443849 507097898 2899082614 2434188553
                                     </INIT-VALUE>
                                     <PARAMETER-REF DEST="PARAMETER-DATA-PROTOTYPE">/Interfaces/CalPrm/SupplyCurrentGain</PARAMETER-REF>
                                 </PARAMETER-REQUIRE-COM-SPEC>
+                                <PARAMETER-REQUIRE-COM-SPEC>
+                                    <INIT-VALUE>
+                                        <NUMERICAL-VALUE-SPECIFICATION>
+                                            <SHORT-LABEL>CalPrm_CurrentInvalid_cycles</SHORT-LABEL>
+                                            <VALUE>20</VALUE>
+                                        </NUMERICAL-VALUE-SPECIFICATION>
+                                    </INIT-VALUE>
+                                    <PARAMETER-REF DEST="PARAMETER-DATA-PROTOTYPE">/Interfaces/CalPrm/CurrentInvalid_cycles</PARAMETER-REF>
+                                </PARAMETER-REQUIRE-COM-SPEC>
                             </REQUIRED-COM-SPECS>
                             <REQUIRED-INTERFACE-TREF DEST="PARAMETER-INTERFACE">/Interfaces/CalPrm</REQUIRED-INTERFACE-TREF>
                         </R-PORT-PROTOTYPE>
                     </PORTS>
                     <INTERNAL-BEHAVIORS>
-                        <SWC-INTERNAL-BEHAVIOR UUID="3a4d3354-9229-5922-4e34-9d6a87e60eb2">
+                        <SWC-INTERNAL-BEHAVIOR UUID="ae7d1301-448d-5dec-40e5-905337e16905">
                             <SHORT-NAME>SupplyMonitor_IB</SHORT-NAME>
                             <EVENTS>
-                                <TIMING-EVENT UUID="d1a834d2-e1c0-50bc-d22d-65929cfb72c7">
+                                <TIMING-EVENT UUID="2cdcca60-aef3-5ac8-fdd9-871e99e1786c">
                                     <SHORT-NAME>Event_SupplyTask10ms</SHORT-NAME>
                                     <START-ON-EVENT-REF DEST="RUNNABLE-ENTITY">/Components/SupplyMonitor/SupplyMonitor_IB/SupplyTask10ms</START-ON-EVENT-REF>
                                     <PERIOD>0.01</PERIOD>
@@ -182,18 +208,18 @@ Model Checksum               : 1177443849 507097898 2899082614 2434188553
                             </EVENTS>
                             <HANDLE-TERMINATION-AND-RESTART>NO-SUPPORT</HANDLE-TERMINATION-AND-RESTART>
                             <RUNNABLES>
-                                <RUNNABLE-ENTITY UUID="baea4dc8-c099-523f-0280-bf59a5d2d618">
+                                <RUNNABLE-ENTITY UUID="893d8757-b841-593a-59c3-41293134b447">
                                     <SHORT-NAME>SupplyMonitor_Init</SHORT-NAME>
                                     <MINIMUM-START-INTERVAL>0</MINIMUM-START-INTERVAL>
                                     <CAN-BE-INVOKED-CONCURRENTLY>false</CAN-BE-INVOKED-CONCURRENTLY>
                                     <SYMBOL>SupplyMonitor_Init</SYMBOL>
                                 </RUNNABLE-ENTITY>
-                                <RUNNABLE-ENTITY UUID="9621409c-c73b-5b53-f556-2193513ea490">
+                                <RUNNABLE-ENTITY UUID="e7befbd3-53fb-5e84-e7b3-035c489636a9">
                                     <SHORT-NAME>SupplyTask10ms</SHORT-NAME>
                                     <MINIMUM-START-INTERVAL>0</MINIMUM-START-INTERVAL>
                                     <CAN-BE-INVOKED-CONCURRENTLY>false</CAN-BE-INVOKED-CONCURRENTLY>
                                     <DATA-RECEIVE-POINT-BY-ARGUMENTS>
-                                        <VARIABLE-ACCESS UUID="8b4a01fb-e96b-5681-40f6-f43ccc297e1d">
+                                        <VARIABLE-ACCESS UUID="ece56992-a584-565b-4205-b75750863d02">
                                             <SHORT-NAME>IN_ISupplyQlf_ISupplyQlf</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -202,7 +228,7 @@ Model Checksum               : 1177443849 507097898 2899082614 2434188553
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="05aa2677-0212-5e83-2e97-f0281f0d67de">
+                                        <VARIABLE-ACCESS UUID="5adadda8-775d-5855-4cc5-78c7937da167">
                                             <SHORT-NAME>IN_ISupply_mV_ISupply_mV</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -211,7 +237,7 @@ Model Checksum               : 1177443849 507097898 2899082614 2434188553
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="af5aa389-a07b-5d5f-170c-2ffd7890a039">
+                                        <VARIABLE-ACCESS UUID="0655f3ef-30a7-5379-4297-dc36a831e8e2">
                                             <SHORT-NAME>IN_Limit_Limit</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -222,7 +248,7 @@ Model Checksum               : 1177443849 507097898 2899082614 2434188553
                                         </VARIABLE-ACCESS>
                                     </DATA-RECEIVE-POINT-BY-ARGUMENTS>
                                     <DATA-SEND-POINTS>
-                                        <VARIABLE-ACCESS UUID="75205eb4-7b0e-5c58-7f3c-32990cf704ca">
+                                        <VARIABLE-ACCESS UUID="fb9c4f13-9ceb-507a-5ac3-a887a8b2f9fa">
                                             <SHORT-NAME>OUT_Overload_Overload</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -231,7 +257,7 @@ Model Checksum               : 1177443849 507097898 2899082614 2434188553
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="46f243da-f9ef-5a5e-ccb0-9a0407fb499d">
+                                        <VARIABLE-ACCESS UUID="69d2d45b-e31c-532a-4825-532d7d50eba7">
                                             <SHORT-NAME>OUT_SupplyCurrent_A_SupplyCurrent_A</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -240,7 +266,7 @@ Model Checksum               : 1177443849 507097898 2899082614 2434188553
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
-                                        <VARIABLE-ACCESS UUID="3c97bf74-3d2d-51d1-f248-a686a487363e">
+                                        <VARIABLE-ACCESS UUID="4f4f2b82-8b19-554c-c18a-0b40ecf4222c">
                                             <SHORT-NAME>OUT_LimitActive_LimitActive</SHORT-NAME>
                                             <ACCESSED-VARIABLE>
                                                 <AUTOSAR-VARIABLE-IREF>
@@ -249,9 +275,27 @@ Model Checksum               : 1177443849 507097898 2899082614 2434188553
                                                 </AUTOSAR-VARIABLE-IREF>
                                             </ACCESSED-VARIABLE>
                                         </VARIABLE-ACCESS>
+                                        <VARIABLE-ACCESS UUID="8601792e-03f8-5a38-00f4-66446659c2da">
+                                            <SHORT-NAME>OUT_CurrentInvalid_CurrentInvalid</SHORT-NAME>
+                                            <ACCESSED-VARIABLE>
+                                                <AUTOSAR-VARIABLE-IREF>
+                                                    <PORT-PROTOTYPE-REF DEST="P-PORT-PROTOTYPE">/Components/SupplyMonitor/CurrentInvalid</PORT-PROTOTYPE-REF>
+                                                    <TARGET-DATA-PROTOTYPE-REF DEST="VARIABLE-DATA-PROTOTYPE">/Interfaces/CurrentInvalid/CurrentInvalid</TARGET-DATA-PROTOTYPE-REF>
+                                                </AUTOSAR-VARIABLE-IREF>
+                                            </ACCESSED-VARIABLE>
+                                        </VARIABLE-ACCESS>
                                     </DATA-SEND-POINTS>
                                     <PARAMETER-ACCESSS>
-                                        <PARAMETER-ACCESS UUID="6046ca9c-ddf9-5df7-27e1-77db4e2833ce">
+                                        <PARAMETER-ACCESS UUID="64a6f882-2e75-51d8-7c4d-9fd478b11cff">
+                                            <SHORT-NAME>CALPRM_CalPrm_CurrentInvalid_cycles</SHORT-NAME>
+                                            <ACCESSED-PARAMETER>
+                                                <AUTOSAR-PARAMETER-IREF>
+                                                    <PORT-PROTOTYPE-REF DEST="R-PORT-PROTOTYPE">/Components/SupplyMonitor/CalPrm</PORT-PROTOTYPE-REF>
+                                                    <TARGET-DATA-PROTOTYPE-REF DEST="PARAMETER-DATA-PROTOTYPE">/Interfaces/CalPrm/CurrentInvalid_cycles</TARGET-DATA-PROTOTYPE-REF>
+                                                </AUTOSAR-PARAMETER-IREF>
+                                            </ACCESSED-PARAMETER>
+                                        </PARAMETER-ACCESS>
+                                        <PARAMETER-ACCESS UUID="2cbf8f9c-c6e2-5664-67b4-76b31b9a7a78">
                                             <SHORT-NAME>CALPRM_CalPrm_OverloadHyst_mA</SHORT-NAME>
                                             <ACCESSED-PARAMETER>
                                                 <AUTOSAR-PARAMETER-IREF>
@@ -260,7 +304,7 @@ Model Checksum               : 1177443849 507097898 2899082614 2434188553
                                                 </AUTOSAR-PARAMETER-IREF>
                                             </ACCESSED-PARAMETER>
                                         </PARAMETER-ACCESS>
-                                        <PARAMETER-ACCESS UUID="e83653cf-e938-5e4d-4a8e-2f05e2091a1c">
+                                        <PARAMETER-ACCESS UUID="579468e4-8710-5ffb-3156-e024ae36b7cf">
                                             <SHORT-NAME>CALPRM_CalPrm_OverloadThd_mA</SHORT-NAME>
                                             <ACCESSED-PARAMETER>
                                                 <AUTOSAR-PARAMETER-IREF>
@@ -269,7 +313,7 @@ Model Checksum               : 1177443849 507097898 2899082614 2434188553
                                                 </AUTOSAR-PARAMETER-IREF>
                                             </ACCESSED-PARAMETER>
                                         </PARAMETER-ACCESS>
-                                        <PARAMETER-ACCESS UUID="1cb5b0d0-1476-5254-f90a-a46583305294">
+                                        <PARAMETER-ACCESS UUID="0259789e-7247-5198-d018-47b4258b0ea5">
                                             <SHORT-NAME>CALPRM_CalPrm_SupplyCurrentFilter</SHORT-NAME>
                                             <ACCESSED-PARAMETER>
                                                 <AUTOSAR-PARAMETER-IREF>
@@ -278,7 +322,7 @@ Model Checksum               : 1177443849 507097898 2899082614 2434188553
                                                 </AUTOSAR-PARAMETER-IREF>
                                             </ACCESSED-PARAMETER>
                                         </PARAMETER-ACCESS>
-                                        <PARAMETER-ACCESS UUID="3153ea10-a8ad-5ef2-2b97-d408bb3ea627">
+                                        <PARAMETER-ACCESS UUID="fe4560e5-dbfe-56e6-8539-b3ea86ae053a">
                                             <SHORT-NAME>CALPRM_CalPrm_SupplyCurrentGain</SHORT-NAME>
                                             <ACCESSED-PARAMETER>
                                                 <AUTOSAR-PARAMETER-IREF>

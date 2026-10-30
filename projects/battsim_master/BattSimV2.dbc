@@ -295,5 +295,5 @@ VAL_ 257 CELL04_ENABLE 3 "signal invalid" 2 "enable" 1 "disable" 0 "no value" ;
 VAL_ 256 CELL03_ENABLE 3 "signal invalid" 2 "enable" 1 "disable" 0 "no value" ;
 VAL_ 256 CELL02_ENABLE 3 "signal invalid" 2 "enable" 1 "disable" 0 "no value" ;
 VAL_ 256 CELL01_ENABLE 3 "signal invalid" 2 "enable" 1 "disable" 0 "no value" ;
-VAL_ 289 BATTSIM_FAIL_REASON 15 "unbekannt" 4 "Watchdog/Safety-Reset" 3 "Ueberlast 48 V" 2 "Alive 0x130 falsch" 1 "Timeout 0x130" 0 "keiner" ;
+VAL_ 289 BATTSIM_FAIL_REASON 15 "unbekannt" 6 "Ueberspannung Zelle" 5 "Strommessung ungueltig" 4 "Watchdog/Safety-Reset" 3 "Ueberlast 48 V" 2 "Alive 0x130 falsch" 1 "Timeout 0x130" 0 "keiner" ;
 

@@ -33,6 +33,10 @@ ports:
     direction: out
     type: boolean
     runnables: [SupplyTask10ms]
+  - name: CurrentInvalid           # the current measurement was invalid for CurrentInvalid_cycles samples in a row (C-1): BattSimMode switches off in RUN, FAIL reason 5
+    direction: out
+    type: boolean
+    runnables: [SupplyTask10ms]
 parameters:
   - name: SupplyCurrentFilter
     type: float32
@@ -45,4 +49,7 @@ parameters:
     runnables: [SupplyTask10ms]
   - name: OverloadHyst_mA
     type: float32
+    runnables: [SupplyTask10ms]
+  - name: CurrentInvalid_cycles
+    type: uint8
     runnables: [SupplyTask10ms]
