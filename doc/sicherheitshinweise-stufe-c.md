@@ -325,3 +325,19 @@ Entscheidungen im Review "Termin 0.3.2" (Board `bs-termin-032-review`): **T-1 a,
   * Nachmessung am Geraet (Sprung 4,8 V auf 1,0 V, ADC-Minimum und Scope) beim naechsten Termin; die Erwartung ist ein Minimum nahe 1,0 V.
 * **T-4 (Abschaltzeit): Der Kennwert 315 ms (S-2 a) gilt weiter.** Die Messung mit 0.3.2 bestaetigt ihn: FAIL-Entscheidung 299,8 bis 307,4 ms nach der letzten 0x130 (28 Laeufe) plus analoger Abfall 4,1 ms (4,06 und 4,17 ms) gibt eine Summe von hoechstens
   311,5 ms, unter den 315 ms. Die 310 ms der Konzeptgrenze (Timeout 300 ms plus ein 10-ms-Schritt) sind damit nicht strikt belegt, der Kennwert 315 ms ist es.
+
+## 13. Geraeteteil 0.3.3 (30.10.2026, Board `bs-flash-033` a): T-3 und C-1 am Geraet
+
+Aufbau unveraendert (Nutzer: "Ja der Aufbau steht noch"): J-Link, CANcaseXL Ch2, PicoScope A an Zelle 1 (10:1), kein Pruefling, keine Last.
+
+* **Flash:** Backup des laufenden Stands (0.3.2) `pflash_stufec_032_0x00000000_1M.bin`. **0.3.3** (Zweig-Stand 3afeaa6): nur App und Record, Rueckgelesen 0 Abweichungen (Bootloader, App, Record), Key-Sektor und FCF unveraendert.
+  `check_battsim --hardware --remote` Alles ok, 0x121: Firmware 0.3.3, FAIL-Grund 0, Regler ein, 48 V 0,260 A. Mit allen 14 Kanaelen bei 3,7 V und Ausgang ein keine Reaktion der neuen Plausibilitaet (0,27 A gegen 0,1 A).
+* **T-3 (Sprung 4,8 V auf 1,0 V an Zelle 1, ohne Last):** ADC gefiltert **Minimum 0,985 V (-0,015 V)** gegen 0,9645 V mit 0.3.1 (300 ms, Korrektur stehen) und 0,913 V mit 0.3.0 (ohne Haltezeit); Scope (Blockmittel): 0,965 bis 0,975 V gegen 0,918 bis 0,937 V (0.3.1) und 0,857 bis 0,866 V (0.3.0).
+  Der ADC-Wert laeuft danach auf 0,99 und mit dem Integralanteil (Ki 1/s) langsam auf 1,00 V (nach 2,4 s). Das Unterschwingen ist damit weniger als halb so gross wie bei 0.3.1; der Rest ist nicht mehr die Rest-Korrektur, sondern die statische Abweichung des offenen
+  Kanals bei 1,0 V (etwa -0,01 V), die der Regler mit 1 V/s abbaut. Das SIL (ideale Strecke) sagt 1,001 V voraus; am Geraet bleibt die Abweichung der Karte.
+* **C-1 am Geraet ausgeloest (S-2 a, Weg 1, ohne Hardware-Eingriff):** **Testbau** (nur `MinCurrent_mA` 400 statt 100, Grenze 500, Version 0.3.253; Zweig `testbau-c1-mincurrent-400`, Commit acd8289, **nie mergen, nie auf dem Geraet lassen**), nur App und Record geflasht, Rueckgelesen 0
+  Abweichungen. Alle 14 Kanaele mit 3,7 V, Ausgang ein: **0x121 FAIL-Grund 5** beim ersten Status nach der Abschaltung (308 ms nach dem Einschalten, die Statusbotschaft kommt nur alle 100 ms), `BATTSIM_STATUS` FAIL (5), Ausgang 1. Scope an Zelle 1: Die Spannung steigt ab -11 ms (Trigger 1,5 V
+  = 0) auf etwa 3,4 V und wird bei **189 ms**, also **etwa 200 ms nach dem Einschalten**, abgeschaltet: genau die Zeit `MinCurrentTime_cycles` (20 Zyklen). Gegenprobe (Ausgang ein, kein Kanal freigegeben, 9 s): 0,217 A, FAIL-Grund 0, keine Reaktion.
+  Damit ist der Pfad "Abtastwert unter Schwelle - Zaehler - FAIL 5 - Ausgaenge aus" am Geraet nachgewiesen; nicht der Qualifier-Pfad und kein echter offener Shunt (Abschnitt 11.4).
+* **Zurueck auf 0.3.3:** Produktionsstand erneut geflasht (nur App und Record), Rueckgelesen 0 Abweichungen, Key-Sektor und FCF unveraendert, `check_battsim --hardware --remote` Alles ok, 0x121 Firmware 0.3.3, Kalibrierung Werkswerte (`22 0201` = 0000 2710 0000 2710, `22 0210` = 1), Regler an, Standby, Ausgaenge aus.
+  Auf dem Geraet laeuft **0.3.3**; es ist noch nicht auf `main` (Zweig `stufe-c-strommessung-plausibel`, 3afeaa6).
