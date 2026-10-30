@@ -49,7 +49,9 @@ Der offene Punkt B-2 aus Stufe B (`sicherheitshinweise-stufe-b.md`, Abschnitt 2)
   die Zeit sind Kalibrierwerte (`OverVoltThd_V`, `OverVoltTime_cycles`).
 * Grenzen: Die Erkennung nutzt dieselbe Messkette wie der Regler; ein zu niedrig messender ADC-Kanal verdeckt die Ueberspannung
   (und laesst den Regler bis zu +0,1 V anheben). Der Regler selbst kann die Schwelle nicht ausloesen (+0,1 V gegen 0,2 V).
-* **Offen fuer den Geraeteteil:** Wie schnell der echte Ausgang nach einem Sprung des Sollwerts nach unten folgt (Entladung ohne
+* **Nachtrag (Geraeteteil, Abschnitt 6.4 und 7):** Die Abwaertsflanke ist schnell genug (47 ms), aber ohne Last hat die Endstufe einen Pegelboden von 0,70 V; C-2 ist
+  dafuer mit C-2c angepasst (Abschnitt 7).
+* **Offen war fuer den Geraeteteil:** Wie schnell der echte Ausgang nach einem Sprung des Sollwerts nach unten folgt (Entladung ohne
   Last), ist am Geraet nicht gemessen. Faellt er langsamer als 100 ms um mehr als 0,2 V ab, loest C-2 bei jedem solchen Sprung
   falsch aus. Die Messung gehoert in den Geraeteteil (Sprung 4,8 V nach 0,5 V je Kanal, Ausgang und ADC aufzeichnen); je nach
   Ergebnis wird die Zeit angepasst oder der Sprung vom Vergleich ausgenommen. Dieser Punkt ist vor dem ersten Betrieb mit Pruefling zu klaeren.
@@ -141,3 +143,31 @@ Board: `bs-stufec-flexnvm` a (Partition mit 20 Schluesselplaetzen, kein LOAD_KEY
   Testkalibrierung ADC-Istwert 3,0402 V (n = 200), Werkskalibrierung 3,0001 V; Unterschied **+40,1 mV**, wie berechnet (1,01 * 3,0 + 0,01 V Befehl). PicoScope (Mittel 0,1 s,
   Aufloesung 0,04 V): 3,015 V gegen 2,987 V, Unterschied +28 mV, im Rahmen der Aufloesung.
 * Danach Werkswerte (`0000 2710 0000 2710`) geschrieben und uebernommen, Regler per `2E 0211 00` wieder an (`22 0211` = 0), Standby, Ausgaenge aus.
+
+## 7. Nachtrag-Review Geraetebefund (30.10.2026, alle a): C-2c, R-1, F-1
+
+Entschieden im Review "Stufe C Geraetebefund" (Board `bs-stufec-boden`): C-2a a, C-2b a (Nachtrag), **C-2c a, R-1 a, F-1 a**. Umgesetzt im Zweig
+`stufe-c-kalibrierung`, mit SIL-Test; **am Geraet noch nicht geflasht** (das Flashen dieses Stands ist nicht freigegeben). Auf dem Geraet laeuft bis dahin 5a23104 ohne
+diese Aenderung: nur Sollwerte ab 0,6 V verwenden (F-1 a).
+
+### 7.1 C-2c: Pegelboden
+
+* Der Vergleich der Ueberspannungserkennung (Abschnitt 3) geht gegen **max(Sollwert, `OutputFloor_V`) + `OverVoltThd_V`**. `OutputFloor_V` ist ein Parameter, Vorgabe **0,7 V** (gemessen
+  ohne Last, Abschnitt 6.4). Der Boden ist **beim ersten Betrieb mit Pruefling mit Last nachzumessen**.
+* Ein freigegebener Kanal mit Sollwert groesser 0 V und kleiner als der Boden meldet im Kanalstatus **4 "setpoint below level floor"** (`CELLn_STATUS`, DBC: Wert 4 neu, das Feld
+  hat 3 Bit und war bis 3 begrenzt, jetzt 0..7); es gibt **kein FAIL**. Sein Regler arbeitet nicht (der Sollwert ist nicht erreichbar, Korrektur 0).
+* Restrisiko: Eine echte Ueberspannung unter max(Sollwert, Boden) + 0,2 V, also bis 0,9 V bei kleinem Sollwert, bleibt unentdeckt. Das ist weit unter der Grenze von 5,0 V; ein Pruefling
+  sieht dann hoechstens 0,9 V statt des kleinen Sollwerts. Mit Last kann der Boden niedriger liegen; dann ist der Vergleich bei zu hohem Boden unempfindlich (der Boden ist der Parameter, der nachzumessen ist).
+* Der LabControl-Treiber (Gegenseite) muss den Status 4 kennen.
+
+### 7.2 R-1: Regler nach Sollwertsprung anhalten
+
+* Aendert sich der begrenzte Sollwert eines Kanals um mehr als `StepThreshold_V` (0,2 V, in beiden Richtungen), **steht sein Regler `StepHold_cycles` (30, also 300 ms)**:
+  Korrektur und Integralanteil bleiben wie sie waren (wie bei LIMIT). Danach arbeitet er normal.
+* SIL (Strecke mit 20 ms, Istwert gefiltert 95 ms): Sprung 4,8 V auf 1,0 V gibt **ohne Haltezeit ein Minimum von 0,900 V (-0,10 V, wie am Geraet)**, mit 300 ms 0,970 V (-0,03 V):
+  nach 300 ms haengt der gefilterte Istwert noch 0,16 V nach. Die Haltezeit ist ein Parameter; Nachmessung beim naechsten Termin am Geraet, dort ist gegebenenfalls laenger (bis etwa 600 ms) zu waehlen.
+* Die Schutzabschaltungen C-1 und C-2 haengen nicht vom Regler ab und sind von R-1 nicht beruehrt.
+
+### 7.3 F-1 und Version
+
+Firmware-Stand fuer 0x121: **0.3.1** (0.3.0 war 5a23104). Geflasht wird dieser Stand erst nach einer eigenen Freigabe.

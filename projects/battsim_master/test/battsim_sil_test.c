@@ -216,7 +216,7 @@ static void startIsStandbyWithWatchdogReason(void)
     CHECK(MODE(FailReason) == FAIL_WATCHDOG);
     CHECK(outputsOff());
     CHECK(MODE(LedRemote) == 0U);
-    CHECK(MODE(FwVersionMajor) == 0U && MODE(FwVersionMinor) == 3U && MODE(FwVersionPatch) == 0U);
+    CHECK(MODE(FwVersionMajor) == 0U && MODE(FwVersionMinor) == 3U && MODE(FwVersionPatch) == 1U);
     /* the held setpoints of the CAN buffers do not act in STANDBY (FW-16) */
     setpointFrame123(ENABLE_ON, 3.7, ENABLE_ON, 3.7, ENABLE_ON, 3.7);
     cycles(5);
@@ -638,7 +638,7 @@ static void statusExtensionFrame(void)
     CHECK((data[0] & 0x20U) != 0U);           /* LIMIT */
     CHECK((data[0] & 0x40U) == 0U);           /* regulator switched off by the diagnosis (ControllerOffReq = 1 here) */
     CHECK((data[1] & 0x0FU) == 0U);           /* FAIL reason none */
-    CHECK(data[5] == 0U && data[6] == 3U && data[7] == 0U); /* version 0.3.0 */
+    CHECK(data[5] == 0U && data[6] == 3U && data[7] == 1U); /* version 0.3.0 */
     uint16_t current = (uint16_t)(data[3] | (data[4] << 8U));
     CHECK(current > 480U && current < 510U);   /* 0.5 A in 0.001 A */
     *controlQlf[5] = QLF_OK;
@@ -896,12 +896,13 @@ static void calibrationActsOnTheChannel(void)
 static double plantV;
 static double plantGain   = 1.0;
 static double plantOffset = 0.0;
+static double plantTau    = 0.25; /* s */
 
 static void plantStep(void)
 {
     double const nominal = (*dutyOut[0] == 0U) ? 0.0 : interp(setT, setAx, (double)*dutyOut[0] / 10000.0);
     double const target  = (*dutyOut[0] == 0U) ? 0.0 : plantGain * nominal + plantOffset;
-    plantV += (target - plantV) * (0.01 / 0.25);
+    plantV += (target - plantV) * (0.01 / plantTau);
     *adcIn[0] = (uint32)(interp(senseT, senseAx, plantV) + 0.5);
 }
 
@@ -1118,9 +1119,16 @@ static void overvoltageOfAChannelSwitchesOffEverything(void)
     *adcIn[0] = pinMvFor(0.5);
     cycles(100);
     CHECK(MODE(BattSimStatus) == STATUS_REMOTE && CELL(OverVoltage) == 0U);
-    /* the setpoint 0 V is a setpoint like any other: 0.25 V at the output of a released channel is too much */
+    /* the setpoint 0 V: the output stage does not go below its floor (0.7 V), the reference is max(setpoint, floor) + 0.2 V (C-2c):
+       0.25 V and 0.85 V are no overvoltage, 0.95 V is */
     setpointFrame123(ENABLE_ON, 0.0, 0U, 0.0, 0U, 0.0);
     *adcIn[0] = pinMvFor(0.25);
+    cycles(30);
+    CHECK(MODE(BattSimStatus) == STATUS_REMOTE && CELL(OverVoltage) == 0U);
+    *adcIn[0] = pinMvFor(0.85);
+    cycles(30);
+    CHECK(MODE(BattSimStatus) == STATUS_REMOTE && CELL(OverVoltage) == 0U);
+    *adcIn[0] = pinMvFor(0.95);
     cycles(11);
     CHECK(MODE(BattSimStatus) == STATUS_FAIL && MODE(FailReason) == FAIL_OVERVOLT);
     backToStandby();
@@ -1149,6 +1157,132 @@ static void overvoltageOfAChannelSwitchesOffEverything(void)
     CELL(ControllerOffReq) = 1U;
 }
 
+/* ---------------------------------------------------------------------------------------------------------------- */
+/* Stage C, review C-2c: level floor of the output stage; review R-1: regulator hold after a setpoint step */
+
+static void levelFloorMovesTheOvervoltageReference(void)
+{
+    CELL(ControllerOffReq) = 1U;
+    SUPPLY(ISupplyQlf)     = QLF_OK;
+    *adcQlfIn[0]           = QLF_OK;
+    /* setpoint 0.5 V (below the floor 0.7 V): status 4, the output sits at the floor and that is no overvoltage */
+    setpointFrame123(ENABLE_ON, 0.5, ENABLE_ON, 0.7, ENABLE_ON, 5.5);
+    *adcIn[0] = pinMvFor(0.70);
+    goToRun();
+    cycles(100);
+    CHECK(*stateOut[0] == 4U); /* setpoint below the level floor, no FAIL */
+    CHECK(*stateOut[1] == 2U); /* exactly the floor: reachable */
+    CHECK(*stateOut[2] == 3U); /* clipped setpoint: still status 3 */
+    CHECK(MODE(BattSimStatus) == STATUS_REMOTE && CELL(OverVoltage) == 0U);
+    CHECK(*dutyOut[0] == (uint16)dutyFor(0.5)); /* the setpoint is still driven as before (calibration factory) */
+    /* up to floor + 0.2 V = 0.9 V no overvoltage, however long */
+    *adcIn[0] = pinMvFor(0.88);
+    cycles(100);
+    CHECK(MODE(BattSimStatus) == STATUS_REMOTE && CELL(OverVoltage) == 0U && *stateOut[0] == 4U);
+    /* above 0.9 V it is one (a real fault of a card), FAIL reason 6 as before */
+    *adcIn[0] = pinMvFor(0.95);
+    cycles(11);
+    CHECK(MODE(BattSimStatus) == STATUS_FAIL && MODE(FailReason) == FAIL_OVERVOLT);
+    backToStandby();
+    /* a setpoint above the floor keeps the old reference: 0.8 V + 0.2 V = 1.0 V */
+    setpointFrame123(ENABLE_ON, 0.8, 0U, 0.0, 0U, 0.0);
+    *adcIn[0] = pinMvFor(0.95);
+    goToRun();
+    cycles(50);
+    CHECK(MODE(BattSimStatus) == STATUS_REMOTE && *stateOut[0] == 2U);
+    *adcIn[0] = pinMvFor(1.05);
+    cycles(11);
+    CHECK(MODE(BattSimStatus) == STATUS_FAIL && MODE(FailReason) == FAIL_OVERVOLT);
+    backToStandby();
+    /* the regulator does not work below the floor: no correction, the integral part stays clear */
+    CELL(ControllerOffReq) = 0U;
+    setpointFrame123(ENABLE_ON, 0.5, 0U, 0.0, 0U, 0.0);
+    *adcIn[0] = pinMvFor(0.70);
+    goToRun();
+    cycles(200);
+    CHECK(MODE(BattSimStatus) == STATUS_REMOTE && *stateOut[0] == 4U);
+    CHECK(*dutyOut[0] == (uint16)dutyFor(0.5));
+    backToStandby();
+    *adcIn[0]              = 0U;
+    CELL(ControllerOffReq) = 1U;
+}
+
+static void regulatorHoldsAfterASetpointStep(void)
+{
+    startCalibration(QLF_NOT_AVAILABLE, zeroOff, zeroGain, zeroOff, zeroGain);
+    *adcQlfIn[0] = QLF_OK;
+    plantGain    = 1.0;
+    plantOffset  = 0.0;
+    plantTau     = 0.02; /* the real output follows a step in about 50 ms, the actual value in the status is low-passed (95 ms) */
+    CELL(ControllerOffReq) = 0U;
+    setpointFrame123(ENABLE_ON, 4.8, 0U, 0.0, 0U, 0.0);
+    plantV = 0.0;
+    goToRun();
+    runPlant(1500);
+    CHECK(fabs(plantV - 4.8) < 0.01);
+    int const dutyBefore = *dutyOut[0];
+    CHECK(near(dutyBefore, dutyFor(4.8), 2));
+    /* step down 4.8 V -> 1.0 V: during the hold the regulator stands still (the duty is the one of the table, plus the
+       correction it had), afterwards it works again; the undershoot of the output stays small */
+    setpointFrame123(ENABLE_ON, 1.0, 0U, 0.0, 0U, 0.0);
+    double minV = 10.0;
+    for (int i = 0; i < 30; ++i) /* StepHold_cycles = 30: the step cycle and the 29 after it */
+    {
+        cycle();
+        plantStep();
+        if (plantV < minV)
+        {
+            minV = plantV;
+        }
+        CHECK(near(*dutyOut[0], dutyFor(1.0), 12)); /* corrHold of the old operating point only (a few mV) */
+    }
+    for (int i = 0; i < 1500; ++i)
+    {
+        cycle();
+        plantStep();
+        if (plantV < minV)
+        {
+            minV = plantV;
+        }
+    }
+    printf("  R-1: Unterschwingen nach 4.8 V -> 1.0 V: Minimum %.4f V\n", minV);
+    /* without the hold the output goes down to 0.90 V (-0.10 V, as at the device); after 300 ms the low-passed value still lags by 0.16 V,
+       which leaves -0.03 V */
+    CHECK(minV > 1.0 - 0.05);
+    CHECK(fabs(plantV - 1.0) < 0.005);
+    /* a step of 0.1 V is below the threshold: the regulator keeps working (a disturbance of -0.08 V is answered within 10 cycles) */
+    runPlant(1000);
+    setpointFrame123(ENABLE_ON, 1.1, 0U, 0.0, 0U, 0.0);
+    plantOffset = -0.08;
+    runPlant(10);
+    CHECK(*dutyOut[0] > (uint16)(dutyFor(1.1) + 8));
+    runPlant(1500);
+    CHECK(fabs(plantV - 1.1) < 0.005);
+    /* a step up of 2 V holds as well: the duty stands still for the 30 cycles */
+    plantOffset = -0.05;
+    runPlant(1500);
+    setpointFrame123(ENABLE_ON, 3.1, 0U, 0.0, 0U, 0.0);
+    cycle();
+    plantStep();
+    int const heldDuty = *dutyOut[0];
+    CHECK(heldDuty > dutyFor(3.1)); /* it still carries the held correction of the old operating point */
+    for (int i = 1; i < 30; ++i)
+    {
+        cycle();
+        plantStep();
+        CHECK(*dutyOut[0] == heldDuty);
+    }
+    cycle();
+    plantStep();
+    cycles(40);
+    CHECK(*dutyOut[0] != heldDuty); /* the hold is over: the regulator works again */
+    backToStandby();
+    plantOffset            = 0.0;
+    plantTau               = 0.25;
+    *adcIn[0]              = 0U;
+    CELL(ControllerOffReq) = 1U;
+}
+
 int main(void)
 {
     BattSimMode_Init();
@@ -1172,6 +1306,8 @@ int main(void)
     regulatorCorrectsWithinItsAuthority();
     invalidCurrentMeasurementSwitchesOffInRun();
     overvoltageOfAChannelSwitchesOffEverything();
+    levelFloorMovesTheOvervoltageReference();
+    regulatorHoldsAfterASetpointStep();
     printf("%d checks, %d failures\n", checks, failures);
     return (failures == 0) ? 0 : 1;
 }

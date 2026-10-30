@@ -81,6 +81,9 @@ Die Korrektur und der Integralanteil sind auf +-`CtrlLimit_V` (0,1 V) geklemmt (
 Sonst ist die Korrektur 0 und der Integralanteil geloescht. Meldet die Versorgung LIMIT, **steht** der Regler: die Korrektur bleibt, der
 Integralanteil bewegt sich nicht. 0x121 `BATTSIM_CONTROLLER_ON` zeigt, ob der Regler nicht abgeschaltet ist.
 
+Nachtrag Geraetebefund (Review C-2c, R-1): Nach einem Sollwertsprung groesser 0,2 V steht der Regler dieses Kanals 300 ms (Parameter `StepThreshold_V`, `StepHold_cycles`), und bei einem
+Sollwert unter dem Pegelboden `OutputFloor_V` (0,7 V, ohne Last gemessen) arbeitet er nicht; der Kanalstatus ist dann 4. Dazu `sicherheitshinweise-stufe-c.md` Abschnitt 7.
+
 **Schutzabschaltungen (Review C-1 und C-2)**, unabhaengig vom Regler und von der Diagnose:
 
 * Strommessung (`ISupplyQlf`) 200 ms am Stueck ungueltig: in RUN FAIL, 0x121 `BATTSIM_FAIL_REASON` = 5, Ausgaenge im selben Schritt aus
