@@ -171,3 +171,23 @@ diese Aenderung: nur Sollwerte ab 0,6 V verwenden (F-1 a).
 ### 7.3 F-1 und Version
 
 Firmware-Stand fuer 0x121: **0.3.1** (0.3.0 war 5a23104). Geflasht wird dieser Stand erst nach einer eigenen Freigabe.
+
+## 8. Geraeteteil 0.3.1 (30.10.2026, Board `bs-stufec-flash-031` a, Zweig-Stand 419eb99)
+
+Aufbau unveraendert (Nutzer: "Der Aufbau steht noch so"): J-Link, CANcaseXL Ch2, PicoScope A an Zelle 1 (10:1), kein Pruefling.
+
+* **Flash:** Backup des laufenden P-Flash (0.3.0, `battsim_backup/2026-10-30/pflash_stufec_030_0x00000000_1M.bin`; gegenueber 5a23104 nur der Key-Record bei 0xFE000
+  anders). Nur die App und der Record geflasht (`flash.jlink`, kein Erase, kein Unlock; Bootloader nicht angefasst). Rueckgelesen: Bootloader, App und Record 0 Abweichungen
+  gegen die Hex, Key-Sektor 0xFE000..0xFEFFF und FCF unveraendert (FSEC 0xFE). Partition und Provisionierung bleiben, Kalibrierung im NvM unberuehrt.
+* **0x121:** Firmware 0.3.1, FAIL-Grund 0, Regler ein, 48 V 0,259 A bei 14 Zellen mit 3,7 V. `check_battsim.py --hardware` lesend und mit `--remote` ohne Fehler (Istwerte 3,696 bis 3,721 V
+  bei 3,7 V Soll).
+* **Abschaltzeit (S-2):** 16 Laeufe mit Hardware-Zeitstempeln: FAIL-Entscheidung nach der letzten 0x130 zwischen **299,7 und 304,5 ms** (0.3.0: 299,8 bis 303,7 ms). Mit dem analogen Abfall (4,2 ms,
+  in 6.2 gemessen, Endstufe unveraendert) etwa 304 bis 309 ms; 310 ms eingehalten.
+* **C-2c (Pegelboden), Kanal 1 ohne Last:** Sollwert **0,5 V und 0,3 V aus dem Stillstand** (Ausgang ein): Kanalstatus **4**, 12 s lang **kein FAIL** (FAIL-Grund 0, BATTSIM_STATUS nur 1 und 3), ADC-Istwert
+  gefiltert 0,707 V, Scope 0,697 bis 0,700 V. **Sprung 4,8 V auf 0,5 V und auf 0,3 V aus dem Lauf** (je 12 s gehalten): Status 4, kein FAIL, Ausgang bleibt bei 0,70 V (Scope 1,8 s lang, Minimum 0,35 V
+  = Rauschboden des Scopes, kein Abfall auf 0 V); bei 0.3.0 loeste derselbe Sprung nach etwa 100 ms FAIL Grund 6 aus (Abschnitt 6.4). Der Boden von 0,70 V wurde nicht mit Last gemessen.
+* **R-1 (Sprung 4,8 V auf 1,0 V, Haltezeit 300 ms):** Der Ausgang unterschwingt weniger. ADC (gefiltert): Minimum **0,965 V (-0,035 V)**, zuvor ohne Haltezeit 0,913 V (-0,087 V); zurueck auf 0,982 V nach 1,5 s. Scope (Blockmittel,
+  8 Bit): Minimum 0,918 V gegen 0,857 V, nach 1,2 bis 1,8 s 0,968 V. Der Rest kommt daher, dass der gefilterte Istwert nach 300 ms noch 0,2 V ueber dem neuen Sollwert liegt (ADC 1,235 V bei +291 ms).
+  **Vorschlag (nicht umgesetzt):** `StepHold_cycles` 50 (500 ms); SIL-Strecke: Minimum 0,970 V (30), **0,997 V (50)**, 0,999 V (60). Aenderung ohne weitere Logik nur ueber den Parameter, braucht eine neue Freigabe zum Flashen.
+
+Das Geraet ist im Standby, die Ausgaenge sind aus, das PicoScope ist freigegeben.
