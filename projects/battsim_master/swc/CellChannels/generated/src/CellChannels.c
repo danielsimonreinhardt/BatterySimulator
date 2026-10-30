@@ -662,6 +662,23 @@ void CellTask10ms(void)                /* Explicit Task: CellTask10ms */
     }
   }
 
+  /* Outport: '<Root>/ChannelsReleased' incorporates:
+   *  MATLAB Function: '<S1>/CellCore'
+   */
+  (void)Rte_Write_ChannelsReleased_ChannelsReleased(FALSE);
+
+  /* MATLAB Function: '<S1>/CellCore' */
+  k = 0;
+  exitg1 = FALSE;
+  while ((!exitg1) && (k < 14)) {
+    if (en[k]) {
+      (void)Rte_Write_ChannelsReleased_ChannelsReleased(TRUE);
+      exitg1 = TRUE;
+    } else {
+      k++;
+    }
+  }
+
   /* Outport: '<Root>/OverVoltage' incorporates:
    *  MATLAB Function: '<S1>/CellCore'
    */

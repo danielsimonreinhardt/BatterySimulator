@@ -69,11 +69,15 @@ port(c, "Limit", "in", "boolean", "dio.in.LIMIT")
 port(c, "Overload", "out", "boolean", "can.tx.STATUS_BATTSIM_EXT.BATTSIM_OVERLOAD")
 port(c, "SupplyCurrent_A", "out", "float32", "can.tx.STATUS_BATTSIM_EXT.BATTSIM_SUPPLY_CURRENT")
 port(c, "LimitActive", "out", "boolean", "can.tx.STATUS_BATTSIM_EXT.BATTSIM_LIMIT")
-port(c, "CurrentInvalid", "out", "boolean", None, "the current measurement was invalid for CurrentInvalid_cycles samples in a row (C-1): BattSimMode switches off in RUN, FAIL reason 5")
+port(c, "ChannelsReleased", "in", "boolean", "CellChannels.ChannelsReleased.ChannelsReleased", "output on and at least one channel released (CellChannels, from the previous step): the quiescent current of the supply is always above MinCurrent_mA then (review bs-c1-strommessung S-1)")
+port(c, "CurrentInvalid", "out", "boolean", None, "the current measurement was invalid for CurrentInvalid_cycles samples in a row, or implausibly low for MinCurrentTime_cycles samples with the output on and a channel released (C-1): BattSimMode switches off in RUN, FAIL reason 5")
 param(c, "SupplyCurrentFilter", "float32", [0.0078125], "[-]   low-pass weight per 10 ms (1/128, exact in single): time constant about 1.3 s, as 0.08 per 100 ms of the old firmware")
 param(c, "SupplyCurrentGain", "float32", [1.0], "[mA/mV] INA181A1 on 50 mOhm: 1 V per A, i.e. 1 mA per mV at the ADC pin")
 param(c, "OverloadThd_mA", "float32", [1280], "[mA]  overload above this current (IRM-60-48: 1.25 A continuous)")
 param(c, "OverloadHyst_mA", "float32", [200], "[mA]  overload ends below OverloadThd_mA - this value (1.08 A)")
+param(c, "MinCurrent_mA", "float32", [100], "[mA]  plausibility of the current measurement: with the output on and a channel released, a sample below this value is implausible; the quiescent current of the supply measured at the device is 216 mA, 270 mA with 14 channels (30.10.2026)",
+      unit="mA", min=0, max=200, description="Mindeststrom der 48-V-Versorgung bei Ausgang ein")
+param(c, "MinCurrentTime_cycles", "uint8", [20], "[10 ms] number of implausibly low samples in a row that count as a failure of the current measurement (20 = 200 ms, review bs-c1-strommessung S-1 a)")
 param(c, "CurrentInvalid_cycles", "uint8", [20], "[10 ms] number of invalid samples of the current measurement in a row that count as a failure (20 = 200 ms, review C-1)")
 
 # ------------------------------------------------------------------ BattSimMode
@@ -108,8 +112,8 @@ for v, msg in zip(vnames, QLF_MSGS):
 for part in ("Major", "Minor", "Patch"):
     port(c, f"FwVersion{part}", "out", "uint8", f"can.tx.STATUS_BATTSIM_EXT.FW_VERSION_{part.upper()}")
 param(c, "VersionMajor", "uint8", [0], "firmware version of 0x121")
-param(c, "VersionMinor", "uint8", [3], "firmware version of 0x121 (0.3.2: stage C, calibration, regulator and diagnosis, level floor, regulator hold 500 ms; 0.3.1 had 300 ms; 0.2.0 was stage B)")
-param(c, "VersionPatch", "uint8", [2], "firmware version of 0x121")
+param(c, "VersionMinor", "uint8", [3], "firmware version of 0x121 (0.3.3: stage C, plausibility check of the current measurement; 0.3.2: regulator hold 500 ms; 0.2.0 was stage B)")
+param(c, "VersionPatch", "uint8", [3], "firmware version of 0x121")
 param(c, "ButtonDebounce_cycles", "uint8", [3], "[10 ms] a key level counts after this many equal samples")
 
 # ------------------------------------------------------------------ CellCal (stage C)
@@ -164,6 +168,7 @@ for n in CH:
     port(c, f"Duty{nn}", "out", "uint16", f"pwm.SET_{nn}", "duty in 0.01 %")
 port(c, "ControllerOn", "out", "boolean", "can.tx.STATUS_BATTSIM_EXT.BATTSIM_CONTROLLER_ON", "regulator active (not switched off)")
 port(c, "ControllerOffAct", "out", "uint8", ["rte", "did.ControllerControl.controllerOff"], "request of the diagnosis as the model uses it")
+port(c, "ChannelsReleased", "out", "boolean", None, "output on and at least one channel released: feeds the plausibility check of the current measurement in SupplyMonitor")
 port(c, "OverVoltage", "out", "boolean", None, "a released channel was above setpoint + OverVoltThd_V for OverVoltTime_cycles samples (C-2): BattSimMode switches off in RUN, FAIL reason 6")
 port(c, "Cell15State", "out", "uint8", "can.tx.STATUS_CELL13_14_15.CELL15_STATUS", "not fitted: disabled")
 port(c, "Cell15VoltAct_V", "out", "float32", "can.tx.STATUS_CELL13_14_15.CELL15_VOLTAGE_ACT", "not fitted: 0 V")

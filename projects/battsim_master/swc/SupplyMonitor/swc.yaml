@@ -33,7 +33,11 @@ ports:
     direction: out
     type: boolean
     runnables: [SupplyTask10ms]
-  - name: CurrentInvalid           # the current measurement was invalid for CurrentInvalid_cycles samples in a row (C-1): BattSimMode switches off in RUN, FAIL reason 5
+  - name: ChannelsReleased           # output on and at least one channel released (CellChannels, from the previous step): the quiescent current of the supply is always above MinCurrent_mA then (review bs-c1-strommessung S-1)
+    direction: in
+    type: boolean
+    runnables: [SupplyTask10ms]
+  - name: CurrentInvalid           # the current measurement was invalid for CurrentInvalid_cycles samples in a row, or implausibly low for MinCurrentTime_cycles samples with the output on and a channel released (C-1): BattSimMode switches off in RUN, FAIL reason 5
     direction: out
     type: boolean
     runnables: [SupplyTask10ms]
@@ -49,6 +53,16 @@ parameters:
     runnables: [SupplyTask10ms]
   - name: OverloadHyst_mA
     type: float32
+    runnables: [SupplyTask10ms]
+  - name: MinCurrent_mA
+    type: float32
+    unit: "mA"
+    min: 0
+    max: 200
+    description: "Mindeststrom der 48-V-Versorgung bei Ausgang ein"
+    runnables: [SupplyTask10ms]
+  - name: MinCurrentTime_cycles
+    type: uint8
     runnables: [SupplyTask10ms]
   - name: CurrentInvalid_cycles
     type: uint8

@@ -553,6 +553,10 @@ ports:
     direction: out
     type: uint8
     runnables: [CellTask10ms]
+  - name: ChannelsReleased           # output on and at least one channel released: feeds the plausibility check of the current measurement in SupplyMonitor
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
   - name: OverVoltage           # a released channel was above setpoint + OverVoltThd_V for OverVoltTime_cycles samples (C-2): BattSimMode switches off in RUN, FAIL reason 6
     direction: out
     type: boolean

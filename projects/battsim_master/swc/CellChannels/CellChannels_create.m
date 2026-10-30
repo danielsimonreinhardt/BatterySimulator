@@ -25,6 +25,8 @@ function CellChannels_create()
 %     - Status CELLn_STATUS as in the DBC: 2 enabled, 1 disabled, 3 setpoint error while enabled (as the old firmware
 %       it follows the command, not OutputEnable). Channels 15 and 16 are not fitted: status 1, voltage 0, as before.
 %     - ControllerOn (0x121 BATTSIM_CONTROLLER_ON) is 1 when the regulator is not switched off by the diagnosis.
+%     - ChannelsReleased: output on and at least one channel released (any En); SupplyMonitor checks the current measurement for
+%       plausibility with it (a step later: CellChannels runs after SupplyMonitor).
 %     - OverVoltage (FW-17, review C-2): a released channel (OutputEnable on, CELLn_ENABLE = 2) whose calibrated actual value
 %       is more than OverVoltThd_V (0.2 V) above its limited setpoint for OverVoltTime_cycles (10 = 100 ms) valid samples in
 %       a row. The sample itself is compared, not the low-passed value: the low-pass (about 95 ms) would hold the value above
@@ -63,7 +65,7 @@ swc_core(sub, 'CellCore', coreScript(), ...
      {'OverVoltThd_V', 'single'}, {'OverVoltTime_cycles', 'uint8'}, {'OutputFloor_V', 'single'}, ...
      {'StepThreshold_V', 'single'}, {'StepHold_cycles', 'uint8'}, {'QLF_OK', 'uint8'}}, ...
     {{'demux', names('En%02d')}, {'demux', names('Cell%02dVoltAct_V')}, {'demux', names('Cell%02dState')}, ...
-     {'demux', names('Duty%02d')}, 'ControllerOn', 'ControllerOffAct', 'OverVoltage'});
+     {'demux', names('Duty%02d')}, 'ControllerOn', 'ControllerOffAct', 'OverVoltage', 'ChannelsReleased'});
 % channels 15 and 16 are not fitted: status "disabled" (voltage 0 is the placeholder of the port), as the old firmware
 for ch = [15 16]
     add_block('simulink/Sources/Constant', sprintf('%s/Cell%dState_Const', sub, ch), ...
@@ -74,7 +76,7 @@ end
 
 function code = coreScript()
 lines = {
-'function [en, vAct, state, duty, ctrlOn, ctrlOffAct, overVolt] = CellCore(setV, enable, mV, qlf, outEn, limitActive, ctrlOffReq, ...'
+'function [en, vAct, state, duty, ctrlOn, ctrlOffAct, overVolt, released] = CellCore(setV, enable, mV, qlf, outEn, limitActive, ctrlOffReq, ...'
 '    calSO, calSG, calMO, calMG, setAx, setT, senseAx, senseT, limitV, filt, kp, kiPerS, ctrlLim, ovThd, ovN, floorV, stepThd, stepN, QlfOk)'
 '%CELLCORE 14 cell channels: setpoint -> duty, release, actual value, regulator, status (see CellChannels_create.m).'
 '%#codegen'
@@ -173,6 +175,7 @@ lines = {
 '        state(k) = uint8(2);'
 '    end'
 'end'
+'released = any(en);'
 'overVolt = any(ovCnt >= ovN);      % one assignment after the loop: an accumulating output would read the RTE write call'
 ''
 'function [g, o] = plausible(gain, offset)'

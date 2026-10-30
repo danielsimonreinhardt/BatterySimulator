@@ -209,6 +209,7 @@ static void startIsStandbyWithWatchdogReason(void)
         *adcQlfIn[k] = QLF_OK;
     }
     SUPPLY(ISupplyQlf) = QLF_OK;
+    SUPPLY(ISupply_mV) = 220U;
     cycles(3);
     MODE(ResetWatchdog) = 0U;
     CHECK(MODE(BattSimStatus) == STATUS_STANDBY);
@@ -216,7 +217,7 @@ static void startIsStandbyWithWatchdogReason(void)
     CHECK(MODE(FailReason) == FAIL_WATCHDOG);
     CHECK(outputsOff());
     CHECK(MODE(LedRemote) == 0U);
-    CHECK(MODE(FwVersionMajor) == 0U && MODE(FwVersionMinor) == 3U && MODE(FwVersionPatch) == 2U);
+    CHECK(MODE(FwVersionMajor) == 0U && MODE(FwVersionMinor) == 3U && MODE(FwVersionPatch) == 3U);
     /* the held setpoints of the CAN buffers do not act in STANDBY (FW-16) */
     setpointFrame123(ENABLE_ON, 3.7, ENABLE_ON, 3.7, ENABLE_ON, 3.7);
     cycles(5);
@@ -462,6 +463,10 @@ static void lostControlMessageInStopIsNoFail(void)
     CHECK(MODE(BattSimStatus) == STATUS_STANDBY);
 }
 
+/* quiescent current of the supply measured at the device: 216 mA at 1 V per A (30.10.2026); with a channel released the plausibility
+   check of the current measurement (review bs-c1-strommessung) needs a plausible value, 0 would be an open shunt */
+#define QUIESCENT_MV 220U
+
 static void overloadIsFailAndNeedsLowCurrentToReset(void)
 {
     setpointFrame123(ENABLE_ON, 3.7, ENABLE_ON, 3.7, ENABLE_ON, 3.7);
@@ -478,7 +483,7 @@ static void overloadIsFailAndNeedsLowCurrentToReset(void)
     /* a reset command with the current still high is refused (the overload condition is still active) */
     backToStandby();
     CHECK(MODE(BattSimStatus) == STATUS_FAIL);
-    SUPPLY(ISupply_mV) = 0U;
+    SUPPLY(ISupply_mV) = QUIESCENT_MV;
     cycles(20); /* about 1.28 A: the hysteresis keeps the condition above 1.08 A */
     CHECK(SUPPLY(Overload) == 1U);
     backToStandby();
@@ -496,7 +501,7 @@ static void overloadIsFailAndNeedsLowCurrentToReset(void)
     cycles(1000);
     CHECK(fabsf(SUPPLY(SupplyCurrent_A) - 1.0f) < 0.01f);
     CHECK(SUPPLY(LimitActive) == 1U);
-    SUPPLY(ISupply_mV) = 0U;
+    SUPPLY(ISupply_mV) = QUIESCENT_MV;
     SUPPLY(Limit)      = 0U;
     cycles(1000);
     CHECK(SUPPLY(LimitActive) == 0U);
@@ -638,12 +643,12 @@ static void statusExtensionFrame(void)
     CHECK((data[0] & 0x20U) != 0U);           /* LIMIT */
     CHECK((data[0] & 0x40U) == 0U);           /* regulator switched off by the diagnosis (ControllerOffReq = 1 here) */
     CHECK((data[1] & 0x0FU) == 0U);           /* FAIL reason none */
-    CHECK(data[5] == 0U && data[6] == 3U && data[7] == 2U); /* version 0.3.0 */
+    CHECK(data[5] == 0U && data[6] == 3U && data[7] == 3U); /* version 0.3.0 */
     uint16_t current = (uint16_t)(data[3] | (data[4] << 8U));
     CHECK(current > 480U && current < 510U);   /* 0.5 A in 0.001 A */
     *controlQlf[5] = QLF_OK;
     *controlQlf[8] = QLF_OK;
-    SUPPLY(ISupply_mV) = 0U;
+    SUPPLY(ISupply_mV) = QUIESCENT_MV;
     SUPPLY(Limit)      = 0U;
     cycles(1000);
 }
@@ -1283,6 +1288,93 @@ static void regulatorHoldsAfterASetpointStep(void)
     CELL(ControllerOffReq) = 1U;
 }
 
+/* ---------------------------------------------------------------------------------------------------------------- */
+/* Review bs-c1-strommessung S-1 a: plausibility of the current measurement (a valid, but far too low value) */
+
+static void implausiblyLowCurrentSwitchesOffInRun(void)
+{
+    startCalibration(QLF_NOT_AVAILABLE, zeroOff, zeroGain, zeroOff, zeroGain);
+    CELL(ControllerOffReq) = 1U;
+    SUPPLY(ISupplyQlf)     = QLF_OK;
+    SUPPLY(ISupply_mV)     = QUIESCENT_MV;
+    setpointFrame123(ENABLE_ON, 3.0, 0U, 0.0, 0U, 0.0);
+    goToRun();
+    /* the quiescent current of the device (216 mA): healthy, however long */
+    cycles(200);
+    CHECK(SUPPLY(CurrentInvalid) == 0U && MODE(BattSimStatus) == STATUS_REMOTE && !outputsOff());
+    CHECK(CELL(ChannelsReleased) == 1U);
+    /* the measurement reads about 0 A with a valid qualifier (open shunt or sense line): 19 samples (190 ms) are no failure */
+    SUPPLY(ISupply_mV) = 0U;
+    cycles(19);
+    CHECK(SUPPLY(CurrentInvalid) == 0U && MODE(BattSimStatus) == STATUS_REMOTE && !outputsOff());
+    /* a plausible sample clears the count, 19 more are none either */
+    SUPPLY(ISupply_mV) = QUIESCENT_MV;
+    cycle();
+    SUPPLY(ISupply_mV) = 0U;
+    cycles(19);
+    CHECK(SUPPLY(CurrentInvalid) == 0U && MODE(BattSimStatus) == STATUS_REMOTE && !outputsOff());
+    /* the 20th in a row (200 ms): C-1, FAIL reason 5, the outputs are off in the same step */
+    cycle();
+    CHECK(SUPPLY(CurrentInvalid) == 1U);
+    CHECK(MODE(BattSimStatus) == STATUS_FAIL && MODE(FailReason) == FAIL_CURRENT && failReasonOnTheBus() == FAIL_CURRENT);
+    CHECK(outputsOff());
+    /* with the quiescent current back, reset and RUN work again */
+    SUPPLY(ISupply_mV) = QUIESCENT_MV;
+    cycle();
+    CHECK(SUPPLY(CurrentInvalid) == 0U);
+    backToStandby();
+    CHECK(MODE(BattSimStatus) == STATUS_STANDBY && MODE(FailReason) == FAIL_NONE);
+    goToRun();
+    cycles(50);
+    CHECK(MODE(BattSimStatus) == STATUS_REMOTE && MODE(OutputStatus) == 2U);
+
+    /* threshold: 100 mA is the limit (a sample below it is too low): 101 mA never, 99 mA after 20 samples */
+    SUPPLY(ISupply_mV) = 101U;
+    cycles(100);
+    CHECK(SUPPLY(CurrentInvalid) == 0U && MODE(BattSimStatus) == STATUS_REMOTE);
+    SUPPLY(ISupply_mV) = 99U;
+    cycles(19);
+    CHECK(SUPPLY(CurrentInvalid) == 0U);
+    cycle();
+    CHECK(SUPPLY(CurrentInvalid) == 1U && MODE(FailReason) == FAIL_CURRENT && outputsOff());
+    SUPPLY(ISupply_mV) = QUIESCENT_MV;
+    cycle();
+    backToStandby();
+
+    /* invalid samples neither count nor clear: 10 low, 5 with an invalid qualifier, 10 low = 20 valid low samples */
+    goToRun();
+    cycles(5);
+    SUPPLY(ISupply_mV) = 0U;
+    cycles(10);
+    SUPPLY(ISupplyQlf) = QLF_ERROR_RANGE;
+    cycles(5);
+    CHECK(SUPPLY(CurrentInvalid) == 0U && MODE(BattSimStatus) == STATUS_REMOTE);
+    SUPPLY(ISupplyQlf) = QLF_OK;
+    cycles(9);
+    CHECK(SUPPLY(CurrentInvalid) == 0U && MODE(BattSimStatus) == STATUS_REMOTE);
+    cycle();
+    CHECK(SUPPLY(CurrentInvalid) == 1U && MODE(FailReason) == FAIL_CURRENT && outputsOff());
+    SUPPLY(ISupply_mV) = QUIESCENT_MV;
+    cycle();
+    backToStandby();
+
+    /* no channel released (output on, every CELLn_ENABLE off): the check is idle, the quiescent current is not guaranteed */
+    setpointFrame123(0U, 3.0, 0U, 0.0, 0U, 0.0);
+    goToRun();
+    SUPPLY(ISupply_mV) = 0U;
+    cycles(100);
+    CHECK(CELL(ChannelsReleased) == 0U && SUPPLY(CurrentInvalid) == 0U && MODE(BattSimStatus) == STATUS_REMOTE);
+    /* output off (STOP): the same */
+    controlFrame(REMOTE_REMOTE, MODE_ON, OUTPUT_DISABLE);
+    cycles(100);
+    CHECK(SUPPLY(CurrentInvalid) == 0U && MODE(BattSimStatus) == STATUS_REMOTE && MODE(OutputStatus) == 1U);
+    setpointFrame123(ENABLE_ON, 3.0, 0U, 0.0, 0U, 0.0);
+    SUPPLY(ISupply_mV) = QUIESCENT_MV;
+    cycles(2);
+    backToStandby();
+    CHECK(MODE(BattSimStatus) == STATUS_STANDBY);
+}
+
 int main(void)
 {
     BattSimMode_Init();
@@ -1305,6 +1397,7 @@ int main(void)
     calibrationActsOnTheChannel();
     regulatorCorrectsWithinItsAuthority();
     invalidCurrentMeasurementSwitchesOffInRun();
+    implausiblyLowCurrentSwitchesOffInRun();
     overvoltageOfAChannelSwitchesOffEverything();
     levelFloorMovesTheOvervoltageReference();
     regulatorHoldsAfterASetpointStep();

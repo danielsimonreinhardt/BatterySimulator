@@ -101,6 +101,7 @@ connections:
   SupplyMonitor.Overload.Overload: can.tx.STATUS_BATTSIM_EXT.BATTSIM_OVERLOAD
   SupplyMonitor.SupplyCurrent_A.SupplyCurrent_A: can.tx.STATUS_BATTSIM_EXT.BATTSIM_SUPPLY_CURRENT
   SupplyMonitor.LimitActive.LimitActive: can.tx.STATUS_BATTSIM_EXT.BATTSIM_LIMIT
+  SupplyMonitor.ChannelsReleased.ChannelsReleased: CellChannels.ChannelsReleased.ChannelsReleased
   BattSimMode.RemoteControl.RemoteControl: can.rx.CONTROL_BATTSIM.BATTSIM_REMOTE_CONTROL
   BattSimMode.ModeControl.ModeControl: can.rx.CONTROL_BATTSIM.BATTSIM_MODE_CONTROL
   BattSimMode.OutputControl.OutputControl: can.rx.CONTROL_BATTSIM.BATTSIM_OUTPUT_CONTROL

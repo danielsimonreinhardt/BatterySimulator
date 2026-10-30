@@ -264,3 +264,45 @@ verrutscht (Scope zeigte 0 V); die Messung wurde nach dem Anschliessen wiederhol
 * C-1 laesst sich ohne Eingriff nicht ausloesen: `I_SUPPLY` ist in `boards/battsim_master_v1/board.yaml` ein normaler skalierter ADC-Kanal (Faktor 1, keine Sensorgrenzen). `adc.qlf.I_SUPPLY` wird nur ungueltig, wenn die ADC-Wandlung selbst
   scheitert; Rohwert 0 oder Vollausschlag (offener oder kurzgeschlossener Shunt) geben nur bei Sensorkanaelen QLF_ERROR_RANGE (nextbsw `doc/architecture/signal-qualifier.md`, IO-18). Ein Draht- oder Shuntfehler
   macht die Strommessung also **gueltig, aber falsch**; das faengt C-1 nicht (Review `bs-c1-strommessung`).
+
+## 11. Plausibilitaet der Strommessung (Review `bs-c1-strommessung` S-1 a und S-2 a, Version 0.3.3)
+
+Entschieden am 30.10.2026 (Review "C-1 Strommessung"): **S-1 a** Plausibilitaetspruefung der Strommessung ergaenzen, **S-2 a** C-1 am Geraet ohne Hardware-Eingriff nachweisen (Verfahren unten als Vorschlag, nicht umgesetzt).
+Auf dem Geraet laeuft 0.3.2; **0.3.3 ist im Zweig `stufe-c-strommessung-plausibel` (von main 9223da8), nicht geflasht.**
+
+### 11.1 Was die Pruefung tut
+
+* Befund: Ein offener Shunt oder eine unterbrochene Sense-Leitung ergibt eine **gueltige** Messung von etwa 0 A (`I_SUPPLY` ist ein normaler skalierter ADC-Kanal ohne Sensorgrenzen, Abschnitt 10.6). C-1 aus Abschnitt 2 erkennt nur einen
+  ungueltigen Qualifier; die Ueberlastabschaltung (FAIL Grund 3) waere in diesem Fall blind.
+* Neu: Bei **Ausgang ein und mindestens einem freigegebenen Kanal** nimmt der Master immer einen Mindeststrom auf (Ruhestrom 216 mA, mit 14 Kanaelen 270 mA, mit Last bis 282 mA, Abschnitt 10.2). Ein **gueltiger** Abtastwert unter
+  `MinCurrent_mA` (Vorgabe **100 mA**) gilt als unplausibel. Sind es `MinCurrentTime_cycles` (**20**, also 200 ms) Abtastwerte in Folge, setzt `SupplyMonitor` `CurrentInvalid` wie bei einem ungueltigen Qualifier:
+  `BattSimMode` geht in RUN auf **FAIL Grund 5** (Strommessung ungueltig), die Ausgaenge sind im selben 10-ms-Schritt aus.
+* Verglichen wird der Abtastwert (`ISupply_mV` mal `SupplyCurrentGain`), nicht der Tiefpass (Zeitkonstante 1,3 s, er brauchte etwa 1 s, um unter die Schwelle zu fallen). Ein ungueltiger Abtastwert zaehlt weder mit noch loescht er;
+  ein plausibler Wert, Ausgang aus oder kein freigegebener Kanal loeschen den Zaehler. Der Zaehler sattelt bei 255.
+* `CellChannels` liefert dazu den neuen Ausgang `ChannelsReleased` (Ausgang ein **und** mindestens ein Kanal freigegeben, `CELLn_ENABLE` = 2). `CellChannels` laeuft nach `SupplyMonitor`: Der Wert wirkt einen 10-ms-Schritt spaeter.
+* Beim Wechsel STOP nach RUN ist der Strom noch nicht ueberwacht (kein Kanal freigegeben, Ausgang aus): kein Einfluss auf das Freigeben von RUN; der bestehende Weg "RUN mit ungueltiger Messung wird direkt FAIL" bleibt.
+* Parameter (Kalibrierwerte, kein neuer Code beim Aendern): `MinCurrent_mA` (0 bis 200 mA, 100), `MinCurrentTime_cycles` (20). Firmware-Version in 0x121: **0.3.3**.
+
+### 11.2 Restrisiko
+
+* Gueltig, aber falsch **ueber** der Schwelle (zum Beispiel ein Messwert, der bei 0,5 A haengt) bleibt unentdeckt; ebenso eine Messung, die nur etwas zu niedrig liest (die Ueberlastschwelle liegt bei 1,28 A). Die Pruefung deckt nur den Ausfall "Messung faellt auf etwa 0 A" ab.
+* Ein Ruhestrom unter 100 mA (zum Beispiel eine Hardware-Aenderung der Karten) loest die Pruefung dauerhaft aus; die Schwelle ist dann nachzumessen und anzupassen. Der Abstand zum gemessenen Ruhestrom (216 mA) ist gut 2:1.
+* Die Plausibilitaet gilt nur bei freigegebenem Kanal. Ohne freigegebene Kanaele ist ein tiefer Strom plausibel und die Ueberlast ist dann ohnehin nicht relevant.
+
+### 11.3 SIL-Test
+
+`implausiblyLowCurrentSwitchesOffInRun`: Ruhestrom (220 mA) bleibt ohne Folgen; Messwert 0 mA gueltig: 19 Abtastwerte keine Reaktion, ein plausibler Wert loescht den Zaehler, der 20. fuehrt in FAIL Grund 5 (auch auf dem Bus), Ausgaenge im selben Schritt aus, Rueckweg ueber STANDBY und RUN
+wieder moeglich; Schwelle (101 mA nie, 99 mA nach 20 Abtastwerten); ungueltige Abtastwerte zaehlen nicht und loeschen nicht; ohne freigegebenen Kanal oder bei Ausgang aus keine Reaktion. Die uebrigen SIL-Tests laufen jetzt mit einer Strommessung von 220 mA
+statt 0 mA (ein Geraet mit freigegebenem Kanal hat nie 0 A).
+
+### 11.4 S-2 a: Nachweis am Geraet ohne Hardware-Eingriff (Vorschlag, nicht umgesetzt)
+
+Die Messung selbst laesst sich am Geraet nicht verfaelschen (kein Eingriff in den Shunt, die Kalibrierung per UDS betrifft nur die Zellkanaele). Zwei Wege, beide ohne Hardware-Eingriff:
+
+1. **Parameter-Testbau (kein neuer Code, nur zwei Zahlen):** Ein Bau, der sich von 0.3.3 nur in `MinCurrent_mA` (zum Beispiel 400 statt 100, dazu die Obergrenze von 200 auf 500 in `swc.yaml`) unterscheidet, wird per J-Link geflasht
+   (nur App und Record, kein Pruefling). Alle 14 Kanaele freigegeben mit 3,7 V und Ausgang ein: Die gemessenen 0,27 A liegen unter 0,4 A, nach 200 ms folgt FAIL Grund 5 (0x121, im Scope die abgeschaltete Zelle 1). Danach der Gegenversuch mit
+   Ausgang ein ohne freigegebenen Kanal (keine Reaktion). Zum Schluss wieder 0.3.3 flashen, `check_battsim`. **Zwei zusaetzliche Flashvorgaenge, eigene Freigabe.**
+2. **Schwelle ueber Diagnose einstellbar machen (Codeaenderung):** `MinCurrent_mA` als RAM-Wert (nicht gespeichert, wie `controllerOff`) per `2E` mit Security-Access setzbar; dann reicht ein Lauf ohne Flash: Schwelle auf 400 mA setzen, Kanaele an, FAIL Grund 5 abwarten, Schwelle zurueck. Ein Eingriff
+   in den Produktionscode, nicht nur eine Testfunktion, und eine neue Diagnosekennung.
+
+Empfehlung: Weg 1, weil er den Produktionscode unveraendert laesst. Beide Wege weisen den Pfad "Abtastwert unter Schwelle -> Zaehler -> FAIL 5 -> Ausgaenge aus" am Geraet nach (Zaehler, ChannelsReleased, Mode); den Qualifier-Pfad und einen echten offenen Shunt weisen sie nicht nach.
