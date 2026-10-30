@@ -44,6 +44,8 @@ enum
     FAIL_ALIVE     = 2,
     FAIL_OVERLOAD  = 3,
     FAIL_WATCHDOG  = 4,
+    FAIL_CURRENT   = 5,
+    FAIL_OVERVOLT  = 6,
     ENABLE_ON      = 2,
     REMOTE_REMOTE  = 2,
     MODE_STANDBY   = 1,
@@ -994,6 +996,159 @@ static void regulatorCorrectsWithinItsAuthority(void)
     CELL(ControllerOffReq) = 1U;
 }
 
+/* ---------------------------------------------------------------------------------------------------------------- */
+/* Stage C, review C-1: the current measurement is invalid for 200 ms in RUN */
+
+static uint8 failReasonOnTheBus(void) /* BATTSIM_FAIL_REASON as the generated pack code of 0x121 puts it on the wire */
+{
+    CanDb_STATUS_BATTSIM_EXT_t msg;
+    CanDb_STATUS_BATTSIM_EXT_Init(&msg);
+    msg.BATTSIM_FAIL_REASON = MODE(FailReason);
+    uint8_t data[CANDB_STATUS_BATTSIM_EXT_LENGTH];
+    CanDb_STATUS_BATTSIM_EXT_Pack(&msg, data);
+    CanDb_STATUS_BATTSIM_EXT_t rx;
+    CanDb_STATUS_BATTSIM_EXT_Unpack(&rx, data);
+    return (uint8)rx.BATTSIM_FAIL_REASON;
+}
+
+static void invalidCurrentMeasurementSwitchesOffInRun(void)
+{
+    startCalibration(QLF_NOT_AVAILABLE, zeroOff, zeroGain, zeroOff, zeroGain);
+    setpointFrame123(ENABLE_ON, 3.0, 0U, 0.0, 0U, 0.0);
+    SUPPLY(ISupplyQlf) = QLF_OK;
+    goToRun();
+    cycles(5);
+    CHECK(MODE(BattSimStatus) == STATUS_REMOTE && MODE(OutputStatus) == 2U);
+    CHECK(SUPPLY(CurrentInvalid) == 0U);
+    /* 19 invalid samples (190 ms) are no failure, a valid one clears the count, 19 more are none either */
+    SUPPLY(ISupplyQlf) = QLF_ERROR_RANGE;
+    cycles(19);
+    CHECK(SUPPLY(CurrentInvalid) == 0U && MODE(BattSimStatus) == STATUS_REMOTE);
+    SUPPLY(ISupplyQlf) = QLF_OK;
+    cycle();
+    SUPPLY(ISupplyQlf) = QLF_ERROR_RANGE;
+    cycles(19);
+    CHECK(SUPPLY(CurrentInvalid) == 0U && MODE(BattSimStatus) == STATUS_REMOTE && !outputsOff());
+    /* the 20th invalid sample in a row (200 ms): FAIL with reason 5, the outputs are off in the same step */
+    cycle();
+    CHECK(SUPPLY(CurrentInvalid) == 1U);
+    CHECK(MODE(BattSimStatus) == STATUS_FAIL);
+    CHECK(MODE(FailReason) == FAIL_CURRENT && failReasonOnTheBus() == FAIL_CURRENT);
+    CHECK(outputsOff());
+    /* it stays latched while the measurement is still invalid, and a reset command leaves FAIL */
+    cycles(20);
+    CHECK(MODE(BattSimStatus) == STATUS_FAIL);
+    backToStandby();
+    CHECK(MODE(BattSimStatus) == STATUS_STANDBY && MODE(FailReason) == FAIL_NONE);
+    /* in STOP an invalid measurement is no failure (the outputs are off) ... */
+    controlFrame(REMOTE_REMOTE, MODE_ON, OUTPUT_DISABLE);
+    cycles(50);
+    CHECK(MODE(BattSimStatus) == STATUS_REMOTE && MODE(OutputStatus) == 1U && MODE(FailReason) == FAIL_NONE);
+    /* ... but RUN is refused at once: the overload shut-off would be blind */
+    controlFrame(REMOTE_REMOTE, MODE_ON, OUTPUT_ENABLE);
+    cycle();
+    CHECK(MODE(BattSimStatus) == STATUS_FAIL && MODE(FailReason) == FAIL_CURRENT);
+    CHECK(outputsOff()); /* the outputs were not on for a single step */
+    /* a valid measurement again: reset, RUN works */
+    SUPPLY(ISupplyQlf) = QLF_OK;
+    cycle();
+    CHECK(SUPPLY(CurrentInvalid) == 0U);
+    backToStandby();
+    goToRun();
+    CHECK(MODE(BattSimStatus) == STATUS_REMOTE && MODE(OutputStatus) == 2U);
+    backToStandby();
+}
+
+/* Stage C, review C-2: a released channel 100 ms more than 0.2 V above its setpoint */
+
+static uint32 pinMvFor(double volts)
+{
+    return (uint32)(interp(senseT, senseAx, volts) + 0.5);
+}
+
+static void overvoltageOfAChannelSwitchesOffEverything(void)
+{
+    setpointFrame123(ENABLE_ON, 3.0, 0U, 0.0, 0U, 0.0);
+    CELL(ControllerOffReq) = 1U;
+    SUPPLY(ISupplyQlf)     = QLF_OK;
+    *adcQlfIn[0]           = QLF_OK;
+    *adcIn[0]              = pinMvFor(3.0);
+    cycles(100);
+    goToRun();
+    cycles(5);
+    CHECK(MODE(BattSimStatus) == STATUS_REMOTE && CELL(OverVoltage) == 0U);
+    /* 0.15 V above the setpoint is no overvoltage, however long */
+    *adcIn[0] = pinMvFor(3.15);
+    cycles(100);
+    CHECK(CELL(OverVoltage) == 0U && MODE(BattSimStatus) == STATUS_REMOTE);
+    /* 0.25 V: nine samples are no failure, a sample below the threshold starts the count again */
+    *adcIn[0] = pinMvFor(3.25);
+    cycles(9);
+    CHECK(CELL(OverVoltage) == 0U);
+    *adcIn[0] = pinMvFor(3.1);
+    cycle();
+    *adcIn[0] = pinMvFor(3.25);
+    cycles(9);
+    CHECK(CELL(OverVoltage) == 0U && MODE(BattSimStatus) == STATUS_REMOTE);
+    /* invalid samples neither count nor clear: 9 above, 4 invalid, then the tenth valid one above decides */
+    *adcQlfIn[0] = QLF_ERROR_RANGE;
+    cycles(4);
+    CHECK(CELL(OverVoltage) == 0U && MODE(BattSimStatus) == STATUS_REMOTE);
+    *adcQlfIn[0] = QLF_OK;
+    /* the tenth sample (100 ms): the flag is set in this step, BattSimMode (which runs before CellChannels) acts in the next */
+    cycle();
+    CHECK(CELL(OverVoltage) == 1U);
+    CHECK(MODE(BattSimStatus) == STATUS_REMOTE);
+    cycle();
+    CHECK(MODE(BattSimStatus) == STATUS_FAIL);
+    CHECK(MODE(FailReason) == FAIL_OVERVOLT && failReasonOnTheBus() == FAIL_OVERVOLT);
+    CHECK(outputsOff());
+    cycles(5);
+    CHECK(CELL(OverVoltage) == 0U && MODE(BattSimStatus) == STATUS_FAIL); /* latched in BattSimMode */
+    backToStandby();
+    CHECK(MODE(BattSimStatus) == STATUS_STANDBY && MODE(FailReason) == FAIL_NONE);
+
+    /* a large step down of the setpoint that the output follows at once is no overvoltage (the actual value in the
+       status frame lags by the low-pass, the comparison uses the sample) */
+    setpointFrame123(ENABLE_ON, 4.8, 0U, 0.0, 0U, 0.0);
+    *adcIn[0] = pinMvFor(4.8);
+    goToRun();
+    cycles(100);
+    setpointFrame123(ENABLE_ON, 0.5, 0U, 0.0, 0U, 0.0);
+    *adcIn[0] = pinMvFor(0.5);
+    cycles(100);
+    CHECK(MODE(BattSimStatus) == STATUS_REMOTE && CELL(OverVoltage) == 0U);
+    /* the setpoint 0 V is a setpoint like any other: 0.25 V at the output of a released channel is too much */
+    setpointFrame123(ENABLE_ON, 0.0, 0U, 0.0, 0U, 0.0);
+    *adcIn[0] = pinMvFor(0.25);
+    cycles(11);
+    CHECK(MODE(BattSimStatus) == STATUS_FAIL && MODE(FailReason) == FAIL_OVERVOLT);
+    backToStandby();
+
+    /* not released (CELL02_ENABLE = 0) or outputs off (STOP): the voltage is none of our business */
+    setpointFrame123(ENABLE_ON, 3.0, 0U, 0.0, 0U, 0.0);
+    *adcIn[0]  = pinMvFor(3.0);
+    *adcIn[1]  = pinMvFor(4.5);
+    goToRun();
+    cycles(100);
+    CHECK(MODE(BattSimStatus) == STATUS_REMOTE && CELL(OverVoltage) == 0U);
+    controlFrame(REMOTE_REMOTE, MODE_ON, OUTPUT_DISABLE);
+    *adcIn[0] = pinMvFor(4.5);
+    cycles(100);
+    CHECK(MODE(BattSimStatus) == STATUS_REMOTE && MODE(OutputStatus) == 1U && CELL(OverVoltage) == 0U);
+    /* back to RUN with the high voltage still there: the count starts from nothing, 100 ms later FAIL */
+    controlFrame(REMOTE_REMOTE, MODE_ON, OUTPUT_ENABLE);
+    cycles(5);
+    CHECK(MODE(BattSimStatus) == STATUS_REMOTE);
+    cycles(10);
+    CHECK(MODE(BattSimStatus) == STATUS_FAIL && MODE(FailReason) == FAIL_OVERVOLT);
+    CHECK(outputsOff());
+    backToStandby();
+    *adcIn[0]              = 0U;
+    *adcIn[1]              = 0U;
+    CELL(ControllerOffReq) = 1U;
+}
+
 int main(void)
 {
     BattSimMode_Init();
@@ -1015,6 +1170,8 @@ int main(void)
     stagedValuesAreTakenOverOnRequestWithOutputsOff();
     calibrationActsOnTheChannel();
     regulatorCorrectsWithinItsAuthority();
+    invalidCurrentMeasurementSwitchesOffInRun();
+    overvoltageOfAChannelSwitchesOffEverything();
     printf("%d checks, %d failures\n", checks, failures);
     return (failures == 0) ? 0 : 1;
 }

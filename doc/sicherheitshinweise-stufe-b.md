@@ -45,6 +45,9 @@ aus, bleibt die Ueberlasterkennung (FAIL Grund 3) damit unwirksam und der Ausfal
 (Fail-safe Abschalten, Meldung, Entprellzeit) wird in der **Safety-Bewertung von Stufe C** entschieden. Bis dahin ist das
 ein offener Punkt, der nicht durch eine Zwischenloesung im Kundenprojekt umgangen wird.
 
+**Entschieden am 30.10.2026 (Review Stufe C, C-1 a):** In RUN laenger als 200 ms ungueltig fuehrt zu FAIL Grund 5, die Ausgaenge sind im
+selben Schritt aus. Umsetzung und Grenzen: `sicherheitshinweise-stufe-c.md`, Abschnitt 2.
+
 ## 3. Alive-Zaehler der Steuerbotschaften (bs-alive-rx b)
 
 Alle neun Steuerbotschaften (0x130, 0x100 bis 0x105, 0x131, 0x132) werden beim Empfang auf einen Alive-Zaehler **1..14**

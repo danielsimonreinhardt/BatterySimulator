@@ -2,7 +2,8 @@
 
 Stand: 30.10.2026, Zweig `stufe-c-kalibrierung`, neXtBSW dev `e70ea7b8`. Gilt fuer den **Schreibtischteil** der Stufe C
 (Konzept BS-4, FW-06, FW-07, FW-13, FW-14). Nichts davon ist am Geraet gelaufen. Die Safety-Bewertung (Review B-2, FW-17 und die
-Punkte C-1 bis C-7) steht im Review-Artefakt "Review BattSim Stufe C"; was dort entschieden wird, tragen wir hier nach.
+Punkte C-1 bis C-7) steht im Review-Artefakt "Review BattSim Stufe C" und ist am 30.10.2026 mit a entschieden; die Umsetzung von C-1
+(FAIL Grund 5) und C-2 (FAIL Grund 6) und der offene Punkt C-7 stehen in `sicherheitshinweise-stufe-c.md`.
 
 ## 1. Datenfluss
 
@@ -80,6 +81,13 @@ Die Korrektur und der Integralanteil sind auf +-`CtrlLimit_V` (0,1 V) geklemmt (
 Sonst ist die Korrektur 0 und der Integralanteil geloescht. Meldet die Versorgung LIMIT, **steht** der Regler: die Korrektur bleibt, der
 Integralanteil bewegt sich nicht. 0x121 `BATTSIM_CONTROLLER_ON` zeigt, ob der Regler nicht abgeschaltet ist.
 
+**Schutzabschaltungen (Review C-1 und C-2)**, unabhaengig vom Regler und von der Diagnose:
+
+* Strommessung (`ISupplyQlf`) 200 ms am Stueck ungueltig: in RUN FAIL, 0x121 `BATTSIM_FAIL_REASON` = 5, Ausgaenge im selben Schritt aus
+  (`SupplyMonitor.CurrentInvalid`, Parameter `CurrentInvalid_cycles`). Von STOP nach RUN wird mit ungueltiger Messung direkt FAIL.
+* Freigegebener Kanal 100 ms am Stueck mehr als 0,2 V ueber dem Sollwert (Abtastwert, nicht der tiefpassgefilterte Istwert): in RUN FAIL, Grund 6,
+  alle Ausgaenge aus (`CellChannels.OverVoltage`, Parameter `OverVoltThd_V`, `OverVoltTime_cycles`), einen 10-ms-Schritt spaeter als Grund 5.
+
 ## 5. Diagnose
 
 | Kennung | Inhalt | Lesen | Schreiben |
@@ -105,9 +113,13 @@ starten mit den Standardwerten: die Kalibrierung geht bei jedem Reset verloren, 
   defektem Speicher; Bereitlegen, Uebernehmen, Ablehnen, alles oder nichts, Grenzen inklusive), ihre Wirkung auf Tastgrad und Istwert, den
   Tastgrad-Deckel bei 5,0 V, und den Regler gegen eine Strecke (Verstaerkung 0,99, Offset -0,02 V, 0,25 s Tiefpass, ADC-Teiler):
   Ausregelung auf unter 4 mV, Begrenzung bei +-0,1 V, Stillstand bei LIMIT, keine Korrektur bei ungueltigem ADC, begrenztem Sollwert und Ausgang aus, Abschalten per
-  Diagnose.
+  Diagnose. Dazu die Schutzabschaltungen: ungueltige Strommessung (19 Abtastwerte keine Reaktion, ein gueltiger Wert loescht den Zaehler, der 20. fuehrt in
+  FAIL Grund 5 mit Ausgaenge-aus im selben Schritt, in STOP kein FAIL, STOP nach RUN mit ungueltiger Messung direkt FAIL) und Ueberspannung (0,15 V
+  nie, 0,25 V erst beim 10. Abtastwert, ungueltige Abtastwerte zaehlen nicht und loeschen nicht, grosser Sprung des Sollwerts nach unten ohne Fehlausloesung,
+  Sollwert 0 V, nicht freigegebener Kanal und Ausgang aus ohne Reaktion, Grund 6 auf dem Bus).
 * Nicht geprueft ohne Geraet: die Regelparameter an der echten Strecke, die Dauer eines NvM-Schreibens, das Verhalten nach einem Reset mit
-  partitioniertem FlexNVM, die UDS-Kette bis zur Zellkarte (Security-Schluessel, ISO-TP). Das ist der Geraeteteil.
+  partitioniertem FlexNVM, die UDS-Kette bis zur Zellkarte (Security-Schluessel, ISO-TP), und ob der echte Ausgang einem Sprung des Sollwerts
+  nach unten schnell genug folgt, damit die Ueberspannungserkennung (C-2) nicht falsch ausloest. Das ist der Geraeteteil.
 
 ## 8. Befunde zu neXtBSW (an den Koordinator gemeldet, im Kundenprojekt umgangen oder hingenommen)
 
