@@ -1,7 +1,7 @@
 """Host test of the components of battsim_master (software in the loop, no hardware).
 
 Generates the RTE of the project with tools/rtegen of the pinned neXtBSW tree into a temporary folder, compiles
-the C test (battsim_sil_test.c) together with the generated model code of SupplyMonitor, BattSimMode and CellChannels, the RTE and the
+the C test (battsim_sil_test.c) together with the generated model code of SupplyMonitor, BattSimMode, CellCal and CellChannels, the RTE and the
 CAN database code for the PC with zig cc, and runs it. Started by the test list of the workspace (ci/tests.yaml)
 from the workspace folder.
 """
@@ -17,7 +17,7 @@ from pathlib import Path
 WORKSPACE = Path(__file__).resolve().parents[3]
 TREE = WORKSPACE / "nextbsw"
 PROJECT = WORKSPACE / "projects" / "battsim_master"
-COMPONENTS = ["SupplyMonitor", "BattSimMode", "CellChannels"]
+COMPONENTS = ["SupplyMonitor", "BattSimMode", "CellCal", "CellChannels"]
 E2E = TREE / "libs" / "bsw" / "e2e"
 ALIVE_CONFIG = re.compile(
     r"E2E_AliveConfigType const (\w+)_ALIVE_CONFIG = \{/\* CounterBits \*/ (\d+)U, /\* MaxDeltaCounter \*/ (\d+)U, "

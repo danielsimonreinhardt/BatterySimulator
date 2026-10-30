@@ -37,10 +37,13 @@ tests:
     group: host
     kind: script
     comment: >
-      Software-in-the-Loop von SupplyMonitor, BattSimMode und CellChannels auf dem PC (Stufe B): erzeugter Modellcode,
+      Software-in-the-Loop von SupplyMonitor, BattSimMode, CellCal und CellChannels auf dem PC (Stufen B und C): erzeugter Modellcode,
       RTE von tools/rtegen und CAN-Datenbank des Projekts. Sollwert-Frame 0x100 -> Tastgrad (Kennlinie), Freigabe,
       Istwert, Timeout und Alive-Fehler von 0x130 -> Ausgaenge aus und FAIL im selben 10-ms-Schritt, Rueckkehr aus FAIL,
-      Ueberlast mit Hysterese, Tasten, LED, Lebenszeichen 1..14 und Statusbotschaft 0x121
+      Ueberlast mit Hysterese, Tasten, LED, Lebenszeichen 1..14 und Statusbotschaft 0x121;
+      Stufe C: Kalibrierung je Kanal (Start aus Werks-, gespeicherten und defekten Werten, Uebernahme per Anforderung nur bei Ausgang aus,
+      alles oder nichts, Grenzen), ihre Wirkung auf Tastgrad und Istwert, Tastgrad-Deckel bei 5,0 V, PI-Regler gegen eine Strecke
+      (Genauigkeit, Begrenzung, Stillstand bei LIMIT, Abschalten) und BATTSIM_CONTROLLER_ON
     args: [projects/battsim_master/test/test_battsim_sil.py, projects/battsim_master/test/battsim_sil_test.c]
     covers:
       - projects/battsim_master/test/test_battsim_sil.py
