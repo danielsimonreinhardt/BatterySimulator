@@ -222,7 +222,7 @@ CM_ SG_ 256 CELL01_VOLTAGE_SET "Zellspannungs-Vorgabe";
 CM_ SG_ 289 ALIVE_STATUS_BATTSIM_EXT "Lebenszeichen, +1 je Senden";
 CM_ SG_ 289 BATTSIM_OVERLOAD "Ueberlast 48 V";
 CM_ SG_ 289 BATTSIM_LIMIT "LIMIT-Leitung";
-CM_ SG_ 289 BATTSIM_CONTROLLER_ON "Regler ein (bis Stufe C fest 0)";
+CM_ SG_ 289 BATTSIM_CONTROLLER_ON "Spannungsregler der Kanaele: 1 = arbeitet, 0 = per Diagnose abgeschaltet (nach jedem Start 1)";
 CM_ SG_ 289 BATTSIM_FAIL_REASON "Grund des FAIL-Zustands";
 CM_ SG_ 289 QLF_CONTROL_CELL01_02_03 "Qualifier CONTROL_CELL01_02_03: 1 = gueltig (Timeout nicht abgelaufen)";
 CM_ SG_ 289 QLF_CONTROL_CELL04_05_06 "Qualifier CONTROL_CELL04_05_06: 1 = gueltig (Timeout nicht abgelaufen)";
