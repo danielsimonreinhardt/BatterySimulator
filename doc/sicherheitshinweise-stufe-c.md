@@ -126,9 +126,18 @@ Board: `bs-stufec-flexnvm` a (Partition mit 20 Schluesselplaetzen, kein LOAD_KEY
 * Zeit bis unter Sollwert + 0,2 V nach dem Sprung (vom Abfallbeginn, 4,0 V): 1,0 V Sollwert 43 ms (unter 1,2 V bei +31,5 ms nach dem Trigger bei 2,5 V, Abfallbeginn
   -11,8 ms); 0,5 V Sollwert: 0,7 V nach 47 ms, bleibt dort an der Schwelle.
 
-### 6.5 Offen
+### 6.5 Provisionierung und Kalibrierung per UDS (Board `battsim-provisionierung` a, 30.10.2026)
 
-* Schritt 5 (Kalibrierung per UDS schreiben, Routine 0x0200, Erhalt nach Reset) ist nicht gelaufen: Das Geraet ist nicht provisioniert (kein Key-Record im Key-Sektor),
-  `27 01` antwortet NRC 0x22. Es gibt keinen Master-Key `battsim_master_v1` im Schluesselspeicher. Entscheidung im Board `battsim-provisionierung`
-  (keygen und provision.py). Bis dahin laeuft Stufe C mit Werks-Kalibrierung (22 0210 = 1 STORED, die Werkswerte hat der NvM nach der Partition
-  aufgenommen und ueber Resets behalten).
+* Master-Key `battsim_master_v1` mit `canflash keygen` im Schluesselspeicher des Nutzers angelegt (nichts ueberschrieben):
+  `C:\Users\danie\AppData\Local\neXtBSW\keys\battsim_master_v1.key`. **Der Nutzer muss ihn ausserhalb des PCs sichern**; ohne ihn laesst sich das
+  Geraet nicht mehr ueber CAN entsperren und nicht ueber den Bootloader flashen (per J-Link geht es weiter).
+* Geraeteschluessel mit `provision.py --uid 000effffffffffff4e535161400e001b` per J-Link (1000 kHz, `loadfile` nur des Key-Sektors 0xFE000, kein Erase-Befehl, kein
+  Unlock, `verifybin` erfolgreich); die Datei mit dem Geraeteschluessel wurde danach geloescht. Kein CSEc-Schluessel, kein LOAD_KEY, kein Schreibschutz.
+* Schritt 5 an Kanal 1, Ausgang aus, kein Pruefling: `27 01/02` entsperrt. `2E 0201` mit Offset +10 mV, Steigung 1,0100 (`0064 2774 0000 2710`) wirkt erst nach der
+  Routine (`22 0201` danach unveraendert). `31 01 0200`, `31 03 0200` ergibt result 0 (angewendet), badChannel 0, `22 0201` zeigt die neuen Werte, `22 0210` = 1.
+* Reset per `11 01` (4 s nach der Routine, der NvM schreibt 2 s nach der Aenderung): `22 0201` zeigt weiter `0064 2774 0000 2710`, `22 0210` = 1, `22 0211` = 0 (Regler nach dem
+  Start an). Die Kalibrierung bleibt ueber den Reset erhalten, die Partition traegt.
+* Wirkung bei 3,0 V, Regler per `2E 0211 01` aus (0x121 `BATTSIM_CONTROLLER_ON` = 0; der Rueckleseversuch im selben 10-ms-Zyklus zeigt noch den alten Wert):
+  Testkalibrierung ADC-Istwert 3,0402 V (n = 200), Werkskalibrierung 3,0001 V; Unterschied **+40,1 mV**, wie berechnet (1,01 * 3,0 + 0,01 V Befehl). PicoScope (Mittel 0,1 s,
+  Aufloesung 0,04 V): 3,015 V gegen 2,987 V, Unterschied +28 mV, im Rahmen der Aufloesung.
+* Danach Werkswerte (`0000 2710 0000 2710`) geschrieben und uebernommen, Regler per `2E 0211 00` wieder an (`22 0211` = 0), Standby, Ausgaenge aus.
