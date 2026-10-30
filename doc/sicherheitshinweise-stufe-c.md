@@ -203,3 +203,64 @@ nicht vom Regler ab. Waehrend der Haltezeit regelt der Kanal nicht, er folgt nur
   mehr als 0,99 V (vorher mehr als 0,95 V) und prueft das Stillstehen des Tastgrads ueber alle 50 Zyklen.
 * **Nicht geflasht.** Das passiert beim naechsten Geraetetermin mit eigener Freigabe, zusammen mit den Messungen mit Last. Offen bleiben dort: Pegelboden und Schwellen mit Last, C-1 und C-2 am Geraet
   ausloesen (bisher nur im SIL-Test), analoge Abschaltzeit mit der neuen Firmware, Nachmessung R-1 mit 500 ms, C-7 (Pull-ups an SET/EN und wiederholte Reset-Messung).
+
+## 10. Termin 0.3.2 mit Last (30.10.2026, Board `bs-termin-032-last` a, main 9223da8)
+
+Aufbau: J-Link, CANcaseXL Ch2, PicoScope A an Zelle 1 (10:1), kein Pruefling. Die Widerstaende 100 Ohm und 1 kOhm wurden vom Nutzer jeweils nur bei laufendem Master im Standby an Zelle 1
+angesteckt und abgezogen (AoU S-1 a); waehrend einer Last gab es keinen J-Link-Lauf, keinen Reset und kein Aus/Ein der Versorgung. Dem Nutzer ist ein Tastkopf waehrend der ersten 100-Ohm-Messung
+verrutscht (Scope zeigte 0 V); die Messung wurde nach dem Anschliessen wiederholt.
+
+### 10.1 Flash und Abschaltzeit (ohne Last)
+
+* Backup des laufenden Stands (0.3.1) `pflash_stufec_031_0x00000000_1M.bin`. Nur App und Record geflasht (2 Sektoren), Rueckgelesen: Bootloader, App, Record 0 Abweichungen, Key-Sektor und FCF unveraendert.
+  0x121 meldet Firmware **0.3.2**.
+* Abschaltzeit: 28 Laeufe: FAIL-Entscheidung nach der letzten 0x130 zwischen **299,8 und 307,4 ms** (die Obergrenze ist das kleinste "erste FAIL" aller Laeufe; 0.3.1 mit gleicher Logik: 299,7 bis 304,5 ms).
+  Analoger Abfall an Zelle 1 (3,69 V auf unter 0,5 V): 4,06 und 4,17 ms. Die 310 ms (S-2) sind mit diesen Daten nicht strikt belegt, weil die Statusbotschaft nur alle 100 ms kommt; erwartet sind 300 bis 310 ms
+  plus 4 ms.
+
+### 10.2 Versorgungsstrom (0x121, 48 V), alle 14 Kanaele, Ausgang ein
+
+* Standby und Fernsteuerung ohne Ausgang **0,216 A**; Ausgang ein, kein Kanal freigegeben 0,216 A (nach den Stufen 0,244 A, waermebedingt).
+* Alle Kanaele freigegeben, ohne Last: 0,6 V 0,266 A, 1,0 V 0,273 A, 2,0 V 0,272 A, 3,7 V 0,272 A, 4,8 V 0,271 A. Mit 100 Ohm an Zelle 1: 0,267 / 0,275 / 0,276 / 0,281 / 0,282 A.
+  Nur Zelle 1 freigegeben: 0,220 A (0,3 V) bis 0,231 A (4,8 V) mit 100 Ohm, 0,220 bis 0,222 A mit 1 kOhm.
+* Grundlage fuer eine Mindeststrom-Schwelle der Plausibilitaetspruefung der Strommessung: Der Ruhestrom liegt immer ueber 0,2 A, eine tote Messung (0 A) ist daher mit einer Schwelle von etwa 0,1 A sicher erkennbar.
+
+### 10.3 Pegelboden und Spannungsabfall mit Last (Zelle 1)
+
+| Sollwert | ohne Last (ADC) | 100 Ohm: ADC / Scope | 1 kOhm: ADC / Scope |
+|---|---|---|---|
+| 0,3 V | 0,707 (Boden) | 0,297 / 0,268 | 0,330 / - |
+| 0,5 V | 0,707 (Boden) | 0,491 / 0,445 | 0,491 / 0,466 |
+| 0,7 V | - | 0,700 / 0,642 | 0,700 / 0,678 |
+| 1,0 V | 0,999 | 0,999 / 0,88 bis 0,89 | 1,000 / - |
+| 2,0 V | 2,000 | 2,000 / 1,863 | 2,001 / - |
+| 3,7 V | 3,701 | 3,701 / 3,455 | 3,701 / 3,626 |
+| 4,8 V | 4,801 | 4,801 / 4,510 | 4,801 / 4,732 |
+
+* **Der Pegelboden von 0,70 V tritt nur ohne Last auf.** Schon mit 1 kOhm (0,3 bis 5 mA) folgt der Ausgang dem Sollwert bis 0,3 V. Der Boden ist ein Befund der unbelasteten Endstufe; mit Last kann er nur sinken.
+  C-2 loeste mit keiner Last bei keinem Sollwert aus, Status 4 meldet unter 0,7 V weiter "Sollwert unter Pegelboden", auch wenn die Spannung stimmt (Hinweis, kein FAIL).
+* **Spannungsabfall zwischen ADC-Abgriff und Klemmen:** Die Klemmenspannung liegt unter Last unter dem ADC-Wert (und damit unter dem Sollwert, auf den der Regler den ADC-Wert ausregelt): 0,03 bis 0,06 V bei 3 bis 7 mA, 0,11 bis 0,14 V bei
+  10 bis 20 mA, 0,25 V bei 37 mA, 0,29 V bei 48 mA, entsprechend etwa 5 bis 7 Ohm (Scope-Fehler von etwa 0,03 V eingerechnet). Mit 1 kOhm: 0,02 bis 0,03 V (0,5 bis 0,7 mA), 0,07 V (4 bis 5 mA). Der Regler sieht diesen Abfall nicht.
+  Fuer einen Pruefling mit Eingangsstrom im uA- bis mA-Bereich bleibt die Abweichung unter etwa 0,05 V.
+
+### 10.4 R-1 mit Last (Sprung 4,8 V auf 1,0 V)
+
+* 0.3.2 mit 500 ms Haltezeit und 100 Ohm: ADC (gefiltert) Minimum **0,971 V (-0,029 V)**; 0.3.1 mit 300 ms ohne Last: 0,9645 V. Die Verlaengerung der Haltezeit bringt kaum etwas, obwohl der SIL 0,997 V voraussagt.
+  Das spricht dagegen, dass allein das Nachhaengen des Filters schuld ist. Vermutete Ursache: Waehrend der Haltezeit bleibt die Korrektur des **alten Arbeitspunktes** (4,8 V) stehen und wird auf 1,0 V angewendet (am Geraet rund -0,03 V,
+  im SIL ist die Strecke ideal und die Korrektur 0).
+  Am Scope: die Spannung faellt unter 1,2 V nach 32 ms, unter 1,0 V nach 60 ms, Minimum 0,874 V und Endwert 0,88 bis 0,89 V (der Abstand zum Sollwert kommt vom Spannungsabfall an der Last, 10.3).
+* **Vorschlag (nicht umgesetzt):** Bei einem Sollwertsprung Korrektur und Integralanteil des Kanals auf 0 setzen und fuer die Haltezeit auf 0 lassen (statt stehen zu lassen); dazu eine SIL-Strecke mit Verstaerkungs- und Offsetfehler.
+  Das aendert die Logik von R-1 und braucht eine eigene Entscheidung.
+
+### 10.5 C-2 am Geraet ausgeloest (ohne Last, ohne Eingriff)
+
+* Kanal 1 per UDS auf Messen 1,1000 (`11000`) und +0,2 V (`2000`) gesetzt, Routine 0x0200 (Ergebnis 0). Sollwert 3,0 V, Ausgang ein: Die Firmware rechnet 1,1 * 3,0 + 0,2 = 3,5 V.
+* Scope (Kanal 1, Einzeltrigger 1,5 V steigend): Die echte Spannung steigt auf etwa 3,05 V (kein echter Ueberspannungsfall) und wird **etwa 135 ms nach dem Durchgang durch 1,5 V, etwa 155 ms nach dem Einschalten**, abgeschaltet.
+  CAN: 0x120 FAIL (5) mit Ausgang 1 und 0x121 **FAIL-Grund 6** beim ersten Status nach 203 ms, alle Ausgaenge aus. Erwartet waren etwa 110 ms plus das Anlaufen der Spannung (die Bedingung ist erst ab etwa 2,7 V wahr); passt.
+* Danach Werkswerte (`0000 2710 0000 2710`) zurueckgeschrieben und uebernommen, Standby, Ausgaenge aus.
+
+### 10.6 C-1 und Grenze der Strommessung
+
+* C-1 laesst sich ohne Eingriff nicht ausloesen: `I_SUPPLY` ist in `boards/battsim_master_v1/board.yaml` ein normaler skalierter ADC-Kanal (Faktor 1, keine Sensorgrenzen). `adc.qlf.I_SUPPLY` wird nur ungueltig, wenn die ADC-Wandlung selbst
+  scheitert; Rohwert 0 oder Vollausschlag (offener oder kurzgeschlossener Shunt) geben nur bei Sensorkanaelen QLF_ERROR_RANGE (nextbsw `doc/architecture/signal-qualifier.md`, IO-18). Ein Draht- oder Shuntfehler
+  macht die Strommessung also **gueltig, aber falsch**; das faengt C-1 nicht (Review `bs-c1-strommessung`).
