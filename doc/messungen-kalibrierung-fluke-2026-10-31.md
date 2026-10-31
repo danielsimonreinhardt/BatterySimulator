@@ -60,11 +60,36 @@ Geschrieben per UDS (`2E 0201`..`020E`, Stellpfad = Werkswert `0000 2710`), übe
 
 Mit eingeschaltetem Regler (Standard nach dem Start) liegt die Ausgangsspannung damit bei beiden geprüften Zellen innerhalb der Ablesung (1 mV) auf dem Sollwert.
 
-## 5. Offen
+## 5. Offen (Stand nach Abschnitt 6)
 
-* **Stellpfad (Vorsteuerung)** nicht kalibriert: Ohne Regler liegt der Ausgang bei 1,0 V bei allen Zellen 25 bis 40 mV unter dem Sollwert, bei 4,2 V zwischen −17 und +49 mV. Zwei-Punkt-Werte
-  daraus wären Steigung 0,977..0,993 und Offset +41..+51 mV (alle innerhalb der Grenzen). Im Betrieb gleicht der Regler (Grenze ±0,1 V)
-  das aus; die Kalibrierung der Vorsteuerung verbessert nur das Einschwingen und die Reglerreserve.
+* Der Stellpfad ist in Abschnitt 6 kalibriert (Board `bs-stellpfad-kalibrierung` a).
 * Nur zwei Punkte (1,0 und 4,2 V) und nur zwei Kanäle in der Gegenprobe; keine Messung bei Last und keine Temperaturabhängigkeit.
 * Beobachtung während der Aufwärmphase: Die Ausgänge fielen nach einem kurzen Ausbleiben von 0x130 (Status 14:29:38 für etwa 1,3 s weg) in den sicheren Zustand (FAIL-Grund 1, Timeout 0x130).
   Das Gerät reagierte wie vorgesehen; Wiederanlauf mit `BS_RESET_FAIL` und danach `BS_OUT_ON`. Auslöser wahrscheinlich Rechnerlast (ein Build einer anderen Sitzung), nicht nachgewiesen.
+
+## 6. Kalibrierung des Stellpfads (Board `bs-stellpfad-kalibrierung` a, Abend des 31.10.)
+
+Aus denselben Fluke-Messungen (Regler aus, Werks-Stellpfad): `Fluke = a * Soll + b` je Kanal, daraus `SetSteigung = 1/a`, `SetOffset = −b/a`. Das ist unabhängig vom Messpfad. Geschrieben für alle 14 Kanäle
+(zusammen mit den Messpfad-Werten aus Abschnitt 3, die sechs unkalibrierten Kanäle mit Werks-Messwerten), Routine 0x0200 Ergebnis 0, Reset `11 01`, danach alle Werte erhalten (Zustand 1).
+
+| Zelle | SetOffset (0,1 mV) | SetSteigung (1e-4) | Zelle | SetOffset (0,1 mV) | SetSteigung (1e-4) |
+|---|---|---|---|---|---|
+| 1 | +470 | 9886 | 8 | +463 | 9883 |
+| 2 | +469 | 9929 | 9 | +408 | 9919 |
+| 3 | +489 | 9877 | 10 | +482 | 9792 |
+| 4 | +447 | 9828 | 11 | +465 | 9810 |
+| 5 | +470 | 9774 | 12 | +476 | 9849 |
+| 6 | +512 | 9822 | 13 | +426 | 9901 |
+| 7 | +427 | 9819 | 14 | +456 | 9849 |
+
+Gegenprobe (Regler aus, Fluke, Zelle 5 und Zelle 6, vorher Ist−Soll 1,0 V: −25 / −34 mV, 4,2 V: +49 / +24 mV):
+
+| Sollwert | Zelle 5 | Zelle 6 |
+|---|---|---|
+| 1,0 V | Fluke 0,999 (ADC 0,9976) | Fluke 0,999 (ADC 1,0011) |
+| 4,2 V | Fluke 4,196 (ADC 4,1962) | Fluke 4,197 (ADC 4,1990) |
+
+Der Ausgang ohne Regler liegt damit an den beiden geprüften Zellen innerhalb von 1 mV (1,0 V) und 4 mV (4,2 V) auf dem Sollwert, im Bereich der Ablesegenauigkeit des Fluke. Die ADC-Werte aller 14 Zellen ohne Regler
+bei 1,0 V lagen zwischen 0,9971 und 1,0091 V, bei 4,2 V zwischen 4,1906 und 4,2037 V. Zum Ausgang an den übrigen zwölf Zellen gibt es keine Fluke-Ablesung.
+
+Während der ersten Gegenprobe fiel der Ausgang wieder in FAIL "Timeout 0x130" (Rechnerlast: zwei vergessene `find`-Läufer, einer davon aus dieser Sitzung); nach deren Ende blieb er stabil.
