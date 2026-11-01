@@ -30,11 +30,15 @@ typedef struct {
   float32 CalMeasOffset_V[Rte_SysCon_CellCount];/* '<Root>/CalMeasOffset_V' */
   float32 CalMeasGain[Rte_SysCon_CellCount];/* '<Root>/CalMeasGain' */
   sint16 NvSetOffsetOut[Rte_SysCon_CellCount];/* '<Root>/NvSetOffsetOut' */
+  sint16 AcSetOffset[Rte_SysCon_CellCount];/* '<Root>/AcSetOffset' */
   sint16 NvMeasOffsetOut[Rte_SysCon_CellCount];/* '<Root>/NvMeasOffsetOut' */
+  sint16 AcMeasOffset[Rte_SysCon_CellCount];/* '<Root>/AcMeasOffset' */
   sint16 aSO[14];                      /* '<S1>/CalCore' */
   sint16 aMO[14];                      /* '<S1>/CalCore' */
   uint16 NvSetGainOut[Rte_SysCon_CellCount];/* '<Root>/NvSetGainOut' */
+  uint16 AcSetGain[Rte_SysCon_CellCount];/* '<Root>/AcSetGain' */
   uint16 NvMeasGainOut[Rte_SysCon_CellCount];/* '<Root>/NvMeasGainOut' */
+  uint16 AcMeasGain[Rte_SysCon_CellCount];/* '<Root>/AcMeasGain' */
   uint16 aSG[14];                      /* '<S1>/CalCore' */
   uint16 aMG[14];                      /* '<S1>/CalCore' */
   uint8 last;                          /* '<S1>/CalCore' */

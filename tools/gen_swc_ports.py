@@ -1,10 +1,11 @@
 # SPDX-License-Identifier: Apache-2.0
 """swc.yaml, <Swc>_data.m and the connections of rte.yaml of battsim_master from one port table (BattSimFW).
 
-The 14 cell channels have one port per signal (CAN signal, ADC channel, pin), and the calibration of the channels has
-one scalar port per value for the diagnosis (a data identifier element serves one scalar port, rtegen _diag_scalar):
-that is hundreds of lines of the same shape. This script writes them, so that the table below is the one place that says
-what a channel has. The models (<Swc>_create.m) and the diagnostic description (diag.yaml, between the markers) follow it.
+The 14 cell channels have one port per signal (CAN signal, ADC channel, pin): hundreds of lines of the same shape. This
+script writes them, so that the table below is the one place that says what a channel has. The calibration of the channels
+has one vector port per kind of value (four kinds, 14 channels each, RTE-57: a data identifier element is a field of 14
+values served by one vector port). The models (<Swc>_create.m) and the diagnostic description (diag.yaml, between the
+markers) follow the table.
 
     python tools/gen_swc_ports.py     # rewrites the four swc.yaml, the data files, the connections of rte.yaml and the
                                       # calibration identifiers of diag.yaml
@@ -43,7 +44,7 @@ CAL = [  # (key, port stem, wire type, element label, factor, min, max, default 
 ]
 PORT_TYPE = {"int16": "sint16", "uint16": "uint16"}
 PHYS = {"SetOffset": "CalSetOffset_V", "SetGain": "CalSetGain", "MeasOffset": "CalMeasOffset_V", "MeasGain": "CalMeasGain"}
-CAL_DID_BASE = 0x0200          # 0x0201 .. 0x020E: channel 1 .. 14
+CAL_DID = 0x0201               # one identifier: four fields (SetOffset, SetGain, MeasOffset, MeasGain) of 14 values, channel 1 first
 
 components = {}     # name -> dict(description, runnable, ports, params)
 connections = {}    # "Comp.Port.Port" -> target (string or list)
@@ -112,21 +113,20 @@ for v, msg in zip(vnames, QLF_MSGS):
 for part in ("Major", "Minor", "Patch"):
     port(c, f"FwVersion{part}", "out", "uint8", f"can.tx.STATUS_BATTSIM_EXT.FW_VERSION_{part.upper()}")
 param(c, "VersionMajor", "uint8", [0], "firmware version of 0x121")
-param(c, "VersionMinor", "uint8", [3], "firmware version of 0x121 (0.3.4: initial values of the calibration ports, RTE-56; 0.3.3: stage C, plausibility check of the current measurement; 0.3.2: regulator hold 500 ms; 0.2.0 was stage B)")
-param(c, "VersionPatch", "uint8", [4], "firmware version of 0x121")
+param(c, "VersionMinor", "uint8", [4], "firmware version of 0x121 (0.4.0: the calibration identifier 0x0201 holds all 14 channels, vector ports, RTE-57; 0.3.4: initial values of the calibration ports, RTE-56; 0.3.3: stage C, plausibility check of the current measurement; 0.3.2: regulator hold 500 ms; 0.2.0 was stage B)")
+param(c, "VersionPatch", "uint8", [0], "firmware version of 0x121")
 param(c, "ButtonDebounce_cycles", "uint8", [3], "[10 ms] a key level counts after this many equal samples")
 
 # ------------------------------------------------------------------ CellCal (stage C)
 c = "CellCal"
 components[c] = dict(description="Kalibrierung der Zellkanaele: Werte per Diagnose uebernehmen (nur bei Ausgang aus), im NvM halten, an CellChannels geben",
                      runnable="CalTask10ms", ports=[], params=[])
-port(c, "OutputsOn", "in", "boolean", "BattSimMode.OutputEnable.OutputEnable", "outputs enabled (a port of another name than CellChannels.OutputEnable: RTE-49, same-named required ports of two components collide in the headers)")
+port(c, "OutputEnable", "in", "boolean", "BattSimMode.OutputEnable.OutputEnable", "outputs enabled (the same name as the port of CellChannels and the provided port of BattSimMode: allowed since RTE-49)")
 port(c, "ApplyRequest", "in", "uint8", "routine.ApplyCalibration.start", "counts the requests of the routine ApplyCalibration (31 01)")
 for key, stem, wire, label, factor, lo, hi, default, unit in CAL:
     ptype = PORT_TYPE[wire]
-    for n in CH:
-        nn = f"{n:02d}"
-        port(c, f"St{stem}{nn}", "in", ptype, f"did.CalCh{nn}.{key}", "staged value written by the tester (2E)")
+    port(c, f"St{stem}", "in", ptype, f"did.CalValues.{key}", "staged values of the 14 channels written by the tester (2E 0201, all kinds at once)",
+         dimension="CellCount")
     port(c, f"Nv{stem}In", "in", ptype, f"nvm.Cal{stem}", "stored value", dimension="CellCount")
     port(c, f"Nv{stem}Qlf", "in", "uint8", f"nvm.qlf.Cal{stem}")
 for key, stem, wire, label, factor, lo, hi, default, unit in CAL:
@@ -137,10 +137,8 @@ for key, stem, wire, label, factor, lo, hi, default, unit in CAL:
     init_code = {"init": default} if default else {}
     init_phys = {"init": round(default * factor, 6)} if default else {}
     port(c, f"Nv{stem}Out", "out", ptype, f"nvm.Cal{stem}", "value to store", dimension="CellCount", **init_code)
-    for n in CH:
-        nn = f"{n:02d}"
-        port(c, f"Ac{stem}{nn}", "out", ptype, ["rte", f"did.CalCh{nn}.{key}"], "value in use (read back by the tester, 22)",
-             **init_code)
+    port(c, f"Ac{stem}", "out", ptype, ["rte", f"did.CalValues.{key}"], "values in use of the 14 channels (read back by the tester, 22 0201)",
+         dimension="CellCount", **init_code)
     port(c, PHYS[key], "out", "float32", None, "value in use, physical, for CellChannels", dimension="CellCount", **init_phys)
 port(c, "ApplyResult", "out", "uint8", ["rte", "routine.ApplyCalibration.results.result"])
 port(c, "ApplyBadChannel", "out", "uint8", ["rte", "routine.ApplyCalibration.results.badChannel"])
@@ -280,33 +278,33 @@ print("connections", len(out) - 1)
 BEGIN = "  # ---- begin generated by tools/gen_swc_ports.py: calibration of the cell channels (stage C) ----"
 END = "  # ---- end generated by tools/gen_swc_ports.py ----"
 did = [BEGIN]
-for n in CH:
-    nn = f"{n:02d}"
-    did += [
-        f"  - identifier: 0x{CAL_DID_BASE + n:04X}",
-        f"    name: CalCh{nn}",
-        f"    label: Calibration of cell channel {n}",
-        "    description: >-",
-        f"      Offset and gain for the setpoint and for the actual value of channel {n} (y = gain * x + offset). Reading gives",
-        "      the values in use; writing stages new values, which take effect only with the routine ApplyCalibration",
-        "      (outputs off).",
-        "    group: calibration",
-        "    read: true",
-        "    read_sessions: [Default, Extended]",
-        "    write: true",
-        "    write_sessions: [Extended]",
-        "    write_security: Application",
-        "    data:"]
-    for key, stem, wire, label, factor, lo, hi, default, unit in CAL:
-        did += [f"      - name: {key}",
-                f"        label: {label}",
-                f"        type: {wire}",
-                f"        factor: {factor}"]
-        if unit:
-            did.append(f"        unit: {unit}")
-        did += [f"        min: {lo}",
-                f"        max: {hi}",
-                f"        source: {{port: CellCal.Ac{stem}{nn}.Ac{stem}{nn}}}"]
+did += [
+    f"  - identifier: 0x{CAL_DID:04X}",
+    "    name: CalValues",
+    "    label: Calibration of the cell channels",
+    "    description: >-",
+    "      Offset and gain for the setpoint and for the actual value of the 14 channels (y = gain * x + offset), four fields of",
+    "      14 values each, channel 1 first: SetOffset, SetGain, MeasOffset, MeasGain (112 bytes). Reading gives the values in",
+    "      use; writing stages new values for all channels at once (read first and write back the unchanged channels), which",
+    "      take effect only with the routine ApplyCalibration (outputs off).",
+    "    group: calibration",
+    "    read: true",
+    "    read_sessions: [Default, Extended]",
+    "    write: true",
+    "    write_sessions: [Extended]",
+    "    write_security: Application",
+    "    data:"]
+for key, stem, wire, label, factor, lo, hi, default, unit in CAL:
+    did += [f"      - name: {key}",
+            f"        label: {label}",
+            f"        type: {wire}",
+            f"        count: {len(CH)}",
+            f"        factor: {factor}"]
+    if unit:
+        did.append(f"        unit: {unit}")
+    did += [f"        min: {lo}",
+            f"        max: {hi}",
+            f"        source: {{port: CellCal.Ac{stem}.Ac{stem}}}"]
 did += [END]
 diag = PROJECT / "diag.yaml"
 text = diag.read_bytes().decode("utf-8")

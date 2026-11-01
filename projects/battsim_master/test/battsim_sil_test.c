@@ -8,11 +8,8 @@
 
 #include "CanDb.h"
 #include "CellCal.h"
-#include "Rte_BattSimMode.h"
-#include "Rte_CellCal.h"
-#include "Rte_CellChannels.h"
+#include "RteComponents.h" /* the full names of all components, no short-name macros: CellCal and CellChannels both have an OutputEnable (RTE-49) */
 #include "Rte_Internal.h"
-#include "Rte_SupplyMonitor.h"
 #include "e2e/E2E_Alive.h"
 
 #include <math.h>
@@ -217,7 +214,7 @@ static void startIsStandbyWithWatchdogReason(void)
     CHECK(MODE(FailReason) == FAIL_WATCHDOG);
     CHECK(outputsOff());
     CHECK(MODE(LedRemote) == 0U);
-    CHECK(MODE(FwVersionMajor) == 0U && MODE(FwVersionMinor) == 3U && MODE(FwVersionPatch) == 4U);
+    CHECK(MODE(FwVersionMajor) == 0U && MODE(FwVersionMinor) == 4U && MODE(FwVersionPatch) == 0U);
     /* the held setpoints of the CAN buffers do not act in STANDBY (FW-16) */
     setpointFrame123(ENABLE_ON, 3.7, ENABLE_ON, 3.7, ENABLE_ON, 3.7);
     cycles(5);
@@ -643,7 +640,7 @@ static void statusExtensionFrame(void)
     CHECK((data[0] & 0x20U) != 0U);           /* LIMIT */
     CHECK((data[0] & 0x40U) == 0U);           /* regulator switched off by the diagnosis (ControllerOffReq = 1 here) */
     CHECK((data[1] & 0x0FU) == 0U);           /* FAIL reason none */
-    CHECK(data[5] == 0U && data[6] == 3U && data[7] == 4U); /* version 0.3.4 */
+    CHECK(data[5] == 0U && data[6] == 4U && data[7] == 0U); /* version 0.4.0 */
     uint16_t current = (uint16_t)(data[3] | (data[4] << 8U));
     CHECK(current > 480U && current < 510U);   /* 0.5 A in 0.001 A */
     *controlQlf[5] = QLF_OK;
@@ -660,15 +657,21 @@ static void statusExtensionFrame(void)
     M(A, 01), M(A, 02), M(A, 03), M(A, 04), M(A, 05), M(A, 06), M(A, 07), M(A, 08), M(A, 09), M(A, 10), M(A, 11),      \
         M(A, 12), M(A, 13), M(A, 14)
 #define CALPTR(stem, nn) &CAL(stem##nn)
+/* RTE-57: the calibration ports are vector ports of 14 values (one element per channel); the tests below keep their view
+ * "one pointer per channel", now into the vector buffers */
+#define LISTV(M, A)                                                                                                    \
+    M(A, 0), M(A, 1), M(A, 2), M(A, 3), M(A, 4), M(A, 5), M(A, 6), M(A, 7), M(A, 8), M(A, 9), M(A, 10), M(A, 11),     \
+        M(A, 12), M(A, 13)
+#define VECPTR(stem, k) &CAL(stem)[k]
 
-static sint16* const stSetOff[14]   = {LIST14(CALPTR, StSetOffset)};
-static uint16* const stSetGain[14]  = {LIST14(CALPTR, StSetGain)};
-static sint16* const stMeasOff[14]  = {LIST14(CALPTR, StMeasOffset)};
-static uint16* const stMeasGain[14] = {LIST14(CALPTR, StMeasGain)};
-static sint16* const acSetOff[14]   = {LIST14(CALPTR, AcSetOffset)};
-static uint16* const acSetGain[14]  = {LIST14(CALPTR, AcSetGain)};
-static sint16* const acMeasOff[14]  = {LIST14(CALPTR, AcMeasOffset)};
-static uint16* const acMeasGain[14] = {LIST14(CALPTR, AcMeasGain)};
+static sint16* const stSetOff[14]   = {LISTV(VECPTR, StSetOffset)};
+static uint16* const stSetGain[14]  = {LISTV(VECPTR, StSetGain)};
+static sint16* const stMeasOff[14]  = {LISTV(VECPTR, StMeasOffset)};
+static uint16* const stMeasGain[14] = {LISTV(VECPTR, StMeasGain)};
+static sint16* const acSetOff[14]   = {LISTV(VECPTR, AcSetOffset)};
+static uint16* const acSetGain[14]  = {LISTV(VECPTR, AcSetGain)};
+static sint16* const acMeasOff[14]  = {LISTV(VECPTR, AcMeasOffset)};
+static uint16* const acMeasGain[14] = {LISTV(VECPTR, AcMeasGain)};
 
 /* curves of CellChannels_data.m (the table of the old firmware and the ADC divider) */
 static const double setAx[6]   = {0.0, 1.0, 2.0, 3.0, 4.0, 5.0};

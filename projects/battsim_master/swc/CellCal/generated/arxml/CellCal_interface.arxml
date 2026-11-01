@@ -3,19 +3,19 @@
 Auto generated XML Component Description for model CellCal
 Model version                : 1.2
 Simulink Coder version       : Simulink Coder 24.1 (R2024a) 19-Nov-2023
-Model Checksum               : 1872630003 3299259749 1725763829 2813168544
+Model Checksum               : 4055117618 476131315 3037568670 2090878096
 -->
 <AUTOSAR xmlns="http://autosar.org/schema/r4.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://autosar.org/schema/r4.0 AUTOSAR_00051.xsd">
     <AR-PACKAGES>
         <AR-PACKAGE>
             <SHORT-NAME>Interfaces</SHORT-NAME>
             <ELEMENTS>
-                <SENDER-RECEIVER-INTERFACE UUID="a99de889-5760-5efe-1e91-9709d1dfde24">
-                    <SHORT-NAME>OutputsOn</SHORT-NAME>
+                <SENDER-RECEIVER-INTERFACE UUID="c96c4e4e-8332-5194-fe6e-92e4f48ae3a9">
+                    <SHORT-NAME>OutputEnable</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="7635b1cc-29a4-5e7b-910d-8377bbb1b2ff">
-                            <SHORT-NAME>OutputsOn</SHORT-NAME>
+                        <VARIABLE-DATA-PROTOTYPE UUID="272c8e6c-4967-5342-326f-19a0ba2efa1b">
+                            <SHORT-NAME>OutputEnable</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
                                 <SW-DATA-DEF-PROPS-VARIANTS>
@@ -29,11 +29,11 @@ Model Checksum               : 1872630003 3299259749 1725763829 2813168544
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="6de31ce5-3e01-5565-6a9c-bf3096c06390">
+                <SENDER-RECEIVER-INTERFACE UUID="f017cc47-c29f-5d48-aa4d-a59a82e0c6a9">
                     <SHORT-NAME>ApplyRequest</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="e36cb903-1d3d-5410-c009-4c86563120d2">
+                        <VARIABLE-DATA-PROTOTYPE UUID="d0a63680-baea-5199-004c-3bbe830376cc">
                             <SHORT-NAME>ApplyRequest</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -48,13 +48,13 @@ Model Checksum               : 1872630003 3299259749 1725763829 2813168544
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="09a4639c-37e6-573e-3511-47372e90e1d8">
-                    <SHORT-NAME>StSetOffset01</SHORT-NAME>
+                <SENDER-RECEIVER-INTERFACE UUID="f3f7c1a1-e54c-56da-833e-ec90dd09c7b8">
+                    <SHORT-NAME>StSetOffset</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="6804b1ea-fc6c-5a01-7c34-39236f6c7862">
-                            <SHORT-NAME>StSetOffset01</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
+                        <VARIABLE-DATA-PROTOTYPE UUID="2c49aee2-cd9e-520b-ac36-c94e9260537d">
+                            <SHORT-NAME>StSetOffset</SHORT-NAME>
+                            <CATEGORY>ARRAY</CATEGORY>
                             <SW-DATA-DEF-PROPS>
                                 <SW-DATA-DEF-PROPS-VARIANTS>
                                     <SW-DATA-DEF-PROPS-CONDITIONAL>
@@ -63,262 +63,15 @@ Model Checksum               : 1872630003 3299259749 1725763829 2813168544
                                     </SW-DATA-DEF-PROPS-CONDITIONAL>
                                 </SW-DATA-DEF-PROPS-VARIANTS>
                             </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
+                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/rt_Array_sint16_CellCount</TYPE-TREF>
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="bb22f90c-e7f6-560e-1cf0-08ce5837edc2">
-                    <SHORT-NAME>StSetOffset02</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="a5fb0e07-75ab-5174-2a8f-57290a81e67e">
-                            <SHORT-NAME>StSetOffset02</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="38513937-4551-5c31-de36-042fc985e013">
-                    <SHORT-NAME>StSetOffset03</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="82a8fb4c-f11d-59a9-93cb-e7e491953eef">
-                            <SHORT-NAME>StSetOffset03</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="f88deae8-6143-5b38-a7d3-1ba2fdae9402">
-                    <SHORT-NAME>StSetOffset04</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="6accb9c5-31a1-5a2c-2c5d-3a5b5105c5cb">
-                            <SHORT-NAME>StSetOffset04</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="ee2cb2e6-dbfe-539d-7026-20eb136c531a">
-                    <SHORT-NAME>StSetOffset05</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="6ce02220-f25f-52a1-579c-d670ad550c7c">
-                            <SHORT-NAME>StSetOffset05</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="a6a73a32-8a56-5464-13b8-6c11344bc66a">
-                    <SHORT-NAME>StSetOffset06</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="e6155ef8-ba2d-5570-0222-72dddefc8926">
-                            <SHORT-NAME>StSetOffset06</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="510bb25e-9089-5cb8-fc03-285d04d7ab0d">
-                    <SHORT-NAME>StSetOffset07</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="0b6533c7-c4f2-5a58-2e19-a4645676092e">
-                            <SHORT-NAME>StSetOffset07</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="7c29e81f-a55c-5002-b7c0-6a4c1b6eb465">
-                    <SHORT-NAME>StSetOffset08</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="571e55ca-162d-56ee-bd28-70fdd455b75e">
-                            <SHORT-NAME>StSetOffset08</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="45b19584-b860-5364-8e23-1c3ed6e1fecf">
-                    <SHORT-NAME>StSetOffset09</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="906a99c2-89bc-562f-501e-062ba26bda4e">
-                            <SHORT-NAME>StSetOffset09</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="8aa7da19-ccfd-5fa3-f6f6-7efb399e62b9">
-                    <SHORT-NAME>StSetOffset10</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="9b219c0b-97cb-50c7-f006-1216ac2e9b23">
-                            <SHORT-NAME>StSetOffset10</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="d3cafc46-019c-5743-1308-96e0d479b0fb">
-                    <SHORT-NAME>StSetOffset11</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="786348ed-0949-5c7a-9d33-7e668b0940a1">
-                            <SHORT-NAME>StSetOffset11</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="dda5a744-08ac-5e9a-d044-72645179a014">
-                    <SHORT-NAME>StSetOffset12</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="98ff8a2d-f1a4-5b58-b756-88b25fbc7566">
-                            <SHORT-NAME>StSetOffset12</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="2b8cd7a8-71c6-5cf1-e389-070b658353d4">
-                    <SHORT-NAME>StSetOffset13</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="04a086ce-eca6-58b1-f174-0b5a0a0d0181">
-                            <SHORT-NAME>StSetOffset13</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="087240d9-dd78-5d3f-7368-02fd46459858">
-                    <SHORT-NAME>StSetOffset14</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="838199d9-bfb2-5c12-fbaf-f1ddde1ce612">
-                            <SHORT-NAME>StSetOffset14</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="fa38d45a-e27b-54d0-8c82-2b9e7cc81a0b">
+                <SENDER-RECEIVER-INTERFACE UUID="86be31de-0ff3-57d7-bba2-738859b0d29d">
                     <SHORT-NAME>NvSetOffsetIn</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="deb3880d-770c-5955-26fd-b4f8f33439b6">
+                        <VARIABLE-DATA-PROTOTYPE UUID="cdebc64f-c759-543a-4c77-3c52f2a742fe">
                             <SHORT-NAME>NvSetOffsetIn</SHORT-NAME>
                             <CATEGORY>ARRAY</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -333,11 +86,11 @@ Model Checksum               : 1872630003 3299259749 1725763829 2813168544
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="1c0439b6-e6ef-5bc5-9548-a1652b63d55c">
+                <SENDER-RECEIVER-INTERFACE UUID="556be673-a314-544f-ed9f-4ba01145641b">
                     <SHORT-NAME>NvSetOffsetQlf</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="1fc83991-b66e-517a-fc3a-54c95de36295">
+                        <VARIABLE-DATA-PROTOTYPE UUID="183401da-d5a3-5019-cac9-3e9d26de611d">
                             <SHORT-NAME>NvSetOffsetQlf</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -352,13 +105,13 @@ Model Checksum               : 1872630003 3299259749 1725763829 2813168544
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="b3ca0e35-19da-5396-78b0-bb9466617b61">
-                    <SHORT-NAME>StSetGain01</SHORT-NAME>
+                <SENDER-RECEIVER-INTERFACE UUID="ce173a5f-b7f1-55b9-60a3-2df98b9f10cf">
+                    <SHORT-NAME>StSetGain</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="9cec79f7-9cdf-5788-151a-847a19c4fd3b">
-                            <SHORT-NAME>StSetGain01</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
+                        <VARIABLE-DATA-PROTOTYPE UUID="7f719a61-da51-54f7-9a1f-3be0aa3039f4">
+                            <SHORT-NAME>StSetGain</SHORT-NAME>
+                            <CATEGORY>ARRAY</CATEGORY>
                             <SW-DATA-DEF-PROPS>
                                 <SW-DATA-DEF-PROPS-VARIANTS>
                                     <SW-DATA-DEF-PROPS-CONDITIONAL>
@@ -367,262 +120,15 @@ Model Checksum               : 1872630003 3299259749 1725763829 2813168544
                                     </SW-DATA-DEF-PROPS-CONDITIONAL>
                                 </SW-DATA-DEF-PROPS-VARIANTS>
                             </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
+                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/rt_Array_uint16_CellCount</TYPE-TREF>
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="57605969-53ae-58c7-e413-97a1f01bad40">
-                    <SHORT-NAME>StSetGain02</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="87e2ac14-9929-546b-5ca1-e0baf6f57be6">
-                            <SHORT-NAME>StSetGain02</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="b7787c09-8293-5921-2704-c38cf68c4435">
-                    <SHORT-NAME>StSetGain03</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="e726ac6b-ffb6-5eca-e7ca-250e2ae27f45">
-                            <SHORT-NAME>StSetGain03</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="7d5b7c24-11be-517d-3f54-1dbb3e5bd6bf">
-                    <SHORT-NAME>StSetGain04</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="55fed5c6-9337-5a22-9105-2bb2dbb8ed7f">
-                            <SHORT-NAME>StSetGain04</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="dcc4ce2e-5164-53bd-36b3-f8d5c5e9844d">
-                    <SHORT-NAME>StSetGain05</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="eb4bcbf2-7324-548e-ad21-253599d6429a">
-                            <SHORT-NAME>StSetGain05</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="1921ffcf-007a-5ab0-66df-54e16948ed78">
-                    <SHORT-NAME>StSetGain06</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="0d338fff-fc14-59b8-af8e-b66ef921ac11">
-                            <SHORT-NAME>StSetGain06</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="16cde9b5-f277-5862-dc85-236a12e3ec2c">
-                    <SHORT-NAME>StSetGain07</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="2767da83-cd71-5099-844d-15dca7ed5d15">
-                            <SHORT-NAME>StSetGain07</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="0b90a35f-73ba-59fc-7da1-340799b3b198">
-                    <SHORT-NAME>StSetGain08</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="10fa1eca-232b-557c-c706-87fafb50a855">
-                            <SHORT-NAME>StSetGain08</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="0fe8b66f-591a-5b9c-b799-95d8c28cc4b6">
-                    <SHORT-NAME>StSetGain09</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="081f84e8-7c4a-50b3-31e1-a29023d7165f">
-                            <SHORT-NAME>StSetGain09</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="506336a8-e4f0-50db-bfda-ff8eef3b675b">
-                    <SHORT-NAME>StSetGain10</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="fb3898ae-d63c-5125-ddd8-4b4da49c2437">
-                            <SHORT-NAME>StSetGain10</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="9660d355-d162-50ce-6f47-19bb33b97e0c">
-                    <SHORT-NAME>StSetGain11</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="2ef67c1c-8f6e-56de-b091-d07cc43682a0">
-                            <SHORT-NAME>StSetGain11</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="e7ebd9b8-4727-5867-7640-5524171d4e49">
-                    <SHORT-NAME>StSetGain12</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="b23c157d-5c6e-5470-4bff-8e121f3bd77b">
-                            <SHORT-NAME>StSetGain12</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="190d807f-60be-5b7b-8050-24e1733dbf77">
-                    <SHORT-NAME>StSetGain13</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="7c723d6c-5f6f-5c48-2d66-7621326d899c">
-                            <SHORT-NAME>StSetGain13</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="bb4dfd2a-15b6-5b15-0cfd-40b896dabbd5">
-                    <SHORT-NAME>StSetGain14</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="e62298b7-2e20-5294-f57b-e4fa11c4af4e">
-                            <SHORT-NAME>StSetGain14</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="6516914c-58d4-51fc-91ec-b65f995dae6b">
+                <SENDER-RECEIVER-INTERFACE UUID="e3816390-5962-5a1d-2ac5-0839943b694e">
                     <SHORT-NAME>NvSetGainIn</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="1a80be32-82d8-555d-80b2-023c7190ff74">
+                        <VARIABLE-DATA-PROTOTYPE UUID="6dfd6a32-b684-5db7-84ee-a939539b452d">
                             <SHORT-NAME>NvSetGainIn</SHORT-NAME>
                             <CATEGORY>ARRAY</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -637,11 +143,11 @@ Model Checksum               : 1872630003 3299259749 1725763829 2813168544
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="654e2863-94c5-54db-ac5f-e9acaf831759">
+                <SENDER-RECEIVER-INTERFACE UUID="f9796d71-849e-5766-c7c4-d47ac45e12d4">
                     <SHORT-NAME>NvSetGainQlf</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="34992900-ae7c-5a7c-2829-966ce57ef809">
+                        <VARIABLE-DATA-PROTOTYPE UUID="1584e124-4fc9-5581-068d-79af401a7a05">
                             <SHORT-NAME>NvSetGainQlf</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -656,13 +162,13 @@ Model Checksum               : 1872630003 3299259749 1725763829 2813168544
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="6d58ab5e-b28a-57bb-1c4e-05057a79dd89">
-                    <SHORT-NAME>StMeasOffset01</SHORT-NAME>
+                <SENDER-RECEIVER-INTERFACE UUID="1cf9b1d3-0a0a-51b9-4ab0-dfd11a8ae19a">
+                    <SHORT-NAME>StMeasOffset</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="a83c7cf0-1e74-5408-b0c0-2e63ba662302">
-                            <SHORT-NAME>StMeasOffset01</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
+                        <VARIABLE-DATA-PROTOTYPE UUID="4cf4ab1f-51cd-5b8f-e5ba-ab86e376a456">
+                            <SHORT-NAME>StMeasOffset</SHORT-NAME>
+                            <CATEGORY>ARRAY</CATEGORY>
                             <SW-DATA-DEF-PROPS>
                                 <SW-DATA-DEF-PROPS-VARIANTS>
                                     <SW-DATA-DEF-PROPS-CONDITIONAL>
@@ -671,262 +177,15 @@ Model Checksum               : 1872630003 3299259749 1725763829 2813168544
                                     </SW-DATA-DEF-PROPS-CONDITIONAL>
                                 </SW-DATA-DEF-PROPS-VARIANTS>
                             </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
+                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/rt_Array_sint16_CellCount</TYPE-TREF>
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="0fa6fed5-195b-5a4d-5b17-7e20715b3c2b">
-                    <SHORT-NAME>StMeasOffset02</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="8fa15614-80b8-5df3-d749-1230737d990a">
-                            <SHORT-NAME>StMeasOffset02</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="f1adbfd2-4d39-5ea7-53bf-4a6e403d6bd3">
-                    <SHORT-NAME>StMeasOffset03</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="7c379eef-33b0-57da-b5b0-80d6dc2c015c">
-                            <SHORT-NAME>StMeasOffset03</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="84b16265-e20e-5e41-de30-cc599d072191">
-                    <SHORT-NAME>StMeasOffset04</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="04de97d6-fd96-5062-5b9e-474f79213f14">
-                            <SHORT-NAME>StMeasOffset04</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="e55a535e-436a-5cc1-d7b0-ab1df9ac1bbc">
-                    <SHORT-NAME>StMeasOffset05</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="9504e620-c07d-54c2-94a3-35c0dabccf95">
-                            <SHORT-NAME>StMeasOffset05</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="c30aa46a-af56-5a0b-1af8-7126673b1623">
-                    <SHORT-NAME>StMeasOffset06</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="1be7af17-3eb7-5375-703c-2ed12807ad3c">
-                            <SHORT-NAME>StMeasOffset06</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="ab93edcc-0809-5ad2-8c1b-1da07eadeca7">
-                    <SHORT-NAME>StMeasOffset07</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="c0f7d3fd-847c-5691-a4a3-8e4476b91e35">
-                            <SHORT-NAME>StMeasOffset07</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="77e16b15-bfcb-5413-db34-9d86d0c9e792">
-                    <SHORT-NAME>StMeasOffset08</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="fb0eff29-3cfc-5501-8620-d1f8e8a7a78b">
-                            <SHORT-NAME>StMeasOffset08</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="a0b0b209-ef55-50bf-9064-2538041cc40e">
-                    <SHORT-NAME>StMeasOffset09</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="f57f3494-d3ab-5c75-2bb3-361ac1df7aa2">
-                            <SHORT-NAME>StMeasOffset09</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="ccd99207-5f1a-5c13-2a1b-9a0e93c89140">
-                    <SHORT-NAME>StMeasOffset10</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="fb7da2ad-fab2-5db4-2b10-f6a048a779b1">
-                            <SHORT-NAME>StMeasOffset10</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="d76f876f-83c9-5d19-ecf7-9261d58d1cc8">
-                    <SHORT-NAME>StMeasOffset11</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="d87ec200-8089-5c9c-0899-199580c26a33">
-                            <SHORT-NAME>StMeasOffset11</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="d3adc3ce-364a-54b0-5fbc-c44e370c99f1">
-                    <SHORT-NAME>StMeasOffset12</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="f0cf5c61-a424-5fc7-1e2f-da362a30fb1d">
-                            <SHORT-NAME>StMeasOffset12</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="50d07330-ed97-5dca-7716-33e4f750f636">
-                    <SHORT-NAME>StMeasOffset13</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="d483b135-a4c5-5fd2-6e6e-2ad418a7005b">
-                            <SHORT-NAME>StMeasOffset13</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="bd9efb7c-0eb3-5af1-40ea-3a3a14f1215c">
-                    <SHORT-NAME>StMeasOffset14</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="cab7e916-de11-5a00-c11e-42accccfb64e">
-                            <SHORT-NAME>StMeasOffset14</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="0488e2cc-fcd0-5b84-2997-bae360ef4387">
+                <SENDER-RECEIVER-INTERFACE UUID="9e5f4b4c-3ec7-582a-bc45-48ee3e1560a4">
                     <SHORT-NAME>NvMeasOffsetIn</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="58879ad5-d80a-5a64-b9d3-9f30034a8880">
+                        <VARIABLE-DATA-PROTOTYPE UUID="9404db9a-2ed0-52b9-4d32-808b7ca6b0b6">
                             <SHORT-NAME>NvMeasOffsetIn</SHORT-NAME>
                             <CATEGORY>ARRAY</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -941,11 +200,11 @@ Model Checksum               : 1872630003 3299259749 1725763829 2813168544
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="181e4886-a01c-5bdc-4bc0-420419a335bc">
+                <SENDER-RECEIVER-INTERFACE UUID="24b9ccbe-4ccb-5b60-e54a-26422b3ec270">
                     <SHORT-NAME>NvMeasOffsetQlf</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="2387e1a9-9669-5a2e-cec1-d66cc3268340">
+                        <VARIABLE-DATA-PROTOTYPE UUID="40862070-8f35-50ac-11bc-062d2060fa5f">
                             <SHORT-NAME>NvMeasOffsetQlf</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -960,13 +219,13 @@ Model Checksum               : 1872630003 3299259749 1725763829 2813168544
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="a686620c-1e69-5bdf-1440-4397f1c7d3a9">
-                    <SHORT-NAME>StMeasGain01</SHORT-NAME>
+                <SENDER-RECEIVER-INTERFACE UUID="67402727-3ca0-5e39-b09b-b1b040d33627">
+                    <SHORT-NAME>StMeasGain</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="cd7dc368-9638-58a0-528e-7333ec461920">
-                            <SHORT-NAME>StMeasGain01</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
+                        <VARIABLE-DATA-PROTOTYPE UUID="00d67731-dc86-51ee-15a4-673db85e72d5">
+                            <SHORT-NAME>StMeasGain</SHORT-NAME>
+                            <CATEGORY>ARRAY</CATEGORY>
                             <SW-DATA-DEF-PROPS>
                                 <SW-DATA-DEF-PROPS-VARIANTS>
                                     <SW-DATA-DEF-PROPS-CONDITIONAL>
@@ -975,262 +234,15 @@ Model Checksum               : 1872630003 3299259749 1725763829 2813168544
                                     </SW-DATA-DEF-PROPS-CONDITIONAL>
                                 </SW-DATA-DEF-PROPS-VARIANTS>
                             </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
+                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/rt_Array_uint16_CellCount</TYPE-TREF>
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="f11ad24c-8bb8-5c84-5d33-0b94c45260bc">
-                    <SHORT-NAME>StMeasGain02</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="8fe19903-9b89-59b4-efb8-57c5490fe43b">
-                            <SHORT-NAME>StMeasGain02</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="c1a37e91-643d-58ca-114a-1d91741849f1">
-                    <SHORT-NAME>StMeasGain03</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="c46f3604-f120-531a-93db-b6718342097b">
-                            <SHORT-NAME>StMeasGain03</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="f221bc9c-8bfa-5b81-403d-a1d84d79122a">
-                    <SHORT-NAME>StMeasGain04</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="34f7375e-f0d9-56ad-a309-f9ee3f0ad8a8">
-                            <SHORT-NAME>StMeasGain04</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="3f51d363-af37-59f1-a923-db10debe1ab8">
-                    <SHORT-NAME>StMeasGain05</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="9ed220e4-ff50-5bc8-6327-f1cc4120c8b4">
-                            <SHORT-NAME>StMeasGain05</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="13702b1c-480f-578e-2f0e-ea3abf7fbc3b">
-                    <SHORT-NAME>StMeasGain06</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="53086867-7a4b-55fd-ac8f-b8c262f83adb">
-                            <SHORT-NAME>StMeasGain06</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="4bbf9d8e-ec47-54c8-f68b-8db28f81e1f2">
-                    <SHORT-NAME>StMeasGain07</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="d9d6ca39-56bb-5baa-c2fc-c44dba6e3507">
-                            <SHORT-NAME>StMeasGain07</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="a99c4054-1254-5c69-2a1c-2a2210cb0092">
-                    <SHORT-NAME>StMeasGain08</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="82de3876-ad73-5f4d-543c-b1947cddc441">
-                            <SHORT-NAME>StMeasGain08</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="88d9926e-78ca-571c-c3ec-1278db8a0afc">
-                    <SHORT-NAME>StMeasGain09</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="90e15a96-802c-522a-6dd7-595ee08877e0">
-                            <SHORT-NAME>StMeasGain09</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="77b75161-c0a1-5aea-2b3d-d50c346a8aa6">
-                    <SHORT-NAME>StMeasGain10</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="b708d021-a187-581b-c9c9-851725733697">
-                            <SHORT-NAME>StMeasGain10</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="423b8089-a6b7-5997-08b1-87309ee32594">
-                    <SHORT-NAME>StMeasGain11</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="241d503d-002a-5e14-a285-f0da7f0e0e5e">
-                            <SHORT-NAME>StMeasGain11</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="2fbd68c2-d56c-551e-b45c-635af8b7fcd1">
-                    <SHORT-NAME>StMeasGain12</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="7851dfae-c35d-594a-036d-d1c7650bb9f2">
-                            <SHORT-NAME>StMeasGain12</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="9d94f20c-4f80-529f-8201-144b5f5b8789">
-                    <SHORT-NAME>StMeasGain13</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="537546a6-235e-5e13-feab-cd8b5cc11c05">
-                            <SHORT-NAME>StMeasGain13</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="fa5c0645-ee5c-56df-9a49-3888145c9a40">
-                    <SHORT-NAME>StMeasGain14</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="be1a4522-37ae-51f6-de5b-c973f5da7129">
-                            <SHORT-NAME>StMeasGain14</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="6d0a62ad-3b9d-5c42-204e-ab09addb0bc6">
+                <SENDER-RECEIVER-INTERFACE UUID="8e98769a-f84f-567e-295c-815c5c728d80">
                     <SHORT-NAME>NvMeasGainIn</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="b73beab6-ea0e-5f36-cbfd-079ecdbcc82c">
+                        <VARIABLE-DATA-PROTOTYPE UUID="62e7ae1d-8b76-57f9-b94f-8cd21db758cc">
                             <SHORT-NAME>NvMeasGainIn</SHORT-NAME>
                             <CATEGORY>ARRAY</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1245,11 +257,11 @@ Model Checksum               : 1872630003 3299259749 1725763829 2813168544
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="b14983c8-150f-5a3c-07db-d79f8ced1511">
+                <SENDER-RECEIVER-INTERFACE UUID="1cdc43bb-32af-5234-805c-642e41bf702f">
                     <SHORT-NAME>NvMeasGainQlf</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="f8f755ba-9077-5bb4-c624-5bfd4cf1ddfd">
+                        <VARIABLE-DATA-PROTOTYPE UUID="03de4ca3-4349-59b8-7882-5761f3dec294">
                             <SHORT-NAME>NvMeasGainQlf</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1264,11 +276,11 @@ Model Checksum               : 1872630003 3299259749 1725763829 2813168544
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="2a2b244b-e95f-593f-a33f-475d371bd554">
+                <SENDER-RECEIVER-INTERFACE UUID="6185697d-a0e9-5a84-161e-9092f5e01ba0">
                     <SHORT-NAME>NvSetOffsetOut</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="4c707c72-00cd-59d0-6f23-073dd09ed77a">
+                        <VARIABLE-DATA-PROTOTYPE UUID="3ef7cc45-c6a3-5a2c-db8d-8ff39d2f9bde">
                             <SHORT-NAME>NvSetOffsetOut</SHORT-NAME>
                             <CATEGORY>ARRAY</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1283,13 +295,13 @@ Model Checksum               : 1872630003 3299259749 1725763829 2813168544
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="88b6cafc-9f23-5994-c157-01691a038c0e">
-                    <SHORT-NAME>AcSetOffset01</SHORT-NAME>
+                <SENDER-RECEIVER-INTERFACE UUID="4d6cc62e-20ba-5ed0-ebb6-5b221b085cbf">
+                    <SHORT-NAME>AcSetOffset</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="c9b1e057-3e26-5b0b-83f1-ed946854b320">
-                            <SHORT-NAME>AcSetOffset01</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
+                        <VARIABLE-DATA-PROTOTYPE UUID="090cdbb8-d5e8-5f88-0fa6-e81194212ea0">
+                            <SHORT-NAME>AcSetOffset</SHORT-NAME>
+                            <CATEGORY>ARRAY</CATEGORY>
                             <SW-DATA-DEF-PROPS>
                                 <SW-DATA-DEF-PROPS-VARIANTS>
                                     <SW-DATA-DEF-PROPS-CONDITIONAL>
@@ -1298,262 +310,15 @@ Model Checksum               : 1872630003 3299259749 1725763829 2813168544
                                     </SW-DATA-DEF-PROPS-CONDITIONAL>
                                 </SW-DATA-DEF-PROPS-VARIANTS>
                             </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
+                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/rt_Array_sint16_CellCount</TYPE-TREF>
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="d424ba70-062e-5372-a399-6a299508debf">
-                    <SHORT-NAME>AcSetOffset02</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="9a563e01-d993-55bf-4c48-057e39c6fbcc">
-                            <SHORT-NAME>AcSetOffset02</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="7345889a-88af-59f7-7378-26b359f89242">
-                    <SHORT-NAME>AcSetOffset03</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="82983d5d-ee93-573d-89e4-1f5beef7d862">
-                            <SHORT-NAME>AcSetOffset03</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="204ee50b-71ba-5e30-89e2-5d8b39c5e345">
-                    <SHORT-NAME>AcSetOffset04</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="465a73f5-ba50-56b5-610d-4f94cc4509b7">
-                            <SHORT-NAME>AcSetOffset04</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="f1ae8f17-d70a-53e4-add5-f9a92cbfb88e">
-                    <SHORT-NAME>AcSetOffset05</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="c895374e-123e-5816-780e-b9b415709bcc">
-                            <SHORT-NAME>AcSetOffset05</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="39a74d2a-b3f4-5a34-337a-034b6e7ec78b">
-                    <SHORT-NAME>AcSetOffset06</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="75798c3a-db13-5739-e76e-4fb3c0d3cf91">
-                            <SHORT-NAME>AcSetOffset06</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="0aaa2526-5d5b-5627-db2f-1658ab6a54d6">
-                    <SHORT-NAME>AcSetOffset07</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="ee4c1bc1-967e-5c83-797a-8ac6e7fc0018">
-                            <SHORT-NAME>AcSetOffset07</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="ada9ab0e-c687-56ee-9363-f0b937bb7f0a">
-                    <SHORT-NAME>AcSetOffset08</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="b5339ac0-ec4f-51d1-9420-8442ccec082e">
-                            <SHORT-NAME>AcSetOffset08</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="056447a5-d579-59d4-5a06-f8a45383885f">
-                    <SHORT-NAME>AcSetOffset09</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="50d5a9df-9200-5806-ffa1-f1f2e376b13f">
-                            <SHORT-NAME>AcSetOffset09</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="937b23fa-d617-5b4b-22ed-11cbf550170f">
-                    <SHORT-NAME>AcSetOffset10</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="0f848873-9646-5514-d8a9-de8337fa2c6c">
-                            <SHORT-NAME>AcSetOffset10</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="a426b599-08b7-5cab-bfa3-f65a68c9369a">
-                    <SHORT-NAME>AcSetOffset11</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="e410a257-4b38-56d8-1e35-77c1de8d4b88">
-                            <SHORT-NAME>AcSetOffset11</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="a8629803-f1c1-53d5-ebf9-3b940822fdab">
-                    <SHORT-NAME>AcSetOffset12</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="83c73bcd-c226-5f03-fc56-c948be24ef84">
-                            <SHORT-NAME>AcSetOffset12</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="df8cb7bf-3c9a-5102-80c6-5d2d668c54ce">
-                    <SHORT-NAME>AcSetOffset13</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="74fbf157-9baf-5bf7-7e3f-67c92660fc0d">
-                            <SHORT-NAME>AcSetOffset13</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="e5704d0b-7ff3-518e-caec-b098f3f98fbf">
-                    <SHORT-NAME>AcSetOffset14</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="9536647c-6e5e-5f98-359b-9cd578651fa4">
-                            <SHORT-NAME>AcSetOffset14</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="130556cc-2d6b-5479-7baa-9681f56b37c7">
+                <SENDER-RECEIVER-INTERFACE UUID="009e5d50-55cc-518c-1d9a-9866a9882a6e">
                     <SHORT-NAME>CalSetOffset_V</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="afc00d25-5a36-5b51-8fba-554fe95c5bfa">
+                        <VARIABLE-DATA-PROTOTYPE UUID="a1db8b24-e432-5eb4-217f-b470e70be42c">
                             <SHORT-NAME>CalSetOffset_V</SHORT-NAME>
                             <CATEGORY>ARRAY</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1568,11 +333,11 @@ Model Checksum               : 1872630003 3299259749 1725763829 2813168544
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="0f5e91b0-aac3-5d8c-d41b-866df0fe08bc">
+                <SENDER-RECEIVER-INTERFACE UUID="87d7158f-9f95-5d10-2d22-b016e1031efb">
                     <SHORT-NAME>NvSetGainOut</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="c189d019-5e81-5bfc-22ec-9b969c446436">
+                        <VARIABLE-DATA-PROTOTYPE UUID="15543189-43b4-5d30-f297-3d9013110a9b">
                             <SHORT-NAME>NvSetGainOut</SHORT-NAME>
                             <CATEGORY>ARRAY</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1587,13 +352,13 @@ Model Checksum               : 1872630003 3299259749 1725763829 2813168544
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="bd386b05-bbce-527f-e724-74462f21f637">
-                    <SHORT-NAME>AcSetGain01</SHORT-NAME>
+                <SENDER-RECEIVER-INTERFACE UUID="70e76f8f-30c8-58b6-d431-fc12c336b585">
+                    <SHORT-NAME>AcSetGain</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="56a24b37-55c5-5c83-125e-efe6e68916cd">
-                            <SHORT-NAME>AcSetGain01</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
+                        <VARIABLE-DATA-PROTOTYPE UUID="8d857587-c1f4-5c86-8926-b3976ad1080f">
+                            <SHORT-NAME>AcSetGain</SHORT-NAME>
+                            <CATEGORY>ARRAY</CATEGORY>
                             <SW-DATA-DEF-PROPS>
                                 <SW-DATA-DEF-PROPS-VARIANTS>
                                     <SW-DATA-DEF-PROPS-CONDITIONAL>
@@ -1602,262 +367,15 @@ Model Checksum               : 1872630003 3299259749 1725763829 2813168544
                                     </SW-DATA-DEF-PROPS-CONDITIONAL>
                                 </SW-DATA-DEF-PROPS-VARIANTS>
                             </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
+                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/rt_Array_uint16_CellCount</TYPE-TREF>
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="56cb312e-f395-540d-359b-49e87d0148de">
-                    <SHORT-NAME>AcSetGain02</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="31f74cd0-3629-562e-5118-e127283c985e">
-                            <SHORT-NAME>AcSetGain02</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="2bf46348-8ff6-5b5d-6ec5-90efb667f879">
-                    <SHORT-NAME>AcSetGain03</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="4b7533bb-d2ee-56d5-da81-217675da5e20">
-                            <SHORT-NAME>AcSetGain03</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="ad2d3a18-7642-52ac-3b30-d1db306cf22c">
-                    <SHORT-NAME>AcSetGain04</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="4884132f-89a9-5b52-aa41-142c0f48996a">
-                            <SHORT-NAME>AcSetGain04</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="f1358f80-9bd5-58c9-0256-92fd0e49a65f">
-                    <SHORT-NAME>AcSetGain05</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="cdf00f53-4cdd-51e4-a4f0-2232066ce0c4">
-                            <SHORT-NAME>AcSetGain05</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="75765a4a-09e1-5fd5-d274-3483c29d4905">
-                    <SHORT-NAME>AcSetGain06</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="fb13d7c8-e60b-5a4d-0421-3d6bf04e80e5">
-                            <SHORT-NAME>AcSetGain06</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="ea372f3b-4743-59e0-53d3-37eae9a841ed">
-                    <SHORT-NAME>AcSetGain07</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="e7de0436-1904-595d-286f-9381b441e966">
-                            <SHORT-NAME>AcSetGain07</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="47e5bc04-5314-5c6e-b69c-e891e44f3caf">
-                    <SHORT-NAME>AcSetGain08</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="84cb5491-3e2f-5e8f-5590-33efd97f47b2">
-                            <SHORT-NAME>AcSetGain08</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="68486fac-ec54-53d5-9f00-1aab4afed327">
-                    <SHORT-NAME>AcSetGain09</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="70ec3ff3-fd8b-5320-d512-9a1ffa059665">
-                            <SHORT-NAME>AcSetGain09</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="64591846-fec9-5e02-0fd3-c210920cdef2">
-                    <SHORT-NAME>AcSetGain10</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="4c171c98-4f0c-5743-4cec-f10a70eb434c">
-                            <SHORT-NAME>AcSetGain10</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="5e0f9978-e2ca-51a0-3bcf-f834e531cba4">
-                    <SHORT-NAME>AcSetGain11</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="c67709c2-ca97-5518-a517-b59fe0b8749d">
-                            <SHORT-NAME>AcSetGain11</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="741280b4-a2a5-5b40-93f3-5261ec7afabe">
-                    <SHORT-NAME>AcSetGain12</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="50e5bfab-9c7e-584c-d746-c48b83e02c20">
-                            <SHORT-NAME>AcSetGain12</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="4bcbcc6f-bbae-57de-8017-5055c19df159">
-                    <SHORT-NAME>AcSetGain13</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="0b9dc9a4-bfb8-583f-9f16-d0f3822478d1">
-                            <SHORT-NAME>AcSetGain13</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="28ec8f51-d486-5bd1-ff00-018de8daca67">
-                    <SHORT-NAME>AcSetGain14</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="ee27240b-f174-56e8-9e9d-e42618df8601">
-                            <SHORT-NAME>AcSetGain14</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="84ff31f7-3473-54ff-db8a-adb3d46a9276">
+                <SENDER-RECEIVER-INTERFACE UUID="8c4fb3a6-ee8c-5460-9444-656a5851cbb5">
                     <SHORT-NAME>CalSetGain</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="731bb3d7-a49e-58f1-d96e-537f2b277972">
+                        <VARIABLE-DATA-PROTOTYPE UUID="fbb1fba2-5379-5c8c-7d18-11f828496889">
                             <SHORT-NAME>CalSetGain</SHORT-NAME>
                             <CATEGORY>ARRAY</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1872,11 +390,11 @@ Model Checksum               : 1872630003 3299259749 1725763829 2813168544
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="30a6be10-1d4c-5a99-8cc2-51a46a3e70da">
+                <SENDER-RECEIVER-INTERFACE UUID="6bcaaa2a-5457-55db-06e2-da1baeb333b8">
                     <SHORT-NAME>NvMeasOffsetOut</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="8223467d-7fe4-55ef-95f8-3d783cff5e86">
+                        <VARIABLE-DATA-PROTOTYPE UUID="29ce63b4-70dd-59e7-b860-87fb818fee2b">
                             <SHORT-NAME>NvMeasOffsetOut</SHORT-NAME>
                             <CATEGORY>ARRAY</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1891,13 +409,13 @@ Model Checksum               : 1872630003 3299259749 1725763829 2813168544
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="17a6c0f6-9a07-5350-35c4-d4ef6415e31b">
-                    <SHORT-NAME>AcMeasOffset01</SHORT-NAME>
+                <SENDER-RECEIVER-INTERFACE UUID="0a439995-bb72-5648-b600-0780ec86e70c">
+                    <SHORT-NAME>AcMeasOffset</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="ee9f231b-6ffc-5b81-7aa6-496953e40813">
-                            <SHORT-NAME>AcMeasOffset01</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
+                        <VARIABLE-DATA-PROTOTYPE UUID="3aa4da19-fe25-5b53-8ddd-2538a535908c">
+                            <SHORT-NAME>AcMeasOffset</SHORT-NAME>
+                            <CATEGORY>ARRAY</CATEGORY>
                             <SW-DATA-DEF-PROPS>
                                 <SW-DATA-DEF-PROPS-VARIANTS>
                                     <SW-DATA-DEF-PROPS-CONDITIONAL>
@@ -1906,262 +424,15 @@ Model Checksum               : 1872630003 3299259749 1725763829 2813168544
                                     </SW-DATA-DEF-PROPS-CONDITIONAL>
                                 </SW-DATA-DEF-PROPS-VARIANTS>
                             </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
+                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/rt_Array_sint16_CellCount</TYPE-TREF>
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="459f6877-09a3-5621-9ac0-e78fef40b05c">
-                    <SHORT-NAME>AcMeasOffset02</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="38a10769-bc0f-50be-662f-f1f7374ef082">
-                            <SHORT-NAME>AcMeasOffset02</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="70eef9ef-7cb8-5643-7459-184fcdd8c5cf">
-                    <SHORT-NAME>AcMeasOffset03</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="d2841fe8-3181-5c06-cfab-eb711754dbf5">
-                            <SHORT-NAME>AcMeasOffset03</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="f691b3bf-dc7d-5928-56db-b3f35a1f61bf">
-                    <SHORT-NAME>AcMeasOffset04</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="45881f03-dbe5-50d8-c2c9-5a65d0081cc6">
-                            <SHORT-NAME>AcMeasOffset04</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="7a9e460f-533e-5ced-c1bf-dc1fa45bc881">
-                    <SHORT-NAME>AcMeasOffset05</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="f021c69a-7c98-5fee-6be5-bfd91c6060d2">
-                            <SHORT-NAME>AcMeasOffset05</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="90eca66f-585e-5fb4-873c-6ecfc2fa4c6a">
-                    <SHORT-NAME>AcMeasOffset06</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="81f1c171-9c90-5eec-6409-493d66d9e332">
-                            <SHORT-NAME>AcMeasOffset06</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="bdb129c9-e16b-5374-71be-0658dc450f1f">
-                    <SHORT-NAME>AcMeasOffset07</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="87c894e3-ef7d-51cb-887a-379ab095d206">
-                            <SHORT-NAME>AcMeasOffset07</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="a5c966ce-c12b-5ebb-f6a3-e28fc5dd5960">
-                    <SHORT-NAME>AcMeasOffset08</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="5eb970ee-5109-5277-cd13-1d6be5cfc45e">
-                            <SHORT-NAME>AcMeasOffset08</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="bc3ce215-831d-5857-1f60-06b8b8e9df66">
-                    <SHORT-NAME>AcMeasOffset09</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="ab2342c8-d5fc-5eb9-7b6d-fc22dd4d90e7">
-                            <SHORT-NAME>AcMeasOffset09</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="69cd2927-9299-583f-b6d5-feef66c8aa6b">
-                    <SHORT-NAME>AcMeasOffset10</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="9a42e6df-6083-5746-f02d-853288cf5e7f">
-                            <SHORT-NAME>AcMeasOffset10</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="6a94600e-21ad-5dab-58f1-ea616db02939">
-                    <SHORT-NAME>AcMeasOffset11</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="d96fda90-1f95-5898-7e11-6c2da4d2f3ea">
-                            <SHORT-NAME>AcMeasOffset11</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="af90d7b2-343d-56d9-a6c7-f33bdd9066a1">
-                    <SHORT-NAME>AcMeasOffset12</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="66cd9934-9020-5c76-ced9-0ae042b4ba7c">
-                            <SHORT-NAME>AcMeasOffset12</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="0f6a4bd2-487a-564e-4261-76f4ea81aed0">
-                    <SHORT-NAME>AcMeasOffset13</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="a5648564-1171-5316-7259-269752aec8bd">
-                            <SHORT-NAME>AcMeasOffset13</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="67f326d4-426a-53df-0aa3-3abc3f90c70e">
-                    <SHORT-NAME>AcMeasOffset14</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="3edac9ae-01ff-5fd5-200d-e1d390bf46da">
-                            <SHORT-NAME>AcMeasOffset14</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/sint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="0b597775-a316-51de-ec0b-45a27079acb4">
+                <SENDER-RECEIVER-INTERFACE UUID="75f9027c-3ca7-5bc8-9531-62b1d95e2bd6">
                     <SHORT-NAME>CalMeasOffset_V</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="d432c1dc-1777-5321-8cd0-53d7b993e4d7">
+                        <VARIABLE-DATA-PROTOTYPE UUID="f480a5ff-151a-51dc-1637-a1f3cc169ad1">
                             <SHORT-NAME>CalMeasOffset_V</SHORT-NAME>
                             <CATEGORY>ARRAY</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2176,11 +447,11 @@ Model Checksum               : 1872630003 3299259749 1725763829 2813168544
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="fa1f0c53-cd7e-5df9-f083-930648089441">
+                <SENDER-RECEIVER-INTERFACE UUID="34c7f26e-f80c-582d-d397-fb8b76858663">
                     <SHORT-NAME>NvMeasGainOut</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="d8bc2586-51b0-5554-f95d-2b19ae96255a">
+                        <VARIABLE-DATA-PROTOTYPE UUID="17c738bb-5c4a-5cd4-cf2f-0e9da632d163">
                             <SHORT-NAME>NvMeasGainOut</SHORT-NAME>
                             <CATEGORY>ARRAY</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2195,13 +466,13 @@ Model Checksum               : 1872630003 3299259749 1725763829 2813168544
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="0c69e323-e08e-5f43-e0cd-edc73922bd0c">
-                    <SHORT-NAME>AcMeasGain01</SHORT-NAME>
+                <SENDER-RECEIVER-INTERFACE UUID="415ae79d-6b07-5f19-4e18-4d6e95747d4c">
+                    <SHORT-NAME>AcMeasGain</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="1e404515-4cc4-5215-5b3e-011595ac475d">
-                            <SHORT-NAME>AcMeasGain01</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
+                        <VARIABLE-DATA-PROTOTYPE UUID="1c6836c1-9a81-5b32-bb42-51a4d363f57d">
+                            <SHORT-NAME>AcMeasGain</SHORT-NAME>
+                            <CATEGORY>ARRAY</CATEGORY>
                             <SW-DATA-DEF-PROPS>
                                 <SW-DATA-DEF-PROPS-VARIANTS>
                                     <SW-DATA-DEF-PROPS-CONDITIONAL>
@@ -2210,262 +481,15 @@ Model Checksum               : 1872630003 3299259749 1725763829 2813168544
                                     </SW-DATA-DEF-PROPS-CONDITIONAL>
                                 </SW-DATA-DEF-PROPS-VARIANTS>
                             </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
+                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/rt_Array_uint16_CellCount</TYPE-TREF>
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="dd002f01-6e5e-5b80-75bc-acd8618c4629">
-                    <SHORT-NAME>AcMeasGain02</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="dbf47550-01cb-51da-5ccf-1eaf938423c1">
-                            <SHORT-NAME>AcMeasGain02</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="63a95b64-52bd-5508-ad2a-25984b16de02">
-                    <SHORT-NAME>AcMeasGain03</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="eaaa18d4-69e2-5af1-5b01-bfb70fb818f0">
-                            <SHORT-NAME>AcMeasGain03</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="b03e545c-82c1-5ce6-e40a-bda3079fba2d">
-                    <SHORT-NAME>AcMeasGain04</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="dd89b0fb-60ad-5466-10fe-8c6673581f47">
-                            <SHORT-NAME>AcMeasGain04</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="91464589-872e-5888-8871-b4939de9c3c8">
-                    <SHORT-NAME>AcMeasGain05</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="2a52a5f9-e7a2-54a8-dd49-3234c4763eaa">
-                            <SHORT-NAME>AcMeasGain05</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="28c46c45-038e-5896-23ba-33f502f1423b">
-                    <SHORT-NAME>AcMeasGain06</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="0e272805-8b50-51fc-cb90-38d23c2593ee">
-                            <SHORT-NAME>AcMeasGain06</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="f189aa3e-c099-508e-70ca-b3eeb227d26e">
-                    <SHORT-NAME>AcMeasGain07</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="234176f9-a47e-5d06-b964-d65f9c7baf8b">
-                            <SHORT-NAME>AcMeasGain07</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="fac90979-88a4-512a-1b0e-d8f91b0bbf9b">
-                    <SHORT-NAME>AcMeasGain08</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="722b10f3-1623-58b9-00ef-0d1958e6a6da">
-                            <SHORT-NAME>AcMeasGain08</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="6079810c-93b2-5720-131d-d8df82137dee">
-                    <SHORT-NAME>AcMeasGain09</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="36fdc034-77da-5ae2-bb19-ec79f311c944">
-                            <SHORT-NAME>AcMeasGain09</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="27f57550-5524-5196-91fd-baa71734db59">
-                    <SHORT-NAME>AcMeasGain10</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="7effc3be-917a-5af6-578e-5d2605a874c8">
-                            <SHORT-NAME>AcMeasGain10</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="49f1a24c-7a34-551d-9825-47b3dd8f7b69">
-                    <SHORT-NAME>AcMeasGain11</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="20c81e56-f0a1-56c0-4499-965688c5230a">
-                            <SHORT-NAME>AcMeasGain11</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="dc1721fe-83f3-53c6-6ae1-8d7ec23cdeac">
-                    <SHORT-NAME>AcMeasGain12</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="cac08fbd-3a51-5803-49f0-2e96a74ad81e">
-                            <SHORT-NAME>AcMeasGain12</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="0316013e-524f-5add-7a4c-fc610d8c127d">
-                    <SHORT-NAME>AcMeasGain13</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="d4aa946c-3a8b-5eba-cf48-ee9fa5ef49fe">
-                            <SHORT-NAME>AcMeasGain13</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="9c98dcbe-ae75-58f3-7e12-f0302b111bbd">
-                    <SHORT-NAME>AcMeasGain14</SHORT-NAME>
-                    <IS-SERVICE>false</IS-SERVICE>
-                    <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="66f913be-8349-5ac2-4475-2c6ee46d3739">
-                            <SHORT-NAME>AcMeasGain14</SHORT-NAME>
-                            <CATEGORY>VALUE</CATEGORY>
-                            <SW-DATA-DEF-PROPS>
-                                <SW-DATA-DEF-PROPS-VARIANTS>
-                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
-                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
-                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
-                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
-                                </SW-DATA-DEF-PROPS-VARIANTS>
-                            </SW-DATA-DEF-PROPS>
-                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
-                        </VARIABLE-DATA-PROTOTYPE>
-                    </DATA-ELEMENTS>
-                </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="c07a83e5-a30d-5612-8710-65c23a34d13e">
+                <SENDER-RECEIVER-INTERFACE UUID="2cf1459e-a1ac-55d6-b3e2-40a6bd8680c8">
                     <SHORT-NAME>CalMeasGain</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="7bc46fd5-b707-55e2-8d0d-9476c5af538b">
+                        <VARIABLE-DATA-PROTOTYPE UUID="a6690378-9e71-5585-2fb5-73c94f5b4f93">
                             <SHORT-NAME>CalMeasGain</SHORT-NAME>
                             <CATEGORY>ARRAY</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2480,11 +504,11 @@ Model Checksum               : 1872630003 3299259749 1725763829 2813168544
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="290b1547-4ebc-5fac-e8cd-0a238d849e52">
+                <SENDER-RECEIVER-INTERFACE UUID="0160bc10-443d-58fe-719f-a76037379773">
                     <SHORT-NAME>ApplyResult</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="9a2ba89b-077b-5744-af1a-3a54f4a2edd5">
+                        <VARIABLE-DATA-PROTOTYPE UUID="0ab3509e-f86c-5d39-ac5f-2ca186fc06b1">
                             <SHORT-NAME>ApplyResult</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2499,11 +523,11 @@ Model Checksum               : 1872630003 3299259749 1725763829 2813168544
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="a5f0263d-d6f2-5aba-7ec5-86e99d580d75">
+                <SENDER-RECEIVER-INTERFACE UUID="e386891e-00db-5f51-7c88-aa26b28cb4de">
                     <SHORT-NAME>ApplyBadChannel</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="96996ca1-72eb-5b31-8d8e-b86bf5d9f218">
+                        <VARIABLE-DATA-PROTOTYPE UUID="917d7033-bcb9-59b9-1771-064daac7dbfb">
                             <SHORT-NAME>ApplyBadChannel</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2518,11 +542,11 @@ Model Checksum               : 1872630003 3299259749 1725763829 2813168544
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="134bca2c-799d-5fbb-ac29-c7efd970f513">
+                <SENDER-RECEIVER-INTERFACE UUID="d9aa4135-e61e-502b-4c39-c3dea650cfa0">
                     <SHORT-NAME>CalState</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="8253c994-0cb6-54d7-8b4f-608cad50b35b">
+                        <VARIABLE-DATA-PROTOTYPE UUID="9fa972b2-0193-54d4-a9da-73bf9fd672d3">
                             <SHORT-NAME>CalState</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2537,11 +561,11 @@ Model Checksum               : 1872630003 3299259749 1725763829 2813168544
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <PARAMETER-INTERFACE UUID="d63abaf9-6084-547a-3e7e-6006f9557ebf">
+                <PARAMETER-INTERFACE UUID="d70783dc-a574-5c0c-dad5-71b57ae721aa">
                     <SHORT-NAME>CalPrm</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <PARAMETERS>
-                        <PARAMETER-DATA-PROTOTYPE UUID="071f521e-91ed-56d1-4a78-58a347c2f41c">
+                        <PARAMETER-DATA-PROTOTYPE UUID="7d5bf97d-180e-58ca-cd18-034f600daa9d">
                             <SHORT-NAME>OffsetLimit_code</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2554,7 +578,7 @@ Model Checksum               : 1872630003 3299259749 1725763829 2813168544
                             </SW-DATA-DEF-PROPS>
                             <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
                         </PARAMETER-DATA-PROTOTYPE>
-                        <PARAMETER-DATA-PROTOTYPE UUID="9676144c-7a83-5d76-0984-3e7c950b38f2">
+                        <PARAMETER-DATA-PROTOTYPE UUID="7e4ba671-d74d-53da-f883-f539e0717bd1">
                             <SHORT-NAME>GainMin_code</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2567,7 +591,7 @@ Model Checksum               : 1872630003 3299259749 1725763829 2813168544
                             </SW-DATA-DEF-PROPS>
                             <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
                         </PARAMETER-DATA-PROTOTYPE>
-                        <PARAMETER-DATA-PROTOTYPE UUID="780f60f8-a06f-5eb0-b3e9-e2cde02a00df">
+                        <PARAMETER-DATA-PROTOTYPE UUID="9f4d4fb8-46bf-513e-0da7-861fe19b2361">
                             <SHORT-NAME>GainMax_code</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>

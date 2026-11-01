@@ -9,7 +9,7 @@ runnables:
   - name: CalTask10ms
     period_ms: 10
 ports:
-  - name: OutputsOn           # outputs enabled (a port of another name than CellChannels.OutputEnable: RTE-49, same-named required ports of two components collide in the headers)
+  - name: OutputEnable           # outputs enabled (the same name as the port of CellChannels and the provided port of BattSimMode: allowed since RTE-49)
     direction: in
     type: boolean
     runnables: [CalTask10ms]
@@ -17,61 +17,10 @@ ports:
     direction: in
     type: uint8
     runnables: [CalTask10ms]
-  - name: StSetOffset01           # staged value written by the tester (2E)
+  - name: StSetOffset           # staged values of the 14 channels written by the tester (2E 0201, all kinds at once)
     direction: in
     type: sint16
-    runnables: [CalTask10ms]
-  - name: StSetOffset02           # staged value written by the tester (2E)
-    direction: in
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: StSetOffset03           # staged value written by the tester (2E)
-    direction: in
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: StSetOffset04           # staged value written by the tester (2E)
-    direction: in
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: StSetOffset05           # staged value written by the tester (2E)
-    direction: in
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: StSetOffset06           # staged value written by the tester (2E)
-    direction: in
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: StSetOffset07           # staged value written by the tester (2E)
-    direction: in
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: StSetOffset08           # staged value written by the tester (2E)
-    direction: in
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: StSetOffset09           # staged value written by the tester (2E)
-    direction: in
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: StSetOffset10           # staged value written by the tester (2E)
-    direction: in
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: StSetOffset11           # staged value written by the tester (2E)
-    direction: in
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: StSetOffset12           # staged value written by the tester (2E)
-    direction: in
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: StSetOffset13           # staged value written by the tester (2E)
-    direction: in
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: StSetOffset14           # staged value written by the tester (2E)
-    direction: in
-    type: sint16
+    dimension: CellCount
     runnables: [CalTask10ms]
   - name: NvSetOffsetIn           # stored value
     direction: in
@@ -82,61 +31,10 @@ ports:
     direction: in
     type: uint8
     runnables: [CalTask10ms]
-  - name: StSetGain01           # staged value written by the tester (2E)
+  - name: StSetGain           # staged values of the 14 channels written by the tester (2E 0201, all kinds at once)
     direction: in
     type: uint16
-    runnables: [CalTask10ms]
-  - name: StSetGain02           # staged value written by the tester (2E)
-    direction: in
-    type: uint16
-    runnables: [CalTask10ms]
-  - name: StSetGain03           # staged value written by the tester (2E)
-    direction: in
-    type: uint16
-    runnables: [CalTask10ms]
-  - name: StSetGain04           # staged value written by the tester (2E)
-    direction: in
-    type: uint16
-    runnables: [CalTask10ms]
-  - name: StSetGain05           # staged value written by the tester (2E)
-    direction: in
-    type: uint16
-    runnables: [CalTask10ms]
-  - name: StSetGain06           # staged value written by the tester (2E)
-    direction: in
-    type: uint16
-    runnables: [CalTask10ms]
-  - name: StSetGain07           # staged value written by the tester (2E)
-    direction: in
-    type: uint16
-    runnables: [CalTask10ms]
-  - name: StSetGain08           # staged value written by the tester (2E)
-    direction: in
-    type: uint16
-    runnables: [CalTask10ms]
-  - name: StSetGain09           # staged value written by the tester (2E)
-    direction: in
-    type: uint16
-    runnables: [CalTask10ms]
-  - name: StSetGain10           # staged value written by the tester (2E)
-    direction: in
-    type: uint16
-    runnables: [CalTask10ms]
-  - name: StSetGain11           # staged value written by the tester (2E)
-    direction: in
-    type: uint16
-    runnables: [CalTask10ms]
-  - name: StSetGain12           # staged value written by the tester (2E)
-    direction: in
-    type: uint16
-    runnables: [CalTask10ms]
-  - name: StSetGain13           # staged value written by the tester (2E)
-    direction: in
-    type: uint16
-    runnables: [CalTask10ms]
-  - name: StSetGain14           # staged value written by the tester (2E)
-    direction: in
-    type: uint16
+    dimension: CellCount
     runnables: [CalTask10ms]
   - name: NvSetGainIn           # stored value
     direction: in
@@ -147,61 +45,10 @@ ports:
     direction: in
     type: uint8
     runnables: [CalTask10ms]
-  - name: StMeasOffset01           # staged value written by the tester (2E)
+  - name: StMeasOffset           # staged values of the 14 channels written by the tester (2E 0201, all kinds at once)
     direction: in
     type: sint16
-    runnables: [CalTask10ms]
-  - name: StMeasOffset02           # staged value written by the tester (2E)
-    direction: in
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: StMeasOffset03           # staged value written by the tester (2E)
-    direction: in
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: StMeasOffset04           # staged value written by the tester (2E)
-    direction: in
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: StMeasOffset05           # staged value written by the tester (2E)
-    direction: in
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: StMeasOffset06           # staged value written by the tester (2E)
-    direction: in
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: StMeasOffset07           # staged value written by the tester (2E)
-    direction: in
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: StMeasOffset08           # staged value written by the tester (2E)
-    direction: in
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: StMeasOffset09           # staged value written by the tester (2E)
-    direction: in
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: StMeasOffset10           # staged value written by the tester (2E)
-    direction: in
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: StMeasOffset11           # staged value written by the tester (2E)
-    direction: in
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: StMeasOffset12           # staged value written by the tester (2E)
-    direction: in
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: StMeasOffset13           # staged value written by the tester (2E)
-    direction: in
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: StMeasOffset14           # staged value written by the tester (2E)
-    direction: in
-    type: sint16
+    dimension: CellCount
     runnables: [CalTask10ms]
   - name: NvMeasOffsetIn           # stored value
     direction: in
@@ -212,61 +59,10 @@ ports:
     direction: in
     type: uint8
     runnables: [CalTask10ms]
-  - name: StMeasGain01           # staged value written by the tester (2E)
+  - name: StMeasGain           # staged values of the 14 channels written by the tester (2E 0201, all kinds at once)
     direction: in
     type: uint16
-    runnables: [CalTask10ms]
-  - name: StMeasGain02           # staged value written by the tester (2E)
-    direction: in
-    type: uint16
-    runnables: [CalTask10ms]
-  - name: StMeasGain03           # staged value written by the tester (2E)
-    direction: in
-    type: uint16
-    runnables: [CalTask10ms]
-  - name: StMeasGain04           # staged value written by the tester (2E)
-    direction: in
-    type: uint16
-    runnables: [CalTask10ms]
-  - name: StMeasGain05           # staged value written by the tester (2E)
-    direction: in
-    type: uint16
-    runnables: [CalTask10ms]
-  - name: StMeasGain06           # staged value written by the tester (2E)
-    direction: in
-    type: uint16
-    runnables: [CalTask10ms]
-  - name: StMeasGain07           # staged value written by the tester (2E)
-    direction: in
-    type: uint16
-    runnables: [CalTask10ms]
-  - name: StMeasGain08           # staged value written by the tester (2E)
-    direction: in
-    type: uint16
-    runnables: [CalTask10ms]
-  - name: StMeasGain09           # staged value written by the tester (2E)
-    direction: in
-    type: uint16
-    runnables: [CalTask10ms]
-  - name: StMeasGain10           # staged value written by the tester (2E)
-    direction: in
-    type: uint16
-    runnables: [CalTask10ms]
-  - name: StMeasGain11           # staged value written by the tester (2E)
-    direction: in
-    type: uint16
-    runnables: [CalTask10ms]
-  - name: StMeasGain12           # staged value written by the tester (2E)
-    direction: in
-    type: uint16
-    runnables: [CalTask10ms]
-  - name: StMeasGain13           # staged value written by the tester (2E)
-    direction: in
-    type: uint16
-    runnables: [CalTask10ms]
-  - name: StMeasGain14           # staged value written by the tester (2E)
-    direction: in
-    type: uint16
+    dimension: CellCount
     runnables: [CalTask10ms]
   - name: NvMeasGainIn           # stored value
     direction: in
@@ -282,61 +78,10 @@ ports:
     type: sint16
     dimension: CellCount
     runnables: [CalTask10ms]
-  - name: AcSetOffset01           # value in use (read back by the tester, 22)
+  - name: AcSetOffset           # values in use of the 14 channels (read back by the tester, 22 0201)
     direction: out
     type: sint16
-    runnables: [CalTask10ms]
-  - name: AcSetOffset02           # value in use (read back by the tester, 22)
-    direction: out
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: AcSetOffset03           # value in use (read back by the tester, 22)
-    direction: out
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: AcSetOffset04           # value in use (read back by the tester, 22)
-    direction: out
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: AcSetOffset05           # value in use (read back by the tester, 22)
-    direction: out
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: AcSetOffset06           # value in use (read back by the tester, 22)
-    direction: out
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: AcSetOffset07           # value in use (read back by the tester, 22)
-    direction: out
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: AcSetOffset08           # value in use (read back by the tester, 22)
-    direction: out
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: AcSetOffset09           # value in use (read back by the tester, 22)
-    direction: out
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: AcSetOffset10           # value in use (read back by the tester, 22)
-    direction: out
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: AcSetOffset11           # value in use (read back by the tester, 22)
-    direction: out
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: AcSetOffset12           # value in use (read back by the tester, 22)
-    direction: out
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: AcSetOffset13           # value in use (read back by the tester, 22)
-    direction: out
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: AcSetOffset14           # value in use (read back by the tester, 22)
-    direction: out
-    type: sint16
+    dimension: CellCount
     runnables: [CalTask10ms]
   - name: CalSetOffset_V           # value in use, physical, for CellChannels
     direction: out
@@ -349,74 +94,10 @@ ports:
     dimension: CellCount
     init: 10000
     runnables: [CalTask10ms]
-  - name: AcSetGain01           # value in use (read back by the tester, 22)
+  - name: AcSetGain           # values in use of the 14 channels (read back by the tester, 22 0201)
     direction: out
     type: uint16
-    init: 10000
-    runnables: [CalTask10ms]
-  - name: AcSetGain02           # value in use (read back by the tester, 22)
-    direction: out
-    type: uint16
-    init: 10000
-    runnables: [CalTask10ms]
-  - name: AcSetGain03           # value in use (read back by the tester, 22)
-    direction: out
-    type: uint16
-    init: 10000
-    runnables: [CalTask10ms]
-  - name: AcSetGain04           # value in use (read back by the tester, 22)
-    direction: out
-    type: uint16
-    init: 10000
-    runnables: [CalTask10ms]
-  - name: AcSetGain05           # value in use (read back by the tester, 22)
-    direction: out
-    type: uint16
-    init: 10000
-    runnables: [CalTask10ms]
-  - name: AcSetGain06           # value in use (read back by the tester, 22)
-    direction: out
-    type: uint16
-    init: 10000
-    runnables: [CalTask10ms]
-  - name: AcSetGain07           # value in use (read back by the tester, 22)
-    direction: out
-    type: uint16
-    init: 10000
-    runnables: [CalTask10ms]
-  - name: AcSetGain08           # value in use (read back by the tester, 22)
-    direction: out
-    type: uint16
-    init: 10000
-    runnables: [CalTask10ms]
-  - name: AcSetGain09           # value in use (read back by the tester, 22)
-    direction: out
-    type: uint16
-    init: 10000
-    runnables: [CalTask10ms]
-  - name: AcSetGain10           # value in use (read back by the tester, 22)
-    direction: out
-    type: uint16
-    init: 10000
-    runnables: [CalTask10ms]
-  - name: AcSetGain11           # value in use (read back by the tester, 22)
-    direction: out
-    type: uint16
-    init: 10000
-    runnables: [CalTask10ms]
-  - name: AcSetGain12           # value in use (read back by the tester, 22)
-    direction: out
-    type: uint16
-    init: 10000
-    runnables: [CalTask10ms]
-  - name: AcSetGain13           # value in use (read back by the tester, 22)
-    direction: out
-    type: uint16
-    init: 10000
-    runnables: [CalTask10ms]
-  - name: AcSetGain14           # value in use (read back by the tester, 22)
-    direction: out
-    type: uint16
+    dimension: CellCount
     init: 10000
     runnables: [CalTask10ms]
   - name: CalSetGain           # value in use, physical, for CellChannels
@@ -430,61 +111,10 @@ ports:
     type: sint16
     dimension: CellCount
     runnables: [CalTask10ms]
-  - name: AcMeasOffset01           # value in use (read back by the tester, 22)
+  - name: AcMeasOffset           # values in use of the 14 channels (read back by the tester, 22 0201)
     direction: out
     type: sint16
-    runnables: [CalTask10ms]
-  - name: AcMeasOffset02           # value in use (read back by the tester, 22)
-    direction: out
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: AcMeasOffset03           # value in use (read back by the tester, 22)
-    direction: out
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: AcMeasOffset04           # value in use (read back by the tester, 22)
-    direction: out
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: AcMeasOffset05           # value in use (read back by the tester, 22)
-    direction: out
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: AcMeasOffset06           # value in use (read back by the tester, 22)
-    direction: out
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: AcMeasOffset07           # value in use (read back by the tester, 22)
-    direction: out
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: AcMeasOffset08           # value in use (read back by the tester, 22)
-    direction: out
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: AcMeasOffset09           # value in use (read back by the tester, 22)
-    direction: out
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: AcMeasOffset10           # value in use (read back by the tester, 22)
-    direction: out
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: AcMeasOffset11           # value in use (read back by the tester, 22)
-    direction: out
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: AcMeasOffset12           # value in use (read back by the tester, 22)
-    direction: out
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: AcMeasOffset13           # value in use (read back by the tester, 22)
-    direction: out
-    type: sint16
-    runnables: [CalTask10ms]
-  - name: AcMeasOffset14           # value in use (read back by the tester, 22)
-    direction: out
-    type: sint16
+    dimension: CellCount
     runnables: [CalTask10ms]
   - name: CalMeasOffset_V           # value in use, physical, for CellChannels
     direction: out
@@ -497,74 +127,10 @@ ports:
     dimension: CellCount
     init: 10000
     runnables: [CalTask10ms]
-  - name: AcMeasGain01           # value in use (read back by the tester, 22)
+  - name: AcMeasGain           # values in use of the 14 channels (read back by the tester, 22 0201)
     direction: out
     type: uint16
-    init: 10000
-    runnables: [CalTask10ms]
-  - name: AcMeasGain02           # value in use (read back by the tester, 22)
-    direction: out
-    type: uint16
-    init: 10000
-    runnables: [CalTask10ms]
-  - name: AcMeasGain03           # value in use (read back by the tester, 22)
-    direction: out
-    type: uint16
-    init: 10000
-    runnables: [CalTask10ms]
-  - name: AcMeasGain04           # value in use (read back by the tester, 22)
-    direction: out
-    type: uint16
-    init: 10000
-    runnables: [CalTask10ms]
-  - name: AcMeasGain05           # value in use (read back by the tester, 22)
-    direction: out
-    type: uint16
-    init: 10000
-    runnables: [CalTask10ms]
-  - name: AcMeasGain06           # value in use (read back by the tester, 22)
-    direction: out
-    type: uint16
-    init: 10000
-    runnables: [CalTask10ms]
-  - name: AcMeasGain07           # value in use (read back by the tester, 22)
-    direction: out
-    type: uint16
-    init: 10000
-    runnables: [CalTask10ms]
-  - name: AcMeasGain08           # value in use (read back by the tester, 22)
-    direction: out
-    type: uint16
-    init: 10000
-    runnables: [CalTask10ms]
-  - name: AcMeasGain09           # value in use (read back by the tester, 22)
-    direction: out
-    type: uint16
-    init: 10000
-    runnables: [CalTask10ms]
-  - name: AcMeasGain10           # value in use (read back by the tester, 22)
-    direction: out
-    type: uint16
-    init: 10000
-    runnables: [CalTask10ms]
-  - name: AcMeasGain11           # value in use (read back by the tester, 22)
-    direction: out
-    type: uint16
-    init: 10000
-    runnables: [CalTask10ms]
-  - name: AcMeasGain12           # value in use (read back by the tester, 22)
-    direction: out
-    type: uint16
-    init: 10000
-    runnables: [CalTask10ms]
-  - name: AcMeasGain13           # value in use (read back by the tester, 22)
-    direction: out
-    type: uint16
-    init: 10000
-    runnables: [CalTask10ms]
-  - name: AcMeasGain14           # value in use (read back by the tester, 22)
-    direction: out
-    type: uint16
+    dimension: CellCount
     init: 10000
     runnables: [CalTask10ms]
   - name: CalMeasGain           # value in use, physical, for CellChannels

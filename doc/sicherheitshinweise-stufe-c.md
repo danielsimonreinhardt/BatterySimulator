@@ -367,3 +367,18 @@ Aufbau unveraendert (Nutzer: "Ja der Aufbau steht noch"): J-Link, CANcaseXL Ch2,
   `AcSetGain` 10000, Offsets und bereitgelegte Werte 0; ein nie geschriebener Block (Standard aus dem generierten RTE) startet mit 1,0000, Zustand 0; ein Standardwert 0 (Anfangswert fehlt)
   gibt Werkswerte und Zustand 2. Alle anderen Tests starten nun mit dem Standardwert aus dem RTE statt mit 0.
 * Version 0.3.4; Groesse, Anzahl und Kennungen der NvM-Bloecke und die Diagnosekennungen unveraendert. Dass gespeicherte Werte aus 0.3.3 nach dem Flashen gueltig bleiben, ist am Geraet noch nicht geprueft (naechster Geraetetermin). **Nicht geflasht.**
+
+## 16. Kalibrierung als Feld an Vektorports (RTE-57, Version 0.4.0, 01.11.2026)
+
+* **Aenderung:** Die Kalibrierwerte liefen bis 0.3.3 ueber 14 Kennungen `0x0201`..`0x020E` (vier Werte je Kanal) und 112 skalare Ports in `CellCal` (56 bereitgelegt, 56 benutzt). Mit neXtBSW
+  b14845b8 (RTE-57) ist ein Datenelement ein Feld an einem Vektorport: eine Kennung `0x0201` `CalValues` mit vier Feldern zu je 14 Werten (SetOffset, SetGain, MeasOffset, MeasGain, Kanal 1
+  zuerst, 56 Werte zu 2 Byte, 112 Byte) und acht Vektorports (`StSetOffset`..`StMeasGain`, `AcSetOffset`..`AcMeasGain`). `CellCal.OutputsOn` heisst wieder `OutputEnable` (RTE-49). Version 0.4.0.
+* **Gewaehlt wurde eine Kennung statt vier (je Wertart):** bei vier Kennungen koennte ein Tester drei Wertarten bereitlegen und MeasOffset vergessen. Das Feld steht dann bei 0 = "nie geschrieben", und die
+  Routine uebernaehme fuer die betroffenen Kanaele MeasOffset 0 und loeschte den benutzten Wert, ohne abzulehnen (ein fehlender Gain wird abgelehnt, 0 liegt ausserhalb der Grenzen). Eine Kennung mit allen
+  vier Feldern behaelt, was bei den Kennungen je Kanal galt: alle Werte des Kanals stehen in **einem** `2E`.
+* **Schreiben:** `2E 0201` traegt immer alle 56 Werte. Der Tester liest zuerst mit `22 0201` und schreibt die unveraenderten Kanaele zurueck. Die Grenzen (Offset +-0,2 V, Steigung 0,9..1,1) gelten je Wert;
+  ein einzelner ungueltiger Wert (auch 0) lehnt den ganzen Schreibzugriff mit NRC 0x31 ab, bevor etwas bereitgelegt wird. Die Routine `0x0200` und ihre Ablehnungen (Ausgang ein, Wert ausserhalb, nichts Neues) sind unveraendert.
+* **Achtung, Schnittstelle:** `0x0201` hat ein anderes Layout (vorher 8 Byte fuer Kanal 1, jetzt 112 Byte fuer alle Kanaele), `0x0202`..`0x020E` entfallen. Tester-Skripte und Protokolle der Termine bis 31.10. (zum Beispiel `doc/messungen-kalibrierung-fluke-2026-10-31.md`) gelten fuer die alte Kennung und passen nicht mehr auf 0.4.0.
+* **Grenzen der Diagnose:** `2E` ist 115 Byte lang (Dienst, Kennung, 112 Byte Daten), die Antwort von `22` ebenso; der Diagnosepuffer hat 256 Byte (`DIAG_PAYLOAD_SIZE`). Die Reihenfolge im Feld (Offset 0, 28, 56, 84; je 14 Werte zu 2 Byte, hoeherwertiges Byte zuerst) ist im erzeugten `DiagDescription.cpp` geprueft; `2E` prueft jeden Wert gegen die Grenzen (NRC 0x31), bevor etwas bereitgelegt wird.
+* **Unveraendert:** NvM-Bloecke (Groesse, Anzahl, Kennungen, Zweikopienschutz), Grenzpruefung in `CellCal`, Anfangswerte (RTE-56), Zustand `0x0210`, `CellChannels`. Die gespeicherte Kalibrierung vom 31.10. (Messpfad acht Kanaele,
+  Stellpfad 14) bleibt gueltig und muss nicht neu eingegeben werden.

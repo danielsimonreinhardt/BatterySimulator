@@ -26,6 +26,10 @@
  * '<S1>/NvMeasOffsetIn_r'
  * '<S1>/NvSetGainIn_r'
  * '<S1>/NvSetOffsetIn_r'
+ * '<S1>/StMeasGain_r'
+ * '<S1>/StMeasOffset_r'
+ * '<S1>/StSetGain_r'
+ * '<S1>/StSetOffset_r'
  */
 #if Rte_SysCon_CellCount != 14
 # error "The preprocessor definition 'Rte_SysCon_CellCount' must be equal to '14'"

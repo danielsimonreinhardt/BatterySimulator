@@ -9,12 +9,12 @@ Punkte C-1 bis C-7) steht im Review-Artefakt "Review BattSim Stufe C" und ist am
 
 ```mermaid
 flowchart LR
-    T["Tester / Kalibrierskript<br/>UDS ueber 0x7E1 / 0x7E9"] -->|"2E CalCh01..14<br/>(Extended + Security)"| ST["Staging-Ports<br/>56 Werte"]
+    T["Tester / Kalibrierskript<br/>UDS ueber 0x7E1 / 0x7E9"] -->|"2E 0201 CalValues<br/>(Extended + Security)"| ST["4 Staging-Vektorports<br/>je 14 Werte"]
     T -->|"31 01 0200 ApplyCalibration"| CAL
     ST --> CAL["CellCal<br/>uebernimmt nur bei Ausgang aus,<br/>alles oder nichts"]
     NV[("NvM, 4 Bloecke<br/>asil_b, 2 Kopien")] <--> CAL
     CAL -->|"4 Vektoren float32<br/>Offset V, Steigung"| CH["CellChannels<br/>Kalibrierung + PI-Regler"]
-    CAL -->|"22 CalCh01..14<br/>22 0x0210"| T
+    CAL -->|"22 0201 CalValues<br/>22 0x0210"| T
     SUP["SupplyMonitor<br/>LimitActive"] --> CH
     MODE["BattSimMode<br/>OutputEnable"] --> CAL
     MODE --> CH
@@ -55,13 +55,14 @@ Vier Werte je Kanal: Offset und Steigung fuer das **Stellen** und fuer das **Mes
 * **Messen:** `Istwert = MessSteigung * Kennlinienwert + MessOffset`, danach der Tiefpass. Vor dem ersten Lauf von `CellCal` (Port noch 0)
   und bei Werten ausserhalb 0,5..1,5 bzw. +-0,5 V gelten in `CellChannels` die Werkswerte.
 * **Ablauf des Testers** (alle Schritte in der Extended-Session, nach `27` mit Stufe "Application"):
-  1. Je Kanal `2E 02xx` mit vier Werten (Kennungen `0x0201`..`0x020E`). Das legt die Werte nur bereit; im Betrieb aendert sich nichts.
-     Die Diagnose lehnt Werte ausserhalb der Grenzen ab (NRC 0x31).
+  1. Ein `2E 0201` mit **allen** Werten: vier Felder zu je 14 Werten, Kanal 1 zuerst (SetOffset, SetGain, MeasOffset, MeasGain; 56 Werte zu 2 Byte, 112 Byte). Der Tester liest vorher
+     mit `22 0201` und schreibt die unveraenderten Kanaele mit ihrem benutzten Wert zurueck. Das legt die Werte nur bereit; im Betrieb aendert sich nichts.
+     Die Diagnose lehnt Werte ausserhalb der Grenzen ab (NRC 0x31), auch einen einzelnen: ein Kanal mit Steigung 0 sperrt den ganzen Schreibzugriff.
   2. Ausgang aus, dann `31 01 0200` (`ApplyCalibration`), kurz warten (das Modell laeuft alle 10 ms), `31 03 0200` liest das Ergebnis:
      `0` uebernommen, `1` abgelehnt (Ausgang ein), `2` Wert ausser Bereich (`badChannel` nennt den ersten Kanal, es aendert sich nichts),
      `3` nichts Neues. Neu ist ein Kanal, dessen bereitgelegte Werte sich von den benutzten unterscheiden und nicht alle 0 sind (alle 0 =
      seit dem Start nicht beschrieben). Alles oder nichts.
-  3. `22 02xx` liest die **benutzten** Werte zurueck, `22 0210` den Zustand: `0` Werkswerte (nie geschrieben), `1` gespeichert/uebernommen,
+  3. `22 0201` liest die **benutzten** Werte zurueck, `22 0210` den Zustand: `0` Werkswerte (nie geschrieben), `1` gespeichert/uebernommen,
      `2` Speicher defekt (Werkswerte oder Werte ersetzt).
 * **Ablage:** vier NvM-Bloecke `CalSetOffset`, `CalSetGain`, `CalMeasOffset`, `CalMeasGain` (je 14 Werte, `integrity: asil_b`: zwei Kopien mit
   CRC-32, eine defekte Kopie wird aus der anderen repariert, `write: change`, hoechstens alle 2 s). Sind beide Kopien defekt, laedt der NvM den
@@ -99,7 +100,7 @@ Sollwert unter dem Pegelboden `OutputFloor_V` (0,7 V, ohne Last gemessen) arbeit
 
 | Kennung | Inhalt | Lesen | Schreiben |
 |---|---|---|---|
-| `0x0201`..`0x020E` `CalCh01..14` | je 4 Werte (SetOffset, SetGain, MeasOffset, MeasGain) | Default, Extended | Extended, Security "Application" |
+| `0x0201` `CalValues` | 4 Felder zu je 14 Werten, Kanal 1 zuerst (SetOffset, SetGain, MeasOffset, MeasGain; 112 Byte) | Default, Extended | Extended, Security "Application" |
 | `0x0210` `CalibrationState` | Zustand 0/1/2 | Default, Extended | nein |
 | `0x0211` `ControllerControl` | `controllerOff` 0 ein, 1 aus | Default, Extended | Extended, Security "Application" |
 | Routine `0x0200` `ApplyCalibration` | start (Uebernahme), results (Ergebnis, `badChannel`) | | Extended, Security "Application" |
@@ -130,8 +131,9 @@ starten mit den Standardwerten: die Kalibrierung geht bei jedem Reset verloren, 
 
 ## 8. Befunde zu neXtBSW (an den Koordinator gemeldet, im Kundenprojekt umgangen oder hingenommen)
 
-1. **Datenidentifier-Elemente und Routinenparameter nur skalar** (`rtegen _diag_scalar`): 56 skalare Required-Ports zum Schreiben und 56
-   Provided-Ports zum Zuruecklesen statt Vektorports. Board-Frage `diag-did-vektor`; bis dahin Generatorskript.
+1. **Datenidentifier-Elemente und Routinenparameter nur skalar** (`rtegen _diag_scalar`): bis 0.3.4 56 skalare Required-Ports zum Schreiben und 56
+   Provided-Ports zum Zuruecklesen, 14 Kennungen `0x0201`..`0x020E`. **Erledigt mit RTE-57 (neXtBSW b14845b8, Firmware 0.4.0):** `diag.yaml` kennt `count`, ein Datenelement
+   ist ein Feld an einem Vektorport. Seitdem eine Kennung `0x0201` mit vier Feldern zu je 14 Werten, 8 Vektorports (`StSetOffset`..`StMeasGain`, `AcSetOffset`..`AcMeasGain`).
 2. **Symbolische Dimension und MATLAB-Function-Block:** Embedded Coder bricht mit "does not support symbolic dimensions propagation" ab, wenn ein Vektorport mit
    `dimension: CellCount` direkt in einen MATLAB-Function-Block fuehrt. Umgehung hier: ein Reshape-Block vor und hinter dem Kern (`swc/swc_vec.m`), die
    Konstante ist per `min = max = 14` an die Schleifenlaenge des Modells gebunden. Ein Projekt kann keine andere Zahl binden.
@@ -142,6 +144,7 @@ starten mit den Standardwerten: die Kalibrierung geht bei jedem Reset verloren, 
    (`StSetGainNN`, `StMeasGainNN`) behalten 0 = nie geschrieben. `CellCal` nimmt den Wert eines nie geschriebenen Blocks jetzt, wie er kommt, und prueft ihn
    gegen die Grenzen (Abschnitt 15 der Sicherheitshinweise).
 4. **RTE-49 (gleichnamige Ports):** `CellCal` und `CellChannels` hatten beide einen Required-Port `OutputEnable`; die beiden Header definieren dasselbe
-   Makro verschieden, der Bau bricht ab. `CellCal.OutputsOn` heisst jetzt anders.
+   Makro verschieden, der Bau bricht ab. Bis 0.3.4 hiess der Port von `CellCal` `OutputsOn`. **Erledigt mit RTE-49 (b14845b8, Firmware 0.4.0):** gleiche Namen sind erlaubt,
+   `CellCal.OutputEnable` heisst wieder wie in den anderen Komponenten.
 5. **RTE-54** (rtegen-Cast bei Eingangsports mit Konstanten-Dimension und mehreren Lesern, GCC 14) ist hier nicht aufgetreten: jeder Vektor hat genau einen Leser, und
    gebaut wird mit arm-gcc 11.3 (Target) und zig cc (SIL). Mit GCC 14 ist es nicht geprueft.

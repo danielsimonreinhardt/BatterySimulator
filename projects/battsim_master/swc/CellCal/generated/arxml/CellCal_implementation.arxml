@@ -3,7 +3,7 @@
 Auto generated XML Component Description for model CellCal
 Model version                : 1.2
 Simulink Coder version       : Simulink Coder 24.1 (R2024a) 19-Nov-2023
-Model Checksum               : 1872630003 3299259749 1725763829 2813168544
+Model Checksum               : 4055117618 476131315 3037568670 2090878096
 -->
 <AUTOSAR xmlns="http://autosar.org/schema/r4.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://autosar.org/schema/r4.0 AUTOSAR_00051.xsd">
     <AR-PACKAGES>
@@ -14,7 +14,7 @@ Model Checksum               : 1872630003 3299259749 1725763829 2813168544
                 <AR-PACKAGE>
                     <SHORT-NAME>SwcImplementations</SHORT-NAME>
                     <ELEMENTS>
-                        <SWC-IMPLEMENTATION UUID="5f3dcbee-b73a-5e21-7846-f65d82204724">
+                        <SWC-IMPLEMENTATION UUID="7bd02910-27fa-5994-baa6-a8eb5cf5d1c3">
                             <SHORT-NAME>CellCal_Impl</SHORT-NAME>
                             <CODE-DESCRIPTORS>
                                 <CODE>
