@@ -204,6 +204,50 @@ param(c, "CtrlKi_per_s", "float32", [1.0], "[1/s]  integral gain of the regulato
 param(c, "CtrlLimit_V", "float32", [0.1], "[V]    the regulator corrects by at most this much in both directions (FW-07: 0.1 V)",
       unit="V", min=0, max=0.1, description="Begrenzung der Reglerkorrektur")
 
+# ------------------------------------------------------------------ HandControl (stage D, part 1)
+# Hand mode and selection (doc/stufe-d-handbetrieb-anzeige.md): the inputs that the drivers of neXtBSW IO-117/IO-118 will deliver are
+# connected to rte.init until then (they keep their init value; the SIL test writes the RTE buffers). The names are the ones the
+# drivers shall use (section 6 of the document).
+c = "HandControl"
+components[c] = dict(description="Handbetrieb: Drehgeber und Karten-Tasten zu Sollwerten und Freigaben der Kanaele, Kanalwahl, Anzeigewert",
+                     runnable="HandTask10ms", ports=[], params=[])
+port(c, "HandActive", "in", "boolean", "rte.init", "hand mode (STANDALONE) is active; from BattSimMode in step 2 of stage D")
+port(c, "EncVoltCount", "in", "uint16", "rte.init", "free-running counter of the voltage encoder (enc.ENC_VOLTAGE.count, IO-118), wraps")
+port(c, "EncVoltButton", "in", "boolean", "rte.init", "push button of the voltage encoder (dio.in.ENC_VOLTAGE_BTN), true = pressed")
+port(c, "EncSelCount", "in", "uint16", "rte.init", "free-running counter of the channel encoder (enc.ENC_SELECT.count, IO-118), wraps")
+port(c, "EncSelButton", "in", "boolean", "rte.init", "push button of the channel encoder (dio.in.ENC_SELECT_BTN), true = pressed")
+for n in CH:
+    port(c, f"CardKey{n:02d}", "in", "boolean", "rte.init", f"STATUS key of card {n} (dio.in.STATUS_{n:02d}), true = pressed")
+port(c, "ActualVolt_V", "in", "float32", "rte.init", "actual values of the channels, from CellChannels in step 2 of stage D", dimension="CellCount")
+port(c, "HandSetpoint_V", "out", "float32", "rte", "setpoints of the hand mode", dimension="CellCount")
+port(c, "HandEnable", "out", "boolean", "rte", "release of the channels in the hand mode", dimension="CellCount")
+port(c, "SelectedChannel", "out", "uint8", "rte", "selected channel 1..14 (SELECT LED of the card)")
+port(c, "SelectAllMode", "out", "boolean", "rte", "all channels are edited together")
+port(c, "DisplayValue_mV", "out", "uint16", None, "actual value of the selected channel in mV (0..9999) for the display")
+param(c, "CellCount", "sint32", [14], "dimension of the vector ports, bound to BattSimParams.CellCount in rte.yaml", kind="constant",
+      min=14, max=14, description="Anzahl der Zellkanaele (Dimension der Vektorports)")
+param(c, "SetpointLimit_V", "float32", [5.0], "[V]    upper setpoint limit, bound to BattSimParams.CellVoltLimit_V in rte.yaml",
+      unit="V", min=0, max=5.0, description="Obere Grenze jedes Sollwerts")
+param(c, "CoarseStep_mV", "float32", [15], "[mV]   setpoint step per detent, coarse (derived from EncoderGainCoarse_P = 30 of the old firmware, to be measured at the device)",
+      unit="mV", min=1, max=100, description="Sollwertschritt je Raste grob")
+param(c, "FineStep_mV", "float32", [1], "[mV]   setpoint step per detent, fine (derived from EncoderGainFine_P = 2, to be measured at the device)",
+      unit="mV", min=0.1, max=10, description="Sollwertschritt je Raste fein")
+param(c, "CountsPerStep", "uint8", [4], "[-]    counts of the quadrature decoder per detent (x4 decoding)",
+      unit="-", min=1, max=8, description="Zaehlerschritte je Raste")
+param(c, "KeyDebounce_cycles", "uint8", [3], "[10 ms] a key level counts after this many equal samples")
+
+# ------------------------------------------------------------------ DisplayDriver (stage D, part 1)
+c = "DisplayDriver"
+components[c] = dict(description="Anzeige: 4 Ziffern des 7-Segment-Moduls (I2C 0x71), ein Byte je Schreibauftrag",
+                     runnable="DispTask10ms", ports=[], params=[])
+port(c, "DisplayValue_mV", "in", "uint16", "HandControl.DisplayValue_mV.DisplayValue_mV", "value to show in mV, from HandControl")
+port(c, "DispTxDone", "in", "uint8", "rte.init", "counter of the finished write orders (i2c.DISPLAY.write.done, IO-117); equal to DispTxRequest = free")
+port(c, "DispTxError", "in", "boolean", "rte.init", "the last write order failed (i2c.DISPLAY.write.error, IO-117)")
+port(c, "DispTxByte", "out", "uint8", "rte", "the next byte for address 0x71 (i2c.DISPLAY.write.byte)")
+port(c, "DispTxRequest", "out", "uint8", "rte", "counter: every change is one write order of one byte (i2c.DISPLAY.write.request)")
+param(c, "DisplayRefresh_cycles", "uint16", [100], "[10 ms] the picture is sent again after this time even if the value did not change (a module that lost its power comes back)")
+param(c, "DisplayRetry_cycles", "uint16", [50], "[10 ms] pause after a failed write order, then the picture starts again with a clear")
+
 
 def fmt(v):
     return repr(float(v)) if isinstance(v, float) else str(v)
@@ -258,7 +302,7 @@ for comp, d in components.items():
 # ------------------------------------------------------------------ connections of rte.yaml
 # key: the port that is connected; value: its source (required port) or its targets (provided port with a CAN signal,
 # a pin, a data identifier, ...). A provided port that only feeds components has no line.
-order = ["SupplyMonitor", "BattSimMode", "CellCal", "CellChannels"]
+order = ["SupplyMonitor", "BattSimMode", "CellCal", "CellChannels", "HandControl", "DisplayDriver"]
 out = ["connections:"]
 for comp in order:
     for key, target in connections.items():

@@ -23,6 +23,10 @@ components:
     path: swc/CellCal
   - name: CellChannels
     path: swc/CellChannels
+  - name: HandControl         # hand mode and selection (stage D, part 1): encoders and card keys to setpoints and releases
+    path: swc/HandControl
+  - name: DisplayDriver       # 7-segment display (stage D, part 1): digits of the selected channel, one byte per write order
+    path: swc/DisplayDriver
 
 # Global values (RTE-47/RTE-48, stage C): <Component>.<Parameter>: <ParameterComponent>.<Name>. The number of cell channels is a
 # constant of the build (the dimension of the vector ports of CellCal and CellChannels, min = max = 14); the setpoint limit is
@@ -31,6 +35,8 @@ parameters:
   CellCal.CellCount: BattSimParams.CellCount
   CellChannels.CellCount: BattSimParams.CellCount
   CellChannels.SetpointLimit_V: BattSimParams.CellVoltLimit_V
+  HandControl.CellCount: BattSimParams.CellCount
+  HandControl.SetpointLimit_V: BattSimParams.CellVoltLimit_V
 
 # CAN matrix of the simulator (Stufe A): BattSimV1 content unchanged (LabControl driver stays valid) plus nodes, cycle
 # times and 0x121 STATUS_BATTSIM_EXT; sender BATTSIM = this ECU, counterpart LABCONTROL (Board battsim-knoten-gegenseite).
@@ -309,3 +315,32 @@ connections:
   CellChannels.Cell15VoltAct_V.Cell15VoltAct_V: can.tx.STATUS_CELL13_14_15.CELL15_VOLTAGE_ACT
   CellChannels.Cell16State.Cell16State: can.tx.STATUS_CELL16.CELL16_STATUS
   CellChannels.Cell16VoltAct_V.Cell16VoltAct_V: can.tx.STATUS_CELL16.CELL16_VOLTAGE_ACT
+  HandControl.HandActive.HandActive: rte.init
+  HandControl.EncVoltCount.EncVoltCount: rte.init
+  HandControl.EncVoltButton.EncVoltButton: rte.init
+  HandControl.EncSelCount.EncSelCount: rte.init
+  HandControl.EncSelButton.EncSelButton: rte.init
+  HandControl.CardKey01.CardKey01: rte.init
+  HandControl.CardKey02.CardKey02: rte.init
+  HandControl.CardKey03.CardKey03: rte.init
+  HandControl.CardKey04.CardKey04: rte.init
+  HandControl.CardKey05.CardKey05: rte.init
+  HandControl.CardKey06.CardKey06: rte.init
+  HandControl.CardKey07.CardKey07: rte.init
+  HandControl.CardKey08.CardKey08: rte.init
+  HandControl.CardKey09.CardKey09: rte.init
+  HandControl.CardKey10.CardKey10: rte.init
+  HandControl.CardKey11.CardKey11: rte.init
+  HandControl.CardKey12.CardKey12: rte.init
+  HandControl.CardKey13.CardKey13: rte.init
+  HandControl.CardKey14.CardKey14: rte.init
+  HandControl.ActualVolt_V.ActualVolt_V: rte.init
+  HandControl.HandSetpoint_V.HandSetpoint_V: rte
+  HandControl.HandEnable.HandEnable: rte
+  HandControl.SelectedChannel.SelectedChannel: rte
+  HandControl.SelectAllMode.SelectAllMode: rte
+  DisplayDriver.DisplayValue_mV.DisplayValue_mV: HandControl.DisplayValue_mV.DisplayValue_mV
+  DisplayDriver.DispTxDone.DispTxDone: rte.init
+  DisplayDriver.DispTxError.DispTxError: rte.init
+  DisplayDriver.DispTxByte.DispTxByte: rte
+  DisplayDriver.DispTxRequest.DispTxRequest: rte

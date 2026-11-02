@@ -50,3 +50,18 @@ tests:
       - projects/battsim_master/test/battsim_sil_test.c
     requires: [ziglang]
     timeout: 600
+
+  - name: battsim-sil-hand
+    group: host
+    kind: script
+    comment: >
+      Software-in-the-Loop von HandControl und DisplayDriver auf dem PC (Stufe D, Teil 1; doc/stufe-d-handbetrieb-anzeige.md): Kanalwahl 1..14 mit
+      Zaehlerueberlauf und Teilrasten, Sollwerte grob/fein in mV mit Grenzen 0 V und SetpointLimit, Alle-Modus, Karten-Tasten (Entprellung, keine
+      Wiederholung), Handbetrieb startet mit 0 V und allen Kanaelen frei, Anzeigewert; Bytefolge der Anzeige (Loeschen, Cursor, Ziffern, Dezimalpunkt),
+      neues Bild nur bei Aenderung oder nach der Auffrischzeit, langsamer Treiber, Fehler eines Schreibauftrags mit Neustart des Bildes. Die Treiber
+      von neXtBSW IO-117 und IO-118 gibt es noch nicht; der Test spielt Drehgeber, Tasten und I2C-Treiber
+    args: [projects/battsim_master/test/test_battsim_sil.py, projects/battsim_master/test/handdisplay_sil_test.c]
+    covers:
+      - projects/battsim_master/test/handdisplay_sil_test.c
+    requires: [ziglang]
+    timeout: 600

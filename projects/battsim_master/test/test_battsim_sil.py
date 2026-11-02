@@ -17,7 +17,7 @@ from pathlib import Path
 WORKSPACE = Path(__file__).resolve().parents[3]
 TREE = WORKSPACE / "nextbsw"
 PROJECT = WORKSPACE / "projects" / "battsim_master"
-COMPONENTS = ["SupplyMonitor", "BattSimMode", "CellCal", "CellChannels"]
+COMPONENTS = ["SupplyMonitor", "BattSimMode", "CellCal", "CellChannels", "HandControl", "DisplayDriver"]
 E2E = TREE / "libs" / "bsw" / "e2e"
 ALIVE_CONFIG = re.compile(
     r"E2E_AliveConfigType const (\w+)_ALIVE_CONFIG = \{/\* CounterBits \*/ (\d+)U, /\* MaxDeltaCounter \*/ (\d+)U, "

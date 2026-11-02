@@ -1,0 +1,38 @@
+# SPDX-License-Identifier: Apache-2.0
+# Description of DisplayDriver: the model DisplayDriver.slx is the master (made by DisplayDriver_create.m); this file is the
+# description it matches, and tools/rtegen compares it with the generated ARXML. Written by tools/gen_swc_ports.py.
+version: 1
+name: DisplayDriver
+description: "Anzeige: 4 Ziffern des 7-Segment-Moduls (I2C 0x71), ein Byte je Schreibauftrag"
+implementation: simulink
+runnables:
+  - name: DispTask10ms
+    period_ms: 10
+ports:
+  - name: DisplayValue_mV           # value to show in mV, from HandControl
+    direction: in
+    type: uint16
+    runnables: [DispTask10ms]
+  - name: DispTxDone           # counter of the finished write orders (i2c.DISPLAY.write.done, IO-117); equal to DispTxRequest = free
+    direction: in
+    type: uint8
+    runnables: [DispTask10ms]
+  - name: DispTxError           # the last write order failed (i2c.DISPLAY.write.error, IO-117)
+    direction: in
+    type: boolean
+    runnables: [DispTask10ms]
+  - name: DispTxByte           # the next byte for address 0x71 (i2c.DISPLAY.write.byte)
+    direction: out
+    type: uint8
+    runnables: [DispTask10ms]
+  - name: DispTxRequest           # counter: every change is one write order of one byte (i2c.DISPLAY.write.request)
+    direction: out
+    type: uint8
+    runnables: [DispTask10ms]
+parameters:
+  - name: DisplayRefresh_cycles
+    type: uint16
+    runnables: [DispTask10ms]
+  - name: DisplayRetry_cycles
+    type: uint16
+    runnables: [DispTask10ms]

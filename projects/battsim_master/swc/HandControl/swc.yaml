@@ -1,0 +1,153 @@
+# SPDX-License-Identifier: Apache-2.0
+# Description of HandControl: the model HandControl.slx is the master (made by HandControl_create.m); this file is the
+# description it matches, and tools/rtegen compares it with the generated ARXML. Written by tools/gen_swc_ports.py.
+version: 1
+name: HandControl
+description: "Handbetrieb: Drehgeber und Karten-Tasten zu Sollwerten und Freigaben der Kanaele, Kanalwahl, Anzeigewert"
+implementation: simulink
+runnables:
+  - name: HandTask10ms
+    period_ms: 10
+ports:
+  - name: HandActive           # hand mode (STANDALONE) is active; from BattSimMode in step 2 of stage D
+    direction: in
+    type: boolean
+    runnables: [HandTask10ms]
+  - name: EncVoltCount           # free-running counter of the voltage encoder (enc.ENC_VOLTAGE.count, IO-118), wraps
+    direction: in
+    type: uint16
+    runnables: [HandTask10ms]
+  - name: EncVoltButton           # push button of the voltage encoder (dio.in.ENC_VOLTAGE_BTN), true = pressed
+    direction: in
+    type: boolean
+    runnables: [HandTask10ms]
+  - name: EncSelCount           # free-running counter of the channel encoder (enc.ENC_SELECT.count, IO-118), wraps
+    direction: in
+    type: uint16
+    runnables: [HandTask10ms]
+  - name: EncSelButton           # push button of the channel encoder (dio.in.ENC_SELECT_BTN), true = pressed
+    direction: in
+    type: boolean
+    runnables: [HandTask10ms]
+  - name: CardKey01           # STATUS key of card 1 (dio.in.STATUS_01), true = pressed
+    direction: in
+    type: boolean
+    runnables: [HandTask10ms]
+  - name: CardKey02           # STATUS key of card 2 (dio.in.STATUS_02), true = pressed
+    direction: in
+    type: boolean
+    runnables: [HandTask10ms]
+  - name: CardKey03           # STATUS key of card 3 (dio.in.STATUS_03), true = pressed
+    direction: in
+    type: boolean
+    runnables: [HandTask10ms]
+  - name: CardKey04           # STATUS key of card 4 (dio.in.STATUS_04), true = pressed
+    direction: in
+    type: boolean
+    runnables: [HandTask10ms]
+  - name: CardKey05           # STATUS key of card 5 (dio.in.STATUS_05), true = pressed
+    direction: in
+    type: boolean
+    runnables: [HandTask10ms]
+  - name: CardKey06           # STATUS key of card 6 (dio.in.STATUS_06), true = pressed
+    direction: in
+    type: boolean
+    runnables: [HandTask10ms]
+  - name: CardKey07           # STATUS key of card 7 (dio.in.STATUS_07), true = pressed
+    direction: in
+    type: boolean
+    runnables: [HandTask10ms]
+  - name: CardKey08           # STATUS key of card 8 (dio.in.STATUS_08), true = pressed
+    direction: in
+    type: boolean
+    runnables: [HandTask10ms]
+  - name: CardKey09           # STATUS key of card 9 (dio.in.STATUS_09), true = pressed
+    direction: in
+    type: boolean
+    runnables: [HandTask10ms]
+  - name: CardKey10           # STATUS key of card 10 (dio.in.STATUS_10), true = pressed
+    direction: in
+    type: boolean
+    runnables: [HandTask10ms]
+  - name: CardKey11           # STATUS key of card 11 (dio.in.STATUS_11), true = pressed
+    direction: in
+    type: boolean
+    runnables: [HandTask10ms]
+  - name: CardKey12           # STATUS key of card 12 (dio.in.STATUS_12), true = pressed
+    direction: in
+    type: boolean
+    runnables: [HandTask10ms]
+  - name: CardKey13           # STATUS key of card 13 (dio.in.STATUS_13), true = pressed
+    direction: in
+    type: boolean
+    runnables: [HandTask10ms]
+  - name: CardKey14           # STATUS key of card 14 (dio.in.STATUS_14), true = pressed
+    direction: in
+    type: boolean
+    runnables: [HandTask10ms]
+  - name: ActualVolt_V           # actual values of the channels, from CellChannels in step 2 of stage D
+    direction: in
+    type: float32
+    dimension: CellCount
+    runnables: [HandTask10ms]
+  - name: HandSetpoint_V           # setpoints of the hand mode
+    direction: out
+    type: float32
+    dimension: CellCount
+    runnables: [HandTask10ms]
+  - name: HandEnable           # release of the channels in the hand mode
+    direction: out
+    type: boolean
+    dimension: CellCount
+    runnables: [HandTask10ms]
+  - name: SelectedChannel           # selected channel 1..14 (SELECT LED of the card)
+    direction: out
+    type: uint8
+    runnables: [HandTask10ms]
+  - name: SelectAllMode           # all channels are edited together
+    direction: out
+    type: boolean
+    runnables: [HandTask10ms]
+  - name: DisplayValue_mV           # actual value of the selected channel in mV (0..9999) for the display
+    direction: out
+    type: uint16
+    runnables: [HandTask10ms]
+parameters:
+  - name: CellCount
+    kind: constant
+    type: sint32
+    min: 14
+    max: 14
+    description: "Anzahl der Zellkanaele (Dimension der Vektorports)"
+    value: 14
+  - name: SetpointLimit_V
+    type: float32
+    unit: "V"
+    min: 0
+    max: 5.0
+    description: "Obere Grenze jedes Sollwerts"
+    runnables: [HandTask10ms]
+  - name: CoarseStep_mV
+    type: float32
+    unit: "mV"
+    min: 1
+    max: 100
+    description: "Sollwertschritt je Raste grob"
+    runnables: [HandTask10ms]
+  - name: FineStep_mV
+    type: float32
+    unit: "mV"
+    min: 0.1
+    max: 10
+    description: "Sollwertschritt je Raste fein"
+    runnables: [HandTask10ms]
+  - name: CountsPerStep
+    type: uint8
+    unit: "-"
+    min: 1
+    max: 8
+    description: "Zaehlerschritte je Raste"
+    runnables: [HandTask10ms]
+  - name: KeyDebounce_cycles
+    type: uint8
+    runnables: [HandTask10ms]

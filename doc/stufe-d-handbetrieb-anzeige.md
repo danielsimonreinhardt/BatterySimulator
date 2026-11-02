@@ -6,6 +6,14 @@ die Verdrahtung von Drehgebern, Anzeige und Karten-Tasten wird im Gerätetermin 
 Grundlage des alten Verhaltens: `BATTSIM_CONTROL.slx` (Dump `tools/slx_dump.py`, Zustandsautomat `ControlStateMachine`, `INPUT/*Encoder*`,
 `DISPLAY_TASK`), `parameter.m`, Firmware-Analyse und `can-verhalten.md` im Workspace BatterieSimulator. Alles, was nicht aus dem Modell stammt, ist als **Annahme** gekennzeichnet.
 
+## 0. Stand
+
+* **Schritt 1 fertig (02.11.2026):** `HandControl` und `DisplayDriver` als Simulink-Komponenten (`swc/HandControl`, `swc/DisplayDriver`, erzeugt von `tools/gen_swc_ports.py` und
+  `<Swc>_create.m`), in `rte.yaml` eingetragen, Eingänge der Treiber an `rte.init`. SIL-Test `battsim-sil-hand` (`handdisplay_sil_test.c`): 299 Prüfungen, 0 Fehler;
+  `battsim-sil` unverändert 980 Prüfungen, 0 Fehler; Workspace-Tests 9 von 9, 1503 Testfälle; Build warnungsfrei (text 220124 Byte, vorher 214116).
+  Bis Schritt 2 sind die Komponenten im Abbild enthalten, aber wirkungslos (kein Handbetrieb aktiv, keine Verbindung zu CellChannels und zu den Treibern).
+* **Schritt 2 offen:** Integration (Abschnitt 1), wartet auf die Entscheidung `bs-standalone-schutz`.
+
 ## 1. Zwei Schritte
 
 ```mermaid
