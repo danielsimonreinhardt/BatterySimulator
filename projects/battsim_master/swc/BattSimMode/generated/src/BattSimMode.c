@@ -197,12 +197,13 @@ void ModeTask10ms(void)                /* Explicit Task: ModeTask10ms */
       BattSimMode_ARID_DEF.reason = 2U;
     } else {
       (void)Rte_Read_CurrentInvalid_CurrentInvalid(&tmpRead_2);
-      if ((BattSimMode_ARID_DEF.st == 2) && tmpRead_2) {
+      valid = ((BattSimMode_ARID_DEF.st == 2) || (BattSimMode_ARID_DEF.st == 4));
+      if (valid && tmpRead_2) {
         BattSimMode_ARID_DEF.st = 3U;
         BattSimMode_ARID_DEF.reason = 5U;
       } else {
         (void)Rte_Read_OverVoltage_OverVoltage(&tmpRead_3);
-        if ((BattSimMode_ARID_DEF.st == 2) && tmpRead_3) {
+        if (valid && tmpRead_3) {
           BattSimMode_ARID_DEF.st = 3U;
           BattSimMode_ARID_DEF.reason = 6U;
         } else {
@@ -212,6 +213,16 @@ void ModeTask10ms(void)                /* Explicit Task: ModeTask10ms */
               BattSimMode_ARID_DEF.st = 1U;
               if (BattSimMode_ARID_DEF.reason == 4) {
                 BattSimMode_ARID_DEF.reason = 0U;
+              }
+            } else if (tmpRead_4) {
+              if (tmpRead_2) {
+                BattSimMode_ARID_DEF.st = 3U;
+                BattSimMode_ARID_DEF.reason = 5U;
+              } else {
+                BattSimMode_ARID_DEF.st = 4U;
+                if (BattSimMode_ARID_DEF.reason == 4) {
+                  BattSimMode_ARID_DEF.reason = 0U;
+                }
               }
             }
             break;
@@ -240,6 +251,15 @@ void ModeTask10ms(void)                /* Explicit Task: ModeTask10ms */
             }
             break;
 
+           case 4U:
+            if (tmpRead_4 || ((r == 2) && (m == 1))) {
+              BattSimMode_ARID_DEF.st = 0U;
+            } else if (tmpRead_0 || ((r == 2) && (m == 2))) {
+              BattSimMode_ARID_DEF.st = 1U;
+              BattSimMode_ARID_DEF.outBlock = TRUE;
+            }
+            break;
+
            default:
             if ((!tmpRead_1) && (((r == 2) && (m == 1)) || tmpRead_4)) {
               BattSimMode_ARID_DEF.st = 0U;
@@ -262,9 +282,18 @@ void ModeTask10ms(void)                /* Explicit Task: ModeTask10ms */
   if (valid) {
     /* Outport: '<Root>/BattSimStatus' */
     (void)Rte_Write_BattSimStatus_BattSimStatus(3U);
-  } else if (BattSimMode_ARID_DEF.st == 3) {
-    /* Outport: '<Root>/BattSimStatus' */
-    (void)Rte_Write_BattSimStatus_BattSimStatus(5U);
+  } else {
+    switch (BattSimMode_ARID_DEF.st) {
+     case 3:
+      /* Outport: '<Root>/BattSimStatus' */
+      (void)Rte_Write_BattSimStatus_BattSimStatus(5U);
+      break;
+
+     case 4:
+      /* Outport: '<Root>/BattSimStatus' */
+      (void)Rte_Write_BattSimStatus_BattSimStatus(2U);
+      break;
+    }
   }
 
   /* Outport: '<Root>/OutputStatus' incorporates:
@@ -273,7 +302,19 @@ void ModeTask10ms(void)                /* Explicit Task: ModeTask10ms */
   (void)Rte_Write_OutputStatus_OutputStatus(1U);
 
   /* MATLAB Function: '<S1>/ModeCore' */
-  tmpRead_1 = (BattSimMode_ARID_DEF.st == 2);
+  tmpRead_1 = ((BattSimMode_ARID_DEF.st == 2) || (BattSimMode_ARID_DEF.st == 4));
+
+  /* Outport: '<Root>/OutputEnable' incorporates:
+   *  MATLAB Function: '<S1>/ModeCore'
+   */
+  (void)Rte_Write_OutputEnable_OutputEnable(tmpRead_1);
+
+  /* Outport: '<Root>/HandActive' incorporates:
+   *  MATLAB Function: '<S1>/ModeCore'
+   */
+  (void)Rte_Write_HandActive_HandActive(BattSimMode_ARID_DEF.st == 4);
+
+  /* MATLAB Function: '<S1>/ModeCore' */
   if (tmpRead_1) {
     /* Outport: '<Root>/OutputStatus' */
     (void)Rte_Write_OutputStatus_OutputStatus(2U);
@@ -312,11 +353,6 @@ void ModeTask10ms(void)                /* Explicit Task: ModeTask10ms */
   } else {
     BattSimMode_ARID_DEF.tick++;
   }
-
-  /* Outport: '<Root>/OutputEnable' incorporates:
-   *  MATLAB Function: '<S1>/ModeCore'
-   */
-  (void)Rte_Write_OutputEnable_OutputEnable(tmpRead_1);
 
   /* Outport: '<Root>/AliveStatusBattSimExt' incorporates:
    *  SignalConversion generated from: '<S1>/AliveStatusBattSimExt'

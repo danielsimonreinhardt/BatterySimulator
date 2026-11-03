@@ -21,9 +21,11 @@
 #endif                                 /* CellChannels_COMMON_INCLUDES_ */
 
 #include "CellChannels_types.h"
+#include "Rte_Cfg.h"
 
 /* PublicStructure Variables for Internal Data, for system '<Root>' */
 typedef struct {
+  float32 ActualVolt_V[Rte_SysCon_CellCount];/* '<Root>/ActualVolt_V' */
   float32 y[14];                       /* '<S1>/CellCore' */
   float32 integ[14];                   /* '<S1>/CellCore' */
   float32 corrHold[14];                /* '<S1>/CellCore' */
@@ -40,7 +42,7 @@ typedef struct {
 } ConstB_CellChannels_T;
 
 /* PublicStructure Variables for Internal Data */
-extern ARID_DEF_CellChannels_T CellChannels_ARID_DEF;/* '<S1>/CellCore' */
+extern ARID_DEF_CellChannels_T CellChannels_ARID_DEF;/* '<Root>/ActualVolt_V' */
 extern const ConstB_CellChannels_T CellChannels_ConstB;/* constant block i/o */
 
 /*-

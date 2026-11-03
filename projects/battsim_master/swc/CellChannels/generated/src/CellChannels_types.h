@@ -26,6 +26,8 @@
  * '<S1>/CalMeasOffset_V_r'
  * '<S1>/CalSetGain_r'
  * '<S1>/CalSetOffset_V_r'
+ * '<S1>/HandEnable_r'
+ * '<S1>/HandSetpoint_V_r'
  */
 #if Rte_SysCon_CellCount != 14
 # error "The preprocessor definition 'Rte_SysCon_CellCount' must be equal to '14'"

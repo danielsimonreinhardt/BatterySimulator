@@ -105,6 +105,7 @@ port(c, "BattSimStatus", "out", "uint8", "can.tx.STATUS_BATTSIM.BATTSIM_STATUS")
 port(c, "OutputStatus", "out", "uint8", "can.tx.STATUS_BATTSIM.BATTSIM_OUTPUT_STATUS")
 port(c, "LedRemote", "out", "boolean", "dio.out.LED_REMOTE")
 port(c, "OutputEnable", "out", "boolean")
+port(c, "HandActive", "out", "boolean", None, "hand mode (STANDALONE, status 2) is active: HandControl starts at 0 V, CellChannels takes the setpoints and releases of HandControl instead of the CAN ones (stage D, step 2)")
 port(c, "FailReason", "out", "uint8", "can.tx.STATUS_BATTSIM_EXT.BATTSIM_FAIL_REASON")
 for p, msg in ALIVE.items():
     port(c, p, "out", "uint8", f"can.tx.{msg}.ALIVE_{msg}")
@@ -113,7 +114,7 @@ for v, msg in zip(vnames, QLF_MSGS):
 for part in ("Major", "Minor", "Patch"):
     port(c, f"FwVersion{part}", "out", "uint8", f"can.tx.STATUS_BATTSIM_EXT.FW_VERSION_{part.upper()}")
 param(c, "VersionMajor", "uint8", [0], "firmware version of 0x121")
-param(c, "VersionMinor", "uint8", [4], "firmware version of 0x121 (0.4.0: the calibration identifier 0x0201 holds all 14 channels, vector ports, RTE-57; 0.3.4: initial values of the calibration ports, RTE-56; 0.3.3: stage C, plausibility check of the current measurement; 0.3.2: regulator hold 500 ms; 0.2.0 was stage B)")
+param(c, "VersionMinor", "uint8", [5], "firmware version of 0x121 (0.5.0: hand mode STANDALONE, HandControl and DisplayDriver in the task; 0.4.0: the calibration identifier 0x0201 holds all 14 channels, vector ports, RTE-57; 0.3.4: initial values of the calibration ports, RTE-56; 0.3.3: stage C, plausibility check of the current measurement; 0.3.2: regulator hold 500 ms; 0.2.0 was stage B)")
 param(c, "VersionPatch", "uint8", [0], "firmware version of 0x121")
 param(c, "ButtonDebounce_cycles", "uint8", [3], "[10 ms] a key level counts after this many equal samples")
 
@@ -157,6 +158,11 @@ components[c] = dict(description="14 Zellkanaele: Sollwert auf Tastgrad, Freigab
 port(c, "OutputEnable", "in", "boolean", "BattSimMode.OutputEnable.OutputEnable")
 port(c, "LimitActive", "in", "boolean", "SupplyMonitor.LimitActive.LimitActive", "LIMIT line of the 48 V supply: the regulator stands still")
 port(c, "ControllerOffReq", "in", "uint8", "did.ControllerControl.controllerOff", "1 = regulator switched off by the diagnosis (0 after every start: on)")
+port(c, "HandActive", "in", "boolean", "BattSimMode.HandActive.HandActive", "hand mode: setpoints and releases come from HandControl, not from the CAN messages (stage D, step 2)")
+port(c, "HandSetpoint_V", "in", "float32", "HandControl.HandSetpoint_V.HandSetpoint_V", "setpoints of the hand mode (HandControl, from the previous step)", dimension="CellCount")
+port(c, "HandEnable", "in", "boolean", "HandControl.HandEnable.HandEnable", "releases of the hand mode (HandControl, from the previous step)", dimension="CellCount")
+port(c, "SelectedChannel", "in", "uint8", "HandControl.SelectedChannel.SelectedChannel", "selected channel 1..14 (SELECT LED)")
+port(c, "SelectAllMode", "in", "boolean", "HandControl.SelectAllMode.SelectAllMode", "all channels are edited together (SELECT LED of all channels)")
 for key, stem, wire, label, factor, lo, hi, default, unit in CAL:
     port(c, PHYS[key], "in", "float32", f"CellCal.{PHYS[key]}.{PHYS[key]}", "from CellCal", dimension="CellCount")
 for n in CH:
@@ -170,6 +176,7 @@ for n in CH:
     port(c, f"Cell{nn}VoltAct_V", "out", "float32", f"can.tx.STATUS_CELL{g}.CELL{nn}_VOLTAGE_ACT")
     port(c, f"Cell{nn}State", "out", "uint8", f"can.tx.STATUS_CELL{g}.CELL{nn}_STATUS")
     port(c, f"Duty{nn}", "out", "uint16", f"pwm.SET_{nn}", "duty in 0.01 %")
+port(c, "ActualVolt_V", "out", "float32", None, "actual values of the 14 channels (the ones of the CAN status messages), for the display of HandControl", dimension="CellCount")
 port(c, "ControllerOn", "out", "boolean", "can.tx.STATUS_BATTSIM_EXT.BATTSIM_CONTROLLER_ON", "regulator active (not switched off)")
 port(c, "ControllerOffAct", "out", "uint8", ["rte", "did.ControllerControl.controllerOff"], "request of the diagnosis as the model uses it")
 port(c, "ChannelsReleased", "out", "boolean", None, "output on and at least one channel released: feeds the plausibility check of the current measurement in SupplyMonitor")
@@ -211,18 +218,18 @@ param(c, "CtrlLimit_V", "float32", [0.1], "[V]    the regulator corrects by at m
 c = "HandControl"
 components[c] = dict(description="Handbetrieb: Drehgeber und Karten-Tasten zu Sollwerten und Freigaben der Kanaele, Kanalwahl, Anzeigewert",
                      runnable="HandTask10ms", ports=[], params=[])
-port(c, "HandActive", "in", "boolean", "rte.init", "hand mode (STANDALONE) is active; from BattSimMode in step 2 of stage D")
+port(c, "HandActive", "in", "boolean", "BattSimMode.HandActive.HandActive", "hand mode (STANDALONE) is active (BattSimMode)")
 port(c, "EncVoltCount", "in", "uint16", "rte.init", "free-running counter of the voltage encoder (enc.ENC_VOLTAGE.count, IO-118), wraps")
 port(c, "EncVoltButton", "in", "boolean", "rte.init", "push button of the voltage encoder (dio.in.ENC_VOLTAGE_BTN), true = pressed")
 port(c, "EncSelCount", "in", "uint16", "rte.init", "free-running counter of the channel encoder (enc.ENC_SELECT.count, IO-118), wraps")
 port(c, "EncSelButton", "in", "boolean", "rte.init", "push button of the channel encoder (dio.in.ENC_SELECT_BTN), true = pressed")
 for n in CH:
     port(c, f"CardKey{n:02d}", "in", "boolean", "rte.init", f"STATUS key of card {n} (dio.in.STATUS_{n:02d}), true = pressed")
-port(c, "ActualVolt_V", "in", "float32", "rte.init", "actual values of the channels, from CellChannels in step 2 of stage D", dimension="CellCount")
-port(c, "HandSetpoint_V", "out", "float32", "rte", "setpoints of the hand mode", dimension="CellCount")
-port(c, "HandEnable", "out", "boolean", "rte", "release of the channels in the hand mode", dimension="CellCount")
-port(c, "SelectedChannel", "out", "uint8", "rte", "selected channel 1..14 (SELECT LED of the card)")
-port(c, "SelectAllMode", "out", "boolean", "rte", "all channels are edited together")
+port(c, "ActualVolt_V", "in", "float32", "CellChannels.ActualVolt_V.ActualVolt_V", "actual values of the channels (CellChannels, from the same step)", dimension="CellCount")
+port(c, "HandSetpoint_V", "out", "float32", None, "setpoints of the hand mode", dimension="CellCount")
+port(c, "HandEnable", "out", "boolean", None, "release of the channels in the hand mode", dimension="CellCount")
+port(c, "SelectedChannel", "out", "uint8", None, "selected channel 1..14 (SELECT LED of the card)")
+port(c, "SelectAllMode", "out", "boolean", None, "all channels are edited together")
 port(c, "DisplayValue_mV", "out", "uint16", None, "actual value of the selected channel in mV (0..9999) for the display")
 param(c, "CellCount", "sint32", [14], "dimension of the vector ports, bound to BattSimParams.CellCount in rte.yaml", kind="constant",
       min=14, max=14, description="Anzahl der Zellkanaele (Dimension der Vektorports)")

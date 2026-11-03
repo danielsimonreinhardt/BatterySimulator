@@ -1,6 +1,6 @@
 # Stufe D (Teil 1): Handbetrieb und Anzeige (battsim_master)
 
-Stand: 02.11.2026, Zweig `stufe-d-hand`. Board `bs-handbetrieb-anzeige` a (P1 bis P6 je a): Handbetrieb und Anzeige kommen vor C-7, XCP und BCU-Tests;
+Stand: 03.11.2026, Zweig `stufe-d-hand`. Board `bs-handbetrieb-anzeige` a (P1 bis P6 je a): Handbetrieb und Anzeige kommen vor C-7, XCP und BCU-Tests;
 der Handbetrieb startet mit 0 V (F8), wählbar sind nur die konfigurierten Kanäle 1..14 (F9), im Alle-Kanäle-Modus gilt ein Sollwert für alle,
 die Verdrahtung von Drehgebern, Anzeige und Karten-Tasten wird im Gerätetermin geprüft. Das Zellmodell (Status 4) gehört **nicht** zu diesem Teil.
 Grundlage des alten Verhaltens: `BATTSIM_CONTROL.slx` (Dump `tools/slx_dump.py`, Zustandsautomat `ControlStateMachine`, `INPUT/*Encoder*`,
@@ -12,7 +12,14 @@ Grundlage des alten Verhaltens: `BATTSIM_CONTROL.slx` (Dump `tools/slx_dump.py`,
   `<Swc>_create.m`), in `rte.yaml` eingetragen, Eingänge der Treiber an `rte.init`. SIL-Test `battsim-sil-hand` (`handdisplay_sil_test.c`): 299 Prüfungen, 0 Fehler;
   `battsim-sil` unverändert 980 Prüfungen, 0 Fehler; Workspace-Tests 9 von 9, 1503 Testfälle; Build warnungsfrei (text 220124 Byte, vorher 214116).
   Bis Schritt 2 sind die Komponenten im Abbild enthalten, aber wirkungslos (kein Handbetrieb aktiv, keine Verbindung zu CellChannels und zu den Treibern).
-* **Schritt 2 offen:** Integration (Abschnitt 1), wartet auf die Entscheidung `bs-standalone-schutz`.
+* **Schritt 2 fertig (03.11.2026), Firmware 0.5.0:** Board `bs-standalone-schutz` a: FAIL 5 (Strommessung ungültig) und FAIL 6 (Überspannung) greifen auch in STANDALONE.
+  `BattSimMode` hat den Zustand STANDALONE (intern 4, `BATTSIM_STATUS` 2, `BATTSIM_OUTPUT_STATUS` 2, `OutputEnable` an) und den neuen Ausgang `HandActive`.
+  `CellChannels` nimmt bei `HandActive` Sollwert und Freigabe je Kanal aus `HandSetpoint_V` / `HandEnable` (statt aus den CAN-Botschaften), schaltet die SELECT-LEDs
+  (`Sel01..14`, nur im Handbetrieb: einzeln der gewählte Kanal, im Alle-Modus alle) und gibt die Istwerte als `ActualVolt_V` an `HandControl`.
+  `HandControl` bekommt `HandActive` und `ActualVolt_V` jetzt aus den Komponenten; die Treiber-Eingänge (Drehgeber, Karten-Tasten, I2C-Rückmeldung) bleiben an `rte.init`.
+  Fernsteuer-Pfade unverändert (bestehende Prüfungen von `battsim-sil` unverändert grün). `battsim-sil`: 1042 Prüfungen, 0 Fehler (62 neue für den Handbetrieb),
+  `battsim-sil-hand`: 299, 0 Fehler, Workspace-Tests 9 von 9, 1565 Testfälle, Build warnungsfrei (text 220556 Byte). Nichts geflasht.
+  Die Abweichungen und Ergänzungen zur alten Firmware stehen in Abschnitt 3 (Zeilen „Eintritt bei ungültiger Strommessung“ und „Wechsel nach REMOTE“).
 
 ## 1. Zwei Schritte
 
@@ -62,10 +69,13 @@ stateDiagram-v2
 | Austritt per Taste | Taste ALL ON/OFF → STANDBY | gleich | keine |
 | Austritt per 0x130 | REMOTE=2 und MODE=1 → STANDBY; REMOTE=2 und MODE>1 oder Taste Remote → REMOTE (MODE=3: Zellmodell) | gleich; MODE=3 (Zellmodell) hat bis Stufe D, Teil 2 keine Wirkung (wie heute in dieser Firmware) | keine bis auf das fehlende Zellmodell |
 | Überlast | → FAIL | gleich (Grund 3) | keine |
-| Strommessung ungültig, Überspannung | gab es nicht | wie in REMOTE/RUN: → FAIL (Gründe 5 und 6), weil die Ausgänge aktiv sind | **NEU, sicherheitsrelevant, Board-Entscheid nötig** |
+| Strommessung ungültig, Überspannung | gab es nicht | wie in REMOTE/RUN: → FAIL (Gründe 5 und 6), weil die Ausgänge aktiv sind | **NEU, sicherheitsrelevant, Board `bs-standalone-schutz` a: umgesetzt** |
 | 0x130 fällt aus | in STANDALONE ohne Wirkung | gleich: der Handbetrieb braucht kein 0x130 | keine |
 | Zellbotschaften 0x100..0x105 | werden in STANDALONE nicht ausgewertet (Annahme aus dem Modell) | gleich ignoriert; die Sollwerte kommen von HandControl | keine |
 | Verlassen des Handbetriebs | Sollwerte bleiben im Arrayspeicher (Befund F8: Start mit altem Wert) | beim nächsten Eintritt immer 0 V | F8 |
+| Eintritt bei ungültiger Strommessung | gab es nicht | wie STOP → RUN: Eintritt verweigert, sofort FAIL (Grund 5), die Ausgänge gehen nie an | **neu** (Folge von `bs-standalone-schutz` a, am Gerät nicht prüfbar ohne Fehlerinjektion) |
+| Wechsel nach REMOTE (STOP) | direkt in den Fernsteuerbetrieb | Zustand STOP, Ausgänge aus; ein noch anliegendes OUTPUT=2 startet RUN erst, wenn OUTPUT einmal von 2 weggegangen ist (die Handsollwerte werden nicht auf einen Schlag zu CAN-Sollwerten) | **neu, Annahme**, Board-Hinweis an den Koordinator |
+| REMOTE=1 auf 0x130 | – | verlässt STANDALONE nicht (nur REMOTE=2 mit MODE=1 wie in der alten Firmware) | keine |
 
 ## 4. Handbedienung (Annahme: alt, am Gerät zu prüfen)
 
@@ -140,7 +150,8 @@ Zwischen den Komponenten (Schritt 2): `HandActive` (BattSimMode → HandControl)
 
 ## 8. Offene Punkte
 
-* **Board:** Strommessung und Überspannung in STANDALONE (Abschnitt 3, NEU).
+* **Entschieden:** Strommessung und Überspannung in STANDALONE (Board `bs-standalone-schutz` a, umgesetzt in 0.5.0).
+* **Hinweis an den Koordinator:** der Wechsel STANDALONE → STOP sperrt RUN, bis OUTPUT einmal von 2 weggegangen ist (Abschnitt 3); die alte Firmware tut das nicht erkennbar.
 * **Gerätetermin:** Skalierung je Raste (Annahme 15 mV grob, 1 mV fein) und Zähler je Raste gegen die alte Firmware; Polarität und Pull-ups der Tasten; SELECT-LED im Alle-Modus; Anzeige des Moduls (Adresse, Befehle);
   Pins von Drehgebern und Anzeige am gebauten Master (bei PTD11 und PTD12 gab es Drahtbrücken); Verhalten bei MODE=3 (Zellmodell) bis Stufe D, Teil 2.
 * **neXtBSW:** IO-117 und IO-118 liefern die Treiber-Ports unter den Namen aus Abschnitt 6.

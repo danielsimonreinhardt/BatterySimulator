@@ -9,7 +9,7 @@ runnables:
   - name: HandTask10ms
     period_ms: 10
 ports:
-  - name: HandActive           # hand mode (STANDALONE) is active; from BattSimMode in step 2 of stage D
+  - name: HandActive           # hand mode (STANDALONE) is active (BattSimMode)
     direction: in
     type: boolean
     runnables: [HandTask10ms]
@@ -85,7 +85,7 @@ ports:
     direction: in
     type: boolean
     runnables: [HandTask10ms]
-  - name: ActualVolt_V           # actual values of the channels, from CellChannels in step 2 of stage D
+  - name: ActualVolt_V           # actual values of the channels (CellChannels, from the same step)
     direction: in
     type: float32
     dimension: CellCount

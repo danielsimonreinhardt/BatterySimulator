@@ -101,6 +101,10 @@ ports:
     direction: out
     type: boolean
     runnables: [ModeTask10ms]
+  - name: HandActive           # hand mode (STANDALONE, status 2) is active: HandControl starts at 0 V, CellChannels takes the setpoints and releases of HandControl instead of the CAN ones (stage D, step 2)
+    direction: out
+    type: boolean
+    runnables: [ModeTask10ms]
   - name: FailReason
     direction: out
     type: uint8

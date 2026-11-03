@@ -34,6 +34,7 @@ static int checks   = 0;
 enum
 {
     STATUS_STANDBY = 1,
+    STATUS_STANDALONE = 2,
     STATUS_REMOTE  = 3,
     STATUS_FAIL    = 5,
     FAIL_NONE      = 0,
@@ -101,6 +102,8 @@ static void cycle(void)
     ModeTask10ms();
     CalTask10ms();
     CellTask10ms();
+    HandTask10ms();
+    DispTask10ms();
 }
 
 static void cycles(int n)
@@ -214,7 +217,7 @@ static void startIsStandbyWithWatchdogReason(void)
     CHECK(MODE(FailReason) == FAIL_WATCHDOG);
     CHECK(outputsOff());
     CHECK(MODE(LedRemote) == 0U);
-    CHECK(MODE(FwVersionMajor) == 0U && MODE(FwVersionMinor) == 4U && MODE(FwVersionPatch) == 0U);
+    CHECK(MODE(FwVersionMajor) == 0U && MODE(FwVersionMinor) == 5U && MODE(FwVersionPatch) == 0U);
     /* the held setpoints of the CAN buffers do not act in STANDBY (FW-16) */
     setpointFrame123(ENABLE_ON, 3.7, ENABLE_ON, 3.7, ENABLE_ON, 3.7);
     cycles(5);
@@ -522,7 +525,9 @@ static void keysSwitchTheModes(void)
     pressRemoteKey();
     CHECK(MODE(BattSimStatus) == STATUS_STANDBY);
     CHECK(MODE(LedRemote) == 0U);
-    /* ALL ON/OFF in STANDBY: nothing (hand mode comes with stage D) */
+    /* ALL ON/OFF in STANDBY: hand mode (STANDALONE, stage D), the same key leaves it */
+    pressAllOnOffKey();
+    CHECK(MODE(BattSimStatus) == STATUS_STANDALONE && MODE(LedRemote) == 0U);
     pressAllOnOffKey();
     CHECK(MODE(BattSimStatus) == STATUS_STANDBY);
     /* ALL ON/OFF in RUN: output off, it stays off until OUTPUT has left 2 */
@@ -640,7 +645,7 @@ static void statusExtensionFrame(void)
     CHECK((data[0] & 0x20U) != 0U);           /* LIMIT */
     CHECK((data[0] & 0x40U) == 0U);           /* regulator switched off by the diagnosis (ControllerOffReq = 1 here) */
     CHECK((data[1] & 0x0FU) == 0U);           /* FAIL reason none */
-    CHECK(data[5] == 0U && data[6] == 4U && data[7] == 0U); /* version 0.4.0 */
+    CHECK(data[5] == 0U && data[6] == 5U && data[7] == 0U); /* version 0.5.0 */
     uint16_t current = (uint16_t)(data[3] | (data[4] << 8U));
     CHECK(current > 480U && current < 510U);   /* 0.5 A in 0.001 A */
     *controlQlf[5] = QLF_OK;
@@ -1464,10 +1469,296 @@ static void stepClearsTheCorrectionOfTheOldOperatingPoint(void)
     CELL(ControllerOffReq) = 1U;
 }
 
+/* ---------------------------------------------------------------------------------------------------------------- */
+/* Stage D, step 2: hand mode (STANDALONE, status 2) with HandControl, CellChannels and the SELECT LEDs */
+
+#define HAND(name)        Rte_Buf_HandControl_##name##_##name
+#define CELLPTR(stem, nn) &CELL(stem##nn)
+#define KEYPTR(stem, nn)  &HAND(stem##nn)
+
+static boolean* const selLed[14]  = {LIST14(CELLPTR, Sel)};
+static boolean* const cardKey[14] = {LIST14(KEYPTR, CardKey)};
+
+static uint16 handVolt = 0U;
+static uint16 handSel  = 0U;
+
+static void turnHandVoltage(int counts) /* the quadrature counter of the voltage encoder, one 10 ms step */
+{
+    handVolt           = (uint16)(handVolt + (uint16)counts);
+    HAND(EncVoltCount) = handVolt;
+    cycle();
+}
+
+static void turnHandSelect(int counts)
+{
+    handSel           = (uint16)(handSel + (uint16)counts);
+    HAND(EncSelCount) = handSel;
+    cycle();
+}
+
+static void pressHand(boolean* key)
+{
+    *key = 1U;
+    cycles(4);
+    *key = 0U;
+    cycles(4);
+}
+
+static int onlySelected(int ch) /* ch = 0..13, or -1 for none, 14 for all */
+{
+    int ok = 1;
+    for (int k = 0; k < 14; ++k)
+    {
+        int want = (ch == 14) || (k == ch);
+        ok       = ok && ((*selLed[k] != 0U) == (want != 0));
+    }
+    return ok;
+}
+
+static int handEverythingZeroAndOff(void)
+{
+    int ok = 1;
+    for (int k = 0; k < 14; ++k)
+    {
+        ok = ok && (HAND(HandSetpoint_V)[k] == 0.0f) && (HAND(HandEnable)[k] == 0U);
+    }
+    return ok;
+}
+
+static void settleSupplyCurrent(void)
+{
+    SUPPLY(ISupplyQlf) = QLF_OK;
+    SUPPLY(Limit)      = 0U;
+    SUPPLY(ISupply_mV) = QUIESCENT_MV;
+    cycles(800); /* the low-pass of the current (1.3 s) is settled */
+}
+
+static void standaloneEntryAndExitWithTheKey(void)
+{
+    CELL(ControllerOffReq) = 1U;
+    for (int k = 0; k < 14; ++k)
+    {
+        *adcQlfIn[k] = QLF_OK;
+        *adcIn[k]    = 0U;
+    }
+    controlFrame(0U, 0U, 0U);
+    settleSupplyCurrent();
+    CHECK(MODE(BattSimStatus) == STATUS_STANDBY && outputsOff() && onlySelected(-1));
+    CHECK(MODE(HandActive) == 0U && handEverythingZeroAndOff());
+    /* the CAN setpoints held in the buffers (3.7 V on three channels) do not act */
+    setpointFrame123(ENABLE_ON, 3.7, ENABLE_ON, 3.7, ENABLE_ON, 3.7);
+    pressAllOnOffKey();
+    CHECK(MODE(BattSimStatus) == STATUS_STANDALONE);
+    CHECK(MODE(OutputStatus) == 2U && MODE(OutputEnable) == 1U && MODE(HandActive) == 1U);
+    CHECK(MODE(LedRemote) == 0U && MODE(FailReason) == FAIL_NONE);
+    /* F8: all channels released at 0 V, no CAN value */
+    int released = 1;
+    int zero     = 1;
+    for (int k = 0; k < 14; ++k)
+    {
+        released = released && (*enOut[k] == 1U) && (*stateOut[k] == 2U);
+        zero     = zero && (*dutyOut[k] == 0U);
+    }
+    CHECK(released && zero);
+    CHECK(onlySelected(0)); /* the SELECT LED of channel 1 */
+    /* ALL ON/OFF again: STANDBY, everything off, LEDs off, hand values cleared */
+    pressAllOnOffKey();
+    CHECK(MODE(BattSimStatus) == STATUS_STANDBY && outputsOff() && onlySelected(-1) && handEverythingZeroAndOff());
+}
+
+static void handSetpointsReachTheChannels(void)
+{
+    pressAllOnOffKey();
+    CHECK(MODE(BattSimStatus) == STATUS_STANDALONE);
+    turnHandVoltage(4 * 100); /* 100 detents coarse = 1.5 V on channel 1 */
+    cycles(2);
+    CHECK(fabsf(HAND(HandSetpoint_V)[0] - 1.5f) < 1e-5f);
+    CHECK(near(*dutyOut[0], dutyFor(1.5), 1) && *dutyOut[1] == 0U && *dutyOut[2] == 0U);
+    CHECK(*enOut[0] == 1U && *enOut[1] == 1U);
+    /* the actual value goes back to HandControl and to the display value */
+    *adcIn[0] = pinMvFor(1.5);
+    cycles(80); /* the low-pass of the actual value (about 95 ms) has settled */
+    CHECK(fabsf(CELL(ActualVolt_V)[0] - 1.5f) < 0.01f && fabsf(CELL(Cell01VoltAct_V) - CELL(ActualVolt_V)[0]) < 1e-6f);
+    CHECK(HAND(DisplayValue_mV) >= 1490U && HAND(DisplayValue_mV) <= 1510U);
+    /* select channel 3: the LED moves, the display shows channel 3 (0 V) */
+    turnHandSelect(8);
+    cycles(2);
+    CHECK(HAND(SelectedChannel) == 3U && onlySelected(2) && HAND(DisplayValue_mV) == 0U);
+    /* all channels together: all LEDs, the new value of the selected channel goes to all */
+    pressHand(&HAND(EncSelButton));
+    CHECK(HAND(SelectAllMode) == 1U && onlySelected(14));
+    turnHandVoltage(4 * 200); /* 3.0 V */
+    cycles(2);
+    int all = 1;
+    for (int k = 0; k < 14; ++k)
+    {
+        all = all && (fabsf(HAND(HandSetpoint_V)[k] - 3.0f) < 1e-5f) && near(*dutyOut[k], dutyFor(3.0), 1);
+    }
+    CHECK(all);
+    pressHand(&HAND(EncSelButton));
+    CHECK(HAND(SelectAllMode) == 0U && onlySelected(2));
+    /* a card key blocks and releases one channel */
+    pressHand(cardKey[1]);
+    cycles(2);
+    CHECK(HAND(HandEnable)[1] == 0U && *enOut[1] == 0U && *stateOut[1] == 1U); /* as with CAN: the duty of a blocked channel is not cleared */
+    CHECK(*enOut[0] == 1U && *enOut[2] == 1U);
+    pressHand(cardKey[1]);
+    cycles(2);
+    CHECK(*enOut[1] == 1U && near(*dutyOut[1], dutyFor(3.0), 1));
+    /* 5.0 V is the end */
+    turnHandVoltage(4 * 400);
+    cycles(2);
+    CHECK(fabsf(HAND(HandSetpoint_V)[2] - 5.0f) < 1e-5f);
+    CHECK(fabsf(CELL(Cell03VoltAct_V) - CELL(ActualVolt_V)[2]) < 1e-6f);
+    turnHandSelect(-8); /* back to channel 1 */
+    cycles(2);
+    CHECK(HAND(SelectedChannel) == 1U && onlySelected(0));
+}
+
+static void handModeNeedsNoBusAndLeavesWithCommands(void)
+{
+    CHECK(MODE(BattSimStatus) == STATUS_STANDALONE);
+    /* no supervision of 0x130 in the hand mode: timeout and alive error change nothing */
+    *controlQlf[6] = QLF_ERROR_TIMEOUT;
+    cycles(20);
+    CHECK(MODE(BattSimStatus) == STATUS_STANDALONE && MODE(OutputEnable) == 1U);
+    *controlQlf[6] = QLF_ERROR_ALIVE;
+    cycles(20);
+    CHECK(MODE(BattSimStatus) == STATUS_STANDALONE);
+    *controlQlf[6] = QLF_OK;
+    /* REMOTE=1 and MODE=3 (cell model) do not leave it, REMOTE=2/MODE=1 does */
+    controlFrame(1U, MODE_STANDBY, OUTPUT_DISABLE);
+    cycles(5);
+    CHECK(MODE(BattSimStatus) == STATUS_STANDALONE);
+    controlFrame(REMOTE_REMOTE, 3U, OUTPUT_DISABLE);
+    cycles(5);
+    CHECK(MODE(BattSimStatus) == STATUS_STANDALONE);
+    controlFrame(REMOTE_REMOTE, MODE_STANDBY, OUTPUT_DISABLE);
+    cycles(2);
+    CHECK(MODE(BattSimStatus) == STATUS_STANDBY && outputsOff() && onlySelected(-1) && handEverythingZeroAndOff());
+    controlFrame(0U, 0U, 0U);
+    *adcIn[0] = 0U; /* the output of channel 1 is off now: a measurement of 1.5 V at a setpoint of 0 V would be an overvoltage */
+    cycles(2);
+    /* entry again: 0 V and all released, not the 5.0 V of the earlier turn (F8) */
+    pressAllOnOffKey();
+    CHECK(MODE(BattSimStatus) == STATUS_STANDALONE);
+    cycles(2);
+    int zero = 1;
+    for (int k = 0; k < 14; ++k)
+    {
+        zero = zero && (*dutyOut[k] == 0U) && (*enOut[k] == 1U) && (HAND(HandSetpoint_V)[k] == 0.0f);
+    }
+    CHECK(zero);
+    turnHandVoltage(4 * 100);
+    cycles(2);
+    CHECK(*dutyOut[0] != 0U);
+    /* REMOTE=2/MODE=2 -> STOP: outputs off; OUTPUT=2 that is still there does not start RUN until it has left 2 once */
+    controlFrame(REMOTE_REMOTE, MODE_ON, OUTPUT_ENABLE);
+    cycles(3);
+    CHECK(MODE(BattSimStatus) == STATUS_REMOTE && MODE(OutputStatus) == 1U && MODE(OutputEnable) == 0U && outputsOff());
+    CHECK(onlySelected(-1) && handEverythingZeroAndOff());
+    cycles(20);
+    CHECK(MODE(OutputEnable) == 0U);
+    controlFrame(REMOTE_REMOTE, MODE_ON, OUTPUT_DISABLE);
+    cycles(2);
+    controlFrame(REMOTE_REMOTE, MODE_ON, OUTPUT_ENABLE);
+    cycles(3);
+    CHECK(MODE(BattSimStatus) == STATUS_REMOTE && MODE(OutputEnable) == 1U);
+    /* RUN: the CAN setpoints act again (channel 1 at 3.7 V), the hand state does not */
+    CHECK(near(*dutyOut[0], dutyFor(3.7), 1) && *enOut[0] == 1U && *enOut[3] == 0U);
+    backToStandby();
+    controlFrame(0U, 0U, 0U);
+    cycles(2);
+    /* the REMOTE key leaves it as well */
+    pressAllOnOffKey();
+    CHECK(MODE(BattSimStatus) == STATUS_STANDALONE);
+    pressRemoteKey();
+    CHECK(MODE(BattSimStatus) == STATUS_REMOTE && MODE(OutputEnable) == 0U && outputsOff() && MODE(LedRemote) == 1U);
+    pressRemoteKey();
+    CHECK(MODE(BattSimStatus) == STATUS_STANDBY);
+}
+
+static void currentMeasurementInTheHandMode(void)
+{
+    /* FAIL 5 in the hand mode: invalid for 200 ms */
+    pressAllOnOffKey();
+    CHECK(MODE(BattSimStatus) == STATUS_STANDALONE);
+    SUPPLY(ISupplyQlf) = QLF_ERROR_RANGE;
+    cycles(15);
+    CHECK(MODE(BattSimStatus) == STATUS_STANDALONE && !outputsOff());
+    cycles(10);
+    CHECK(MODE(BattSimStatus) == STATUS_FAIL && MODE(FailReason) == FAIL_CURRENT && failReasonOnTheBus() == FAIL_CURRENT);
+    CHECK(outputsOff() && MODE(HandActive) == 0U);
+    cycles(2);
+    CHECK(onlySelected(-1) && handEverythingZeroAndOff());
+    SUPPLY(ISupplyQlf) = QLF_OK;
+    cycles(2);
+    pressAllOnOffKey();
+    CHECK(MODE(BattSimStatus) == STATUS_STANDBY && MODE(FailReason) == FAIL_NONE);
+    /* the entry with an invalid current measurement is refused: the outputs never come on */
+    SUPPLY(ISupplyQlf) = QLF_ERROR_RANGE;
+    cycles(30);
+    MODE(BtnAllOnOff) = 1U;
+    int everOn        = 0;
+    for (int i = 0; i < 6; ++i)
+    {
+        cycle();
+        everOn = everOn || !outputsOff();
+    }
+    MODE(BtnAllOnOff) = 0U;
+    cycles(4);
+    CHECK(MODE(BattSimStatus) == STATUS_FAIL && MODE(FailReason) == FAIL_CURRENT && !everOn);
+    SUPPLY(ISupplyQlf) = QLF_OK;
+    cycles(2);
+    pressAllOnOffKey();
+    CHECK(MODE(BattSimStatus) == STATUS_STANDBY && MODE(FailReason) == FAIL_NONE);
+    cycles(30);
+}
+
+static void overvoltageInTheHandMode(void)
+{
+    /* FAIL 6: channel 1 at 1.5 V, the measurement shows 1.75 V for 100 ms */
+    pressAllOnOffKey();
+    CHECK(MODE(BattSimStatus) == STATUS_STANDALONE);
+    turnHandVoltage(4 * 100);
+    *adcIn[0] = pinMvFor(1.5);
+    cycles(30);
+    CHECK(MODE(BattSimStatus) == STATUS_STANDALONE && CELL(OverVoltage) == 0U);
+    *adcIn[0] = pinMvFor(1.75);
+    cycles(9);
+    CHECK(CELL(OverVoltage) == 0U && MODE(BattSimStatus) == STATUS_STANDALONE);
+    cycle();
+    CHECK(CELL(OverVoltage) == 1U && MODE(BattSimStatus) == STATUS_STANDALONE); /* BattSimMode acts one step later */
+    cycle();
+    CHECK(MODE(BattSimStatus) == STATUS_FAIL && MODE(FailReason) == FAIL_OVERVOLT && failReasonOnTheBus() == FAIL_OVERVOLT);
+    CHECK(outputsOff() && MODE(HandActive) == 0U);
+    cycles(2);
+    CHECK(onlySelected(-1) && handEverythingZeroAndOff());
+    *adcIn[0] = 0U;
+    pressAllOnOffKey();
+    CHECK(MODE(BattSimStatus) == STATUS_STANDBY && MODE(FailReason) == FAIL_NONE);
+}
+
+static void overloadInTheHandMode(void)
+{
+    pressAllOnOffKey();
+    CHECK(MODE(BattSimStatus) == STATUS_STANDALONE);
+    SUPPLY(ISupply_mV) = 1500U;
+    cycles(300);
+    CHECK(SUPPLY(Overload) == 1U && MODE(BattSimStatus) == STATUS_FAIL && MODE(FailReason) == FAIL_OVERLOAD && outputsOff());
+    SUPPLY(ISupply_mV) = QUIESCENT_MV;
+    cycles(400);
+    CHECK(SUPPLY(Overload) == 0U);
+    pressAllOnOffKey();
+    CHECK(MODE(BattSimStatus) == STATUS_STANDBY && MODE(FailReason) == FAIL_NONE);
+}
+
 int main(void)
 {
     rteStartsWithTheFactoryValues(); /* before anything has run */
     BattSimMode_Init();
+    HandControl_Init();
+    DisplayDriver_Init();
     nvmRestore(QLF_NOT_AVAILABLE, initOff, initGain, initOff, initGain);
     CELL(ControllerOffReq) = 1U; /* the stage B checks run without the regulator */
     startIsStandbyWithWatchdogReason();
@@ -1492,6 +1783,12 @@ int main(void)
     levelFloorMovesTheOvervoltageReference();
     regulatorHoldsAfterASetpointStep();
     stepClearsTheCorrectionOfTheOldOperatingPoint();
+    standaloneEntryAndExitWithTheKey();
+    handSetpointsReachTheChannels();
+    handModeNeedsNoBusAndLeavesWithCommands();
+    currentMeasurementInTheHandMode();
+    overvoltageInTheHandMode();
+    overloadInTheHandMode();
     printf("%d checks, %d failures\n", checks, failures);
     return (failures == 0) ? 0 : 1;
 }

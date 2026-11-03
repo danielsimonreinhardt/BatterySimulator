@@ -3,18 +3,18 @@
 Auto generated XML Component Description for model CellChannels
 Model version                : 1.2
 Simulink Coder version       : Simulink Coder 24.1 (R2024a) 19-Nov-2023
-Model Checksum               : 2096643271 2151979888 1995392019 2225908216
+Model Checksum               : 251925749 3927130133 3198698994 3100747914
 -->
 <AUTOSAR xmlns="http://autosar.org/schema/r4.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://autosar.org/schema/r4.0 AUTOSAR_00051.xsd">
     <AR-PACKAGES>
         <AR-PACKAGE>
             <SHORT-NAME>Interfaces</SHORT-NAME>
             <ELEMENTS>
-                <SENDER-RECEIVER-INTERFACE UUID="b209902a-6086-5f55-9dc5-7f2856bfacfc">
+                <SENDER-RECEIVER-INTERFACE UUID="b7353c79-a719-59bf-f6ef-fc6b50d86baf">
                     <SHORT-NAME>OutputEnable</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="edd19044-03cd-5a31-1592-4e82bf0f6d71">
+                        <VARIABLE-DATA-PROTOTYPE UUID="bee95e9d-c00b-5d43-eb6d-9460d8d4707d">
                             <SHORT-NAME>OutputEnable</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -29,11 +29,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="3c78b5df-dcd7-5f00-052b-593afdb66ad3">
+                <SENDER-RECEIVER-INTERFACE UUID="24345b39-a386-5430-baf2-1a85bc2a042d">
                     <SHORT-NAME>LimitActive</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="b00c6e47-ef84-598a-5d8c-7590ab5a5613">
+                        <VARIABLE-DATA-PROTOTYPE UUID="b17f6a76-31b4-5abc-57bc-16a3b6472f52">
                             <SHORT-NAME>LimitActive</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -48,11 +48,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="341573ab-aa35-55b9-0e9f-1888575a6b84">
+                <SENDER-RECEIVER-INTERFACE UUID="21c815da-6cea-5bb0-2a03-c843fa057a37">
                     <SHORT-NAME>ControllerOffReq</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="2e42652c-91ee-573e-d845-f9473f3d24e0">
+                        <VARIABLE-DATA-PROTOTYPE UUID="bef14739-ab73-544e-65f1-c04e6d5593dc">
                             <SHORT-NAME>ControllerOffReq</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -67,11 +67,106 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="734ca509-ccbf-5e69-6703-a697b5db702c">
+                <SENDER-RECEIVER-INTERFACE UUID="d0d85314-2d85-508f-3bb2-0eeb8609213e">
+                    <SHORT-NAME>HandActive</SHORT-NAME>
+                    <IS-SERVICE>false</IS-SERVICE>
+                    <DATA-ELEMENTS>
+                        <VARIABLE-DATA-PROTOTYPE UUID="e374efd2-7025-5bfb-55d0-fee9b59c010d">
+                            <SHORT-NAME>HandActive</SHORT-NAME>
+                            <CATEGORY>VALUE</CATEGORY>
+                            <SW-DATA-DEF-PROPS>
+                                <SW-DATA-DEF-PROPS-VARIANTS>
+                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
+                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
+                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
+                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
+                                </SW-DATA-DEF-PROPS-VARIANTS>
+                            </SW-DATA-DEF-PROPS>
+                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/boolean</TYPE-TREF>
+                        </VARIABLE-DATA-PROTOTYPE>
+                    </DATA-ELEMENTS>
+                </SENDER-RECEIVER-INTERFACE>
+                <SENDER-RECEIVER-INTERFACE UUID="86d5d63c-2da7-55b5-36d4-b637bbae3095">
+                    <SHORT-NAME>HandSetpoint_V</SHORT-NAME>
+                    <IS-SERVICE>false</IS-SERVICE>
+                    <DATA-ELEMENTS>
+                        <VARIABLE-DATA-PROTOTYPE UUID="f0c76460-28d3-5111-5c15-b89103d173e7">
+                            <SHORT-NAME>HandSetpoint_V</SHORT-NAME>
+                            <CATEGORY>ARRAY</CATEGORY>
+                            <SW-DATA-DEF-PROPS>
+                                <SW-DATA-DEF-PROPS-VARIANTS>
+                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
+                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
+                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
+                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
+                                </SW-DATA-DEF-PROPS-VARIANTS>
+                            </SW-DATA-DEF-PROPS>
+                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/rt_Array_float32_CellCount</TYPE-TREF>
+                        </VARIABLE-DATA-PROTOTYPE>
+                    </DATA-ELEMENTS>
+                </SENDER-RECEIVER-INTERFACE>
+                <SENDER-RECEIVER-INTERFACE UUID="3f5a556c-3180-5983-c8ca-ef39a2d00058">
+                    <SHORT-NAME>HandEnable</SHORT-NAME>
+                    <IS-SERVICE>false</IS-SERVICE>
+                    <DATA-ELEMENTS>
+                        <VARIABLE-DATA-PROTOTYPE UUID="ef7fe1bd-e7d1-5a0f-a823-658f272d2af2">
+                            <SHORT-NAME>HandEnable</SHORT-NAME>
+                            <CATEGORY>ARRAY</CATEGORY>
+                            <SW-DATA-DEF-PROPS>
+                                <SW-DATA-DEF-PROPS-VARIANTS>
+                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
+                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
+                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
+                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
+                                </SW-DATA-DEF-PROPS-VARIANTS>
+                            </SW-DATA-DEF-PROPS>
+                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/rt_Array_boolean_CellCount</TYPE-TREF>
+                        </VARIABLE-DATA-PROTOTYPE>
+                    </DATA-ELEMENTS>
+                </SENDER-RECEIVER-INTERFACE>
+                <SENDER-RECEIVER-INTERFACE UUID="8313e989-d1c7-5120-b493-261cedbe7ed5">
+                    <SHORT-NAME>SelectedChannel</SHORT-NAME>
+                    <IS-SERVICE>false</IS-SERVICE>
+                    <DATA-ELEMENTS>
+                        <VARIABLE-DATA-PROTOTYPE UUID="d2c010b5-e55c-5ea4-de71-d47919a0c0e0">
+                            <SHORT-NAME>SelectedChannel</SHORT-NAME>
+                            <CATEGORY>VALUE</CATEGORY>
+                            <SW-DATA-DEF-PROPS>
+                                <SW-DATA-DEF-PROPS-VARIANTS>
+                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
+                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
+                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
+                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
+                                </SW-DATA-DEF-PROPS-VARIANTS>
+                            </SW-DATA-DEF-PROPS>
+                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint8</TYPE-TREF>
+                        </VARIABLE-DATA-PROTOTYPE>
+                    </DATA-ELEMENTS>
+                </SENDER-RECEIVER-INTERFACE>
+                <SENDER-RECEIVER-INTERFACE UUID="c55e5467-4208-5fa3-afc0-a80681241020">
+                    <SHORT-NAME>SelectAllMode</SHORT-NAME>
+                    <IS-SERVICE>false</IS-SERVICE>
+                    <DATA-ELEMENTS>
+                        <VARIABLE-DATA-PROTOTYPE UUID="2169bf4f-b573-5d8a-f9af-dff9820b8105">
+                            <SHORT-NAME>SelectAllMode</SHORT-NAME>
+                            <CATEGORY>VALUE</CATEGORY>
+                            <SW-DATA-DEF-PROPS>
+                                <SW-DATA-DEF-PROPS-VARIANTS>
+                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
+                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
+                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
+                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
+                                </SW-DATA-DEF-PROPS-VARIANTS>
+                            </SW-DATA-DEF-PROPS>
+                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/boolean</TYPE-TREF>
+                        </VARIABLE-DATA-PROTOTYPE>
+                    </DATA-ELEMENTS>
+                </SENDER-RECEIVER-INTERFACE>
+                <SENDER-RECEIVER-INTERFACE UUID="20695343-fffb-5ac8-928c-624210c778e9">
                     <SHORT-NAME>CalSetOffset_V</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="7d8b220a-b2fc-5382-973c-915cd25e9a00">
+                        <VARIABLE-DATA-PROTOTYPE UUID="c5b33276-a143-5b3e-bbb2-e911afe6ab85">
                             <SHORT-NAME>CalSetOffset_V</SHORT-NAME>
                             <CATEGORY>ARRAY</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -86,11 +181,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="7a87bf93-512d-5a6f-e922-7da3aad20d67">
+                <SENDER-RECEIVER-INTERFACE UUID="5baf99ae-1612-5644-06bd-e052034e9504">
                     <SHORT-NAME>CalSetGain</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="1e533067-be54-5ae3-1bb9-9df1d70b3d2f">
+                        <VARIABLE-DATA-PROTOTYPE UUID="2a8e2691-3d58-5f4e-071b-1e926643bed4">
                             <SHORT-NAME>CalSetGain</SHORT-NAME>
                             <CATEGORY>ARRAY</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -105,11 +200,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="1ceee853-298b-5215-6642-0c51d2ac8f7c">
+                <SENDER-RECEIVER-INTERFACE UUID="fb43998e-ac08-5942-3b58-a00071ddc97f">
                     <SHORT-NAME>CalMeasOffset_V</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="a7f80c3c-9ba7-5add-d459-aa36317a3faf">
+                        <VARIABLE-DATA-PROTOTYPE UUID="a7cd5f38-6202-5ddb-a942-2d8b9eaa9490">
                             <SHORT-NAME>CalMeasOffset_V</SHORT-NAME>
                             <CATEGORY>ARRAY</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -124,11 +219,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="192ff2f2-a52d-58d4-4f28-41d0eced31cf">
+                <SENDER-RECEIVER-INTERFACE UUID="85e1c38b-d716-5120-8497-87ce3058694a">
                     <SHORT-NAME>CalMeasGain</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="c2bbe9aa-5466-55b5-39a9-0d74953785fd">
+                        <VARIABLE-DATA-PROTOTYPE UUID="67d22391-461b-5f76-15ec-3fa012706c84">
                             <SHORT-NAME>CalMeasGain</SHORT-NAME>
                             <CATEGORY>ARRAY</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -143,11 +238,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="9c412ff9-20f6-5410-d7a0-02b289bad3f1">
+                <SENDER-RECEIVER-INTERFACE UUID="e96efcc7-235b-5d72-db62-fab171684762">
                     <SHORT-NAME>Cell01VoltSet_V</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="7345e0cf-d0cb-5ac8-c519-1ba794b280e2">
+                        <VARIABLE-DATA-PROTOTYPE UUID="25588625-12f2-54aa-029c-96c35589d6dd">
                             <SHORT-NAME>Cell01VoltSet_V</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -162,11 +257,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="93b3ac74-a9bd-513d-5816-d0c3144c8831">
+                <SENDER-RECEIVER-INTERFACE UUID="c38d254b-6da5-5f31-1828-211dace3029d">
                     <SHORT-NAME>Cell01Enable</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="465e97af-9914-53aa-f4f6-7b07c4b6e2c1">
+                        <VARIABLE-DATA-PROTOTYPE UUID="a345b3b7-5d80-5ead-198c-f70e6fc554bf">
                             <SHORT-NAME>Cell01Enable</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -181,11 +276,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="ae552a4a-622e-53cb-8192-d5a1b1b4167e">
+                <SENDER-RECEIVER-INTERFACE UUID="34968b03-6e76-5222-506b-64dde6fc73d8">
                     <SHORT-NAME>UCell01_mV</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="2cbfe479-6b78-5c34-bbd9-593fe41bf6ed">
+                        <VARIABLE-DATA-PROTOTYPE UUID="78290fef-2cd0-57f2-1c5b-b42fc9e241c2">
                             <SHORT-NAME>UCell01_mV</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -200,11 +295,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="4a30d785-d7df-5311-de48-22467a583adb">
+                <SENDER-RECEIVER-INTERFACE UUID="a8f50686-770d-5d92-ab3d-2b0d1784ffbf">
                     <SHORT-NAME>UCell01Qlf</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="847c0562-8d6d-5f35-147f-01ff93d98620">
+                        <VARIABLE-DATA-PROTOTYPE UUID="e1aa18e6-6706-598c-206c-0b8225868d62">
                             <SHORT-NAME>UCell01Qlf</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -219,11 +314,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="9b22c7a6-482e-50e3-6cd8-44f7b679397c">
+                <SENDER-RECEIVER-INTERFACE UUID="7b115f1d-6537-5b76-6151-574984c0bfc2">
                     <SHORT-NAME>Cell02VoltSet_V</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="e25f0a6f-a79a-5547-70f1-31a8027625b4">
+                        <VARIABLE-DATA-PROTOTYPE UUID="959dc782-9d03-539b-6861-5668a9115eb4">
                             <SHORT-NAME>Cell02VoltSet_V</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -238,11 +333,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="c7b75ab7-7dce-50ed-38ab-62cd8fcd8fed">
+                <SENDER-RECEIVER-INTERFACE UUID="69592d78-597a-5a4c-f7b3-bda656880246">
                     <SHORT-NAME>Cell02Enable</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="3a7cd6cd-3961-52d8-ba64-b31b5bffc452">
+                        <VARIABLE-DATA-PROTOTYPE UUID="abcc910d-f8f0-5dd8-0851-603097511ed0">
                             <SHORT-NAME>Cell02Enable</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -257,11 +352,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="b57fd879-cf2c-534d-1c86-2b2ba2fd7ff6">
+                <SENDER-RECEIVER-INTERFACE UUID="512ad3eb-9a3b-5075-76d8-533543b57222">
                     <SHORT-NAME>UCell02_mV</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="925bd65b-67c3-55f5-86f6-80429c47b3e6">
+                        <VARIABLE-DATA-PROTOTYPE UUID="b00d1834-c2f4-54df-8ecc-5e9d5d23ff79">
                             <SHORT-NAME>UCell02_mV</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -276,11 +371,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="d2754b72-c7aa-542d-a569-09c01fdd95f9">
+                <SENDER-RECEIVER-INTERFACE UUID="06b6fecc-f868-5f78-9ccc-5ba7cfcfffb2">
                     <SHORT-NAME>UCell02Qlf</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="451d4be9-37f5-56a9-8713-bb3c89d9d662">
+                        <VARIABLE-DATA-PROTOTYPE UUID="2266f2df-7e76-5e60-e332-37200876f712">
                             <SHORT-NAME>UCell02Qlf</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -295,11 +390,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="029e2d1a-3d8f-5a1b-e4a8-b6078839e921">
+                <SENDER-RECEIVER-INTERFACE UUID="56f04499-f97a-5edf-6dc1-9760fa0528c8">
                     <SHORT-NAME>Cell03VoltSet_V</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="b7155047-3c9e-5343-14a1-0492f9d03d5c">
+                        <VARIABLE-DATA-PROTOTYPE UUID="80e01252-27f7-5d07-dd5b-89e2042e4643">
                             <SHORT-NAME>Cell03VoltSet_V</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -314,11 +409,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="e8c82744-3088-5a09-5298-76767129a57b">
+                <SENDER-RECEIVER-INTERFACE UUID="97f980ba-6329-599f-5ff4-61b9702eef29">
                     <SHORT-NAME>Cell03Enable</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="64ed0d80-92b4-58f0-5aee-df17a21aca9f">
+                        <VARIABLE-DATA-PROTOTYPE UUID="7ad778e1-0b9d-57b4-6eb2-38d6c8efa4e9">
                             <SHORT-NAME>Cell03Enable</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -333,11 +428,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="4dcaa56a-8ca9-5853-742d-293d17229583">
+                <SENDER-RECEIVER-INTERFACE UUID="16dbb711-fe49-521b-38ab-5917b2ef295f">
                     <SHORT-NAME>UCell03_mV</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="37c8c08d-1466-5b2d-89e6-db89900cfe00">
+                        <VARIABLE-DATA-PROTOTYPE UUID="cdc81849-3d97-5c35-1d8f-7215cd3c149a">
                             <SHORT-NAME>UCell03_mV</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -352,11 +447,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="e0fdccf6-cd3d-5b01-0b3d-f3157ef880e5">
+                <SENDER-RECEIVER-INTERFACE UUID="9467011c-cd79-534f-0582-5199a4aee46f">
                     <SHORT-NAME>UCell03Qlf</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="ff0d4bbe-f34e-566f-5df5-1355295327a8">
+                        <VARIABLE-DATA-PROTOTYPE UUID="70ca0ad2-a2f4-5441-be6f-50082f5efdfc">
                             <SHORT-NAME>UCell03Qlf</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -371,11 +466,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="d96d6598-8479-56f2-d6d1-958eddc03ed1">
+                <SENDER-RECEIVER-INTERFACE UUID="019eaf64-308c-5846-e6b5-67a99f74d4d4">
                     <SHORT-NAME>Cell04VoltSet_V</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="2cb6a030-365f-51b7-d6bb-5abc03d42f63">
+                        <VARIABLE-DATA-PROTOTYPE UUID="a57e28de-8346-59d0-88a5-981e0cbe8b1a">
                             <SHORT-NAME>Cell04VoltSet_V</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -390,11 +485,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="b9cb3bc3-1512-5dd5-6fd6-fb90b4b48e55">
+                <SENDER-RECEIVER-INTERFACE UUID="ae10f781-0d2d-56f4-4050-b1eb2271f05f">
                     <SHORT-NAME>Cell04Enable</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="2f32966b-0c62-52cf-a7be-514c21f1ded6">
+                        <VARIABLE-DATA-PROTOTYPE UUID="495e0f3a-a091-5c81-f843-fe5c7f416148">
                             <SHORT-NAME>Cell04Enable</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -409,11 +504,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="c3141c40-03e0-57e0-acd4-360a3b2f6abb">
+                <SENDER-RECEIVER-INTERFACE UUID="74b68fc3-2cc0-5faa-7056-3bd932ebf8e8">
                     <SHORT-NAME>UCell04_mV</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="d29af284-3dc6-5395-bb23-87610e65aefb">
+                        <VARIABLE-DATA-PROTOTYPE UUID="23c8afb5-f742-5400-8b34-e8a9164ce450">
                             <SHORT-NAME>UCell04_mV</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -428,11 +523,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="2eaea164-ac9c-583d-8b72-b9df5c3f5559">
+                <SENDER-RECEIVER-INTERFACE UUID="a2be2df6-6f73-5a6c-9e27-c7c0b9fbc2fe">
                     <SHORT-NAME>UCell04Qlf</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="2cc624ac-d911-526b-d9bd-0fbd714b5a13">
+                        <VARIABLE-DATA-PROTOTYPE UUID="a8dfa11e-ae32-504a-0aec-12666c8b7bb8">
                             <SHORT-NAME>UCell04Qlf</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -447,11 +542,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="99cc16a6-2fde-5791-6dd3-05fcd6c181fc">
+                <SENDER-RECEIVER-INTERFACE UUID="f28326b1-02ec-5a2f-8179-64a067b19b21">
                     <SHORT-NAME>Cell05VoltSet_V</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="96ec7885-1474-56b8-717d-7bdb5ed0ecbf">
+                        <VARIABLE-DATA-PROTOTYPE UUID="c50b89f5-7153-554f-7bb0-3385e9680c0e">
                             <SHORT-NAME>Cell05VoltSet_V</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -466,11 +561,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="958de648-17ad-5e64-5303-0c99c2d5bbd8">
+                <SENDER-RECEIVER-INTERFACE UUID="18d4fcca-7ea1-5a49-a2fb-cc7e274d13a2">
                     <SHORT-NAME>Cell05Enable</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="4eab6e1c-7c9f-5edb-eb69-352349ddbde3">
+                        <VARIABLE-DATA-PROTOTYPE UUID="1fbe2e20-0bce-5387-95a3-a0944058eb3d">
                             <SHORT-NAME>Cell05Enable</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -485,11 +580,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="fa06cae1-d733-5815-4c0a-871c5599686f">
+                <SENDER-RECEIVER-INTERFACE UUID="b08b289a-820d-55ab-85f9-6df8df2bead3">
                     <SHORT-NAME>UCell05_mV</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="c067d6b8-8b2a-5ef4-09a7-28d8fd6d985f">
+                        <VARIABLE-DATA-PROTOTYPE UUID="b9b928c1-dc2b-5d7d-4055-6488f9fce70e">
                             <SHORT-NAME>UCell05_mV</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -504,11 +599,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="f6ab20a3-2137-5411-63fd-71d72d06bb1e">
+                <SENDER-RECEIVER-INTERFACE UUID="72f99fcc-31cb-569d-9187-4e253cce8dc1">
                     <SHORT-NAME>UCell05Qlf</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="17bb541a-8942-5b02-1f26-6126944f9f4e">
+                        <VARIABLE-DATA-PROTOTYPE UUID="453c43b2-eb5d-57dc-169f-3d74dbf3ce69">
                             <SHORT-NAME>UCell05Qlf</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -523,11 +618,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="ea98891d-f413-525b-2b20-08ea7c669d45">
+                <SENDER-RECEIVER-INTERFACE UUID="7ee85a3b-bd80-5f84-1309-2c10b2fca1f1">
                     <SHORT-NAME>Cell06VoltSet_V</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="0ecc348d-5b11-552f-9ff9-0e874047b856">
+                        <VARIABLE-DATA-PROTOTYPE UUID="7fa76cf6-32d5-5bce-274c-32e9212df368">
                             <SHORT-NAME>Cell06VoltSet_V</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -542,11 +637,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="fc0d4747-5c9e-5f61-a5a8-07efc21471e0">
+                <SENDER-RECEIVER-INTERFACE UUID="f1c3134e-928d-5b3d-8c2f-3b65dfdc1331">
                     <SHORT-NAME>Cell06Enable</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="4864c5c7-1de3-595c-ceb3-1f4f1fe75c86">
+                        <VARIABLE-DATA-PROTOTYPE UUID="3836c80c-a482-5f2b-f490-0d2a1e89a0d5">
                             <SHORT-NAME>Cell06Enable</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -561,11 +656,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="a371b44c-f9c0-5429-184c-2d777890a9cc">
+                <SENDER-RECEIVER-INTERFACE UUID="b900ae50-1d41-5fd1-5255-9d4a95edd23e">
                     <SHORT-NAME>UCell06_mV</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="4f5e64f0-eff4-5d69-36c2-e6f86aa1ff30">
+                        <VARIABLE-DATA-PROTOTYPE UUID="d0d86fc6-88cf-5d69-072f-4ba24e9c1044">
                             <SHORT-NAME>UCell06_mV</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -580,11 +675,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="096cc19c-8a7b-5315-0e76-883832d1b205">
+                <SENDER-RECEIVER-INTERFACE UUID="55cf9dba-18ff-5288-1bda-24e840a99a03">
                     <SHORT-NAME>UCell06Qlf</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="5c340a35-9e9b-5b0d-241c-038a39dfb8f3">
+                        <VARIABLE-DATA-PROTOTYPE UUID="7eef6fd1-c2df-5ba9-cfac-b1b311e7242b">
                             <SHORT-NAME>UCell06Qlf</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -599,11 +694,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="8e06bb29-be9c-5d6d-8280-92d23c36ca3b">
+                <SENDER-RECEIVER-INTERFACE UUID="1b39f276-b4ac-54e6-0bcc-e093652c6dfb">
                     <SHORT-NAME>Cell07VoltSet_V</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="e4a97bb6-f5ac-5f81-db83-05b08dead0fe">
+                        <VARIABLE-DATA-PROTOTYPE UUID="0e62e968-cc97-58b5-cf94-a76774f7a912">
                             <SHORT-NAME>Cell07VoltSet_V</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -618,11 +713,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="40c9065c-c7d5-5c5e-a5cc-cf0526f0bdfa">
+                <SENDER-RECEIVER-INTERFACE UUID="31b58ed1-0a93-50a6-ff9b-d3a8c769f037">
                     <SHORT-NAME>Cell07Enable</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="181498ac-a9e8-50fa-9419-554512e278d3">
+                        <VARIABLE-DATA-PROTOTYPE UUID="fa831435-50b9-5d9e-b671-4e7d9f0ffd00">
                             <SHORT-NAME>Cell07Enable</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -637,11 +732,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="a3350913-fbce-5220-d593-9110b6ee94dd">
+                <SENDER-RECEIVER-INTERFACE UUID="ad2e0b51-92cf-5148-4977-f8a9cd275e37">
                     <SHORT-NAME>UCell07_mV</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="289bda8e-59fe-5a33-fb40-a47dbab3ca1d">
+                        <VARIABLE-DATA-PROTOTYPE UUID="c3f981f2-09e9-5d3c-a451-f1587a551115">
                             <SHORT-NAME>UCell07_mV</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -656,11 +751,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="aebe7c0d-ba8d-5e79-9184-64b44ed5a49e">
+                <SENDER-RECEIVER-INTERFACE UUID="4371331f-e97a-5436-8864-07cf5624df9d">
                     <SHORT-NAME>UCell07Qlf</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="a6f4bb8b-becc-52ae-9a2f-9b3fbda2b288">
+                        <VARIABLE-DATA-PROTOTYPE UUID="dfe49854-af86-5703-73fb-44b7dd1ca4aa">
                             <SHORT-NAME>UCell07Qlf</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -675,11 +770,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="1359f9d4-992f-5dba-59f9-3ff9967ce92d">
+                <SENDER-RECEIVER-INTERFACE UUID="12f88fe6-c3a7-5a29-27b7-fb99bf1f047a">
                     <SHORT-NAME>Cell08VoltSet_V</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="5f6f8eec-1ba3-5c6b-b380-c2492dadfeeb">
+                        <VARIABLE-DATA-PROTOTYPE UUID="c9d33af8-b1f2-564c-c91d-4ba09ca08042">
                             <SHORT-NAME>Cell08VoltSet_V</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -694,11 +789,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="296c1b45-b745-5f99-8c8f-612d7f215d2d">
+                <SENDER-RECEIVER-INTERFACE UUID="2cd330e6-4f14-5d90-ae6a-3cdd1df7fb3f">
                     <SHORT-NAME>Cell08Enable</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="eea233af-4b9c-598e-215e-3ef98e434b9f">
+                        <VARIABLE-DATA-PROTOTYPE UUID="4c535894-026e-5a47-a8ac-11dd5745260b">
                             <SHORT-NAME>Cell08Enable</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -713,11 +808,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="29734e5f-a147-5aa7-d90f-2ab761ded89b">
+                <SENDER-RECEIVER-INTERFACE UUID="e38094e8-58eb-534c-5a03-d99f55789187">
                     <SHORT-NAME>UCell08_mV</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="3b8273d1-b3da-5eb7-61f0-0b69adc85eac">
+                        <VARIABLE-DATA-PROTOTYPE UUID="53aa8425-af6a-5822-18d2-01b509e3c93f">
                             <SHORT-NAME>UCell08_mV</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -732,11 +827,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="88c3a31f-5e8c-561b-bc2a-c85cb3b8e9b8">
+                <SENDER-RECEIVER-INTERFACE UUID="e16292d1-6191-5641-9a68-a4e8b359e68c">
                     <SHORT-NAME>UCell08Qlf</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="08624143-5e20-507c-d4cf-9ee1c9f7cd77">
+                        <VARIABLE-DATA-PROTOTYPE UUID="8ac35187-b057-5ed7-2dba-ca598b6ecb37">
                             <SHORT-NAME>UCell08Qlf</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -751,11 +846,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="0d9b302b-cea0-5c82-1791-d971a5e2f37a">
+                <SENDER-RECEIVER-INTERFACE UUID="4ea64e66-f1b1-5eb9-d162-486dd0db5ce8">
                     <SHORT-NAME>Cell09VoltSet_V</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="1ef20d05-5bb0-54d5-7684-06a9e7a9c15b">
+                        <VARIABLE-DATA-PROTOTYPE UUID="b1267c2c-facf-5616-c791-23a8fc307e86">
                             <SHORT-NAME>Cell09VoltSet_V</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -770,11 +865,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="c5d8808c-cff1-5b84-7058-5e288278797b">
+                <SENDER-RECEIVER-INTERFACE UUID="8ca295e9-3cb3-5de6-63ac-30f3531aacb4">
                     <SHORT-NAME>Cell09Enable</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="678b88bd-c905-554c-c37a-ef50956be7a3">
+                        <VARIABLE-DATA-PROTOTYPE UUID="10430cc3-ea6a-5f59-a9d2-374bf650e582">
                             <SHORT-NAME>Cell09Enable</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -789,11 +884,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="97f926e5-133d-5fcc-9235-bc3960c9ffb2">
+                <SENDER-RECEIVER-INTERFACE UUID="5759f838-4dfe-5a38-3a56-2f0f1e3e5f41">
                     <SHORT-NAME>UCell09_mV</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="e12a8849-9764-51e0-1410-ac9e92d4beb0">
+                        <VARIABLE-DATA-PROTOTYPE UUID="0af95872-c0d8-5245-a542-2b0d0eb0a35d">
                             <SHORT-NAME>UCell09_mV</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -808,11 +903,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="340ae2e6-1c3f-5b15-b4f4-f4067db6c7b6">
+                <SENDER-RECEIVER-INTERFACE UUID="49ef14ed-d6b7-5fcc-cd7c-c7b6c6be7601">
                     <SHORT-NAME>UCell09Qlf</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="922aca9a-36f5-5971-98a6-87b919366903">
+                        <VARIABLE-DATA-PROTOTYPE UUID="169a3722-15dd-5cdc-887f-e729a76f207a">
                             <SHORT-NAME>UCell09Qlf</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -827,11 +922,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="b17a7299-5b26-578c-c0fb-8fbafdddd18d">
+                <SENDER-RECEIVER-INTERFACE UUID="06b0c643-f701-5dd3-35b1-1c011b58d3d4">
                     <SHORT-NAME>Cell10VoltSet_V</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="c4c01ad7-c4ee-582a-9409-f9b045a78c53">
+                        <VARIABLE-DATA-PROTOTYPE UUID="0f668bf2-bc78-5078-9c8e-1d164d1b276d">
                             <SHORT-NAME>Cell10VoltSet_V</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -846,11 +941,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="32171868-20fd-537c-b724-57ea86cba5a4">
+                <SENDER-RECEIVER-INTERFACE UUID="b881d1c2-64de-5c92-aa76-3a88b5a31879">
                     <SHORT-NAME>Cell10Enable</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="38180410-115b-5e78-3324-6a987fb156fd">
+                        <VARIABLE-DATA-PROTOTYPE UUID="03cc25fc-c038-52c9-b3c6-daef7fabe144">
                             <SHORT-NAME>Cell10Enable</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -865,11 +960,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="2947c6bf-8a26-5b32-e401-294dae308e6b">
+                <SENDER-RECEIVER-INTERFACE UUID="7295f227-160a-5ef1-e230-4c9df12d7c7e">
                     <SHORT-NAME>UCell10_mV</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="da0b97e7-f6bb-5d82-b6e3-8288d96d2acd">
+                        <VARIABLE-DATA-PROTOTYPE UUID="61ab140c-f03d-58a6-42d1-3e53dbb61f1b">
                             <SHORT-NAME>UCell10_mV</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -884,11 +979,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="659eca15-79e6-5164-3b64-bc6397a33b57">
+                <SENDER-RECEIVER-INTERFACE UUID="309f2a5f-ea2c-596f-797b-d50dddf1d1b7">
                     <SHORT-NAME>UCell10Qlf</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="3396e582-746f-540d-1301-2e3e572f5677">
+                        <VARIABLE-DATA-PROTOTYPE UUID="e437a995-2a29-52a9-e497-1e42477270be">
                             <SHORT-NAME>UCell10Qlf</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -903,11 +998,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="ff990216-dcb5-5fdd-2db6-1a4d9d1b3e28">
+                <SENDER-RECEIVER-INTERFACE UUID="db626d1f-9af6-568e-f55d-4d6630485f81">
                     <SHORT-NAME>Cell11VoltSet_V</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="cce161e8-6f47-5a1d-5cd6-36a0dd981f8d">
+                        <VARIABLE-DATA-PROTOTYPE UUID="a5415fc1-e166-5216-361c-05b400517f02">
                             <SHORT-NAME>Cell11VoltSet_V</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -922,11 +1017,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="0e531bd0-2286-5f21-5e07-bb50d9af255d">
+                <SENDER-RECEIVER-INTERFACE UUID="bf6edaaf-9ef1-5274-c5b3-205c2e0df0f3">
                     <SHORT-NAME>Cell11Enable</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="7590761f-f01a-57f9-ab20-0bd888192043">
+                        <VARIABLE-DATA-PROTOTYPE UUID="f96cd90a-7a90-59d4-bd97-f7698f66bd03">
                             <SHORT-NAME>Cell11Enable</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -941,11 +1036,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="ce031a4a-134c-5169-e291-e2d69281af49">
+                <SENDER-RECEIVER-INTERFACE UUID="97e97264-699f-5c65-534f-da2a843af778">
                     <SHORT-NAME>UCell11_mV</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="76e5f03e-6be5-56db-36c3-3efa77d51ae3">
+                        <VARIABLE-DATA-PROTOTYPE UUID="4ee1bb86-7418-5436-4b14-698f3ee213e5">
                             <SHORT-NAME>UCell11_mV</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -960,11 +1055,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="399837b3-42e9-52da-9e08-60756570adf7">
+                <SENDER-RECEIVER-INTERFACE UUID="8d33cef8-c14b-541a-c394-7dcddc77e3c1">
                     <SHORT-NAME>UCell11Qlf</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="a1706223-68af-5026-7253-9604347e2905">
+                        <VARIABLE-DATA-PROTOTYPE UUID="ce2912a6-8ada-5b2f-9196-b3ca0f5a121a">
                             <SHORT-NAME>UCell11Qlf</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -979,11 +1074,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="34f2355b-9c92-5cff-d356-b0136b2b71cd">
+                <SENDER-RECEIVER-INTERFACE UUID="4f83ec69-14b1-5779-4828-04c9eb6a7a26">
                     <SHORT-NAME>Cell12VoltSet_V</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="f990ef08-7ac0-50e6-9cfa-677cf04b987d">
+                        <VARIABLE-DATA-PROTOTYPE UUID="4ab69399-cef5-5dee-5d43-692494a64041">
                             <SHORT-NAME>Cell12VoltSet_V</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -998,11 +1093,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="9870e55d-6f4a-5f00-e138-a566d5eefdf1">
+                <SENDER-RECEIVER-INTERFACE UUID="f102e114-41ce-52e0-232e-902badf1c0b1">
                     <SHORT-NAME>Cell12Enable</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="de6abc94-e4b7-54a3-d1d6-d44bf83c1f65">
+                        <VARIABLE-DATA-PROTOTYPE UUID="3b9576a3-bcaa-587c-220d-15c5debdb0e0">
                             <SHORT-NAME>Cell12Enable</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1017,11 +1112,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="89ff505f-2b7c-5b52-8641-e0bdaf88d551">
+                <SENDER-RECEIVER-INTERFACE UUID="919a04b3-bb91-52ee-2f31-c8f53b17d8b7">
                     <SHORT-NAME>UCell12_mV</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="9ce15849-a0ee-5dc7-98de-88405ce173a1">
+                        <VARIABLE-DATA-PROTOTYPE UUID="91d4f0ae-d593-5f6a-268b-e073d6b779ec">
                             <SHORT-NAME>UCell12_mV</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1036,11 +1131,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="d7b1fde7-76ec-5f17-ee00-3a8ee9985b0d">
+                <SENDER-RECEIVER-INTERFACE UUID="f0fd1ab1-310d-5992-ebf0-9be853ced8a2">
                     <SHORT-NAME>UCell12Qlf</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="c6371058-0e61-523e-ad13-d178966824b1">
+                        <VARIABLE-DATA-PROTOTYPE UUID="954bfa9b-1a91-5184-375d-e68de2e5cbbd">
                             <SHORT-NAME>UCell12Qlf</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1055,11 +1150,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="3c92e9a9-9223-54fb-2d84-846bc787ef56">
+                <SENDER-RECEIVER-INTERFACE UUID="3adcae55-13d6-599a-3036-c5bcce0ac1e5">
                     <SHORT-NAME>Cell13VoltSet_V</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="83e6fc4f-8ff0-53d9-c98e-339987e0613e">
+                        <VARIABLE-DATA-PROTOTYPE UUID="e9478fce-376b-5616-1b45-0826ca16d512">
                             <SHORT-NAME>Cell13VoltSet_V</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1074,11 +1169,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="a7d72d59-db34-526a-0943-c36fbc8dd604">
+                <SENDER-RECEIVER-INTERFACE UUID="1d184b1b-7686-5478-c14e-a7a6708e0164">
                     <SHORT-NAME>Cell13Enable</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="06ddf0d5-1f60-5599-a05d-02ff6db14135">
+                        <VARIABLE-DATA-PROTOTYPE UUID="3ff11588-5aeb-562a-b879-1c1c3834d722">
                             <SHORT-NAME>Cell13Enable</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1093,11 +1188,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="e79936a7-d8bc-5dcd-21bb-8ef50b407937">
+                <SENDER-RECEIVER-INTERFACE UUID="5addf061-ab3d-572c-b3b5-3caed3c282b2">
                     <SHORT-NAME>UCell13_mV</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="689bb68d-f3ec-524e-3b1b-d2438492bc71">
+                        <VARIABLE-DATA-PROTOTYPE UUID="91ad4a37-e442-5405-6151-1e111427ed30">
                             <SHORT-NAME>UCell13_mV</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1112,11 +1207,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="3569cff3-52c1-5da5-680a-b32d4355d1eb">
+                <SENDER-RECEIVER-INTERFACE UUID="72946bc2-adc8-55bb-7bcd-bda99d6db95f">
                     <SHORT-NAME>UCell13Qlf</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="012af80c-7d57-571b-3527-26a4c52a8ac3">
+                        <VARIABLE-DATA-PROTOTYPE UUID="2824cea6-316c-526f-e97b-dea54bdde65f">
                             <SHORT-NAME>UCell13Qlf</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1131,11 +1226,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="8292e3ef-db1c-5587-801d-06b7c8eac601">
+                <SENDER-RECEIVER-INTERFACE UUID="49e7dd90-b915-53b7-3cd8-38b3195fdf4a">
                     <SHORT-NAME>Cell14VoltSet_V</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="2c491894-d546-53be-67c8-c822d319005c">
+                        <VARIABLE-DATA-PROTOTYPE UUID="73c07b8b-088a-5a2a-6538-9154c9d235a8">
                             <SHORT-NAME>Cell14VoltSet_V</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1150,11 +1245,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="639a3395-310b-5dc2-c082-f706659e61c6">
+                <SENDER-RECEIVER-INTERFACE UUID="9bbcd5db-8cfe-5942-28a4-3052781ec72b">
                     <SHORT-NAME>Cell14Enable</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="42420b2e-7253-5b9e-3ebb-bf1c3a28c157">
+                        <VARIABLE-DATA-PROTOTYPE UUID="8ef93c05-14c6-5b27-d2ed-792d3aa9b11a">
                             <SHORT-NAME>Cell14Enable</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1169,11 +1264,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="38ae5e9d-0b67-5c5a-1d1c-2baa5c97ac78">
+                <SENDER-RECEIVER-INTERFACE UUID="031cd153-7613-501a-6985-0af5d1789dea">
                     <SHORT-NAME>UCell14_mV</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="684f4361-e27e-54ae-9d5a-0cfd6eac7999">
+                        <VARIABLE-DATA-PROTOTYPE UUID="901ae786-5f34-5b37-44d2-eb9171225781">
                             <SHORT-NAME>UCell14_mV</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1188,11 +1283,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="aac5acf5-ada6-58c0-c254-1b7bde79f80a">
+                <SENDER-RECEIVER-INTERFACE UUID="d99a4703-d1b0-5d25-d6d0-4c6e9c914823">
                     <SHORT-NAME>UCell14Qlf</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="846017de-f3ea-595a-ec2e-1449157f0562">
+                        <VARIABLE-DATA-PROTOTYPE UUID="34bfaa50-027f-5229-b546-43a2351e3820">
                             <SHORT-NAME>UCell14Qlf</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1207,11 +1302,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="b7ccc041-fa25-5579-5f1a-33fea4d958e3">
+                <SENDER-RECEIVER-INTERFACE UUID="7aa33bf4-fc1b-5a3d-b9db-a760851076b8">
                     <SHORT-NAME>En01</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="ff33a520-0882-50f9-3b0e-c679d7eb933b">
+                        <VARIABLE-DATA-PROTOTYPE UUID="6a1579af-e7f7-5652-97ac-0389b01dc993">
                             <SHORT-NAME>En01</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1226,11 +1321,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="2663d139-2469-5ab7-c190-f7bb9ea63f81">
+                <SENDER-RECEIVER-INTERFACE UUID="1711e26a-a60f-5f57-52b0-bed196d41e31">
                     <SHORT-NAME>Sel01</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="409a1876-4c05-5de7-c54a-6fd78c5958c9">
+                        <VARIABLE-DATA-PROTOTYPE UUID="7535f97c-c3e2-588b-647b-3747e99ed11a">
                             <SHORT-NAME>Sel01</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1245,11 +1340,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="c3161729-cdec-5255-88dc-e90d27b870a7">
+                <SENDER-RECEIVER-INTERFACE UUID="2c1e2f52-620a-51c2-0eb4-ac803e5d2566">
                     <SHORT-NAME>Cell01VoltAct_V</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="bd508b15-a702-51bf-16d0-1a0e4b7be55d">
+                        <VARIABLE-DATA-PROTOTYPE UUID="784f5192-df62-5074-e0ba-e4df3463fd1e">
                             <SHORT-NAME>Cell01VoltAct_V</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1264,11 +1359,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="bf65abc1-424d-54f4-072a-7160ee12bb91">
+                <SENDER-RECEIVER-INTERFACE UUID="2ce33887-44d4-5072-a444-ed191ff27d0e">
                     <SHORT-NAME>Cell01State</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="0460c016-0021-555f-fb2f-a39a5c4eabcb">
+                        <VARIABLE-DATA-PROTOTYPE UUID="ff969b04-6306-518f-7728-3c768a9ca3be">
                             <SHORT-NAME>Cell01State</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1283,11 +1378,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="2526c3fe-23f5-588b-ace6-1a718463de0a">
+                <SENDER-RECEIVER-INTERFACE UUID="a5712608-bf6e-598f-c8dd-87f7ad2c5b7c">
                     <SHORT-NAME>Duty01</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="ff2f1b66-cc65-5a6f-315d-8233d957614c">
+                        <VARIABLE-DATA-PROTOTYPE UUID="0655efd6-2df3-5454-0c69-dd1108c5c9ad">
                             <SHORT-NAME>Duty01</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1302,11 +1397,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="79664b08-909e-54b8-4522-fcf30f82e332">
+                <SENDER-RECEIVER-INTERFACE UUID="d116f17d-f33c-54ec-fd06-a6229c060df1">
                     <SHORT-NAME>En02</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="64885887-08b3-5a97-df80-39f67be8daa7">
+                        <VARIABLE-DATA-PROTOTYPE UUID="a17e1a9c-67eb-5b51-975d-9fe84564fd81">
                             <SHORT-NAME>En02</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1321,11 +1416,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="1f0fd4b7-2c13-5bfc-8580-5f367aa777f3">
+                <SENDER-RECEIVER-INTERFACE UUID="7ced7fa3-663a-5c77-f1f3-2994d078a29c">
                     <SHORT-NAME>Sel02</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="02be5348-7718-50b7-b328-97da098fec19">
+                        <VARIABLE-DATA-PROTOTYPE UUID="6a6d8883-5d49-542f-5854-4bff839ca812">
                             <SHORT-NAME>Sel02</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1340,11 +1435,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="ca535d00-2a00-5441-6d66-8484033ca6d0">
+                <SENDER-RECEIVER-INTERFACE UUID="a6a38d69-34f0-5cfc-d745-b5ea5dd691b7">
                     <SHORT-NAME>Cell02VoltAct_V</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="0751d989-2db4-5136-51cb-e26179a17f04">
+                        <VARIABLE-DATA-PROTOTYPE UUID="0e46e7cb-5043-5fad-f0e7-a307e4d731ff">
                             <SHORT-NAME>Cell02VoltAct_V</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1359,11 +1454,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="615707d3-af84-57f1-f2d5-0d5f2eda3eb1">
+                <SENDER-RECEIVER-INTERFACE UUID="bcb1e49f-fc6a-5800-b984-dc8980e7a519">
                     <SHORT-NAME>Cell02State</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="1011202f-99f0-5c0e-ffb2-283c4d9959e8">
+                        <VARIABLE-DATA-PROTOTYPE UUID="7f842e0a-6b54-56ae-d5f0-8a5e0abfc034">
                             <SHORT-NAME>Cell02State</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1378,11 +1473,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="3d0e9d29-3265-501e-eb99-6ecbf2f6fafc">
+                <SENDER-RECEIVER-INTERFACE UUID="f85eab03-df32-5243-8fdf-ddbe94cc2256">
                     <SHORT-NAME>Duty02</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="5563cfe8-e2f7-5c1c-f1ae-de2a9b5d3a0b">
+                        <VARIABLE-DATA-PROTOTYPE UUID="6cd4d199-7343-5c6a-de0c-ebe764a36ee4">
                             <SHORT-NAME>Duty02</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1397,11 +1492,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="217f746c-0c4a-5ee3-4341-c420946e8f2e">
+                <SENDER-RECEIVER-INTERFACE UUID="92b3dcf5-5f71-55da-6f01-daf54509cde7">
                     <SHORT-NAME>En03</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="3259bf46-f55d-547a-ec9e-16dfc79ab869">
+                        <VARIABLE-DATA-PROTOTYPE UUID="363c5395-1c5a-530a-7d96-b87071425587">
                             <SHORT-NAME>En03</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1416,11 +1511,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="223ab46e-a630-554e-7d86-423e7505f36d">
+                <SENDER-RECEIVER-INTERFACE UUID="793f7ad8-fc39-5f41-d898-474e23c10e10">
                     <SHORT-NAME>Sel03</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="e6333732-47eb-56b9-9dde-c0d103845843">
+                        <VARIABLE-DATA-PROTOTYPE UUID="54be2181-b076-5bdb-0e42-85657f80da19">
                             <SHORT-NAME>Sel03</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1435,11 +1530,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="afd0bcd6-ae6d-528f-fd47-edaef279ee66">
+                <SENDER-RECEIVER-INTERFACE UUID="f3730ac4-77d7-50e8-f9c9-72629331c3c2">
                     <SHORT-NAME>Cell03VoltAct_V</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="2094e4dd-fe3d-5f2e-8a35-9c620f8cc4e6">
+                        <VARIABLE-DATA-PROTOTYPE UUID="8bb816f3-e269-5946-1abb-71ca91e245dd">
                             <SHORT-NAME>Cell03VoltAct_V</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1454,11 +1549,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="28844d4c-267f-5a77-3f7b-b9b12c937359">
+                <SENDER-RECEIVER-INTERFACE UUID="09da728a-1c96-5078-201c-a15f4cffb259">
                     <SHORT-NAME>Cell03State</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="1b5ab820-c004-5314-6ab0-598b43ab9992">
+                        <VARIABLE-DATA-PROTOTYPE UUID="ba801733-b7e8-5994-0e50-14b550d09396">
                             <SHORT-NAME>Cell03State</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1473,11 +1568,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="e5327fe8-d3d4-522a-43ee-f6e28846dbb8">
+                <SENDER-RECEIVER-INTERFACE UUID="043f51b2-a9e4-587e-e243-4e57eb3dc12f">
                     <SHORT-NAME>Duty03</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="6d419e42-57e0-5485-b256-b33398fff375">
+                        <VARIABLE-DATA-PROTOTYPE UUID="1a980914-1701-5553-a191-b5c790a51de8">
                             <SHORT-NAME>Duty03</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1492,11 +1587,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="e041060c-031a-541f-972a-272724a05fd2">
+                <SENDER-RECEIVER-INTERFACE UUID="5404f208-c4c2-542e-feb3-440a7f0a4b09">
                     <SHORT-NAME>En04</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="2f04b558-5858-5160-0a7b-1d01165398d1">
+                        <VARIABLE-DATA-PROTOTYPE UUID="692f20c3-9c71-5538-e16b-b149b76e645e">
                             <SHORT-NAME>En04</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1511,11 +1606,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="f063b910-2279-5ebe-4741-aac7d0b334d2">
+                <SENDER-RECEIVER-INTERFACE UUID="32b86cef-9512-5719-6d24-be8684aa24ed">
                     <SHORT-NAME>Sel04</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="a0536afb-e9e8-5499-0611-13133337ab5d">
+                        <VARIABLE-DATA-PROTOTYPE UUID="95e9b365-1911-56cd-f222-49d16da4fd14">
                             <SHORT-NAME>Sel04</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1530,11 +1625,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="4a808e17-19f2-50a1-8115-c475939f71ec">
+                <SENDER-RECEIVER-INTERFACE UUID="a36544c2-00c3-5caf-845e-a3dd9ad4bc74">
                     <SHORT-NAME>Cell04VoltAct_V</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="0901668e-82f5-516c-dbeb-7d244e294dcc">
+                        <VARIABLE-DATA-PROTOTYPE UUID="d33240d0-424f-55a9-1a92-b88a52f0f2f7">
                             <SHORT-NAME>Cell04VoltAct_V</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1549,11 +1644,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="b385bfdb-b91e-538b-a02f-0e6151b2fd03">
+                <SENDER-RECEIVER-INTERFACE UUID="25c33e6a-04ef-5609-9187-03331b8b6678">
                     <SHORT-NAME>Cell04State</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="59f5dbb4-90eb-5a20-7dc9-5d26132fc76d">
+                        <VARIABLE-DATA-PROTOTYPE UUID="e9db7209-5a8d-5124-718e-6a03cfc97f05">
                             <SHORT-NAME>Cell04State</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1568,11 +1663,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="f3c17d2e-6f02-5d62-048c-0de6b1e1d377">
+                <SENDER-RECEIVER-INTERFACE UUID="aa609b73-d9b2-5e55-927d-0125fa490e55">
                     <SHORT-NAME>Duty04</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="e23b1f61-3ad9-5fdf-4428-e3ac0648bda5">
+                        <VARIABLE-DATA-PROTOTYPE UUID="93b8600d-5a62-54ae-a61e-adf6b14d1bc6">
                             <SHORT-NAME>Duty04</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1587,11 +1682,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="1f836e97-9bd4-58a0-a6c6-b00b8bd253b3">
+                <SENDER-RECEIVER-INTERFACE UUID="aca5d528-39d0-5290-4f84-30e1d08bea30">
                     <SHORT-NAME>En05</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="f74b6ef9-26da-50b5-5ae8-c9959fac31a7">
+                        <VARIABLE-DATA-PROTOTYPE UUID="45690dff-13e7-5af1-1513-ce55c09a6674">
                             <SHORT-NAME>En05</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1606,11 +1701,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="d2e15707-1085-5213-f5a4-5748c5c0140b">
+                <SENDER-RECEIVER-INTERFACE UUID="a15fa27e-23bb-5cd0-7467-5dcb94004879">
                     <SHORT-NAME>Sel05</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="8363e4ec-ef3e-5f7e-8bd9-329550dd0e68">
+                        <VARIABLE-DATA-PROTOTYPE UUID="21893c1d-1f04-5330-5234-1f069b54a596">
                             <SHORT-NAME>Sel05</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1625,11 +1720,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="6da34425-2bbd-5fb2-5c54-90fe9b827cf1">
+                <SENDER-RECEIVER-INTERFACE UUID="8a6cf0d0-e3fc-59c4-8a14-af006801c794">
                     <SHORT-NAME>Cell05VoltAct_V</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="34948335-e11b-5dc4-f343-aefde0b1712f">
+                        <VARIABLE-DATA-PROTOTYPE UUID="16e7766e-5f49-52f6-5a6c-1c6aa1fc6460">
                             <SHORT-NAME>Cell05VoltAct_V</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1644,11 +1739,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="d1b4b704-e33d-528a-0021-6eab77dd012f">
+                <SENDER-RECEIVER-INTERFACE UUID="9d9c7cd1-b08f-57ce-b5c7-9b8de668d11d">
                     <SHORT-NAME>Cell05State</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="4388458a-6d85-5ddd-942a-9ca1ac368b59">
+                        <VARIABLE-DATA-PROTOTYPE UUID="32f85e50-716e-5373-67a2-841f04cff82d">
                             <SHORT-NAME>Cell05State</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1663,11 +1758,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="b60b0c1a-ea6d-5e48-d33d-9e3c0274f74c">
+                <SENDER-RECEIVER-INTERFACE UUID="337952ad-0969-594d-c503-be17fc982f8a">
                     <SHORT-NAME>Duty05</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="75a14e7b-f331-526d-bea0-46e607936478">
+                        <VARIABLE-DATA-PROTOTYPE UUID="d5e7fe1f-f1ba-59f3-4993-9e165268a38a">
                             <SHORT-NAME>Duty05</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1682,11 +1777,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="40b25fa4-2be7-5c0b-716c-15e4a810b193">
+                <SENDER-RECEIVER-INTERFACE UUID="1f451588-a902-5067-1492-caa2219587d5">
                     <SHORT-NAME>En06</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="8628b343-b105-5d51-6dd8-7f56c34b52e4">
+                        <VARIABLE-DATA-PROTOTYPE UUID="71907a4b-4105-597a-df14-e9410523bd6a">
                             <SHORT-NAME>En06</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1701,11 +1796,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="f4e614ab-df8f-594e-c03a-d3e62cf9813b">
+                <SENDER-RECEIVER-INTERFACE UUID="6feea3a2-e843-57fb-f690-df2aca042f46">
                     <SHORT-NAME>Sel06</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="134efb49-0479-5458-b55b-1ab02597e129">
+                        <VARIABLE-DATA-PROTOTYPE UUID="e903d6cb-49bf-580d-2cef-db1683bcf00f">
                             <SHORT-NAME>Sel06</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1720,11 +1815,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="ce9884b5-ea5e-595c-d52e-626ae6d48e16">
+                <SENDER-RECEIVER-INTERFACE UUID="4973233b-ad25-52a2-66f4-579f90884f37">
                     <SHORT-NAME>Cell06VoltAct_V</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="51997f58-6a0d-5d3b-eee2-0ad9f760753a">
+                        <VARIABLE-DATA-PROTOTYPE UUID="bd3174a1-cde5-5e33-8f80-8d8b1e9923cf">
                             <SHORT-NAME>Cell06VoltAct_V</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1739,11 +1834,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="42e5fc00-5967-53b1-44e6-51ae53854d3b">
+                <SENDER-RECEIVER-INTERFACE UUID="4a2031b9-c4de-500a-174a-b2641bbddc09">
                     <SHORT-NAME>Cell06State</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="e8cd79be-fc53-5960-6271-9b8fe09cc201">
+                        <VARIABLE-DATA-PROTOTYPE UUID="28a0887d-5bb0-5e0a-c747-e4870b096e9c">
                             <SHORT-NAME>Cell06State</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1758,11 +1853,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="6bdad145-b6a1-5b50-4523-cd43259387ea">
+                <SENDER-RECEIVER-INTERFACE UUID="ec857dba-636f-5d2c-97bd-82e694064b2b">
                     <SHORT-NAME>Duty06</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="ce2d21f9-4fad-509b-c3ef-10f3680b3532">
+                        <VARIABLE-DATA-PROTOTYPE UUID="eb95841f-0195-5574-0586-2f6a1e2daae7">
                             <SHORT-NAME>Duty06</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1777,11 +1872,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="ffc7033c-4cf2-564b-f151-bfac0f776bea">
+                <SENDER-RECEIVER-INTERFACE UUID="aec86791-3103-5e2b-d417-fd64ea622ea9">
                     <SHORT-NAME>En07</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="f083c6a6-44e8-5248-cfbb-a08fbb265f84">
+                        <VARIABLE-DATA-PROTOTYPE UUID="1e602edb-a077-5684-1892-242f83e6a13e">
                             <SHORT-NAME>En07</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1796,11 +1891,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="ae02626b-588f-5431-81aa-5aaf2e5ba167">
+                <SENDER-RECEIVER-INTERFACE UUID="4f26a52b-9ca6-55cc-5656-befc0e398b73">
                     <SHORT-NAME>Sel07</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="0255c3fb-bb32-5bd6-c452-18bcd65ea944">
+                        <VARIABLE-DATA-PROTOTYPE UUID="dcd90bfb-1204-52b6-af00-308290463f1b">
                             <SHORT-NAME>Sel07</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1815,11 +1910,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="440a887d-ee57-5fc7-7be3-7f286cb125af">
+                <SENDER-RECEIVER-INTERFACE UUID="6c6a31c6-19de-525a-c267-3df899494ca2">
                     <SHORT-NAME>Cell07VoltAct_V</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="ae8127ef-587e-5bcb-2b2b-c61e8a1abf41">
+                        <VARIABLE-DATA-PROTOTYPE UUID="1f56f61b-57b3-57c8-3487-f8a35c8f2dd5">
                             <SHORT-NAME>Cell07VoltAct_V</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1834,11 +1929,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="c0fec4e9-a2aa-53f8-e09d-1c9cc149f85b">
+                <SENDER-RECEIVER-INTERFACE UUID="f1083946-55d6-5081-b207-012a60756b2d">
                     <SHORT-NAME>Cell07State</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="245ba3e8-2874-5587-22d6-0ac5cf06934d">
+                        <VARIABLE-DATA-PROTOTYPE UUID="820d792c-9a9f-536f-f500-aa8226ec4cd5">
                             <SHORT-NAME>Cell07State</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1853,11 +1948,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="a9672959-b029-5c17-fea1-0e3a04abb6aa">
+                <SENDER-RECEIVER-INTERFACE UUID="ab79c4fe-b12a-5c30-69ea-63a9f3908b34">
                     <SHORT-NAME>Duty07</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="753e93d2-4027-58f4-41d5-89a146208292">
+                        <VARIABLE-DATA-PROTOTYPE UUID="e6690790-cff8-52c4-e033-4078b854b602">
                             <SHORT-NAME>Duty07</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1872,11 +1967,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="e134d38e-9e9b-5b20-17d5-91012b18378f">
+                <SENDER-RECEIVER-INTERFACE UUID="6bcb96b3-5a21-5a1b-8e5a-5ccbe753c737">
                     <SHORT-NAME>En08</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="a016139b-188d-5a2d-1154-964cb07cca65">
+                        <VARIABLE-DATA-PROTOTYPE UUID="bc93988c-65f6-5127-a238-9dca8e3c5e27">
                             <SHORT-NAME>En08</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1891,11 +1986,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="322ab07b-c37e-5ec2-410b-d52a64bd1484">
+                <SENDER-RECEIVER-INTERFACE UUID="0447f941-e47e-5fff-85a9-bb9d22b5104d">
                     <SHORT-NAME>Sel08</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="4a91d782-259a-5da3-2b04-11116c354ca7">
+                        <VARIABLE-DATA-PROTOTYPE UUID="89c0cf85-81d3-56b0-ed0c-9926babf64f0">
                             <SHORT-NAME>Sel08</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1910,11 +2005,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="c4d10831-093b-5227-0777-73c3d465bcbd">
+                <SENDER-RECEIVER-INTERFACE UUID="89b0efc6-96c7-58cd-2548-dee7c612c82a">
                     <SHORT-NAME>Cell08VoltAct_V</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="b69d7dc2-dcfd-56d8-c4a5-f11fe6c27cb1">
+                        <VARIABLE-DATA-PROTOTYPE UUID="670ba290-9365-57ad-e6aa-8329bc15978d">
                             <SHORT-NAME>Cell08VoltAct_V</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1929,11 +2024,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="2ceb2a7a-4492-5cb3-4a83-1950611ac388">
+                <SENDER-RECEIVER-INTERFACE UUID="137fcdc6-8940-57ff-3941-7a68b54697e2">
                     <SHORT-NAME>Cell08State</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="96822fe0-f569-5cd7-c6eb-de0acd4ce495">
+                        <VARIABLE-DATA-PROTOTYPE UUID="fae42b47-241a-55d2-a100-7af8dd99493a">
                             <SHORT-NAME>Cell08State</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1948,11 +2043,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="21e2043f-0ea6-58b3-5ddd-a25710840fba">
+                <SENDER-RECEIVER-INTERFACE UUID="ef19b379-6ba5-592b-ce12-a3788d71dd58">
                     <SHORT-NAME>Duty08</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="2930376c-b841-5a67-b06a-e29c269d186f">
+                        <VARIABLE-DATA-PROTOTYPE UUID="80adba0c-b5cb-5e2e-f579-64bd4992ab0a">
                             <SHORT-NAME>Duty08</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1967,11 +2062,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="19db4c16-9f06-5e90-267c-1684ed9ee91a">
+                <SENDER-RECEIVER-INTERFACE UUID="145672bc-c609-58e8-c66d-383ab99dd399">
                     <SHORT-NAME>En09</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="ef6dd38b-f7f6-5052-1133-9e499db202a8">
+                        <VARIABLE-DATA-PROTOTYPE UUID="29e7cce1-3a2e-5d00-66d8-67541a4409ee">
                             <SHORT-NAME>En09</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -1986,11 +2081,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="a4270fab-ed6f-5dc8-f748-cab0543f07e1">
+                <SENDER-RECEIVER-INTERFACE UUID="5f08309c-5b83-5289-8d3c-0984d41ea9fe">
                     <SHORT-NAME>Sel09</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="e6d5e27d-93c1-59dd-e439-e6b6faa910fc">
+                        <VARIABLE-DATA-PROTOTYPE UUID="ec6640eb-5d09-52e2-7b17-143d054ba215">
                             <SHORT-NAME>Sel09</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2005,11 +2100,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="651f4fd8-a9c1-544c-a942-8398868a2b04">
+                <SENDER-RECEIVER-INTERFACE UUID="a4ee2593-59c8-5d30-f503-944f1bf7bdf9">
                     <SHORT-NAME>Cell09VoltAct_V</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="2fb44101-b9bd-5930-fd02-9c2ce3c5b02a">
+                        <VARIABLE-DATA-PROTOTYPE UUID="ce457ac0-1666-51d5-a205-1396dde03480">
                             <SHORT-NAME>Cell09VoltAct_V</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2024,11 +2119,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="a32cabb4-2e3e-58ee-43f9-39f4d49b9248">
+                <SENDER-RECEIVER-INTERFACE UUID="a019d809-bc0a-5af8-ce1e-ce0d4fb5022a">
                     <SHORT-NAME>Cell09State</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="d650ea1f-a1e2-5ad8-18f3-a233678d6c4a">
+                        <VARIABLE-DATA-PROTOTYPE UUID="5c16b6f7-1a1f-5061-333d-3a5cba76bc21">
                             <SHORT-NAME>Cell09State</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2043,11 +2138,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="989ee5b3-3f8d-5ee8-3f07-5c929da1c078">
+                <SENDER-RECEIVER-INTERFACE UUID="57935046-6579-5d82-08a6-32abb4f9229f">
                     <SHORT-NAME>Duty09</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="e7f863d2-4892-5085-07e9-660612b75d25">
+                        <VARIABLE-DATA-PROTOTYPE UUID="90b333bd-152b-56db-da16-40e74561218d">
                             <SHORT-NAME>Duty09</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2062,11 +2157,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="529dcf52-fce2-5471-34ac-f9186bac464b">
+                <SENDER-RECEIVER-INTERFACE UUID="dd93a04d-e53a-5049-242a-60abdd41b6e7">
                     <SHORT-NAME>En10</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="dc2da509-9392-5532-eb8a-5b55abb64773">
+                        <VARIABLE-DATA-PROTOTYPE UUID="9d379ad2-678a-56ff-2183-1c19f1eac266">
                             <SHORT-NAME>En10</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2081,11 +2176,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="96ed7d00-b8d3-53fd-27b7-dc06b7d2fbcb">
+                <SENDER-RECEIVER-INTERFACE UUID="43818dc3-42a6-5bed-b362-5d8fcc7b0685">
                     <SHORT-NAME>Sel10</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="fbeb7f56-915c-5d8a-f4b5-db9a5b2e98aa">
+                        <VARIABLE-DATA-PROTOTYPE UUID="8b2857eb-718c-5a80-7238-a5de8778a60b">
                             <SHORT-NAME>Sel10</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2100,11 +2195,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="2119bf9a-bfb6-5cc8-6ddf-a5fcdaa96e9d">
+                <SENDER-RECEIVER-INTERFACE UUID="54f6391f-959e-52a6-302a-d80ad62566ec">
                     <SHORT-NAME>Cell10VoltAct_V</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="dab0de19-98f4-5ea4-4259-eeceab617cfd">
+                        <VARIABLE-DATA-PROTOTYPE UUID="bd73bfd4-fa03-5354-600f-9a4d70b58d38">
                             <SHORT-NAME>Cell10VoltAct_V</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2119,11 +2214,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="ded36cac-dd26-539e-de96-e5cdeaadd704">
+                <SENDER-RECEIVER-INTERFACE UUID="d76cf8f2-758e-503b-a82b-866932d922b7">
                     <SHORT-NAME>Cell10State</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="c0f02b1b-1bf2-5c37-2b39-f97dcd5b125b">
+                        <VARIABLE-DATA-PROTOTYPE UUID="0c7dec6d-444b-54ce-2cd9-ac6c5bd926a8">
                             <SHORT-NAME>Cell10State</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2138,11 +2233,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="f2f42f34-37bb-50f5-3aea-6eedf90fe9ab">
+                <SENDER-RECEIVER-INTERFACE UUID="59bc03f5-3637-557a-48f5-8bfdc977d1cb">
                     <SHORT-NAME>Duty10</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="2cae3dfa-70b9-5762-dad5-7129a1c8277d">
+                        <VARIABLE-DATA-PROTOTYPE UUID="50d436d2-13df-5c66-6cb2-4fc02f77693d">
                             <SHORT-NAME>Duty10</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2157,11 +2252,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="6dd34c2d-3eec-5cce-634e-0f9709274f3a">
+                <SENDER-RECEIVER-INTERFACE UUID="f72793e3-b38e-5cac-fff0-b0cf7cbf6fd8">
                     <SHORT-NAME>En11</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="65dde230-fff1-5e05-ac65-3afe9f0ec63b">
+                        <VARIABLE-DATA-PROTOTYPE UUID="7dcb9169-02c2-5cdc-8b6b-c318f7152270">
                             <SHORT-NAME>En11</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2176,11 +2271,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="0080a367-eefc-507c-0191-4e34f0762a14">
+                <SENDER-RECEIVER-INTERFACE UUID="e6250619-b302-592f-6dcb-758dce636f14">
                     <SHORT-NAME>Sel11</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="a0598b11-79a5-555e-f9f5-c4e0d171ac1f">
+                        <VARIABLE-DATA-PROTOTYPE UUID="92240788-9aff-5ce4-3493-08c04e921283">
                             <SHORT-NAME>Sel11</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2195,11 +2290,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="d1f9b747-6fb9-59f6-f4d6-790aa518cbb5">
+                <SENDER-RECEIVER-INTERFACE UUID="99b78b38-9977-57b6-ec60-3a1463633b51">
                     <SHORT-NAME>Cell11VoltAct_V</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="f8619a89-9aa1-5bb9-6f1f-cccba6f0d1c6">
+                        <VARIABLE-DATA-PROTOTYPE UUID="8d0c1061-554f-518c-045a-4fc9fb90bba6">
                             <SHORT-NAME>Cell11VoltAct_V</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2214,11 +2309,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="152b215f-36a7-5e23-5ce6-1a011b1fc5ee">
+                <SENDER-RECEIVER-INTERFACE UUID="0eb044d7-8957-5afd-c4db-a3f62aaf0a0b">
                     <SHORT-NAME>Cell11State</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="4d02dcbc-41a4-5af8-d956-e8c60e341a1c">
+                        <VARIABLE-DATA-PROTOTYPE UUID="e830c1b3-a69b-51af-bb87-f7c6c70a7273">
                             <SHORT-NAME>Cell11State</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2233,11 +2328,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="db1cc788-9857-5ddf-227d-e54443025ad9">
+                <SENDER-RECEIVER-INTERFACE UUID="8e376a05-f7ca-5c37-9e57-f053cc9c5568">
                     <SHORT-NAME>Duty11</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="5d873e80-a948-5fa1-ff02-716ed95e3f3d">
+                        <VARIABLE-DATA-PROTOTYPE UUID="3129727d-18c0-5fb2-e676-a3ef71459e2f">
                             <SHORT-NAME>Duty11</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2252,11 +2347,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="d13806f2-e063-5c19-c843-0b0be2a1a941">
+                <SENDER-RECEIVER-INTERFACE UUID="64893c12-d8cc-526f-c024-a7c91b119012">
                     <SHORT-NAME>En12</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="a02e21fa-afcb-5216-d6f3-25f7abfd4c75">
+                        <VARIABLE-DATA-PROTOTYPE UUID="58abe315-64cc-5827-cc4f-7ea822d6abe6">
                             <SHORT-NAME>En12</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2271,11 +2366,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="bb32073c-ba63-5553-0292-7bf19b729fb9">
+                <SENDER-RECEIVER-INTERFACE UUID="fcfaabdf-b346-5eac-e1a7-85104a415fb7">
                     <SHORT-NAME>Sel12</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="f4b87433-8cea-5bd1-bc74-e0531a8ed26b">
+                        <VARIABLE-DATA-PROTOTYPE UUID="d4b33c60-d962-508f-502e-5f734439d916">
                             <SHORT-NAME>Sel12</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2290,11 +2385,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="b0bdfa89-4e20-5f7c-2953-9ed827585fbf">
+                <SENDER-RECEIVER-INTERFACE UUID="5395eac2-11e1-5421-f6cf-47ac1a183707">
                     <SHORT-NAME>Cell12VoltAct_V</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="4f5a8244-85d4-59a8-d8cd-26deda9a1bf1">
+                        <VARIABLE-DATA-PROTOTYPE UUID="2457449f-eb06-554b-d623-7d4342beda9f">
                             <SHORT-NAME>Cell12VoltAct_V</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2309,11 +2404,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="1a536710-eaa7-5fb5-bb6c-17faadc643c4">
+                <SENDER-RECEIVER-INTERFACE UUID="1f3e6131-b6e5-5579-9aa2-64360e07ae22">
                     <SHORT-NAME>Cell12State</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="0fdfde1c-76db-5bce-0acc-e482d9ce3027">
+                        <VARIABLE-DATA-PROTOTYPE UUID="24f45671-bfc9-54b0-c921-5b26aab89a76">
                             <SHORT-NAME>Cell12State</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2328,11 +2423,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="df083ce2-fcb5-52f6-fc36-4b98495a8fa2">
+                <SENDER-RECEIVER-INTERFACE UUID="733bc051-a0c0-5bd5-7485-771969f7359e">
                     <SHORT-NAME>Duty12</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="c95583f9-1558-5c22-3963-d33e050c0706">
+                        <VARIABLE-DATA-PROTOTYPE UUID="db75f66a-2bdf-506c-eb7c-e083e8d91cf7">
                             <SHORT-NAME>Duty12</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2347,11 +2442,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="a90ab07a-c268-5379-70ef-21f092762b72">
+                <SENDER-RECEIVER-INTERFACE UUID="96f7b8db-9e5b-51c4-89af-25a419fc2b05">
                     <SHORT-NAME>En13</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="3aeb509d-e64a-5006-0832-ec1d1c95b460">
+                        <VARIABLE-DATA-PROTOTYPE UUID="63e8d0dc-51cb-571d-8b41-06aec768a178">
                             <SHORT-NAME>En13</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2366,11 +2461,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="d91bdef2-2ddd-5c6d-f8f3-f731ef5b0bf7">
+                <SENDER-RECEIVER-INTERFACE UUID="41ac8906-5d1c-5b32-60f7-b9d8d408c7fc">
                     <SHORT-NAME>Sel13</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="cc5e9376-e1ba-5d40-171b-16fe14dbfc11">
+                        <VARIABLE-DATA-PROTOTYPE UUID="5dc34ba5-2396-5e70-38fd-8ab903d81327">
                             <SHORT-NAME>Sel13</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2385,11 +2480,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="a3ccd629-f484-556e-bcd1-13509c9c200e">
+                <SENDER-RECEIVER-INTERFACE UUID="92140174-3672-5d3e-ca69-8efd74d070ae">
                     <SHORT-NAME>Cell13VoltAct_V</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="c6895f86-e2c0-5819-c413-e72431fd1177">
+                        <VARIABLE-DATA-PROTOTYPE UUID="72f3cdf7-3ce5-5117-777a-aa17ae0124e6">
                             <SHORT-NAME>Cell13VoltAct_V</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2404,11 +2499,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="2a3f9254-c279-5e8c-8c06-d957c937bbbe">
+                <SENDER-RECEIVER-INTERFACE UUID="ae5d187d-f7ec-5aa5-7303-7787d48f47c9">
                     <SHORT-NAME>Cell13State</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="52afde8c-1c58-577d-40d9-b2be70fb0a64">
+                        <VARIABLE-DATA-PROTOTYPE UUID="1f6f747b-ecb9-5d15-743e-92b1468f3b49">
                             <SHORT-NAME>Cell13State</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2423,11 +2518,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="aef7b9af-bdcd-5c41-aee5-fafa3aa98983">
+                <SENDER-RECEIVER-INTERFACE UUID="57c5d6f9-0763-5210-1c2e-955973d3de4b">
                     <SHORT-NAME>Duty13</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="3ce0bea0-f5cc-505f-833b-c69596515dd4">
+                        <VARIABLE-DATA-PROTOTYPE UUID="52435902-eaab-57fe-daab-7d23a2748ac1">
                             <SHORT-NAME>Duty13</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2442,11 +2537,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="2fb88d2e-dc19-539b-080b-19f748dd0ba5">
+                <SENDER-RECEIVER-INTERFACE UUID="056fcfa9-336f-5670-77d8-ac7f072cbb7f">
                     <SHORT-NAME>En14</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="a3402fbc-23db-5156-a3c6-ff7f4a50c0bc">
+                        <VARIABLE-DATA-PROTOTYPE UUID="4446250a-07f9-55a9-5058-7bb305b49fe6">
                             <SHORT-NAME>En14</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2461,11 +2556,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="ffaef108-0571-5500-20c7-dc47155680f9">
+                <SENDER-RECEIVER-INTERFACE UUID="c3c9a3da-5095-51d7-df96-72c049dbf811">
                     <SHORT-NAME>Sel14</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="71bd9a34-bd43-5439-66df-4efa7eaec6d5">
+                        <VARIABLE-DATA-PROTOTYPE UUID="9033c207-341d-5be4-926b-eebbfbb2218a">
                             <SHORT-NAME>Sel14</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2480,11 +2575,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="22e618e5-59cc-5228-3104-9566d4277ac2">
+                <SENDER-RECEIVER-INTERFACE UUID="2d74155b-0c4c-5156-d049-1fd83d9288e8">
                     <SHORT-NAME>Cell14VoltAct_V</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="83b6a391-e444-538c-3f93-8ba629f0bf99">
+                        <VARIABLE-DATA-PROTOTYPE UUID="9d8c9f2d-31a5-553c-f5c4-7e237a418b52">
                             <SHORT-NAME>Cell14VoltAct_V</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2499,11 +2594,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="c020d572-6487-555a-3ff0-489238498d91">
+                <SENDER-RECEIVER-INTERFACE UUID="4e0c6e56-e9f2-5fa9-a5cf-9b89077eac2c">
                     <SHORT-NAME>Cell14State</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="c0c6297a-7443-5d7b-d123-3c7f903caf84">
+                        <VARIABLE-DATA-PROTOTYPE UUID="2a8c87a9-3c34-5a15-18c5-098fcee6d55b">
                             <SHORT-NAME>Cell14State</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2518,11 +2613,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="1f8ac475-dadc-50bf-fac4-fba330da6ed4">
+                <SENDER-RECEIVER-INTERFACE UUID="ae22e216-97d3-5bd1-9c3c-56d7df05a606">
                     <SHORT-NAME>Duty14</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="cb44ab9c-a1f1-5d7e-ac60-281c5c0d4279">
+                        <VARIABLE-DATA-PROTOTYPE UUID="802c1451-257d-54a6-026c-82c4222fb2aa">
                             <SHORT-NAME>Duty14</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2537,11 +2632,30 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="63b49e43-cd3b-5e59-f904-65660b59afb8">
+                <SENDER-RECEIVER-INTERFACE UUID="44ae07d5-bd09-50c2-99d8-7cd48811e9d7">
+                    <SHORT-NAME>ActualVolt_V</SHORT-NAME>
+                    <IS-SERVICE>false</IS-SERVICE>
+                    <DATA-ELEMENTS>
+                        <VARIABLE-DATA-PROTOTYPE UUID="3c67854c-3444-5e70-8678-7ec8cb7478c4">
+                            <SHORT-NAME>ActualVolt_V</SHORT-NAME>
+                            <CATEGORY>ARRAY</CATEGORY>
+                            <SW-DATA-DEF-PROPS>
+                                <SW-DATA-DEF-PROPS-VARIANTS>
+                                    <SW-DATA-DEF-PROPS-CONDITIONAL>
+                                        <SW-CALIBRATION-ACCESS>READ-ONLY</SW-CALIBRATION-ACCESS>
+                                        <SW-IMPL-POLICY>STANDARD</SW-IMPL-POLICY>
+                                    </SW-DATA-DEF-PROPS-CONDITIONAL>
+                                </SW-DATA-DEF-PROPS-VARIANTS>
+                            </SW-DATA-DEF-PROPS>
+                            <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/rt_Array_float32_CellCount</TYPE-TREF>
+                        </VARIABLE-DATA-PROTOTYPE>
+                    </DATA-ELEMENTS>
+                </SENDER-RECEIVER-INTERFACE>
+                <SENDER-RECEIVER-INTERFACE UUID="c55970df-6abf-5cae-3456-57d00d862947">
                     <SHORT-NAME>ControllerOn</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="b0d70ecb-0851-5fac-d5dc-29f7b8fb9765">
+                        <VARIABLE-DATA-PROTOTYPE UUID="8dccf408-25cf-5685-329c-64d1cffc4b3c">
                             <SHORT-NAME>ControllerOn</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2556,11 +2670,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="8e2635a0-aa63-5193-9919-2716d813582d">
+                <SENDER-RECEIVER-INTERFACE UUID="854a252d-b6b7-5841-9d37-7aa0b6d34ba4">
                     <SHORT-NAME>ControllerOffAct</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="59dc8fcc-8a45-5a63-a61e-50194a148afd">
+                        <VARIABLE-DATA-PROTOTYPE UUID="f3c83565-23ee-584c-839b-1d010c81fb4b">
                             <SHORT-NAME>ControllerOffAct</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2575,11 +2689,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="dd6c8f25-634d-5608-92fd-a1874460bd09">
+                <SENDER-RECEIVER-INTERFACE UUID="1e54d50e-97b1-5be6-1c0d-75f9cd74cff6">
                     <SHORT-NAME>ChannelsReleased</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="a68e1bab-3315-5949-7f45-dc21853952ac">
+                        <VARIABLE-DATA-PROTOTYPE UUID="d39aeccd-a021-5b7a-40f2-9d1df2772f20">
                             <SHORT-NAME>ChannelsReleased</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2594,11 +2708,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="08c8df09-18d3-5512-c361-bd9a90ec88d4">
+                <SENDER-RECEIVER-INTERFACE UUID="8a4cfad5-7f2b-5d09-8c20-b910780f0e5a">
                     <SHORT-NAME>OverVoltage</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="b360ae51-d719-5308-b0cc-42247d48b254">
+                        <VARIABLE-DATA-PROTOTYPE UUID="1f169ebc-f91c-5c4d-7bde-fa6302e48c89">
                             <SHORT-NAME>OverVoltage</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2613,11 +2727,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="2c4b8765-3863-50f6-68c8-c75ca3cfb9fa">
+                <SENDER-RECEIVER-INTERFACE UUID="9bb24710-a146-5ef4-79af-6a02186f2844">
                     <SHORT-NAME>Cell15State</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="3fe7c41d-2058-5c78-1e45-3c0e8e824e5f">
+                        <VARIABLE-DATA-PROTOTYPE UUID="5b254419-67ec-5594-1804-caa0ce98f245">
                             <SHORT-NAME>Cell15State</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2632,11 +2746,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="a371acb6-b141-55f9-615f-bb3855ed6dfb">
+                <SENDER-RECEIVER-INTERFACE UUID="d72ef98f-6e8b-55dd-05dc-fad4bef75a76">
                     <SHORT-NAME>Cell15VoltAct_V</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="e8fd19b8-eaec-54cc-c4c5-30fdf277336f">
+                        <VARIABLE-DATA-PROTOTYPE UUID="d7e9b25d-4198-5388-b446-7438ff3d02dd">
                             <SHORT-NAME>Cell15VoltAct_V</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2651,11 +2765,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="e9e653ec-7902-57e3-d7ef-c92b7874aa7b">
+                <SENDER-RECEIVER-INTERFACE UUID="e6cf1c34-807c-55d3-3f9e-570e45bd8c3d">
                     <SHORT-NAME>Cell16State</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="72e758d9-fabd-5edc-0e85-9d3924ff843a">
+                        <VARIABLE-DATA-PROTOTYPE UUID="963a5aeb-a010-5a14-8a95-1e5fa0584e28">
                             <SHORT-NAME>Cell16State</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2670,11 +2784,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="b87ee325-4eef-5c48-d433-b9a0c5e1694d">
+                <SENDER-RECEIVER-INTERFACE UUID="ce957947-c319-564c-8bc0-5783961f254d">
                     <SHORT-NAME>Cell16VoltAct_V</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="97df273e-af90-5a13-8a1d-d64d637209fd">
+                        <VARIABLE-DATA-PROTOTYPE UUID="f4cf6ab1-6a5f-57b2-8dd7-a4c65d7c8dcc">
                             <SHORT-NAME>Cell16VoltAct_V</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2689,11 +2803,11 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <PARAMETER-INTERFACE UUID="47bce664-d4be-59c0-562d-36997d1c718a">
+                <PARAMETER-INTERFACE UUID="d18d8151-edb3-5a40-07be-66f066bec70c">
                     <SHORT-NAME>CalPrm</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <PARAMETERS>
-                        <PARAMETER-DATA-PROTOTYPE UUID="ede73c4f-1cfc-5d67-4838-77f1bc1451be">
+                        <PARAMETER-DATA-PROTOTYPE UUID="993d376b-7ef9-5a80-8ae9-cfcc4b73adf8">
                             <SHORT-NAME>VoltageSetValue_Ax</SHORT-NAME>
                             <CATEGORY>ARRAY</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2706,7 +2820,7 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                             </SW-DATA-DEF-PROPS>
                             <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/rt_Array_float32_6</TYPE-TREF>
                         </PARAMETER-DATA-PROTOTYPE>
-                        <PARAMETER-DATA-PROTOTYPE UUID="f0dd4be5-e14b-5e78-a50c-dd3bee02f0b6">
+                        <PARAMETER-DATA-PROTOTYPE UUID="cd737897-ae58-52c9-5b94-9cad88c283b8">
                             <SHORT-NAME>VoltageSetPwm_T</SHORT-NAME>
                             <CATEGORY>ARRAY</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2719,7 +2833,7 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                             </SW-DATA-DEF-PROPS>
                             <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/rt_Array_float32_6</TYPE-TREF>
                         </PARAMETER-DATA-PROTOTYPE>
-                        <PARAMETER-DATA-PROTOTYPE UUID="f3153ed1-a6af-593c-8f53-de792f2c2982">
+                        <PARAMETER-DATA-PROTOTYPE UUID="50ddcc49-6dd8-591c-f37d-2d41152b9705">
                             <SHORT-NAME>VoltageSenseMeas_Ax</SHORT-NAME>
                             <CATEGORY>ARRAY</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2732,7 +2846,7 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                             </SW-DATA-DEF-PROPS>
                             <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/rt_Array_float32_6</TYPE-TREF>
                         </PARAMETER-DATA-PROTOTYPE>
-                        <PARAMETER-DATA-PROTOTYPE UUID="2e303fcf-0cbf-58fd-43ed-574b494de0e4">
+                        <PARAMETER-DATA-PROTOTYPE UUID="1c740170-b069-5cbd-e48a-a1fb9f52c295">
                             <SHORT-NAME>VoltageSenseValue_T</SHORT-NAME>
                             <CATEGORY>ARRAY</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2745,7 +2859,7 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                             </SW-DATA-DEF-PROPS>
                             <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/rt_Array_float32_6</TYPE-TREF>
                         </PARAMETER-DATA-PROTOTYPE>
-                        <PARAMETER-DATA-PROTOTYPE UUID="b1714854-6d1f-5e3d-5032-b07d33291f49">
+                        <PARAMETER-DATA-PROTOTYPE UUID="283e9feb-afa7-537c-a6f9-4b1e11e02bdc">
                             <SHORT-NAME>SetpointLimit_V</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2758,7 +2872,7 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                             </SW-DATA-DEF-PROPS>
                             <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/float32</TYPE-TREF>
                         </PARAMETER-DATA-PROTOTYPE>
-                        <PARAMETER-DATA-PROTOTYPE UUID="8efc9183-c69a-5a5f-ada2-c04b95ce4d0d">
+                        <PARAMETER-DATA-PROTOTYPE UUID="998fb116-e930-5d01-9c1c-9c7d76cde203">
                             <SHORT-NAME>OverVoltThd_V</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2771,7 +2885,7 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                             </SW-DATA-DEF-PROPS>
                             <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/float32</TYPE-TREF>
                         </PARAMETER-DATA-PROTOTYPE>
-                        <PARAMETER-DATA-PROTOTYPE UUID="e1372f23-8a4c-53d8-6aed-7609ba8975f5">
+                        <PARAMETER-DATA-PROTOTYPE UUID="aec90a42-fd83-5a56-41cc-c5da1608d46d">
                             <SHORT-NAME>OverVoltTime_cycles</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2784,7 +2898,7 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                             </SW-DATA-DEF-PROPS>
                             <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint8</TYPE-TREF>
                         </PARAMETER-DATA-PROTOTYPE>
-                        <PARAMETER-DATA-PROTOTYPE UUID="b14cdf29-32ab-5cca-f47b-2a5548c91e69">
+                        <PARAMETER-DATA-PROTOTYPE UUID="7a6e87f0-372d-5b8b-70d8-8929e70a239d">
                             <SHORT-NAME>OutputFloor_V</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2797,7 +2911,7 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                             </SW-DATA-DEF-PROPS>
                             <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/float32</TYPE-TREF>
                         </PARAMETER-DATA-PROTOTYPE>
-                        <PARAMETER-DATA-PROTOTYPE UUID="8fde5536-1ebf-5b83-3f2d-fd1c7704f0ac">
+                        <PARAMETER-DATA-PROTOTYPE UUID="c5836557-b8d4-58bc-b103-3502a78112fe">
                             <SHORT-NAME>StepThreshold_V</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2810,7 +2924,7 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                             </SW-DATA-DEF-PROPS>
                             <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/float32</TYPE-TREF>
                         </PARAMETER-DATA-PROTOTYPE>
-                        <PARAMETER-DATA-PROTOTYPE UUID="cae2c6e9-edc0-5991-0c30-88d403fea7f9">
+                        <PARAMETER-DATA-PROTOTYPE UUID="72ec47d1-66c0-5b2c-a7b8-70c5b424fabf">
                             <SHORT-NAME>StepHold_cycles</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2823,7 +2937,7 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                             </SW-DATA-DEF-PROPS>
                             <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint8</TYPE-TREF>
                         </PARAMETER-DATA-PROTOTYPE>
-                        <PARAMETER-DATA-PROTOTYPE UUID="57a5324b-23b7-5c5e-95f4-5c08705ad11d">
+                        <PARAMETER-DATA-PROTOTYPE UUID="acf5efd7-1b61-576e-9d80-7c73e4a20a87">
                             <SHORT-NAME>VoltageSenseFilter</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2836,7 +2950,7 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                             </SW-DATA-DEF-PROPS>
                             <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/float32</TYPE-TREF>
                         </PARAMETER-DATA-PROTOTYPE>
-                        <PARAMETER-DATA-PROTOTYPE UUID="8b440f8d-984d-5cb0-1073-673a8a9aa051">
+                        <PARAMETER-DATA-PROTOTYPE UUID="60071d06-ca43-527f-e17c-0109a5460024">
                             <SHORT-NAME>CtrlKp</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2849,7 +2963,7 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                             </SW-DATA-DEF-PROPS>
                             <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/float32</TYPE-TREF>
                         </PARAMETER-DATA-PROTOTYPE>
-                        <PARAMETER-DATA-PROTOTYPE UUID="1a59ff06-78a4-55cf-0441-063486106c84">
+                        <PARAMETER-DATA-PROTOTYPE UUID="ca4da538-085c-5d33-4381-118203e8a40e">
                             <SHORT-NAME>CtrlKi_per_s</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -2862,7 +2976,7 @@ Model Checksum               : 2096643271 2151979888 1995392019 2225908216
                             </SW-DATA-DEF-PROPS>
                             <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/float32</TYPE-TREF>
                         </PARAMETER-DATA-PROTOTYPE>
-                        <PARAMETER-DATA-PROTOTYPE UUID="c0b26ae3-1fb0-5e66-23c1-ce1c02f5fc0a">
+                        <PARAMETER-DATA-PROTOTYPE UUID="986b6b3d-f46b-5c9c-acd7-c25a5894fd91">
                             <SHORT-NAME>CtrlLimit_V</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>

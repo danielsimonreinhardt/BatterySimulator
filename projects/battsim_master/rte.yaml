@@ -179,6 +179,11 @@ connections:
   CellChannels.OutputEnable.OutputEnable: BattSimMode.OutputEnable.OutputEnable
   CellChannels.LimitActive.LimitActive: SupplyMonitor.LimitActive.LimitActive
   CellChannels.ControllerOffReq.ControllerOffReq: did.ControllerControl.controllerOff
+  CellChannels.HandActive.HandActive: BattSimMode.HandActive.HandActive
+  CellChannels.HandSetpoint_V.HandSetpoint_V: HandControl.HandSetpoint_V.HandSetpoint_V
+  CellChannels.HandEnable.HandEnable: HandControl.HandEnable.HandEnable
+  CellChannels.SelectedChannel.SelectedChannel: HandControl.SelectedChannel.SelectedChannel
+  CellChannels.SelectAllMode.SelectAllMode: HandControl.SelectAllMode.SelectAllMode
   CellChannels.CalSetOffset_V.CalSetOffset_V: CellCal.CalSetOffset_V.CalSetOffset_V
   CellChannels.CalSetGain.CalSetGain: CellCal.CalSetGain.CalSetGain
   CellChannels.CalMeasOffset_V.CalMeasOffset_V: CellCal.CalMeasOffset_V.CalMeasOffset_V
@@ -315,7 +320,7 @@ connections:
   CellChannels.Cell15VoltAct_V.Cell15VoltAct_V: can.tx.STATUS_CELL13_14_15.CELL15_VOLTAGE_ACT
   CellChannels.Cell16State.Cell16State: can.tx.STATUS_CELL16.CELL16_STATUS
   CellChannels.Cell16VoltAct_V.Cell16VoltAct_V: can.tx.STATUS_CELL16.CELL16_VOLTAGE_ACT
-  HandControl.HandActive.HandActive: rte.init
+  HandControl.HandActive.HandActive: BattSimMode.HandActive.HandActive
   HandControl.EncVoltCount.EncVoltCount: rte.init
   HandControl.EncVoltButton.EncVoltButton: rte.init
   HandControl.EncSelCount.EncSelCount: rte.init
@@ -334,11 +339,7 @@ connections:
   HandControl.CardKey12.CardKey12: rte.init
   HandControl.CardKey13.CardKey13: rte.init
   HandControl.CardKey14.CardKey14: rte.init
-  HandControl.ActualVolt_V.ActualVolt_V: rte.init
-  HandControl.HandSetpoint_V.HandSetpoint_V: rte
-  HandControl.HandEnable.HandEnable: rte
-  HandControl.SelectedChannel.SelectedChannel: rte
-  HandControl.SelectAllMode.SelectAllMode: rte
+  HandControl.ActualVolt_V.ActualVolt_V: CellChannels.ActualVolt_V.ActualVolt_V
   DisplayDriver.DisplayValue_mV.DisplayValue_mV: HandControl.DisplayValue_mV.DisplayValue_mV
   DisplayDriver.DispTxDone.DispTxDone: rte.init
   DisplayDriver.DispTxError.DispTxError: rte.init

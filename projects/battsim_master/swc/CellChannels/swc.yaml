@@ -21,6 +21,28 @@ ports:
     direction: in
     type: uint8
     runnables: [CellTask10ms]
+  - name: HandActive           # hand mode: setpoints and releases come from HandControl, not from the CAN messages (stage D, step 2)
+    direction: in
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: HandSetpoint_V           # setpoints of the hand mode (HandControl, from the previous step)
+    direction: in
+    type: float32
+    dimension: CellCount
+    runnables: [CellTask10ms]
+  - name: HandEnable           # releases of the hand mode (HandControl, from the previous step)
+    direction: in
+    type: boolean
+    dimension: CellCount
+    runnables: [CellTask10ms]
+  - name: SelectedChannel           # selected channel 1..14 (SELECT LED)
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: SelectAllMode           # all channels are edited together (SELECT LED of all channels)
+    direction: in
+    type: boolean
+    runnables: [CellTask10ms]
   - name: CalSetOffset_V           # from CellCal
     direction: in
     type: float32
@@ -544,6 +566,11 @@ ports:
   - name: Duty14           # duty in 0.01 %
     direction: out
     type: uint16
+    runnables: [CellTask10ms]
+  - name: ActualVolt_V           # actual values of the 14 channels (the ones of the CAN status messages), for the display of HandControl
+    direction: out
+    type: float32
+    dimension: CellCount
     runnables: [CellTask10ms]
   - name: ControllerOn           # regulator active (not switched off)
     direction: out

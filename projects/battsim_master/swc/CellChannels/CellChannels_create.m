@@ -6,6 +6,10 @@ function CellChannels_create()
 %   come from the generated Rte_Qlf.m: set NX_RTE_GENERATED to build/<preset>/generated/rte of a configured project.
 %
 %   Runnable CellTask10ms, 14 channels as vectors (FW-02, FW-06, FW-07, FW-15, FW-16):
+%     - Hand mode (stage D, step 2): while HandActive is on (BattSimMode, STANDALONE), setpoint and release of a channel come from
+%       HandSetpoint_V / HandEnable (HandControl, one step old) instead of the CAN messages; everything else is the same. The SELECT
+%       LED (Sel01..14) of the selected channel (SelectedChannel), or of all (SelectAllMode), is on in the hand mode only. ActualVolt_V
+%       is the vector of the actual values that also go into the status messages (display of HandControl).
 %     - Setpoint: limited to 0 .. SetpointLimit_V (above it the channel reports status 3 "setpoint error"). Regulator
 %       correction and channel calibration (below) are added to the limited setpoint: command = SetGain * (setpoint +
 %       correction) + SetOffset, the sum limited to 0 .. SetpointLimit_V before the calibration. Curve VoltageSetValue_Ax ->
@@ -60,14 +64,16 @@ vin = @(p) swc_vec(sub, p, 'in');
 swc_core(sub, 'CellCore', coreScript(), ...
     {{'mux', names('Cell%02dVoltSet_V')}, {'mux', names('Cell%02dEnable')}, {'mux', names('UCell%02d_mV')}, ...
      {'mux', names('UCell%02dQlf')}, 'OutputEnable', 'LimitActive', 'ControllerOffReq', ...
-     vin('CalSetOffset_V'), vin('CalSetGain'), vin('CalMeasOffset_V'), vin('CalMeasGain')}, ...
+     vin('CalSetOffset_V'), vin('CalSetGain'), vin('CalMeasOffset_V'), vin('CalMeasGain'), ...
+     'HandActive', vin('HandSetpoint_V'), vin('HandEnable'), 'SelectedChannel', 'SelectAllMode'}, ...
     {{'VoltageSetValue_Ax', 'single'}, {'VoltageSetPwm_T', 'single'}, {'VoltageSenseMeas_Ax', 'single'}, ...
      {'VoltageSenseValue_T', 'single'}, {'SetpointLimit_V', 'single'}, {'VoltageSenseFilter', 'single'}, ...
      {'CtrlKp', 'single'}, {'CtrlKi_per_s', 'single'}, {'CtrlLimit_V', 'single'}, ...
      {'OverVoltThd_V', 'single'}, {'OverVoltTime_cycles', 'uint8'}, {'OutputFloor_V', 'single'}, ...
      {'StepThreshold_V', 'single'}, {'StepHold_cycles', 'uint8'}, {'QLF_OK', 'uint8'}}, ...
     {{'demux', names('En%02d')}, {'demux', names('Cell%02dVoltAct_V')}, {'demux', names('Cell%02dState')}, ...
-     {'demux', names('Duty%02d')}, 'ControllerOn', 'ControllerOffAct', 'OverVoltage', 'ChannelsReleased'});
+     {'demux', names('Duty%02d')}, 'ControllerOn', 'ControllerOffAct', 'OverVoltage', 'ChannelsReleased', ...
+     {'demux', names('Sel%02d')}, swc_vec(sub, 'ActualVolt_V', 'out')});
 % channels 15 and 16 are not fitted: status "disabled" (voltage 0 is the placeholder of the port), as the old firmware
 for ch = [15 16]
     add_block('simulink/Sources/Constant', sprintf('%s/Cell%dState_Const', sub, ch), ...
@@ -78,8 +84,8 @@ end
 
 function code = coreScript()
 lines = {
-'function [en, vAct, state, duty, ctrlOn, ctrlOffAct, overVolt, released] = CellCore(setV, enable, mV, qlf, outEn, limitActive, ctrlOffReq, ...'
-'    calSO, calSG, calMO, calMG, setAx, setT, senseAx, senseT, limitV, filt, kp, kiPerS, ctrlLim, ovThd, ovN, floorV, stepThd, stepN, QlfOk)'
+'function [en, vAct, state, duty, ctrlOn, ctrlOffAct, overVolt, released, selLed, actOut] = CellCore(setV, enable, mV, qlf, outEn, limitActive, ctrlOffReq, ...'
+'    calSO, calSG, calMO, calMG, handOn, handSp, handEn, selCh, selAll, setAx, setT, senseAx, senseT, limitV, filt, kp, kiPerS, ctrlLim, ovThd, ovN, floorV, stepThd, stepN, QlfOk)'
 '%CELLCORE 14 cell channels: setpoint -> duty, release, actual value, regulator, status (see CellChannels_create.m).'
 '%#codegen'
 'persistent y seen integ corrHold ovCnt prevV holdCnt'
@@ -101,8 +107,13 @@ lines = {
 'ctrlOffAct = uint8(ctrlOffReq ~= uint8(0));'
 'ts = single(0.01);'
 'for k = 1:14'
-'    commanded = (enable(k) == uint8(2));'
-'    v = setV(k);'
+'    if handOn'
+'        commanded = handEn(k);'
+'        v = handSp(k);'
+'    else'
+'        commanded = (enable(k) == uint8(2));'
+'        v = setV(k);'
+'    end'
 '    clipped = (v > limitV);'
 '    if clipped'
 '        v = limitV;'
@@ -180,6 +191,13 @@ lines = {
 '        state(k) = uint8(2);'
 '    end'
 'end'
+'selLed = false(14, 1);'
+'if handOn'
+'    for k = 1:14'
+'        selLed(k) = selAll || (uint8(k) == selCh);'
+'    end'
+'end'
+'actOut = vAct;'
 'released = any(en);'
 'overVolt = any(ovCnt >= ovN);      % one assignment after the loop: an accumulating output would read the RTE write call'
 ''

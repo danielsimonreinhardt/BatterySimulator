@@ -53,13 +53,13 @@ static void cycles(int n)
 
 static void resetInputs(void)
 {
-    H(HandActive)   = 0U;
+    Rte_Buf_BattSimMode_HandActive_HandActive   = 0U;
     H(EncVoltButton) = 0U;
     H(EncSelButton)  = 0U;
     for (int k = 0; k < 14; ++k)
     {
         *keyIn[k] = 0U;
-        H(ActualVolt_V)[k] = 0.0f;
+        Rte_Buf_CellChannels_ActualVolt_V_ActualVolt_V[k] = 0.0f;
     }
 }
 
@@ -157,7 +157,7 @@ static void voltageEncoderNeedsTheHandMode(void)
 
 static void handModeStartsAtZeroVolts(void)
 {
-    H(HandActive) = 1U;
+    Rte_Buf_BattSimMode_HandActive_HandActive = 1U;
     cycles(2);
     CHECK(allSetpointsAre(0.0)); /* F8: 0 V at the start, not the value of the earlier turn */
     CHECK(allEnableAre(1));      /* all channels released */
@@ -241,35 +241,35 @@ static void cardKeysToggleTheRelease(void)
 
 static void leavingTheHandModeClearsAndTheNextEntryStartsAtZero(void)
 {
-    H(HandActive) = 0U;
+    Rte_Buf_BattSimMode_HandActive_HandActive = 0U;
     cycles(2);
     CHECK(allSetpointsAre(0.0) && allEnableAre(0));
-    H(HandActive) = 1U;
+    Rte_Buf_BattSimMode_HandActive_HandActive = 1U;
     cycles(2);
     CHECK(allSetpointsAre(0.0) && allEnableAre(1)); /* also the key 10 is released again */
     CHECK(H(SelectedChannel) == 2U);                /* the selection stays */
-    H(HandActive) = 0U;
+    Rte_Buf_BattSimMode_HandActive_HandActive = 0U;
     cycles(2);
 }
 
 static void displayValueIsTheSelectedActualValue(void)
 {
-    H(ActualVolt_V)[1] = 4.1234f;
-    H(ActualVolt_V)[0] = 1.0f;
+    Rte_Buf_CellChannels_ActualVolt_V_ActualVolt_V[1] = 4.1234f;
+    Rte_Buf_CellChannels_ActualVolt_V_ActualVolt_V[0] = 1.0f;
     cycles(2);
     CHECK(H(SelectedChannel) == 2U && H(DisplayValue_mV) == 4123U);
     turnSelect(-4);
     CHECK(H(DisplayValue_mV) == 1000U);
-    H(ActualVolt_V)[0] = -0.2f;
+    Rte_Buf_CellChannels_ActualVolt_V_ActualVolt_V[0] = -0.2f;
     cycles(1);
     CHECK(H(DisplayValue_mV) == 0U);
-    H(ActualVolt_V)[0] = 12.5f;
+    Rte_Buf_CellChannels_ActualVolt_V_ActualVolt_V[0] = 12.5f;
     cycles(1);
     CHECK(H(DisplayValue_mV) == 9999U);
-    H(ActualVolt_V)[0] = 0.0f / 0.0f; /* not a number */
+    Rte_Buf_CellChannels_ActualVolt_V_ActualVolt_V[0] = 0.0f / 0.0f; /* not a number */
     cycles(1);
     CHECK(H(DisplayValue_mV) == 0U);
-    H(ActualVolt_V)[0] = 2.0f;
+    Rte_Buf_CellChannels_ActualVolt_V_ActualVolt_V[0] = 2.0f;
     cycles(1);
     CHECK(H(DisplayValue_mV) == 2000U);
 }
@@ -349,8 +349,8 @@ static int pictureIs(const uint8* b, int hasClear, int mv)
 
 static void setDisplayedValue(int mv)
 {
-    H(HandActive)      = 0U;
-    H(ActualVolt_V)[0] = (float32)mv / 1000.0f;
+    Rte_Buf_BattSimMode_HandActive_HandActive      = 0U;
+    Rte_Buf_CellChannels_ActualVolt_V_ActualVolt_V[0] = (float32)mv / 1000.0f;
     cycles(1);
 }
 
@@ -422,7 +422,7 @@ static void theChainFromTheSelectedChannelToTheDisplay(void)
 {
     settle(1, 1, -1);
     turnSelect(4 * 5); /* channel 6 */
-    H(ActualVolt_V)[5] = 3.7f;
+    Rte_Buf_CellChannels_ActualVolt_V_ActualVolt_V[5] = 3.7f;
     cycles(60);
     CHECK(H(SelectedChannel) == 6U && H(DisplayValue_mV) == 3700U);
     CHECK(sentCount >= 14);

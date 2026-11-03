@@ -3,7 +3,7 @@
 Auto generated XML Component Description for model BattSimMode
 Model version                : 1.2
 Simulink Coder version       : Simulink Coder 24.1 (R2024a) 19-Nov-2023
-Model Checksum               : 1842907818 4180505001 4063173778 2505711124
+Model Checksum               : 2085934555 765610380 2090856266 3782546923
 -->
 <AUTOSAR xmlns="http://autosar.org/schema/r4.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://autosar.org/schema/r4.0 AUTOSAR_00051.xsd">
     <AR-PACKAGES>
@@ -14,7 +14,7 @@ Model Checksum               : 1842907818 4180505001 4063173778 2505711124
                 <AR-PACKAGE>
                     <SHORT-NAME>SwcImplementations</SHORT-NAME>
                     <ELEMENTS>
-                        <SWC-IMPLEMENTATION UUID="710555da-4ccc-5c32-fe7b-7930c0b450c8">
+                        <SWC-IMPLEMENTATION UUID="be06d7e3-851f-564a-586c-43661a93581e">
                             <SHORT-NAME>BattSimMode_Impl</SHORT-NAME>
                             <CODE-DESCRIPTORS>
                                 <CODE>

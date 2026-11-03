@@ -382,3 +382,18 @@ Aufbau unveraendert (Nutzer: "Ja der Aufbau steht noch"): J-Link, CANcaseXL Ch2,
 * **Grenzen der Diagnose:** `2E` ist 115 Byte lang (Dienst, Kennung, 112 Byte Daten), die Antwort von `22` ebenso; der Diagnosepuffer hat 256 Byte (`DIAG_PAYLOAD_SIZE`). Die Reihenfolge im Feld (Offset 0, 28, 56, 84; je 14 Werte zu 2 Byte, hoeherwertiges Byte zuerst) ist im erzeugten `DiagDescription.cpp` geprueft; `2E` prueft jeden Wert gegen die Grenzen (NRC 0x31), bevor etwas bereitgelegt wird.
 * **Unveraendert:** NvM-Bloecke (Groesse, Anzahl, Kennungen, Zweikopienschutz), Grenzpruefung in `CellCal`, Anfangswerte (RTE-56), Zustand `0x0210`, `CellChannels`. Die gespeicherte Kalibrierung vom 31.10. (Messpfad acht Kanaele,
   Stellpfad 14) bleibt gueltig und muss nicht neu eingegeben werden.
+
+## 17. Handbetrieb STANDALONE (Stufe D, Version 0.5.0, 03.11.2026, Zweig `stufe-d-hand`, nicht geflasht)
+
+* **Neu:** Die Taste ALL ON/OFF schaltet aus STANDBY in den Handbetrieb (Status 2): alle 14 Kanaele freigegeben, alle Sollwerte 0 V (nicht der letzte CAN-Wert, Befund F8); die Ausgaenge sind aktiv
+  (`OutputEnable`), ohne dass ein Bus-Befehl vorliegt. Sollwerte kommen von den Drehgebern, Freigaben von den Karten-Tasten (Beschreibung `doc/stufe-d-handbetrieb-anzeige.md`).
+* **Schutz im Handbetrieb (Board `bs-standalone-schutz` a):** Ueberlast (Grund 3), Strommessung ungueltig (Grund 5) und Ueberspannung eines Kanals (Grund 6) fuehren wie in RUN in FAIL, die Ausgaenge gehen im selben
+  beziehungsweise (Ueberspannung) im naechsten 10-ms-Schritt aus. Ist die Strommessung beim Eintritt schon ungueltig, wird der Eintritt verweigert (FAIL 5, die Ausgaenge gehen nie an). 0x130 wird im Handbetrieb **nicht**
+  ueberwacht (Timeout und Alive-Fehler loesen kein FAIL aus), weil der Handbetrieb keinen Bus braucht.
+* **Verlassen:** Taste ALL ON/OFF oder REMOTE=2/MODE=1 → STANDBY (alle Ausgaenge aus, Handwerte geloescht); REMOTE=2/MODE=2 oder Taste REMOTE → REMOTE/STOP mit Ausgaengen aus. Ein dabei noch anliegendes OUTPUT=2 startet RUN
+  erst, nachdem OUTPUT einmal von 2 weggegangen ist: die Handsollwerte werden nicht auf einen Schlag zu CAN-Sollwerten.
+* **Fernsteuerung unveraendert:** CAN-Sollwerte und -Freigaben wirken im Handbetrieb nicht, im Fernsteuerbetrieb wirken die Handwerte nicht (Ausgaenge dort aus, HandControl liefert 0/aus ausser im Handbetrieb).
+  Die Kalibrierung wird bei aktivem Ausgang weiter abgelehnt (`OutputEnable` ist auch im Handbetrieb an).
+* **AoU S-1:** weiter gueltig. Im Handbetrieb liegen Spannungen an den Zellklemmen, sobald ein Kanal einen Sollwert hat; ein Pruefling oder eine Last darf nur nach Freigabe und Aufbaubestaetigung angeschlossen sein.
+* **Tests:** `battsim-sil` (1042 Pruefungen, 0 Fehler, darunter 62 fuer den Handbetrieb: Eintritt/Austritt, Sollwerte und Freigaben, SELECT-LED, Alle-Modus, FAIL 3/5/6 aus STANDALONE, Eintritt mit ungueltiger Strommessung,
+  Wechsel nach REMOTE) und `battsim-sil-hand` (299, 0 Fehler). **Am Geraet nicht geprueft:** Skalierung je Raste, Polung der Tasten, SELECT-LED im Alle-Modus, Anzeigemodul; Treiber von IO-117/IO-118 fehlen noch im Abbild.
