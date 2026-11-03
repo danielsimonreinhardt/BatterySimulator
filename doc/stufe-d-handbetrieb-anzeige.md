@@ -154,6 +154,8 @@ Zwischen den Komponenten (Schritt 2): `HandActive` (BattSimMode → HandControl)
 * **Hinweis an den Koordinator:** der Wechsel STANDALONE → STOP sperrt RUN, bis OUTPUT einmal von 2 weggegangen ist (Abschnitt 3); die alte Firmware tut das nicht erkennbar.
 * **Gerätetermin:** Skalierung je Raste (Annahme 15 mV grob, 1 mV fein) und Zähler je Raste gegen die alte Firmware; Polarität und Pull-ups der Tasten; SELECT-LED im Alle-Modus; Anzeige des Moduls (Adresse, Befehle);
   Pins von Drehgebern und Anzeige am gebauten Master (bei PTD11 und PTD12 gab es Drahtbrücken); Verhalten bei MODE=3 (Zellmodell) bis Stufe D, Teil 2.
+* **Offen für den Gerätetermin (Board `bs-anzeige-pullups` a, 03.11.2026):** zuerst messen, ob das Anzeigemodul eigene Pull-ups hat (SDA/SCL gegen VCC) und ob die Pinbelegung an J1 Pin 2/3 passt
+  (PTE15 = SDA, PTE16 = SCL); erst danach Pull-ups (4,7 kΩ nach 3,3 V) nachrüsten. Davor kein Rückschluss aus `DispTxError`.
 * **neXtBSW (03.11.2026 erledigt):** IO-117 und IO-118 sind im Pin 4334fb2d; `rte.yaml` verbindet die Komponenten mit `enc.ENC_VOLTAGE.count`, `enc.ENC_SELECT.count`,
   `dio.in.ENC_VOLT_BTN`, `dio.in.ENC_SEL_BTN`, `dio.in.ST_01`..`ST_14` und `i2c.DISPLAY.write.byte/.request/.done/.error` (Board `battsim_master_v1`: `quadrature`,
   `i2c_devices`, `nmi: disabled`). Die Namen der Tasten folgen dem Board (`ST_nn`, `ENC_VOLT_BTN`, `ENC_SEL_BTN`), nicht dem Vorschlag in Abschnitt 6. Bericht:
