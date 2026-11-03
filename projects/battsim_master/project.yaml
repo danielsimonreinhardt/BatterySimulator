@@ -33,12 +33,19 @@ diagnostics:
 
 use:
   can: [CAN0]
-  i2c: [DISPLAY]
+  i2c: [DISP_I2C]
+  i2c_devices: [DISPLAY]
+  quadrature: [ENC_VOLTAGE, ENC_SELECT]
   adc: [U_CELL_01, U_CELL_02, U_CELL_03, U_CELL_04, U_CELL_05, U_CELL_06, U_CELL_07, U_CELL_08, U_CELL_09, U_CELL_10, U_CELL_11, U_CELL_12, U_CELL_13, U_CELL_14, I_SUPPLY]
   dio: [LED1, LED2, EN_01, SEL_01, EN_02, SEL_02, EN_03, SEL_03, EN_04, SEL_04, EN_05, SEL_05, EN_06, SEL_06, EN_07, SEL_07, EN_08, SEL_08, EN_09, SEL_09, EN_10, SEL_10, EN_11, SEL_11, EN_12, SEL_12, EN_13, SEL_13, EN_14, SEL_14, LED_REMOTE, ST_01, ST_02, ST_03, ST_04, ST_05, ST_06, ST_07, ST_08, ST_09, ST_10, ST_11, ST_12, ST_13, ST_14, BTN_ALL_ON_OFF, BTN_REMOTE, LIMIT, ENC_VOLT_BTN, ENC_SEL_BTN]
 
 can:
   CAN0: { bitrate: 500000 }
+
+# Display bus (IO-117): standard mode; time limit 2 ms: one byte takes about 0.3 ms at 100 kHz, a hanging clock may stretch the
+# 10 ms task by at most 2 x timeout_ms (board io117-blockieren a).
+i2c:
+  DISP_I2C: { baudrate_hz: 100000, timeout_ms: 2 }
 
 # PWM setpoint outputs: 1 kHz, 20000 ticks per period at 80 MHz / 4 (the frequency of the old firmware, 0.26 mV per step).
 pwm:

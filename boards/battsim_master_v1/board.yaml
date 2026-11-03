@@ -23,6 +23,9 @@ board:
   mcu: S32K146
   package: LQFP144
   supply_v: 3.3                        # verify: stated in the wizard, confirm against [SCH]
+  # PTD3 is NMI_b after reset and carries U_CELL_11 (ADC1_SE3) here: the NMI is blocked (FOPT.NMI_PIN_CFG, BL-48). A change changes
+  # the bootloader image (flash configuration field): bootloader update with the user on site (appointment 0.3.15).
+  nmi: disabled
   clock:
     # Fitted crystal or external oscillator. Bit timing of every CAN bus and the UART dividers follow from it; a
     # different crystal changes no code (review question 2). verify: stated in the wizard, confirm against [SCH].
@@ -49,11 +52,39 @@ can:
 
 # I2C buses. Instance and pins are checked against the derivative and [MUX].
 i2c:
-  - name: DISPLAY
+  - name: DISP_I2C
     instance: FlexIO
     sda: { pin: PTE15, flexio_pin: 2 }  # [MUX] FlexIO_D2 on PTE15
     scl: { pin: PTE16, flexio_pin: 3 }  # [MUX] FlexIO_D3 on PTE16
-    # entered by hand (Studio wizard, step i2c)
+    # entered by hand (Studio wizard, step i2c). NO pull-ups on SDA/SCL: [SCH] BattSimMaster.kicad_sch
+    # nets DISP_TX/DISP_RX only join J1 (pin 2 = PTE15, pin 3 = PTE16) and the MCU, the MCU pins have none (IO-117). The bus holds only
+    # if the display module carries pull-ups or 4.7 k to +3.3 V are added at J1 (hardware, user).
+
+# Devices on the I2C buses that the application writes through the RTE (targets i2c.<NAME>.write.<value>, IO-117).
+i2c_devices:
+  - name: DISPLAY
+    bus: DISP_I2C
+    address: 0x71                       # 7 bit address of the 7-segment display module
+    part: 7-segment display module of the master (4 digits)
+    verify: true                        # not checked at the device yet (BattSimFW: assumption)
+
+# Rotary encoders of the front panel (IO-118): FTM quadrature decoder, only FTM1 and FTM2 can do it. [SCH] BattSimMaster.kicad_sch:
+# every phase has its own pull-up to +3.3 V on the MCU side (R36/R37 = 10 k for ENC_VOLTAGE A/B, R34/R35 = 10 k for ENC_SELECT A/B), a
+# series resistor of 1 k (R30..R33) towards the encoder and 1 uF to GND (C22..C25) at the pin (tau about 10 ms when the contact opens).
+# Hence no `pull` (the board provides the level). filter_ns of the decoder and the polarity are assumptions until the device test.
+quadrature:
+  - name: ENC_VOLTAGE
+    instance: FTM2
+    phase_a: { pin: PTE5 }              # [MUX] FTM2_QD_PHA on PTE5
+    phase_b: { pin: PTE4 }              # [MUX] FTM2_QD_PHB on PTE4
+    filter_ns: 1000
+    verify: true
+  - name: ENC_SELECT
+    instance: FTM1
+    phase_a: { pin: PTC7 }              # [MUX] FTM1_QD_PHA on PTC7
+    phase_b: { pin: PTC6 }              # [MUX] FTM1_QD_PHB on PTC6
+    filter_ns: 1000
+    verify: true
 
 # Analog inputs. `scale` converts the pin voltage to the value in mV; factor 1 means the signal reaches the pin
 # unchanged. A divider or a sensor circuit in front of the pin is a board fact and belongs here (architecture section

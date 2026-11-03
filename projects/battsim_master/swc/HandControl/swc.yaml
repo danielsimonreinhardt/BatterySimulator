@@ -17,7 +17,7 @@ ports:
     direction: in
     type: uint16
     runnables: [HandTask10ms]
-  - name: EncVoltButton           # push button of the voltage encoder (dio.in.ENC_VOLTAGE_BTN), true = pressed
+  - name: EncVoltButton           # push button of the voltage encoder (dio.in.ENC_VOLT_BTN), true = pressed
     direction: in
     type: boolean
     runnables: [HandTask10ms]
@@ -25,63 +25,63 @@ ports:
     direction: in
     type: uint16
     runnables: [HandTask10ms]
-  - name: EncSelButton           # push button of the channel encoder (dio.in.ENC_SELECT_BTN), true = pressed
+  - name: EncSelButton           # push button of the channel encoder (dio.in.ENC_SEL_BTN), true = pressed
     direction: in
     type: boolean
     runnables: [HandTask10ms]
-  - name: CardKey01           # STATUS key of card 1 (dio.in.STATUS_01), true = pressed
+  - name: CardKey01           # STATUS key of card 1 (dio.in.ST_01), true = pressed
     direction: in
     type: boolean
     runnables: [HandTask10ms]
-  - name: CardKey02           # STATUS key of card 2 (dio.in.STATUS_02), true = pressed
+  - name: CardKey02           # STATUS key of card 2 (dio.in.ST_02), true = pressed
     direction: in
     type: boolean
     runnables: [HandTask10ms]
-  - name: CardKey03           # STATUS key of card 3 (dio.in.STATUS_03), true = pressed
+  - name: CardKey03           # STATUS key of card 3 (dio.in.ST_03), true = pressed
     direction: in
     type: boolean
     runnables: [HandTask10ms]
-  - name: CardKey04           # STATUS key of card 4 (dio.in.STATUS_04), true = pressed
+  - name: CardKey04           # STATUS key of card 4 (dio.in.ST_04), true = pressed
     direction: in
     type: boolean
     runnables: [HandTask10ms]
-  - name: CardKey05           # STATUS key of card 5 (dio.in.STATUS_05), true = pressed
+  - name: CardKey05           # STATUS key of card 5 (dio.in.ST_05), true = pressed
     direction: in
     type: boolean
     runnables: [HandTask10ms]
-  - name: CardKey06           # STATUS key of card 6 (dio.in.STATUS_06), true = pressed
+  - name: CardKey06           # STATUS key of card 6 (dio.in.ST_06), true = pressed
     direction: in
     type: boolean
     runnables: [HandTask10ms]
-  - name: CardKey07           # STATUS key of card 7 (dio.in.STATUS_07), true = pressed
+  - name: CardKey07           # STATUS key of card 7 (dio.in.ST_07), true = pressed
     direction: in
     type: boolean
     runnables: [HandTask10ms]
-  - name: CardKey08           # STATUS key of card 8 (dio.in.STATUS_08), true = pressed
+  - name: CardKey08           # STATUS key of card 8 (dio.in.ST_08), true = pressed
     direction: in
     type: boolean
     runnables: [HandTask10ms]
-  - name: CardKey09           # STATUS key of card 9 (dio.in.STATUS_09), true = pressed
+  - name: CardKey09           # STATUS key of card 9 (dio.in.ST_09), true = pressed
     direction: in
     type: boolean
     runnables: [HandTask10ms]
-  - name: CardKey10           # STATUS key of card 10 (dio.in.STATUS_10), true = pressed
+  - name: CardKey10           # STATUS key of card 10 (dio.in.ST_10), true = pressed
     direction: in
     type: boolean
     runnables: [HandTask10ms]
-  - name: CardKey11           # STATUS key of card 11 (dio.in.STATUS_11), true = pressed
+  - name: CardKey11           # STATUS key of card 11 (dio.in.ST_11), true = pressed
     direction: in
     type: boolean
     runnables: [HandTask10ms]
-  - name: CardKey12           # STATUS key of card 12 (dio.in.STATUS_12), true = pressed
+  - name: CardKey12           # STATUS key of card 12 (dio.in.ST_12), true = pressed
     direction: in
     type: boolean
     runnables: [HandTask10ms]
-  - name: CardKey13           # STATUS key of card 13 (dio.in.STATUS_13), true = pressed
+  - name: CardKey13           # STATUS key of card 13 (dio.in.ST_13), true = pressed
     direction: in
     type: boolean
     runnables: [HandTask10ms]
-  - name: CardKey14           # STATUS key of card 14 (dio.in.STATUS_14), true = pressed
+  - name: CardKey14           # STATUS key of card 14 (dio.in.ST_14), true = pressed
     direction: in
     type: boolean
     runnables: [HandTask10ms]

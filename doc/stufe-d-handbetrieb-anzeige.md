@@ -1,6 +1,6 @@
 # Stufe D (Teil 1): Handbetrieb und Anzeige (battsim_master)
 
-Stand: 03.11.2026, Zweig `stufe-d-hand`. Board `bs-handbetrieb-anzeige` a (P1 bis P6 je a): Handbetrieb und Anzeige kommen vor C-7, XCP und BCU-Tests;
+Stand: 03.11.2026, Zweig `pin-io117` (Treiber angeschlossen). Board `bs-handbetrieb-anzeige` a (P1 bis P6 je a): Handbetrieb und Anzeige kommen vor C-7, XCP und BCU-Tests;
 der Handbetrieb startet mit 0 V (F8), wählbar sind nur die konfigurierten Kanäle 1..14 (F9), im Alle-Kanäle-Modus gilt ein Sollwert für alle,
 die Verdrahtung von Drehgebern, Anzeige und Karten-Tasten wird im Gerätetermin geprüft. Das Zellmodell (Status 4) gehört **nicht** zu diesem Teil.
 Grundlage des alten Verhaltens: `BATTSIM_CONTROL.slx` (Dump `tools/slx_dump.py`, Zustandsautomat `ControlStateMachine`, `INPUT/*Encoder*`,
@@ -154,4 +154,8 @@ Zwischen den Komponenten (Schritt 2): `HandActive` (BattSimMode → HandControl)
 * **Hinweis an den Koordinator:** der Wechsel STANDALONE → STOP sperrt RUN, bis OUTPUT einmal von 2 weggegangen ist (Abschnitt 3); die alte Firmware tut das nicht erkennbar.
 * **Gerätetermin:** Skalierung je Raste (Annahme 15 mV grob, 1 mV fein) und Zähler je Raste gegen die alte Firmware; Polarität und Pull-ups der Tasten; SELECT-LED im Alle-Modus; Anzeige des Moduls (Adresse, Befehle);
   Pins von Drehgebern und Anzeige am gebauten Master (bei PTD11 und PTD12 gab es Drahtbrücken); Verhalten bei MODE=3 (Zellmodell) bis Stufe D, Teil 2.
-* **neXtBSW:** IO-117 und IO-118 liefern die Treiber-Ports unter den Namen aus Abschnitt 6.
+* **neXtBSW (03.11.2026 erledigt):** IO-117 und IO-118 sind im Pin 4334fb2d; `rte.yaml` verbindet die Komponenten mit `enc.ENC_VOLTAGE.count`, `enc.ENC_SELECT.count`,
+  `dio.in.ENC_VOLT_BTN`, `dio.in.ENC_SEL_BTN`, `dio.in.ST_01`..`ST_14` und `i2c.DISPLAY.write.byte/.request/.done/.error` (Board `battsim_master_v1`: `quadrature`,
+  `i2c_devices`, `nmi: disabled`). Die Namen der Tasten folgen dem Board (`ST_nn`, `ENC_VOLT_BTN`, `ENC_SEL_BTN`), nicht dem Vorschlag in Abschnitt 6. Bericht:
+  `doc/nextbsw-updates/v1.0.0-b14845b8-v1.0.0-4334fb2d.md`. **Schaltplan:** Drehgeber-Phasen mit eigenem 10-kΩ-Pull-up (RC-Glieder, τ etwa 10 ms), **an PTE15/PTE16 (Anzeige)
+  keine Pull-ups** - Modul oder Nachrüstung nötig, am Gerät zu klären.

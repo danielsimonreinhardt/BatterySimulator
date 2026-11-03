@@ -321,27 +321,27 @@ connections:
   CellChannels.Cell16State.Cell16State: can.tx.STATUS_CELL16.CELL16_STATUS
   CellChannels.Cell16VoltAct_V.Cell16VoltAct_V: can.tx.STATUS_CELL16.CELL16_VOLTAGE_ACT
   HandControl.HandActive.HandActive: BattSimMode.HandActive.HandActive
-  HandControl.EncVoltCount.EncVoltCount: rte.init
-  HandControl.EncVoltButton.EncVoltButton: rte.init
-  HandControl.EncSelCount.EncSelCount: rte.init
-  HandControl.EncSelButton.EncSelButton: rte.init
-  HandControl.CardKey01.CardKey01: rte.init
-  HandControl.CardKey02.CardKey02: rte.init
-  HandControl.CardKey03.CardKey03: rte.init
-  HandControl.CardKey04.CardKey04: rte.init
-  HandControl.CardKey05.CardKey05: rte.init
-  HandControl.CardKey06.CardKey06: rte.init
-  HandControl.CardKey07.CardKey07: rte.init
-  HandControl.CardKey08.CardKey08: rte.init
-  HandControl.CardKey09.CardKey09: rte.init
-  HandControl.CardKey10.CardKey10: rte.init
-  HandControl.CardKey11.CardKey11: rte.init
-  HandControl.CardKey12.CardKey12: rte.init
-  HandControl.CardKey13.CardKey13: rte.init
-  HandControl.CardKey14.CardKey14: rte.init
+  HandControl.EncVoltCount.EncVoltCount: enc.ENC_VOLTAGE.count
+  HandControl.EncVoltButton.EncVoltButton: dio.in.ENC_VOLT_BTN
+  HandControl.EncSelCount.EncSelCount: enc.ENC_SELECT.count
+  HandControl.EncSelButton.EncSelButton: dio.in.ENC_SEL_BTN
+  HandControl.CardKey01.CardKey01: dio.in.ST_01
+  HandControl.CardKey02.CardKey02: dio.in.ST_02
+  HandControl.CardKey03.CardKey03: dio.in.ST_03
+  HandControl.CardKey04.CardKey04: dio.in.ST_04
+  HandControl.CardKey05.CardKey05: dio.in.ST_05
+  HandControl.CardKey06.CardKey06: dio.in.ST_06
+  HandControl.CardKey07.CardKey07: dio.in.ST_07
+  HandControl.CardKey08.CardKey08: dio.in.ST_08
+  HandControl.CardKey09.CardKey09: dio.in.ST_09
+  HandControl.CardKey10.CardKey10: dio.in.ST_10
+  HandControl.CardKey11.CardKey11: dio.in.ST_11
+  HandControl.CardKey12.CardKey12: dio.in.ST_12
+  HandControl.CardKey13.CardKey13: dio.in.ST_13
+  HandControl.CardKey14.CardKey14: dio.in.ST_14
   HandControl.ActualVolt_V.ActualVolt_V: CellChannels.ActualVolt_V.ActualVolt_V
   DisplayDriver.DisplayValue_mV.DisplayValue_mV: HandControl.DisplayValue_mV.DisplayValue_mV
-  DisplayDriver.DispTxDone.DispTxDone: rte.init
-  DisplayDriver.DispTxError.DispTxError: rte.init
-  DisplayDriver.DispTxByte.DispTxByte: rte
-  DisplayDriver.DispTxRequest.DispTxRequest: rte
+  DisplayDriver.DispTxDone.DispTxDone: i2c.DISPLAY.write.done
+  DisplayDriver.DispTxError.DispTxError: i2c.DISPLAY.write.error
+  DisplayDriver.DispTxByte.DispTxByte: i2c.DISPLAY.write.byte
+  DisplayDriver.DispTxRequest.DispTxRequest: i2c.DISPLAY.write.request
