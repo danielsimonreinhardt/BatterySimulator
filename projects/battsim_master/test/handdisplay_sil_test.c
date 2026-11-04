@@ -39,6 +39,9 @@ static void driverStep(void);
 static void cycle(void)
 {
     HandTask10ms();
+    /* exchange swc -> disp as in the generated RteConfig.cpp (this test runs Rte.c only) */
+    Rte_Buf_HandControl_DisplayValue_mV_DisplayValue_mV = Rte_Cpy_swc_HandControl_DisplayValue_mV_DisplayValue_mV;
+    Rte_Cpy_disp_HandControl_DisplayValue_mV_DisplayValue_mV = Rte_Buf_HandControl_DisplayValue_mV_DisplayValue_mV;
     DispTask10ms();
     driverStep();
 }

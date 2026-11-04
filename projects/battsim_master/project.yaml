@@ -15,6 +15,10 @@ project:
 
 clock:
   system_hz: 80000000
+  output_dividers: { SPLLDIV2: 64 }   # FlexIO clock 2.5 MHz for SCL 9541 Hz (IO-125, variant 2); slows every user of SPLLDIV2
+
+peripheral_clocks:
+  FlexIO: { select: SPLL, divider: 2 }
 
 # Memory partitioning (projects/README.md, Speicheraufteilung): derived from the derivative by the wizard -
 # the bootloader flash has to hold the bootloader image of this core, check the size after the first build.
@@ -42,12 +46,13 @@ use:
 can:
   CAN0: { bitrate: 500000 }
 
-# Display bus (IO-117, IO-125): SCL only has the weak MCU pull-up (board.yaml, like the factory firmware), so the slowest rate the FlexIO
-# clock allows is used: 31.25 kHz (SPLLDIV2 default divider, no clock.output_dividers). One byte takes about 1 ms at 31.25 kHz; the time
-# limit is 5 ms (nxconfig: the longest transfer of the driver, 13 data bytes, takes 4.32 ms at 31.25 kHz); a hanging clock may stretch the 10 ms task by at most 2 x timeout_ms (board io117-blockieren a). The factory firmware ran
-# at 9600 baud; if the display stays dark, 9600 Hz needs clock.output_dividers SPLLDIV2: 64 and timeout_ms 15 (second variant, io125-blockieren a).
+# Display bus (IO-117, IO-125): like the factory firmware (BATTSIM_CONTROL.slx: FlexIO I2C master, polling, 9600 baud, PTE15 SDA, PTE16 SCL with the
+# MCU pull-up on SCL only, address 0x71). 9600 Hz needs a FlexIO clock of at most 4.9 MHz: SPLLDIV2 / 64 = 2.5 MHz (clock.output_dividers,
+# peripheral_clocks.FlexIO), SCL 9541 Hz. Variant 1 (0.5.1, 31.25 kHz / 5 ms) left the display dark. timeout_ms 15 is the longest transfer of the
+# driver (13 bytes) at this rate; the display runs in its own low-priority task `disp` (rte.yaml), so a byte (about 2 ms) or a hanging bus
+# (2 x 15 ms) never delays the control task. SPLLDIV2 serves FlexIO only (nxconfig info line).
 i2c:
-  DISP_I2C: { baudrate_hz: 31250, timeout_ms: 5 }
+  DISP_I2C: { baudrate_hz: 9600, timeout_ms: 15 }
 
 # PWM setpoint outputs: 1 kHz, 20000 ticks per period at 80 MHz / 4 (the frequency of the old firmware, 0.26 mV per step).
 pwm:
