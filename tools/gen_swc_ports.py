@@ -115,7 +115,7 @@ for part in ("Major", "Minor", "Patch"):
     port(c, f"FwVersion{part}", "out", "uint8", f"can.tx.STATUS_BATTSIM_EXT.FW_VERSION_{part.upper()}")
 param(c, "VersionMajor", "uint8", [0], "firmware version of 0x121")
 param(c, "VersionMinor", "uint8", [5], "firmware version of 0x121 (0.5.0: hand mode STANDALONE, HandControl and DisplayDriver in the task; 0.4.0: the calibration identifier 0x0201 holds all 14 channels, vector ports, RTE-57; 0.3.4: initial values of the calibration ports, RTE-56; 0.3.3: stage C, plausibility check of the current measurement; 0.3.2: regulator hold 500 ms; 0.2.0 was stage B)")
-param(c, "VersionPatch", "uint8", [0], "firmware version of 0x121")
+param(c, "VersionPatch", "uint8", [1], "firmware version of 0x121 (0.5.1: SCL pull-up and 31.25 kHz of the display bus, neXtBSW 23642a8d)")
 param(c, "ButtonDebounce_cycles", "uint8", [3], "[10 ms] a key level counts after this many equal samples")
 
 # ------------------------------------------------------------------ CellCal (stage C)
