@@ -159,5 +159,5 @@ Zwischen den Komponenten (Schritt 2): `HandActive` (BattSimMode → HandControl)
 * **neXtBSW (03.11.2026 erledigt):** IO-117 und IO-118 sind im Pin 4334fb2d; `rte.yaml` verbindet die Komponenten mit `enc.ENC_VOLTAGE.count`, `enc.ENC_SELECT.count`,
   `dio.in.ENC_VOLT_BTN`, `dio.in.ENC_SEL_BTN`, `dio.in.ST_01`..`ST_14` und `i2c.DISPLAY.write.byte/.request/.done/.error` (Board `battsim_master_v1`: `quadrature`,
   `i2c_devices`, `nmi: disabled`). Die Namen der Tasten folgen dem Board (`ST_nn`, `ENC_VOLT_BTN`, `ENC_SEL_BTN`), nicht dem Vorschlag in Abschnitt 6. Bericht:
-  `doc/nextbsw-updates/v1.0.0-b14845b8-v1.0.0-4334fb2d.md`. **Schaltplan:** Drehgeber-Phasen mit eigenem 10-kΩ-Pull-up (RC-Glieder, τ etwa 10 ms), **an PTE15/PTE16 (Anzeige)
-  keine Pull-ups** - Modul oder Nachrüstung nötig, am Gerät zu klären.
+  `doc/nextbsw-updates/v1.0.0-b14845b8-v1.0.0-4334fb2d.md`. **Schaltplan:** Drehgeber-Phasen mit 10-kΩ-Pull-up laut Schaltplan, am gebauten Gerät aber nicht wirksam (04.11.: Pegel dauerhaft Low) - das Board setzt `pull: up`; **an PTE15/PTE16 (Anzeige)
+  keine Pull-ups** - die Werksfirmware nutzt einen MCU-Pull-up an SCL und 9600 Baud, der neue Treiber kann beides noch nicht (Gerätetermin `doc/geraetetermin-handbetrieb-2026-11-04.md`).
