@@ -55,10 +55,11 @@ i2c:
   - name: DISP_I2C
     instance: FlexIO
     sda: { pin: PTE15, flexio_pin: 2 }  # [MUX] FlexIO_D2 on PTE15
-    scl: { pin: PTE16, flexio_pin: 3 }  # [MUX] FlexIO_D3 on PTE16
-    # entered by hand (Studio wizard, step i2c). NO pull-ups on SDA/SCL: [SCH] BattSimMaster.kicad_sch
-    # nets DISP_TX/DISP_RX only join J1 (pin 2 = PTE15, pin 3 = PTE16) and the MCU, the MCU pins have none (IO-117). The bus holds only
-    # if the display module carries pull-ups or 4.7 k to +3.3 V are added at J1 (hardware, user).
+    scl: { pin: PTE16, flexio_pin: 3, pull: up }  # [MUX] FlexIO_D3 on PTE16; internal pull-up like the factory firmware (IO-125)
+    # entered by hand (Studio wizard, step i2c). NO pull-ups on SDA/SCL on the board: [SCH] BattSimMaster.kicad_sch
+    # nets DISP_TX/DISP_RX only join J1 (pin 2 = PTE15, pin 3 = PTE16) and the MCU, the MCU pins have none (IO-117). The factory firmware
+    # (BATTSIM_CONTROL.slx, device test 2026-11-04) enables the MCU pull-up on SCL only and leaves SDA without; the display worked with that
+    # (the module is assumed to hold SDA itself). So SCL gets `pull: up` here and SDA stays without (IO-125).
 
 # Devices on the I2C buses that the application writes through the RTE (targets i2c.<NAME>.write.<value>, IO-117).
 i2c_devices:

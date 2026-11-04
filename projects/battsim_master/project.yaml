@@ -42,10 +42,12 @@ use:
 can:
   CAN0: { bitrate: 500000 }
 
-# Display bus (IO-117): standard mode; time limit 2 ms: one byte takes about 0.3 ms at 100 kHz, a hanging clock may stretch the
-# 10 ms task by at most 2 x timeout_ms (board io117-blockieren a).
+# Display bus (IO-117, IO-125): SCL only has the weak MCU pull-up (board.yaml, like the factory firmware), so the slowest rate the FlexIO
+# clock allows is used: 31.25 kHz (SPLLDIV2 default divider, no clock.output_dividers). One byte takes about 1 ms at 31.25 kHz; the time
+# limit is 5 ms (nxconfig: the longest transfer of the driver, 13 data bytes, takes 4.32 ms at 31.25 kHz); a hanging clock may stretch the 10 ms task by at most 2 x timeout_ms (board io117-blockieren a). The factory firmware ran
+# at 9600 baud; if the display stays dark, 9600 Hz needs clock.output_dividers SPLLDIV2: 64 and timeout_ms 15 (second variant, io125-blockieren a).
 i2c:
-  DISP_I2C: { baudrate_hz: 100000, timeout_ms: 2 }
+  DISP_I2C: { baudrate_hz: 31250, timeout_ms: 5 }
 
 # PWM setpoint outputs: 1 kHz, 20000 ticks per period at 80 MHz / 4 (the frequency of the old firmware, 0.26 mV per step).
 pwm:
