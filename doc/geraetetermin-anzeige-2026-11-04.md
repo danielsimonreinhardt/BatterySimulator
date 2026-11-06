@@ -112,3 +112,18 @@ Board `bs-anzeige-weiter` a. J-Link EDU 801042658, 1000 kHz, `connect; g; sleep;
 **Offen:** die Wirkung der Rate und des SCL-Pull-ups ist nach dem Fix noch zu prüfen (9541 Hz und 31,25 kHz sind beide nicht mit gemuxten Pins getestet). SDA hat im MCU keinen Pull-up und auf der Platine keinen; gemessen ist nur, dass SDA im Ruhezustand high liest (PDIR Bit 15 nach dem Mux), woher der High-Pegel kommt (Pull-up im Modul?), ist nicht untersucht.
 
 Endzustand: Firmware 0.5.2, Standby, Ausgang aus, Fernsteuerung frei; die beiden PCR-Werte gelten bis zum nächsten Reset oder Spannungsausfall (Laufzeit-Mux), danach ist die Anzeige wieder dunkel.
+
+### Termin 06.11.2026, Teil 2: Firmware 0.5.3 geflasht, Anzeige leuchtet, friert aber ein (Ursache: Auftragszähler)
+
+Board `bs-anzeige-053` a. Aufbau vom Nutzer bestätigt, Ja zum Flash im Chat. SHA-256 des Hex vorher `8cd0d61b0a623b73a463c279aee2b46b01cca1ad80e91efd844a1d5d3efaea2c` (Stand b02e062). Gerät vorher Standby (0x120 Byte 1 = 1), 0.5.2.
+
+| Schritt | Ergebnis |
+|---|---|
+| `canflash flash` 0.5.3 | Check OK, **CRC-32 0x4179DE27** (Flashbereich 0x8000..0x3FBC8, 228296 Byte), ECU Reset |
+| Version | 0x121 Byte 6/7 = `05 03`, Standby |
+| Anzeige ohne Laufzeit-Mux | **leuchtet im Standby und zeigt 0.021** (Beobachtung des Nutzers): IO-129 wirkt, PCR noch nicht gelesen |
+| Verhalten | erste Sekunden korrekt (0.019..0.021), dann dauerhaft 0.021; auch im Handbetrieb (dort müssten etwa 0.69 stehen) |
+
+**Ursache (Fehler im Modell `DisplayDriver`, seit 0.5.0):** Der Auftragszähler `req` wurde mit uint8-Sättigung erhöht und blieb bei 255 stehen. `I2cByteWriter` erkennt einen Auftrag an der Änderung von `request` (der Zähler läuft laut Treiber über). Nach 255 Bytes geht nichts mehr raus; `done == request == 255`, das Modell läuft ohne Wirkung weiter. Im Standby wechselt der Messwert, das Bild wird dort etwa alle 0,14 s neu gesendet (14 Bytes), die 255 Bytes sind nach wenigen Sekunden verbraucht. Beleg: die J-Link-Werte vom Laufzeit-Mux-Test (Request/Done = 0xFF, Byte läuft weiter, Nachtrag oben). Der SIL-Test lief nie über 255 Aufträge, deshalb wurde es bei dunkler Anzeige nicht gefunden.
+
+**Version 0.5.4:** `DisplayDriver_create.m`: Zähler läuft bei 255 auf 0 über; `DisplayDriver.slx` und `generated/` mit MATLAB R2024a neu gebaut (nur der Zähler ändert den C-Code). Neuer SIL-Test `theOrderCounterWrapsAndThePicturesKeepComing` (25 Bilder = 350 Aufträge): mit dem alten Modell 43 Fehler, mit dem neuen grün. Workspace-Tests 9/9 grün, 1981 Testfälle. Build `-j 2` grün. Hex-Stand Commit dff313e (sauberer Baum): Abbild 228192 Byte, Build-CRC (romcheck) 0xD3825621, SHA-256 `b26b1860a905cbc2e29bbb481dd1b4cd97aab166769d2e5b28b2b3ba456eae3d`. Nichts davon geflasht; auf dem Gerät läuft 0.5.3 (Standby). Schritte 4-6 (Aus/Ein, PCR lesen, Kalibrierung 0x0201) folgen mit 0.5.4 in einem Termin (Nutzer, 06.11.).
