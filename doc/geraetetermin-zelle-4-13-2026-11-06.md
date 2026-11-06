@@ -76,4 +76,23 @@ Verbleibende Erklärungen (nicht unterschieden):
 * Tests mit Last erst nach Prüfung/Austausch von R25 und Q6 und nur strombegrenzt wiederholen.
 * Bis zur Klärung kein BCU-Board/MC33771C und keine speichernde Last am Simulator.
 
+## 6. Nachtrag: ohne Last, nach Aus/Ein (Nutzer, über den Koordinator)
+
+Der Nutzer hat die Last abgeklemmt und den Simulator netzseitig aus- und wieder eingeschaltet. Ohne Last misst er am Stapelausgang (Zellen selbst über LabControl geschaltet): **alle ein 52 V, alle aus 0,3 V**
+(≈ 21 mV je Karte, wie die Meldungen der guten Karten). `bs-fehlerzustand` ist damit erledigt (Fehlerzustand nicht gehalten).
+
+Bewertung: spricht für A (Steuerseite der Karten verklemmt, durch Aus/Ein gelöst). Es beweist **nicht**, dass R25 und Q6 intakt sind: ohne Last bringt Q4 allein (SET → 0) die Zelle auf ≈ 0 V.
+
+Vorschläge, Q6/R25 je Karte zu prüfen, ohne das Gerät zu öffnen (noch nicht ausgeführt, Freigabe über das Board):
+
+* **Test 1, Stapelwiderstand bei „alle aus“ (kein Strom aus dem Simulator):** Simulator eingeschaltet, Ausgang ein, alle Zellen aus (Karten versorgt, Q6 leitet), Multimeter (Widerstand) an den Stapelklemmen
+  Zelle 1− / Zelle 14+, Plus an Zelle 14+. Intakte Brücken: 14 × (Q6 ≈ 30 mΩ + R25) plus Zuleitungen, also einige 100 mΩ (Relativmessung/Vierleiter, Zuleitung abziehen). Ist bei einer Karte R25 oder Q6 offen, sperrt dort
+  die Body-Diode von Q6 (Strom Drain → Source) und es bleibt der Messteiler (25 kΩ) parallel: Anzeige ≥ 10 kΩ. Findet nur, DASS mindestens eine Karte nicht brückt, nicht welche.
+* **Test 2, welche Karte (lastarm, gestuft):** Stapel mit allen Zellen ein bei niedriger Spannung (z. B. je 1,0 V), rein ohmsche oder CC-Last mit kleinem Strom (0,1–0,2 A, **ohne Kondensatorbank am Eingang**, nicht die Last,
+  die den Stoß ausgelöst hat). Danach EINE Karte k nach der anderen mit `BS_CELL_OFF` ausschalten (Ausgang bleibt ein, nie „alle aus“) und den 48-V-Versorgungsstrom (0x121) sowie die Meldung der Karte k lesen.
+  Begründung: Eine eingeschaltete Karte nimmt den Laststrom I über ihren LT3080 aus der 9-V-Schiene (P = 9 V · I, unabhängig von ihrer Ausgangsspannung). Bei intaktem Q6/R25 übernimmt die Brücke den Strom: der 48-V-Strom
+  fällt um ≈ 9 V · I / (48 V · η) (η ≈ 0,8; bei 0,2 A ≈ −47 mA), die Meldung von Karte k ≈ 0,02 V. Ist die Brücke offen, muss der Strom weiter durch den LT3080 (SET ≈ 0 V durch Q4): der 48-V-Strom ändert sich
+  kaum (≈ 0), die Meldung bleibt ≈ 0,02 V, und die Karte setzt die Leistung 9 V · I in Wärme um (LT3080 ohne Kühlkörper, Befund B6; bei 0,2 A ≈ 1,8 W). Die acht unauffälligen Karten dienen als Vergleich.
+* Beide Tests: keine Kondensatorlast, kein „alle aus“ unter Strom, Strom klein halten (der DC/DC liefert nur etwa 0,6 A), erst nach Freigabe im Board.
+
 Werkzeuge der Auswertung: `capture_alle_aus.py` (passiver Mitschnitt, sendet nichts), `analyse_mitschnitt.py`, Netzliste per `kicad-cli` (Scratchpad der Session); der Rohmitschnitt liegt nicht im Repository (≈ 1,3 MB).
