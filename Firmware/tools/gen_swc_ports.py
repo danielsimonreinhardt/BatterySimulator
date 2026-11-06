@@ -115,7 +115,7 @@ for part in ("Major", "Minor", "Patch"):
     port(c, f"FwVersion{part}", "out", "uint8", f"can.tx.STATUS_BATTSIM_EXT.FW_VERSION_{part.upper()}")
 param(c, "VersionMajor", "uint8", [0], "firmware version of 0x121")
 param(c, "VersionMinor", "uint8", [5], "firmware version of 0x121 (0.5.0: hand mode STANDALONE, HandControl and DisplayDriver in the task; 0.4.0: the calibration identifier 0x0201 holds all 14 channels, vector ports, RTE-57; 0.3.4: initial values of the calibration ports, RTE-56; 0.3.3: stage C, plausibility check of the current measurement; 0.3.2: regulator hold 500 ms; 0.2.0 was stage B)")
-param(c, "VersionPatch", "uint8", [4], "firmware version of 0x121 (0.5.4: display order counter wraps at 255 instead of saturating (the picture froze after 255 bytes); 0.5.3: neXtBSW a18a1e4d, FlexIO I2C muxes SDA/SCL itself (IO-129), display lights; 0.5.2: display bus 9600 Hz and own low-priority task disp; 0.5.1: SCL pull-up, 31.25 kHz, neXtBSW 23642a8d)")
+param(c, "VersionPatch", "uint8", [5], "firmware version of 0x121 (0.5.5: hand mode jumps over the gap 0 V .. HandMinSetpoint_V, the display shows a filtered actual value (PT1 + hysteresis); 0.5.4: display order counter wraps at 255 instead of saturating (the picture froze after 255 bytes); 0.5.3: neXtBSW a18a1e4d, FlexIO I2C muxes SDA/SCL itself (IO-129), display lights; 0.5.2: display bus 9600 Hz and own low-priority task disp; 0.5.1: SCL pull-up, 31.25 kHz, neXtBSW 23642a8d)")
 param(c, "ButtonDebounce_cycles", "uint8", [3], "[10 ms] a key level counts after this many equal samples")
 
 # ------------------------------------------------------------------ CellCal (stage C)
@@ -229,7 +229,7 @@ port(c, "HandSetpoint_V", "out", "float32", None, "setpoints of the hand mode", 
 port(c, "HandEnable", "out", "boolean", None, "release of the channels in the hand mode", dimension="CellCount")
 port(c, "SelectedChannel", "out", "uint8", None, "selected channel 1..14 (SELECT LED of the card)")
 port(c, "SelectAllMode", "out", "boolean", None, "all channels are edited together")
-port(c, "DisplayValue_mV", "out", "uint16", None, "actual value of the selected channel in mV (0..9999) for the display")
+port(c, "DisplayValue_mV", "out", "uint16", None, "actual value of the selected channel in mV (0..9999) for the display, filtered (PT1 + hysteresis, see DisplayFilter_cycles)")
 param(c, "CellCount", "sint32", [14], "dimension of the vector ports, bound to BattSimParams.CellCount in rte.yaml", kind="constant",
       min=14, max=14, description="Anzahl der Zellkanaele (Dimension der Vektorports)")
 param(c, "SetpointLimit_V", "float32", [5.0], "[V]    upper setpoint limit, bound to BattSimParams.CellVoltLimit_V in rte.yaml",
@@ -241,6 +241,14 @@ param(c, "FineStep_mV", "float32", [1], "[mV]   setpoint step per detent, fine (
 param(c, "CountsPerStep", "uint8", [4], "[-]    counts of the quadrature decoder per detent (x4 decoding)",
       unit="-", min=1, max=8, description="Zaehlerschritte je Raste")
 param(c, "KeyDebounce_cycles", "uint8", [3], "[10 ms] a key level counts after this many equal samples")
+param(c, "HandMinSetpoint_V", "float32", [0.7], "[V]    lowest setpoint above 0 V that the voltage encoder sets: the first detent up from 0 V jumps to this value, a detent down from it to 0 V (0 = off); the output stage stands at about 0.7 V without load (OutputFloor_V), the gap below is only dead turning",
+      unit="V", min=0, max=5.0, description="Kleinster Sollwert ueber 0 V im Handbetrieb (Sprung ueber die Luecke)")
+param(c, "DisplayFilter_cycles", "uint16", [30], "[10 ms] time constant of the PT1 filter of the displayed actual value (1 = no filter)",
+      unit="-", min=1, max=1000, description="Zeitkonstante des Anzeigefilters")
+param(c, "DisplayHyst_mV", "uint16", [3], "[mV]   the displayed value changes only when the filtered value is this far away from it (0 = off)",
+      unit="mV", min=0, max=100, description="Hysterese der Anzeige")
+param(c, "DisplayJump_mV", "uint16", [20], "[mV]   an actual value this far from the filtered one (or a new channel) is shown at once, without filter",
+      unit="mV", min=1, max=9999, description="Anzeige springt sofort ab dieser Abweichung")
 
 # ------------------------------------------------------------------ DisplayDriver (stage D, part 1)
 c = "DisplayDriver"

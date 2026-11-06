@@ -26,6 +26,8 @@
 /* PublicStructure Variables for Internal Data, for system '<Root>' */
 typedef struct {
   float32 HandSetpoint_V[Rte_SysCon_CellCount];/* '<Root>/HandSetpoint_V' */
+  float32 filt;                        /* '<S1>/HandCore' */
+  float32 shown;                       /* '<S1>/HandCore' */
   sint32 spMv[14];                     /* '<S1>/HandCore' */
   sint32 accV;                         /* '<S1>/HandCore' */
   sint32 accS;                         /* '<S1>/HandCore' */
@@ -35,12 +37,14 @@ typedef struct {
   uint8 sel;                           /* '<S1>/HandCore' */
   uint8 cntV;                          /* '<S1>/HandCore' */
   uint8 cntS;                          /* '<S1>/HandCore' */
+  uint8 lastSel;                       /* '<S1>/HandCore' */
   boolean HandEnable[Rte_SysCon_CellCount];/* '<Root>/HandEnable' */
   boolean en0[14];                     /* '<S1>/HandCore' */
   boolean started_not_empty;           /* '<S1>/HandCore' */
   boolean coarse;                      /* '<S1>/HandCore' */
   boolean selAll;                      /* '<S1>/HandCore' */
   boolean wasActive;                   /* '<S1>/HandCore' */
+  boolean dispInit;                    /* '<S1>/HandCore' */
 } ARID_DEF_HandControl_T;
 
 /* PublicStructure Variables for Internal Data */

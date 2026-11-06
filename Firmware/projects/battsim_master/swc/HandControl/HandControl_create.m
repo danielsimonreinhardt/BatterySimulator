@@ -10,11 +10,15 @@ function HandControl_create()
 %     - Channel encoder: one detent = one channel, saturating at 1 and 14 (SelectedChannel); its button toggles "single" and "all".
 %     - Voltage encoder: one detent = CoarseStep_mV or FineStep_mV on the setpoint of the selected channel (SelectAllMode: the new
 %       value of the selected channel is written to all channels); its button toggles coarse and fine (start: coarse). The
-%       setpoints are kept in whole mV and limited to 0 .. SetpointLimit_V.
+%       setpoints are kept in whole mV and limited to 0 .. SetpointLimit_V. The gap between 0 V and HandMinSetpoint_V (the output
+%       stage stands at about 0.7 V without load) is jumped over: the first detent up from 0 V sets HandMinSetpoint_V, a detent
+%       down that ends below it sets 0 V (HandMinSetpoint_V = 0: no jump). The hand mode still starts at 0 V (F8).
 %     - Card keys (CardKey01..14): a debounced press (KeyDebounce_cycles) toggles the release of that channel (hand mode only).
 %     - HandActive (BattSimMode, stage D step 2) starts the hand mode: all setpoints 0 V (F8), all channels released. Outside the
 %       hand mode HandSetpoint_V is 0 and HandEnable false; the encoders and the selection keep working in every mode.
-%     - DisplayValue_mV: ActualVolt_V of the selected channel in mV, 0 .. 9999 (a value that is not a number counts as 0).
+%     - DisplayValue_mV: ActualVolt_V of the selected channel in mV, 0 .. 9999 (a value that is not a number counts as 0), calmed
+%       down: PT1 filter (DisplayFilter_cycles) and hysteresis (DisplayHyst_mV, the shown value changes only when the filtered
+%       value is that far away); a new channel or a deviation of DisplayJump_mV from the filtered value is shown at once.
 here = fileparts(mfilename('fullpath'));
 root = fileparts(fileparts(fileparts(fileparts(here))));
 addpath(fullfile(root, 'nextbsw', 'tools', 'swc'), fileparts(here));
@@ -32,16 +36,17 @@ vout = @(p) swc_vec(sub, p, 'out');
 swc_core(sub, 'HandCore', coreScript(), ...
     {'HandActive', 'EncVoltCount', 'EncVoltButton', 'EncSelCount', 'EncSelButton', {'mux', names('CardKey%02d')}, vin('ActualVolt_V')}, ...
     {{'CoarseStep_mV', 'single'}, {'FineStep_mV', 'single'}, {'CountsPerStep', 'uint8'}, {'KeyDebounce_cycles', 'uint8'}, ...
-     {'SetpointLimit_V', 'single'}}, ...
+     {'SetpointLimit_V', 'single'}, {'HandMinSetpoint_V', 'single'}, {'DisplayFilter_cycles', 'uint16'}, ...
+     {'DisplayHyst_mV', 'uint16'}, {'DisplayJump_mV', 'uint16'}}, ...
     {vout('HandSetpoint_V'), vout('HandEnable'), 'SelectedChannel', 'SelectAllMode', 'DisplayValue_mV'});
 end
 
 function code = coreScript()
 lines = {
-'function [sp, en, selOut, allOut, dispMv] = HandCore(active, vCnt, vBtn, sCnt, sBtn, keys, actual, coarseMv, fineMv, cps, deb, limitV)'
+'function [sp, en, selOut, allOut, dispMv] = HandCore(active, vCnt, vBtn, sCnt, sBtn, keys, actual, coarseMv, fineMv, cps, deb, limitV, minV, filtN, hyst, jump)'
 '%HANDCORE Hand mode: encoders, keys, setpoints, releases, selection and display value (see HandControl_create.m).'
 '%#codegen'
-'persistent started lastV lastS accV accS sel coarse selAll spMv en0 wasActive cntV cntS cntK'
+'persistent started lastV lastS accV accS sel coarse selAll spMv en0 wasActive cntV cntS cntK filt shown lastSel dispInit'
 'if isempty(started)'
 '    started = true;'
 '    lastV = vCnt;'
@@ -57,6 +62,10 @@ lines = {
 '    cntV = uint8(0);'
 '    cntS = uint8(0);'
 '    cntK = zeros(14, 1, ''uint8'');'
+'    filt = single(0);'
+'    shown = single(0);'
+'    lastSel = uint8(1);'
+'    dispInit = false;'
 'end'
 'debounce = max(deb, uint8(1));'
 '% encoders: counter difference with the wrap of the 16 bit counter, whole detents'
@@ -109,6 +118,14 @@ lines = {
 '            stepMv = fineMv;'
 '        end'
 '        v = spMv(sel) + int32(round(single(stepsV) * stepMv));'
+'        minMv = int32(round(minV * single(1000)));'
+'        if (v > int32(0)) && (v < minMv)       % the gap 0 .. minimum is jumped over, up to the minimum or down to 0'
+'            if stepsV > int32(0)'
+'                v = minMv;'
+'            else'
+'                v = int32(0);'
+'            end'
+'        end'
 '        if v < int32(0)'
 '            v = int32(0);'
 '        elseif v > limitMv'
@@ -142,7 +159,20 @@ lines = {
 'elseif x >= single(0)'
 '    y = x;'
 'end'
-'dispMv = uint16(round(y));'
+'% display: new channel or a large deviation at once, otherwise PT1 and a hysteresis on the shown value'
+'n = single(max(filtN, uint16(1)));'
+'if (~dispInit) || (sel ~= lastSel) || (abs(y - filt) >= single(jump))'
+'    filt = y;'
+'    shown = round(y);'
+'else'
+'    filt = filt + (y - filt) / n;'
+'    if abs(filt - shown) >= single(hyst)'
+'        shown = round(filt);'
+'    end'
+'end'
+'lastSel = sel;'
+'dispInit = true;'
+'dispMv = uint16(shown);'
 ''
 'function d = wrapDiff(cur, prev)'
 '% difference of two readings of a 16 bit counter, -32768 .. 32767'

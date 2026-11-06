@@ -108,7 +108,7 @@ ports:
     direction: out
     type: boolean
     runnables: [HandTask10ms]
-  - name: DisplayValue_mV           # actual value of the selected channel in mV (0..9999) for the display
+  - name: DisplayValue_mV           # actual value of the selected channel in mV (0..9999) for the display, filtered (PT1 + hysteresis, see DisplayFilter_cycles)
     direction: out
     type: uint16
     runnables: [HandTask10ms]
@@ -150,4 +150,32 @@ parameters:
     runnables: [HandTask10ms]
   - name: KeyDebounce_cycles
     type: uint8
+    runnables: [HandTask10ms]
+  - name: HandMinSetpoint_V
+    type: float32
+    unit: "V"
+    min: 0
+    max: 5.0
+    description: "Kleinster Sollwert ueber 0 V im Handbetrieb (Sprung ueber die Luecke)"
+    runnables: [HandTask10ms]
+  - name: DisplayFilter_cycles
+    type: uint16
+    unit: "-"
+    min: 1
+    max: 1000
+    description: "Zeitkonstante des Anzeigefilters"
+    runnables: [HandTask10ms]
+  - name: DisplayHyst_mV
+    type: uint16
+    unit: "mV"
+    min: 0
+    max: 100
+    description: "Hysterese der Anzeige"
+    runnables: [HandTask10ms]
+  - name: DisplayJump_mV
+    type: uint16
+    unit: "mV"
+    min: 1
+    max: 9999
+    description: "Anzeige springt sofort ab dieser Abweichung"
     runnables: [HandTask10ms]
