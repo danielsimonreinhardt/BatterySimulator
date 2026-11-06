@@ -127,3 +127,20 @@ Board `bs-anzeige-053` a. Aufbau vom Nutzer bestätigt, Ja zum Flash im Chat. SH
 **Ursache (Fehler im Modell `DisplayDriver`, seit 0.5.0):** Der Auftragszähler `req` wurde mit uint8-Sättigung erhöht und blieb bei 255 stehen. `I2cByteWriter` erkennt einen Auftrag an der Änderung von `request` (der Zähler läuft laut Treiber über). Nach 255 Bytes geht nichts mehr raus; `done == request == 255`, das Modell läuft ohne Wirkung weiter. Im Standby wechselt der Messwert, das Bild wird dort etwa alle 0,14 s neu gesendet (14 Bytes), die 255 Bytes sind nach wenigen Sekunden verbraucht. Beleg: die J-Link-Werte vom Laufzeit-Mux-Test (Request/Done = 0xFF, Byte läuft weiter, Nachtrag oben). Der SIL-Test lief nie über 255 Aufträge, deshalb wurde es bei dunkler Anzeige nicht gefunden.
 
 **Version 0.5.4:** `DisplayDriver_create.m`: Zähler läuft bei 255 auf 0 über; `DisplayDriver.slx` und `generated/` mit MATLAB R2024a neu gebaut (nur der Zähler ändert den C-Code). Neuer SIL-Test `theOrderCounterWrapsAndThePicturesKeepComing` (25 Bilder = 350 Aufträge): mit dem alten Modell 43 Fehler, mit dem neuen grün. Workspace-Tests 9/9 grün, 1981 Testfälle. Build `-j 2` grün. Hex-Stand Commit dff313e (sauberer Baum): Abbild 228192 Byte, Build-CRC (romcheck) 0xD3825621, SHA-256 `b26b1860a905cbc2e29bbb481dd1b4cd97aab166769d2e5b28b2b3ba456eae3d`. Nichts davon geflasht; auf dem Gerät läuft 0.5.3 (Standby). Schritte 4-6 (Aus/Ein, PCR lesen, Kalibrierung 0x0201) folgen mit 0.5.4 in einem Termin (Nutzer, 06.11.).
+
+
+## Termin 06.11.2026, Teil 3: Firmware 0.5.4 geflasht und am Gerät geprüft
+
+Aufbau vom Nutzer bestätigt (kein Prüfling/keine Last an den Zellklemmen, BCU aus, Anzeige angesteckt), Standby, ausdrückliches Ja je Schritt. Hex-SHA-256 vor dem Flashen geprüft: `b26b1860a905cbc2e29bbb481dd1b4cd97aab166769d2e5b28b2b3ba456eae3d` (Commit dff313e).
+
+| Schritt | Ergebnis |
+|---|---|
+| 1. Flashen (canflash, Bootloader 0.3.14) | „Check OK (CRC-32 0xDC006115)", ECU-Reset |
+| 2. Version 0x121 | 0.5.4 (Bytes 6/7 = 05 04), Standby |
+| 3. Anzeige Standby und Handbetrieb | Nutzer: leuchtet, kein Einfrieren (je mindestens 1 min), Handbetrieb folgt dem Kanalwert und dem Spannungsdrehgeber |
+| 4. Power-Cycle (Versorgung aus/ein, ohne J-Link-Reset) | Anzeige geht von selbst an und lebt; 0x121 weiter 0.5.4. Handbetrieb danach vom Nutzer selbst eingeschaltet |
+| 5. PORTE_PCR15/16 per J-Link, nur lesend, ohne Reset/Halt (device Cortex-M4) | PCR15 = 0x00000600, PCR16 = 0x00000603 (wie erwartet); GPIOE PDIR = 0x0201D238 (Momentaufnahme); Gerät lief danach weiter, kein Lizenzdialog |
+| 6. Kalibrierung 0x0201 (22 0201, nur lesen) | 112 Byte, gleich dem erwarteten Satz vom 31.10. |
+| 7. Endzustand | Standby, Ausgang aus |
+
+Nicht getestet (Gerät müsste geöffnet werden): Abziehen/Anstecken der Anzeige, Bus-Clear, Task-Hängedauer. Fehler 5/6/3 im Handbetrieb nicht am Gerät geprüft.
