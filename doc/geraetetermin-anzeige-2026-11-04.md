@@ -49,3 +49,32 @@ Nicht pruefbar ohne Messung: der FlexIO-Takt der Werksfirmware, Flankensteilheit
 * `rte.yaml` (freigegeben im Board `bs-anzeige-dunkel` c): zweiter Task `disp`, Prioritaet **15** (unter bsp 20, ueber background 10; swc 30, can 40 laufen vorrangig), Periode **10 ms**, nur `DisplayDriver.DispTask10ms`; Task `swc` listet jetzt seine fuenf Runnables. **Abweichung vom Auftrag ("langsamerer Task"):** die Periode bleibt 10 ms (wie die Werksfirmware), der Schutz kommt aus der niedrigen Prioritaet: ein Byte (etwa 2 ms) oder ein haengender Bus (2 x 15 ms) verzoegert den Steuer-Task nicht. Eine Periode von 20 oder 50 ms haette die Modellzeit der DisplayDriver-Komponente geaendert (MATLAB-Neubau) und das Bild auf 0,3 bis 0,7 s verlangsamt. Der Wert ist als Entscheidung des Koordinators offen, wenn eine laengere Periode gewuenscht ist.
 * `rte.layout.yaml` unberuehrt. SIL-Tests: Austausch HandControl -> DisplayDriver zwischen den Tasks im Test nachgebildet (der RTE kopiert zwischen swc und disp, die C-Tests rufen die Runnables direkt auf).
 * Version 0.5.2 (`VersionPatch` 2). Build `-j 2` gruen (`app.ecu.hex` 228208 Byte, text 226392 Byte), Workspace-Tests 9/9 gruen (1565 Testfaelle). Nichts geflasht.
+
+## Gerätetermin 06.11.2026: Firmware 0.5.2 geflasht, Anzeige weiterhin dunkel
+
+Board `bs-anzeige-052` a (06.11., 06:10). Aufbau vom Nutzer bestätigt (kein Prüfling, keine Last, BCU aus, Anzeige angesteckt, J-Link unbenutzt), Ja zum Flash im Chat. Vorher: SHA-256 des Hex `c9aa75014db2a3d7a3e734559a012d6d639559c489f2ce4b409c335030f77fbf` (gleich dem Build vom 04.11.), Gerät Standby, Ausgang aus, Fernsteuerung frei, Firmware 0.5.1, kein FAIL; 60-V-Netzteil und 150-W-Last offline.
+
+| Schritt | Ergebnis |
+|---|---|
+| `canflash info` | Anwendung aktiv, Bootloader 0.3.14 |
+| `canflash flash` (Zweig `pin-io125` 75f960d) | 228296 Byte (0x00008000..0x0003FBC8), **Check OK (CRC-32 0xDB7D6274)**, ECU Reset. Die Prüfsumme von `canflash` gilt für den Flashbereich; sie ist nicht dieselbe Rechnung wie die Build-CRC 0xB295CA01 im Board. Belegt ist der Flash durch SHA-256 des Hex, Check OK und die Versionsrückmeldung. |
+| Version | Statusbotschaft 0x121: Byte 6/7 = `05 02`, also **0.5.2**; UDS 0x22 F181 antwortet (`nextbsw-app 1.0.0`) |
+| ALL ON/OFF (Standby → Handbetrieb) | 0x120 Byte 1 = 2 (STANDALONE), Zellwerte auf 0x110 ändern sich; **Anzeige dunkel** (Beobachtung des Nutzers) |
+| ALL ON/OFF zurück | 0x120 Byte 1 = 1 (Standby), Ausgang aus |
+
+Abbruch nach der Vorgabe: bei dunkler Anzeige kein Abziehen/Anstecken, keine Task-Hängemessung, keine Bus-Clear-Prüfung.
+
+Beobachtung am Rand: Die Kachel „Batterie-Simulator 1“ in LabControl zeigte nach dem Flash „offline“ (age wuchs weiter), obwohl der Bus 0x110..0x121 im 10-ms-Raster lieferte. Ursache nicht untersucht (LabControl war erst kurz vorher gestartet, Uptime etwa 3 min beim Termin).
+
+### Bewertung
+
+Die Rate (9600 Baud gegen 31,25 kHz) war der einzige belegte Unterschied zur Werksfirmware (Tabelle oben). Mit 9541 Hz, SCL-Pull-up und eigenem Task bleibt die Anzeige dunkel; **die Rate allein ist damit nicht die Ursache.** Offen und ohne Messung nicht zu trennen:
+
+1. Pegel/Flanken an PTE15/PTE16 (SDA hat keinen Pull-up, das Modul vielleicht auch nicht; SCL nur den internen, etwa 20..50 kΩ).
+2. Ob das Modul den Adressbyte-ACK gibt (`i2c.DISPLAY.write.error` wird bei NACK gesetzt; der Zähler ist ohne J-Link/XCP nicht lesbar, und der J-Link läuft nur mit Ansage der Lizenzabfrage).
+3. Ob der FlexIO-Treiber das Byte-Ende (STOP) und die Adressphase wie der SDK-Treiber der Werksfirmware erzeugt.
+4. Pinzuordnung SDA/SCL an J1 Pin 2/3 und Verdrahtung zum Modul (nie gemessen).
+
+Der nächste Schritt, der eine Antwort bringt, ist eine Messung am Bus (PicoScope 2204A oder UNI-T über LabControl an PTE15/PTE16 bzw. J1 Pin 2/3; Tastkopf und Pegel vorher mit dem Nutzer klären) oder das Lesen des Fehlerflags per J-Link.
+
+Endzustand: Firmware 0.5.2, Standby, Ausgang aus, Fernsteuerung frei, Kalibrierung nicht angefasst (0x0201 nach dem Flash nicht gelesen).
