@@ -97,4 +97,42 @@ Vorschläge, Q6/R25 je Karte zu prüfen, ohne das Gerät zu öffnen (noch nicht 
   kaum (≈ 0), die Meldung bleibt ≈ 0,02 V, und die Karte setzt die Leistung 9 V · I in Wärme um (LT3080 ohne Kühlkörper, Befund B6; bei 0,2 A ≈ 1,8 W). Die acht unauffälligen Karten dienen als Vergleich.
 * Beide Tests: keine Kondensatorlast, kein „alle aus“ unter Strom, Strom klein halten (der DC/DC liefert nur etwa 0,6 A), erst nach Freigabe im Board.
 
+## 7. Kartenprüfung mit 100 Ω (16:25–16:31, Board `bs-karten-pruefung` a): die Brücke trägt den Strom bei KEINER Karte
+
+Aufbau: 100 Ω ohmsch am Stapelausgang, ohne Kondensatoren, alle Zellen 1,0 V, Ausgang ein; Karte k = 1 … 14 einzeln mit `BS_CELL_OFF` aus (≈ 8 s), wieder ein (≈ 7 s), nie „alle aus“ unter Strom.
+Mitschnitt `karten_pruefung_mitschnitt.txt` (Beginn 16:25:22), Auswertung `segmente_stromauswertung.py` (Mittelwerte nach 1,5 s Einschwingen, ≥ 3 s je Schritt).
+
+| Zustand | 48-V-Strom (0x121) | Stapelspannung / Meldungen |
+|---|---|---|
+| alle 14 ein | 0,721 A | 14,0 V (je 1,00 V), Laststrom ≈ 0,14 A |
+| Karte k aus (k = 1 … 14) | 0,690–0,692 A, **ΔI = −28 … −31 mA bei jeder der 14 Karten** | Karte k 0,02–0,04 V, übrige 1,00 V |
+| Karte k wieder ein | 0,719–0,720 A, ΔI = +28 … +30 mA | alle 1,00 V |
+| alle 14 aus (Ende, ohmsch) | 0,258 A | 0,28 V |
+
+**Modell:** Eine eingeschaltete Karte nimmt den Laststrom I über den LT3080 aus der 9-V-Schiene (P = 9 V · I). Aus „alle ein“ gegen „alle aus“ folgt η(48 V → 9 V) ≈ 0,79. Schaltet man eine Karte aus,
+sinkt der Strom im Stapel von 0,140 auf 0,130 A (13 V an 100 Ω); die 13 übrigen Karten sparen dadurch 13 · 9 V · 10 mA.
+
+* Trägt die **Brücke** den Strom (Q6 leitet, LT3080 stromlos): erwartet ΔI48 ≈ **−64 mA**.
+* Fließt der Strom **weiter durch den LT3080** der ausgeschalteten Karte (SET ≈ 0 V durch Q4, Brücke wirkungslos): erwartet ≈ **−33 mA**.
+* Gemessen: −28 … −31 mA, bei **allen 14 Karten gleich**, auch bei nie auffälligen (5, 6). Das entspricht „Strom läuft weiter durch den LT3080“, nicht „Brücke trägt“. Die Gleichheit schließt 14 zufällig offene
+  R25/Q6 praktisch aus; es handelt sich um eine Eigenschaft der Schaltung.
+
+**Ursache aus dem Schaltplan (Netzliste, Produktions-BOM bestätigt R24 10k, R23/R28 1k, Q4/Q5 BC817, Q6 AO3400A, R25 0 Ω):** Das Gate von Q6 hängt über R28 am Knoten `Net-(Q5-C)`. Bei gesperrtem Q5 (Kanal aus) speist R24
+(10k an +5VA) diesen Knoten, und R23 (1k) führt dessen Strom in die **Basis von Q4**. Die Basis-Emitter-Strecke von Q4 klemmt den Knoten auf V ≈ (5 V · 1k + V_BE · 10k)/11k = **1,0 … 1,1 V** (V_BE 0,60–0,70 V,
+Basisstrom ≈ 0,4 mA). Q6 bekommt also im Aus-Zustand nur **V_GS ≈ 1,0 … 1,1 V**; der AO3400A hat nach Erinnerung (Datenblatt nicht im Workspace) V_GS(th) typ. ≈ 1,05 V (0,65 … 1,45 V) und seine garantierten
+≈ 30 mΩ erst ab V_GS ≈ 2,5 V. Die Brücke ist damit schwach bis kaum leitend; die Annahme „Q6 schließt den Ausgang mit ≈ 30 mΩ“ (Doku BS-2, B2) gilt nicht. Die ausgeschaltete Karte arbeitet als Durchlassglied: der LT3080 hält den
+Ausgang auf ≈ 0 V (Meldung 0,02–0,04 V, entspricht dem Nullpunkt-Offset der Messkette) und setzt 9 V · I in Wärme um, ohne Kühlkörper und aus dem 6-W-Wandler (≈ 0,6 A); bei 0,14 A sind das ≈ 1,2 W je ausgeschaltete Karte.
+
+Folgen (zum Teil Vermutung):
+
+* Mit Strom im Stapel (ohmsche Last, Prüfling) bleibt eine ausgeschaltete Karte aktiv in der Strombahn. Bei Strömen über ≈ 0,5 A heizt jede ausgeschaltete Karte mit ≈ 4,5 W bzw. begrenzt der Wandler.
+* **Rückspeisung bei Kondensatorlast (Vermutung, nicht gemessen):** Entlädt sich eine Last mit Eingangskondensatoren beim Ausschalten in Rückwärtsrichtung durch die Stapelkarten, hat die Brücke keinen niederohmigen Weg; der Strom
+  nimmt den Weg über D1 (V_OUT+ → Vregin) in die 9-V-Schiene und lädt sie über ihre normalen Werte (Grenzen von NCP1117, U3/U5, U2 im Workspace nicht belegt). Das würde zum Zustand „Steuerseite wirkungslos, Spannungen
+  festgeklemmt“ nach dem Stoß passen und ersetzt die Annahme geöffneter R25/Q6 (diese bleibt ungeprüft).
+
+Messung zur Bestätigung (Nutzer, geöffnet): Gate von Q6 (`LINK_SW`, R28.2 gegen Karten-GND) bei ausgeschalteter Karte, erwartet ≈ 1,0 … 1,1 V statt ≈ 5 V; danach Q6-Spannung über der ausgeschalteten Karte bei kleinem Strom (Millivolt-Bereich).
+
+Für die nächste Revision: Gate-Treiber von Q6 vom Basisknoten von Q4 trennen (eigene Pull-up/Treiberstufe, V_GS ≥ 4,5 V, z. B. Q5 schaltet zwei getrennte Knoten oder ein zweiter Transistor), R25 mit Strombegrenzung,
+und den bekannten Befund aus Abschnitt 4 (Q9 ohne Pull-down) beheben.
+
 Werkzeuge der Auswertung: `capture_alle_aus.py` (passiver Mitschnitt, sendet nichts), `analyse_mitschnitt.py`, Netzliste per `kicad-cli` (Scratchpad der Session); der Rohmitschnitt liegt nicht im Repository (≈ 1,3 MB).
