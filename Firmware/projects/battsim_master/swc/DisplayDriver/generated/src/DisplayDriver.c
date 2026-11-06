@@ -135,12 +135,12 @@ void DispTask10ms(void)                /* Explicit Task: DispTask10ms */
     if (guard1) {
       DisplayDriver_ARID_DEF.outByte =
         DisplayDriver_ARID_DEF.frame[DisplayDriver_ARID_DEF.step - 1];
-      qY = (sint32)(DisplayDriver_ARID_DEF.req + 1U);
-      if (DisplayDriver_ARID_DEF.req + 1U > 255U) {
-        qY = 255;
+      if (DisplayDriver_ARID_DEF.req == 255) {
+        DisplayDriver_ARID_DEF.req = 0U;
+      } else {
+        DisplayDriver_ARID_DEF.req++;
       }
 
-      DisplayDriver_ARID_DEF.req = (uint8)qY;
       DisplayDriver_ARID_DEF.inflight = TRUE;
       if (DisplayDriver_ARID_DEF.step == DisplayDriver_ARID_DEF.len) {
         DisplayDriver_ARID_DEF.step = 0U;

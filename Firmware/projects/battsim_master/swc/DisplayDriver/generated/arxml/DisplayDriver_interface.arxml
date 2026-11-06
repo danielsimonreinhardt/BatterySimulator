@@ -3,18 +3,18 @@
 Auto generated XML Component Description for model DisplayDriver
 Model version                : 1.2
 Simulink Coder version       : Simulink Coder 24.1 (R2024a) 19-Nov-2023
-Model Checksum               : 3392957260 2807315477 1530144009 1581980711
+Model Checksum               : 3026938354 1773011302 999615763 2879249763
 -->
 <AUTOSAR xmlns="http://autosar.org/schema/r4.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://autosar.org/schema/r4.0 AUTOSAR_00051.xsd">
     <AR-PACKAGES>
         <AR-PACKAGE>
             <SHORT-NAME>Interfaces</SHORT-NAME>
             <ELEMENTS>
-                <SENDER-RECEIVER-INTERFACE UUID="0b33ea79-42fa-5e36-8b52-632f2d3e9293">
+                <SENDER-RECEIVER-INTERFACE UUID="0d85aba1-5486-5dcb-5dd7-8959c59b4bf4">
                     <SHORT-NAME>DisplayValue_mV</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="e86f4e4f-6e99-5c9f-30e3-ef78a3257d57">
+                        <VARIABLE-DATA-PROTOTYPE UUID="0c544400-b4f5-57b8-7a44-c88f8d8eb016">
                             <SHORT-NAME>DisplayValue_mV</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -29,11 +29,11 @@ Model Checksum               : 3392957260 2807315477 1530144009 1581980711
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="35d5c6b7-10f5-544b-a376-abe7558b1284">
+                <SENDER-RECEIVER-INTERFACE UUID="4d4a8e62-dafa-5052-ed54-d202b75f6c30">
                     <SHORT-NAME>DispTxDone</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="af7a59e8-980a-5171-7982-de33505a95ef">
+                        <VARIABLE-DATA-PROTOTYPE UUID="b89e02f2-d26f-5c89-796e-56aa5d58cf68">
                             <SHORT-NAME>DispTxDone</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -48,11 +48,11 @@ Model Checksum               : 3392957260 2807315477 1530144009 1581980711
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="418ee63f-69dd-558c-6e8f-f79fa9e28e3f">
+                <SENDER-RECEIVER-INTERFACE UUID="91c97697-5a22-5bdf-cede-b708cb34627e">
                     <SHORT-NAME>DispTxError</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="514a08c3-8845-53ea-0157-f217fa75238b">
+                        <VARIABLE-DATA-PROTOTYPE UUID="92166d0e-cc71-50c1-3de4-335ad77e995b">
                             <SHORT-NAME>DispTxError</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -67,11 +67,11 @@ Model Checksum               : 3392957260 2807315477 1530144009 1581980711
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="7d56bdb9-d9bb-57e4-5d02-52fdd8c64d4c">
+                <SENDER-RECEIVER-INTERFACE UUID="0be667f1-90df-52de-b475-43b00f8035ab">
                     <SHORT-NAME>DispTxByte</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="41466702-3889-52fa-76b1-f05ddff54bea">
+                        <VARIABLE-DATA-PROTOTYPE UUID="ecc19942-517c-5cc1-3a65-363c009fd38d">
                             <SHORT-NAME>DispTxByte</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -86,11 +86,11 @@ Model Checksum               : 3392957260 2807315477 1530144009 1581980711
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <SENDER-RECEIVER-INTERFACE UUID="fb08597e-cce5-5bc2-b0c0-792c157a48ed">
+                <SENDER-RECEIVER-INTERFACE UUID="090efd5c-b1c8-5a13-d18e-e8518add226e">
                     <SHORT-NAME>DispTxRequest</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <DATA-ELEMENTS>
-                        <VARIABLE-DATA-PROTOTYPE UUID="c280e7b5-edf0-57c2-87a4-03d82d30f32b">
+                        <VARIABLE-DATA-PROTOTYPE UUID="cdab4edb-6f30-5cd6-ccd4-fb6425f5b4ac">
                             <SHORT-NAME>DispTxRequest</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -105,11 +105,11 @@ Model Checksum               : 3392957260 2807315477 1530144009 1581980711
                         </VARIABLE-DATA-PROTOTYPE>
                     </DATA-ELEMENTS>
                 </SENDER-RECEIVER-INTERFACE>
-                <PARAMETER-INTERFACE UUID="62440ee6-42a9-5c8f-475f-71ff26e18aee">
+                <PARAMETER-INTERFACE UUID="b4cb15df-be89-5eec-8aa8-24519deb358d">
                     <SHORT-NAME>CalPrm</SHORT-NAME>
                     <IS-SERVICE>false</IS-SERVICE>
                     <PARAMETERS>
-                        <PARAMETER-DATA-PROTOTYPE UUID="ad51fa51-a488-5a15-25a6-d8f838fd8178">
+                        <PARAMETER-DATA-PROTOTYPE UUID="2826a880-8bd0-5353-a00c-4043a771994f">
                             <SHORT-NAME>DisplayRefresh_cycles</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>
@@ -122,7 +122,7 @@ Model Checksum               : 3392957260 2807315477 1530144009 1581980711
                             </SW-DATA-DEF-PROPS>
                             <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/DataTypes/uint16</TYPE-TREF>
                         </PARAMETER-DATA-PROTOTYPE>
-                        <PARAMETER-DATA-PROTOTYPE UUID="2585e6ef-323f-58f2-bc69-dc4d1d821262">
+                        <PARAMETER-DATA-PROTOTYPE UUID="f783fa98-c92e-5ffd-a3d5-0bf947e1b12e">
                             <SHORT-NAME>DisplayRetry_cycles</SHORT-NAME>
                             <CATEGORY>VALUE</CATEGORY>
                             <SW-DATA-DEF-PROPS>

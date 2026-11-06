@@ -95,7 +95,8 @@ static uint8* const aliveOut[8] = {&MODE(AliveStatusBattSim),     &MODE(AliveSta
                                    &MODE(AliveStatusCells101112), &MODE(AliveStatusCells131415),
                                    &MODE(AliveStatusCell16),      &MODE(AliveStatusBattSimExt)};
 
-/* one 10 ms step of the application task */
+/* one 10 ms step of the application tasks: swc (Supply..Hand) and disp (Display), with the exchange of the value HandControl ->
+ * DisplayDriver that the generated RteConfig.cpp does at the end of swc and the start of disp (this test runs Rte.c only) */
 static void cycle(void)
 {
     SupplyTask10ms();
@@ -103,6 +104,8 @@ static void cycle(void)
     CalTask10ms();
     CellTask10ms();
     HandTask10ms();
+    Rte_Buf_HandControl_DisplayValue_mV_DisplayValue_mV = Rte_Cpy_swc_HandControl_DisplayValue_mV_DisplayValue_mV;
+    Rte_Cpy_disp_HandControl_DisplayValue_mV_DisplayValue_mV = Rte_Buf_HandControl_DisplayValue_mV_DisplayValue_mV;
     DispTask10ms();
 }
 
@@ -217,7 +220,7 @@ static void startIsStandbyWithWatchdogReason(void)
     CHECK(MODE(FailReason) == FAIL_WATCHDOG);
     CHECK(outputsOff());
     CHECK(MODE(LedRemote) == 0U);
-    CHECK(MODE(FwVersionMajor) == 0U && MODE(FwVersionMinor) == 5U && MODE(FwVersionPatch) == 0U);
+    CHECK(MODE(FwVersionMajor) == 0U && MODE(FwVersionMinor) == 5U && MODE(FwVersionPatch) == 4U);
     /* the held setpoints of the CAN buffers do not act in STANDBY (FW-16) */
     setpointFrame123(ENABLE_ON, 3.7, ENABLE_ON, 3.7, ENABLE_ON, 3.7);
     cycles(5);
@@ -645,7 +648,7 @@ static void statusExtensionFrame(void)
     CHECK((data[0] & 0x20U) != 0U);           /* LIMIT */
     CHECK((data[0] & 0x40U) == 0U);           /* regulator switched off by the diagnosis (ControllerOffReq = 1 here) */
     CHECK((data[1] & 0x0FU) == 0U);           /* FAIL reason none */
-    CHECK(data[5] == 0U && data[6] == 5U && data[7] == 0U); /* version 0.5.0 */
+    CHECK(data[5] == 0U && data[6] == 5U && data[7] == 4U); /* version 0.5.4 */
     uint16_t current = (uint16_t)(data[3] | (data[4] << 8U));
     CHECK(current > 480U && current < 510U);   /* 0.5 A in 0.001 A */
     *controlQlf[5] = QLF_OK;

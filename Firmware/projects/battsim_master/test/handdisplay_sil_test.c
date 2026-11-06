@@ -39,6 +39,9 @@ static void driverStep(void);
 static void cycle(void)
 {
     HandTask10ms();
+    /* exchange swc -> disp as in the generated RteConfig.cpp (this test runs Rte.c only) */
+    Rte_Buf_HandControl_DisplayValue_mV_DisplayValue_mV = Rte_Cpy_swc_HandControl_DisplayValue_mV_DisplayValue_mV;
+    Rte_Cpy_disp_HandControl_DisplayValue_mV_DisplayValue_mV = Rte_Buf_HandControl_DisplayValue_mV_DisplayValue_mV;
     DispTask10ms();
     driverStep();
 }
@@ -418,6 +421,26 @@ static void aFailedOrderRestartsThePictureWithAClear(void)
     CHECK(sentCount == 5 + 15);
 }
 
+/* 0.5.4: the order counter wraps (255 -> 0). With the saturating counter of 0.5.3 no order was taken after the 255th byte and the
+ * display froze; 25 pictures of 14 bytes are 350 orders. */
+static void theOrderCounterWrapsAndThePicturesKeepComing(void)
+{
+    settle(1, 0, -1);
+    uint8 const startRequest = D(DispTxRequest);
+    int expected = 0;
+    for (int i = 0; i < 25; ++i)
+    {
+        int const mv = 1000 + (i * 37);
+        setDisplayedValue(mv);
+        cycles(25);
+        expected += 14;
+        CHECK(sentCount == expected);
+        CHECK(pictureIs(bytesSent + expected - 14, 0, mv));
+    }
+    CHECK(orderNo == 350);
+    CHECK(D(DispTxRequest) == (uint8)(startRequest + orderNo)); /* 350 orders: the counter went round at least once */
+}
+
 static void theChainFromTheSelectedChannelToTheDisplay(void)
 {
     settle(1, 1, -1);
@@ -450,6 +473,7 @@ int main(void)
     aChangeStartsANewPicture();
     aSlowDriverGetsOneByteAtATime();
     aFailedOrderRestartsThePictureWithAClear();
+    theOrderCounterWrapsAndThePicturesKeepComing();
     theChainFromTheSelectedChannelToTheDisplay();
     printf("%d checks, %d failures\n", checks, failures);
     return (failures == 0) ? 0 : 1;

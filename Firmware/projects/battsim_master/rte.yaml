@@ -4,14 +4,26 @@
 # Format: swc/README.md and projects/README.md. Add components in neXtBSW Studio (step Komponenten).
 # RTE-22: components[].path and can.dbc are relative to this file.
 schema_version: 2
-# One application task with the defaults of ecu/asyncCoreConfiguration/tasks.yaml (application_default).
-# Without a runnables: list every runnable runs in it; the Studio writes the list as soon as
-# a runnable is assigned or a second task is added.
+# Two application tasks (0.5.2): the control task swc with the defaults of ecu/asyncCoreConfiguration/tasks.yaml (application_default) and the
+# display task disp. The display driver polls the FlexIO I2C master at 9600 Hz (one byte about 2 ms, a hanging bus up to 2 x 15 ms), so it runs
+# below bsp (20) and above background (10): swc, can and bsp preempt it. Both tasks keep the period 10 ms of the runnables.
 tasks:
   - name: swc
     period_ms: 10
     priority: 30
     stack_bytes: 2048
+    runnables:
+      - SupplyMonitor.SupplyTask10ms
+      - BattSimMode.ModeTask10ms
+      - CellCal.CalTask10ms
+      - CellChannels.CellTask10ms
+      - HandControl.HandTask10ms
+  - name: disp
+    period_ms: 10
+    priority: 15
+    stack_bytes: 2048
+    runnables:
+      - DisplayDriver.DispTask10ms
 components:
   - name: SupplyMonitor
     path: swc/SupplyMonitor
