@@ -89,6 +89,9 @@ stateDiagram-v2
 * **Karten-Taste STATUS** (`CardKey01..14`, Flanke, entprellt `KeyDebounce_cycles` = 3 Zyklen): schaltet die Freigabe des Kanals um (nur im Handbetrieb).
 * **SELECT-LED** der gewählten Karte: einzeln nur der gewählte Kanal, im Alle-Modus alle (Annahme). Die LEDs gehören dem Ausgang von CellChannels (Schritt 2).
 * Wertebereich: 0 V bis `SetpointLimit_V` (5,0 V, wie in CellChannels), danach die Kalibrierung und der Regler wie bei CAN-Sollwerten.
+* **Sprung über die Lücke (0.5.5, Board bs-hand-drehgeber a):** Der Handbetrieb beginnt weiter bei 0 V (F8). Die Endstufe liegt ohne Last aber bei etwa 0,7 V; bis der Sollwert
+  dort ankäme, wären es 47 Rasten grob (700 fein). Deshalb springt die erste Raste nach oben von 0 V auf `HandMinSetpoint_V` (0,7 V), und eine Raste nach unten, die unter diesen Wert
+  führen würde, setzt 0 V. Werte dazwischen sind per Drehgeber nicht einstellbar (mit Last wären 0,3..0,7 V möglich). `HandMinSetpoint_V` = 0 schaltet den Sprung ab.
 * **Nicht übernommen:** die Software-Auswertung des alten Modells (Entprellung, `EncoderDeathTime_P`, dynamische Ratenbegrenzung `EncoderDynamicRate_P`, Tiefpass `EncoderLpfFactor_P`):
   der Quadraturdecoder (IO-118) zählt in Hardware. Die Zahl der Zählerschritte je Raste ist der Parameter `CountsPerStep` (Vorschlag 4, x4-Dekodierung).
 
@@ -97,6 +100,9 @@ stateDiagram-v2
 * 7-Segment-Modul (SparkFun Serial 7-Segment, Annahme aus den Befehlscodes) an I2C-Adresse 0x71.
 * Angezeigt wird der **gemessene Istwert des gewählten Kanals** in mV (4 Stellen, mit Dezimalpunkt hinter der ersten Stelle: 4,123), `ActualVolt_V` × 1000, auf 0..9999 begrenzt.
   Das gilt in allen Betriebsarten (alt: `DISPLAY_TASK` läuft immer).
+* **Beruhigter Wert (0.5.5, Board bs-anzeige-ruhe a):** Der Wert geht durch ein PT1-Filter (`DisplayFilter_cycles` = 30, also 0,3 s) und eine Hysterese (`DisplayHyst_mV` = 3): die Anzeige
+  ändert sich erst, wenn der gefilterte Wert so weit von ihr entfernt ist. Ein Kanalwechsel und eine Abweichung ab `DisplayJump_mV` (20 mV) vom gefilterten Wert zeigen sofort den neuen
+  Wert. Folge: Änderungen unter 3 mV (ein Fein-Schritt) erscheinen erst, wenn sie sich summieren; `DisplayHyst_mV` = 0 und `DisplayFilter_cycles` = 1 geben das alte Verhalten.
 * Befehlsfolge je Bild (alt: ein Byte alle 10 ms, 15 Schritte, Bild in etwa 160 ms, mit Löschen am Anfang jedes Bildes):
 
 ```mermaid
@@ -145,6 +151,10 @@ Zwischen den Komponenten (Schritt 2): `HandActive` (BattSimMode → HandControl)
 | `FineStep_mV` | 1 | mV je Raste | HandControl |
 | `CountsPerStep` | 4 | Zähler je Raste | HandControl |
 | `KeyDebounce_cycles` | 3 | 10 ms | HandControl |
+| `HandMinSetpoint_V` | 0,7 | V | HandControl |
+| `DisplayFilter_cycles` | 30 | 10 ms | HandControl |
+| `DisplayHyst_mV` | 3 | mV | HandControl |
+| `DisplayJump_mV` | 20 | mV | HandControl |
 | `DisplayRefresh_cycles` | 100 | 10 ms | DisplayDriver |
 | `DisplayRetry_cycles` | 50 | 10 ms | DisplayDriver |
 

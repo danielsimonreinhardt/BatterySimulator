@@ -3,7 +3,7 @@
 Auto generated XML Component Description for model HandControl
 Model version                : 1.2
 Simulink Coder version       : Simulink Coder 24.1 (R2024a) 19-Nov-2023
-Model Checksum               : 4143801146 2208084147 1926769172 152316439
+Model Checksum               : 1852943137 3320670565 2584289628 1398540013
 -->
 <AUTOSAR xmlns="http://autosar.org/schema/r4.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://autosar.org/schema/r4.0 AUTOSAR_00051.xsd">
     <AR-PACKAGES>
@@ -14,7 +14,7 @@ Model Checksum               : 4143801146 2208084147 1926769172 152316439
                 <AR-PACKAGE>
                     <SHORT-NAME>SwcImplementations</SHORT-NAME>
                     <ELEMENTS>
-                        <SWC-IMPLEMENTATION UUID="e379834e-49c5-5fe5-5b1b-6f0496c662ec">
+                        <SWC-IMPLEMENTATION UUID="e7b8d5db-4ed9-55b8-f6ad-5bfcca2a49a1">
                             <SHORT-NAME>HandControl_Impl</SHORT-NAME>
                             <CODE-DESCRIPTORS>
                                 <CODE>

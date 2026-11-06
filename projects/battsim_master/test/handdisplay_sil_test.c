@@ -168,17 +168,32 @@ static void handModeStartsAtZeroVolts(void)
 
 static void voltageEncoderCoarseAndFine(void)
 {
-    turnVoltage(4 * 10); /* ten detents coarse = 10 * 15 mV on the selected channel 1 */
-    CHECK(near(H(HandSetpoint_V)[0], 0.150));
+    /* 0.5.5: the gap between 0 V and HandMinSetpoint_V = 0.7 V is jumped over (the output stage stands at 0.7 V without load) */
+    turnVoltage(4 * 1); /* the first detent up from 0 V (15 mV) lands on 0.7 V ... */
+    CHECK(near(H(HandSetpoint_V)[0], 0.700));
+    turnVoltage(-4 * 1); /* ... and one detent down from there is 0 V again */
+    CHECK(near(H(HandSetpoint_V)[0], 0.0));
+    turnVoltage(-4 * 5); /* down from 0 V stays 0 V */
+    CHECK(near(H(HandSetpoint_V)[0], 0.0));
+    turnVoltage(4 * 10); /* ten detents at once (150 mV) are in the gap, too */
+    CHECK(near(H(HandSetpoint_V)[0], 0.700));
     for (int k = 1; k < 14; ++k)
     {
         CHECK(near(H(HandSetpoint_V)[k], 0.0));
     }
+    turnVoltage(4 * 10); /* above the minimum the steps are 15 mV */
+    CHECK(near(H(HandSetpoint_V)[0], 0.850));
     turnVoltage(-4 * 3);
-    CHECK(near(H(HandSetpoint_V)[0], 0.105));
+    CHECK(near(H(HandSetpoint_V)[0], 0.805));
     press(&H(EncVoltButton), 3); /* coarse -> fine */
     turnVoltage(4 * 10);
-    CHECK(near(H(HandSetpoint_V)[0], 0.115)); /* 10 * 1 mV */
+    CHECK(near(H(HandSetpoint_V)[0], 0.815)); /* 10 * 1 mV */
+    turnVoltage(-4 * 115);
+    CHECK(near(H(HandSetpoint_V)[0], 0.700)); /* 815 - 115 = 700 mV: the minimum itself is a valid value */
+    turnVoltage(-4 * 1);
+    CHECK(near(H(HandSetpoint_V)[0], 0.0)); /* 699 mV would be in the gap: 0 V */
+    turnVoltage(4 * 1);
+    CHECK(near(H(HandSetpoint_V)[0], 0.700)); /* fine: 1 mV from 0 V is in the gap, too */
     turnVoltage(-4 * 200);
     CHECK(near(H(HandSetpoint_V)[0], 0.0)); /* does not go below 0 V */
     press(&H(EncVoltButton), 3);            /* fine -> coarse */
@@ -192,30 +207,30 @@ static void voltageEncoderCoarseAndFine(void)
 
 static void voltageCounterWraps(void)
 {
-    /* the counter stands at 520 here; 131 detents down bring it to 65532 (over the wrap downwards) */
-    turnVoltage(-4 * 131);
+    /* the counter stands at 80 here; 21 detents down bring it to 65532 (over the wrap downwards) */
+    turnVoltage(-4 * 21);
     CHECK(voltCounter == 65532U);
-    CHECK(near(H(HandSetpoint_V)[0], 3.5 - 131 * 0.015));
+    CHECK(near(H(HandSetpoint_V)[0], 3.5 - 21 * 0.015));
     turnVoltage(8); /* 65532 -> 4: two detents up over the wrap */
     CHECK(voltCounter == 4U);
-    CHECK(near(H(HandSetpoint_V)[0], 3.5 - 129 * 0.015));
+    CHECK(near(H(HandSetpoint_V)[0], 3.5 - 19 * 0.015));
 }
 
 static void allChannelsMode(void)
 {
     turnSelect(4); /* channel 2 */
     CHECK(H(SelectedChannel) == 2U);
-    turnVoltage(4 * 20);
-    CHECK(near(H(HandSetpoint_V)[1], 0.300));
-    CHECK(near(H(HandSetpoint_V)[0], 3.5 - 129 * 0.015)); /* the other channel stays */
+    turnVoltage(4 * 20); /* 20 * 15 mV = 300 mV from 0 V is in the gap: 0.7 V */
+    CHECK(near(H(HandSetpoint_V)[1], 0.700));
+    CHECK(near(H(HandSetpoint_V)[0], 3.5 - 19 * 0.015)); /* the other channel stays */
     press(&H(EncSelButton), 3);              /* single -> all */
     CHECK(H(SelectAllMode) == 1U);
     turnVoltage(4);
-    CHECK(allSetpointsAre(0.315)); /* the new value of the selected channel for everybody */
+    CHECK(allSetpointsAre(0.715)); /* the new value of the selected channel for everybody */
     press(&H(EncSelButton), 3);
     CHECK(H(SelectAllMode) == 0U);
     turnVoltage(4);
-    CHECK(near(H(HandSetpoint_V)[1], 0.330) && near(H(HandSetpoint_V)[0], 0.315));
+    CHECK(near(H(HandSetpoint_V)[1], 0.730) && near(H(HandSetpoint_V)[0], 0.715));
 }
 
 static void cardKeysToggleTheRelease(void)
@@ -441,6 +456,65 @@ static void theOrderCounterWrapsAndThePicturesKeepComing(void)
     CHECK(D(DispTxRequest) == (uint8)(startRequest + orderNo)); /* 350 orders: the counter went round at least once */
 }
 
+/* 0.5.5: the displayed value is calm. PT1 (30 cycles) and hysteresis (3 mV); a new channel or 20 mV and more is shown at once. */
+static void theDisplayedValueIsCalm(void)
+{
+    turnSelect(-4 * 20); /* channel 1 */
+    settle(2500, 0, -1);
+    CHECK(H(DisplayValue_mV) == 2500U);
+    /* the jitter of the regulator (+-2 mV, the third decimal) neither changes the value nor starts a picture */
+    for (int i = 0; i < 40; ++i) /* less than DisplayRefresh_cycles = 100 since the picture, so no refresh either */
+    {
+        Rte_Buf_CellChannels_ActualVolt_V_ActualVolt_V[0] = (i % 2 == 0) ? 2.502f : 2.498f;
+        cycles(1);
+        CHECK(H(DisplayValue_mV) == 2500U);
+    }
+    CHECK(sentCount == 0);
+    /* +-5 mV of noise stays inside the filter and the hysteresis, too */
+    for (int i = 0; i < 90; ++i)
+    {
+        Rte_Buf_CellChannels_ActualVolt_V_ActualVolt_V[0] = (i % 3 == 0) ? 2.505f : 2.495f;
+        cycles(1);
+        CHECK(H(DisplayValue_mV) >= 2497U && H(DisplayValue_mV) <= 2503U);
+    }
+    /* a slow drift of 40 mV in 400 cycles is followed in steps of the hysteresis: no jump, no flicker back */
+    uint16 last   = H(DisplayValue_mV);
+    int changes   = 0;
+    for (int i = 1; i <= 400; ++i)
+    {
+        Rte_Buf_CellChannels_ActualVolt_V_ActualVolt_V[0] = 2.500f + (float32)i * 0.0001f;
+        cycles(1);
+        CHECK(H(DisplayValue_mV) >= last); /* never back */
+        if (H(DisplayValue_mV) != last)
+        {
+            CHECK(H(DisplayValue_mV) - last <= 6U); /* small steps, not a jump */
+            ++changes;
+            last = H(DisplayValue_mV);
+        }
+    }
+    CHECK(changes >= 8 && changes <= 20);
+    cycles(200);
+    CHECK(H(DisplayValue_mV) >= 2538U && H(DisplayValue_mV) <= 2540U); /* arrives within the hysteresis of 2.540 V */
+    /* a step of 15 mV (below DisplayJump_mV = 20) is followed slowly, the display does not jump */
+    Rte_Buf_CellChannels_ActualVolt_V_ActualVolt_V[0] = 2.555f;
+    cycles(1);
+    CHECK(H(DisplayValue_mV) <= 2540U);
+    cycles(200);
+    CHECK(H(DisplayValue_mV) >= 2553U && H(DisplayValue_mV) <= 2555U);
+    /* a step of 20 mV and more, a new channel and a fall to 0 are shown at once */
+    Rte_Buf_CellChannels_ActualVolt_V_ActualVolt_V[0] = 2.575f;
+    cycles(1);
+    CHECK(H(DisplayValue_mV) == 2575U);
+    Rte_Buf_CellChannels_ActualVolt_V_ActualVolt_V[1] = 1.234f;
+    turnSelect(4); /* channel 2 */
+    CHECK(H(SelectedChannel) == 2U && H(DisplayValue_mV) == 1234U);
+    turnSelect(-4);
+    CHECK(H(SelectedChannel) == 1U && H(DisplayValue_mV) == 2575U);
+    Rte_Buf_CellChannels_ActualVolt_V_ActualVolt_V[0] = 0.0f;
+    cycles(1);
+    CHECK(H(DisplayValue_mV) == 0U);
+}
+
 static void theChainFromTheSelectedChannelToTheDisplay(void)
 {
     settle(1, 1, -1);
@@ -474,6 +548,7 @@ int main(void)
     aSlowDriverGetsOneByteAtATime();
     aFailedOrderRestartsThePictureWithAClear();
     theOrderCounterWrapsAndThePicturesKeepComing();
+    theDisplayedValueIsCalm();
     theChainFromTheSelectedChannelToTheDisplay();
     printf("%d checks, %d failures\n", checks, failures);
     return (failures == 0) ? 0 : 1;

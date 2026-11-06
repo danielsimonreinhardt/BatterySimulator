@@ -25,8 +25,9 @@ void HandTask10ms(void)                /* Explicit Task: HandTask10ms */
 {
   sint64 tmp;
   float32 tmpRead_4[Rte_SysCon_CellCount];
-  float32 c_y;
   float32 x;
+  float32 y;
+  sint32 i;
   sint32 newSel;
   sint32 stepsS;
   sint32 stepsV;
@@ -37,6 +38,7 @@ void HandTask10ms(void)                /* Explicit Task: HandTask10ms */
   boolean evK[14];
   boolean rtb_TmpSignalConversionAtSFunctionInport6[14];
   boolean evV;
+  boolean guard1;
   boolean tmpRead;
   boolean tmpRead_1;
   boolean tmpRead_3;
@@ -257,6 +259,7 @@ void HandTask10ms(void)                /* Explicit Task: HandTask10ms */
   /* MATLAB Function: '<S1>/HandCore' incorporates:
    *  Constant: '<S1>/CoarseStep_mV_Const'
    *  Constant: '<S1>/FineStep_mV_Const'
+   *  Constant: '<S1>/HandMinSetpoint_V_Const'
    *  Constant: '<S1>/SetpointLimit_V_Const'
    */
   if (tmpRead_3) {
@@ -318,9 +321,9 @@ void HandTask10ms(void)                /* Explicit Task: HandTask10ms */
 
   if (tmpRead) {
     if (!HandControl_ARID_DEF.wasActive) {
-      for (stepsS = 0; stepsS < 14; stepsS++) {
-        HandControl_ARID_DEF.spMv[stepsS] = 0;
-        HandControl_ARID_DEF.en0[stepsS] = TRUE;
+      for (i = 0; i < 14; i++) {
+        HandControl_ARID_DEF.spMv[i] = 0;
+        HandControl_ARID_DEF.en0[i] = TRUE;
       }
     }
 
@@ -335,34 +338,53 @@ void HandTask10ms(void)                /* Explicit Task: HandTask10ms */
       x = roundf((float32)stepsV * x);
       if (x < 2.14748365E+9F) {
         if (x >= -2.14748365E+9F) {
-          stepsV = (sint32)x;
+          i = (sint32)x;
         } else {
-          stepsV = ((sint32)(-2147483647-1));
+          i = ((sint32)(-2147483647-1));
         }
       } else {
-        stepsV = ((sint32)(2147483647));
+        i = ((sint32)(2147483647));
       }
 
-      if ((stepsS < 0) && (stepsV < ((sint32)(-2147483647-1)) - stepsS)) {
-        stepsV = ((sint32)(-2147483647-1));
-      } else if ((stepsS > 0) && (stepsV > ((sint32)(2147483647)) - stepsS)) {
-        stepsV = ((sint32)(2147483647));
+      if ((stepsS < 0) && (i < ((sint32)(-2147483647-1)) - stepsS)) {
+        stepsS = ((sint32)(-2147483647-1));
+      } else if ((stepsS > 0) && (i > ((sint32)(2147483647)) - stepsS)) {
+        stepsS = ((sint32)(2147483647));
       } else {
-        stepsV += stepsS;
+        stepsS += i;
       }
 
-      if (stepsV < 0) {
-        stepsV = 0;
-      } else if (stepsV > newSel) {
-        stepsV = newSel;
+      x = roundf(Rte_Prm_CalPrm_HandMinSetpoint_V() * 1000.0F);
+      if (x < 2.14748365E+9F) {
+        if (x >= -2.14748365E+9F) {
+          i = (sint32)x;
+        } else {
+          i = ((sint32)(-2147483647-1));
+        }
+      } else {
+        i = ((sint32)(2147483647));
+      }
+
+      if ((stepsS > 0) && (stepsS < i)) {
+        if (stepsV > 0) {
+          stepsS = i;
+        } else {
+          stepsS = 0;
+        }
+      }
+
+      if (stepsS < 0) {
+        stepsS = 0;
+      } else if (stepsS > newSel) {
+        stepsS = newSel;
       }
 
       if (HandControl_ARID_DEF.selAll) {
-        for (stepsS = 0; stepsS < 14; stepsS++) {
-          HandControl_ARID_DEF.spMv[stepsS] = stepsV;
+        for (i = 0; i < 14; i++) {
+          HandControl_ARID_DEF.spMv[i] = stepsS;
         }
       } else {
-        HandControl_ARID_DEF.spMv[HandControl_ARID_DEF.sel - 1] = stepsV;
+        HandControl_ARID_DEF.spMv[HandControl_ARID_DEF.sel - 1] = stepsS;
       }
     }
 
@@ -372,9 +394,9 @@ void HandTask10ms(void)                /* Explicit Task: HandTask10ms */
       }
     }
   } else {
-    for (stepsS = 0; stepsS < 14; stepsS++) {
-      HandControl_ARID_DEF.spMv[stepsS] = 0;
-      HandControl_ARID_DEF.en0[stepsS] = FALSE;
+    for (i = 0; i < 14; i++) {
+      HandControl_ARID_DEF.spMv[i] = 0;
+      HandControl_ARID_DEF.en0[i] = FALSE;
     }
   }
 
@@ -391,20 +413,65 @@ void HandTask10ms(void)                /* Explicit Task: HandTask10ms */
   (void)Rte_Write_SelectAllMode_SelectAllMode(HandControl_ARID_DEF.selAll);
 
   /* MATLAB Function: '<S1>/HandCore' incorporates:
+   *  Constant: '<S1>/DisplayFilter_cycles_Const'
+   *  Constant: '<S1>/DisplayHyst_mV_Const'
    *  Reshape: '<S1>/ActualVolt_V_r'
    */
   x = tmpRead_4[HandControl_ARID_DEF.sel - 1] * 1000.0F;
-  c_y = 0.0F;
+  y = 0.0F;
   if (x > 9999.0F) {
-    c_y = 9999.0F;
+    y = 9999.0F;
   } else if (x >= 0.0F) {
-    c_y = x;
+    y = x;
+  }
+
+  guard1 = FALSE;
+  if ((!HandControl_ARID_DEF.dispInit) || (HandControl_ARID_DEF.sel !=
+       HandControl_ARID_DEF.lastSel)) {
+    guard1 = TRUE;
+  } else {
+    x = y - HandControl_ARID_DEF.filt;
+    if (fabsf(x) >= Rte_Prm_CalPrm_DisplayJump_mV()) {
+      guard1 = TRUE;
+    } else {
+      if (Rte_Prm_CalPrm_DisplayFilter_cycles() >= 1) {
+        tmpRead_2 = Rte_Prm_CalPrm_DisplayFilter_cycles();
+      } else {
+        tmpRead_2 = 1U;
+      }
+
+      HandControl_ARID_DEF.filt += x / (float32)tmpRead_2;
+      if (fabsf(HandControl_ARID_DEF.filt - HandControl_ARID_DEF.shown) >=
+          Rte_Prm_CalPrm_DisplayHyst_mV()) {
+        HandControl_ARID_DEF.shown = HandControl_ARID_DEF.filt;
+        HandControl_ARID_DEF.shown = roundf(HandControl_ARID_DEF.shown);
+      }
+    }
+  }
+
+  if (guard1) {
+    HandControl_ARID_DEF.filt = y;
+    HandControl_ARID_DEF.shown = y;
+    HandControl_ARID_DEF.shown = roundf(HandControl_ARID_DEF.shown);
+  }
+
+  HandControl_ARID_DEF.lastSel = HandControl_ARID_DEF.sel;
+  HandControl_ARID_DEF.dispInit = TRUE;
+  x = roundf(HandControl_ARID_DEF.shown);
+  if (x < 65536.0F) {
+    if (x >= 0.0F) {
+      tmpRead_2 = (uint16)x;
+    } else {
+      tmpRead_2 = 0U;
+    }
+  } else {
+    tmpRead_2 = ((uint16)(65535U));
   }
 
   /* Outport: '<Root>/DisplayValue_mV' incorporates:
    *  MATLAB Function: '<S1>/HandCore'
    */
-  (void)Rte_Write_DisplayValue_mV_DisplayValue_mV((uint16)roundf(c_y));
+  (void)Rte_Write_DisplayValue_mV_DisplayValue_mV(tmpRead_2);
   for (newSel = 0; newSel < Rte_SysCon_CellCount; newSel++) {
     /* Outport: '<Root>/HandEnable' incorporates:
      *  MATLAB Function: '<S1>/HandCore'
@@ -435,6 +502,7 @@ void HandControl_Init(void)
   /* SystemInitialize for MATLAB Function: '<S1>/HandCore' */
   HandControl_ARID_DEF.sel = 1U;
   HandControl_ARID_DEF.coarse = TRUE;
+  HandControl_ARID_DEF.lastSel = 1U;
 
   /* End of SystemInitialize for RootInportFunctionCallGenerator generated from: '<Root>/HandTask10ms' */
 }
