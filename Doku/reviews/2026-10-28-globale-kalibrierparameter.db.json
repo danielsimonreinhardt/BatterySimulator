@@ -1,0 +1,78 @@
+{
+  "quelle": "claude.ai-Artefakt „Globale Kalibrierparameter“, Version 1793215616-96a4, siehe doc/archiv/artefakte-2026-11.html",
+  "gelesen": "2026-11-05",
+  "hinweis": "Roher Inhalt der Artefakt-Datenbank: Collection decisions (Dokument je Punkt, data = choice/note/at) und meta/status (done/at). Zeitpunkte in UTC.",
+  "decisions": [
+    {
+      "id": "G-1",
+      "data": {
+        "at": "2026-10-28T20:22:57.075Z",
+        "choice": "b",
+        "note": ""
+      },
+      "version": 3,
+      "updatedAt": "2026-10-28T20:22:57.313244Z"
+    },
+    {
+      "id": "G-2",
+      "data": {
+        "at": "2026-10-28T20:24:05.750Z",
+        "choice": "a",
+        "note": ""
+      },
+      "version": 1,
+      "updatedAt": "2026-10-28T20:24:06.02406Z"
+    },
+    {
+      "id": "G-3",
+      "data": {
+        "at": "2026-10-28T20:24:11.980Z",
+        "choice": "a",
+        "note": ""
+      },
+      "version": 1,
+      "updatedAt": "2026-10-28T20:24:12.223857Z"
+    },
+    {
+      "id": "G-4",
+      "data": {
+        "at": "2026-10-28T20:24:23.677Z",
+        "choice": "a",
+        "note": ""
+      },
+      "version": 1,
+      "updatedAt": "2026-10-28T20:24:23.919435Z"
+    },
+    {
+      "id": "G-5",
+      "data": {
+        "at": "2026-10-28T20:24:41.103Z",
+        "choice": "b",
+        "note": ""
+      },
+      "version": 1,
+      "updatedAt": "2026-10-28T20:24:41.370663Z"
+    },
+    {
+      "id": "G-6",
+      "data": {
+        "at": "2026-10-28T20:26:50.042Z",
+        "choice": "a",
+        "note": ""
+      },
+      "version": 1,
+      "updatedAt": "2026-10-28T20:26:50.295567Z"
+    }
+  ],
+  "meta": [
+    {
+      "id": "status",
+      "data": {
+        "at": "2026-10-28T20:26:58.191Z",
+        "done": true
+      },
+      "version": 1,
+      "updatedAt": "2026-10-28T20:26:58.454371Z"
+    }
+  ]
+}

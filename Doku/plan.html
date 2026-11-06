@@ -1,0 +1,283 @@
+<title>Batterie-Simulator Plan</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: eine Lesespalte, Arbeitspakete als Tabellen, Prioritäten als nummerierte Spur oben */
+:root{
+  --bg:#f6f7f8; --surface:#ffffff; --fg:#1b2228; --muted:#5b6670; --line:#d9dee3;
+  --accent:#0b6e7f; --accent-soft:#e3f1f3; --warn:#9a5b00; --warn-soft:#fbf0dc; --ok:#2f7a3d; --ok-soft:#e5f3e7;
+  --f-display:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12171b; --surface:#1a2127; --fg:#e4e9ed; --muted:#9aa6b0; --line:#2e3840;
+  --accent:#5cc3d3; --accent-soft:#163238; --warn:#e9b25a; --warn-soft:#352812; --ok:#7fcb8b; --ok-soft:#18301c; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12171b; --surface:#1a2127; --fg:#e4e9ed; --muted:#9aa6b0; --line:#2e3840;
+  --accent:#5cc3d3; --accent-soft:#163238; --warn:#e9b25a; --warn-soft:#352812; --ok:#7fcb8b; --ok-soft:#18301c; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.55}
+.wrap{max-width:980px;margin:0 auto;padding-block:32px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:40px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:2.1rem;font-weight:600}
+h2{font-size:1.5rem;font-weight:600;display:flex;gap:12px;align-items:baseline}
+h2 .prio{font-family:var(--f-mono);font-size:.85rem;color:var(--accent);border:1px solid var(--accent);border-radius:3px;padding:1px 7px;font-weight:500}
+h3{font-size:1.12rem;font-weight:600;margin-top:8px}
+p{margin:0;max-width:72ch}
+section{display:flex;flex-direction:column;gap:14px}
+.eyebrow{font-family:var(--f-mono);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.lead{font-size:1.05rem;color:var(--fg)}
+.meta{color:var(--muted);font-size:.9rem}
+code,.mono{font-family:var(--f-mono);font-size:.88em}
+ul{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:4px;max-width:74ch}
+.track{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.track .step{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.track .n{font-family:var(--f-mono);font-size:.8rem;color:var(--accent)}
+.track .t{font-family:var(--f-display);font-weight:600;font-size:1.05rem}
+.track .d{font-size:.88rem;color:var(--muted)}
+@media (max-width:760px){.track{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:440px){.track{grid-template-columns:1fr}}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--line)}
+th{font-family:var(--f-mono);font-weight:500;font-size:.76rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);background:var(--bg)}
+tr:last-child td{border-bottom:none}
+td.id{font-family:var(--f-mono);white-space:nowrap;color:var(--accent)}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;font-family:var(--f-mono)}
+.note{border-left:3px solid var(--accent);background:var(--accent-soft);padding:10px 14px;border-radius:0 6px 6px 0;max-width:80ch}
+.note.warn{border-color:var(--warn);background:var(--warn-soft)}
+.chip{display:inline-block;font-family:var(--f-mono);font-size:.74rem;padding:1px 7px;border-radius:10px;white-space:nowrap}
+.chip.dec{background:var(--warn-soft);color:var(--warn)}
+.chip.ok{background:var(--ok-soft);color:var(--ok)}
+.chip.mock{background:var(--accent-soft);color:var(--accent)}
+.diagram{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px;overflow-x:auto}
+.diagram svg{display:block;min-width:720px;width:100%;height:auto}
+.diagram text{font-family:var(--f-body);font-size:13px;fill:var(--fg)}
+.diagram .small{font-size:11px;fill:var(--muted)}
+.diagram .mono{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
+.diagram .box{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
+.diagram .boxa{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.5}
+.diagram .boxn{fill:var(--warn-soft);stroke:var(--warn);stroke-width:1.5}
+.diagram .grp{fill:none;stroke:var(--line);stroke-width:1.2;stroke-dasharray:5 4}
+.diagram .ln{stroke:var(--muted);stroke-width:1.4;fill:none}
+.diagram .lna{stroke:var(--accent);stroke-width:1.6;fill:none}
+.diagram .ah{fill:var(--muted)}
+.diagram .aha{fill:var(--accent)}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+@media (max-width:700px){.two{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;min-width:0}
+a{color:var(--accent)}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+
+<div class="wrap">
+
+<header style="display:flex;flex-direction:column;gap:10px">
+  <span class="eyebrow">Longboard · 03_TOOLS · Planung vom 21.10.2026 · Stand 22.10.: BS-1.0 erledigt, BS-1.1–1.7 umgesetzt (LabControl 0.22.0), BS-1.8 am Gerät weitgehend geprüft (Rest am geöffneten Gerät) · BS-2 und BS-3 erledigt, am 22.10. mit Gerätebefunden nachgetragen</span>
+  <h1>Batterie-Simulator: Plan</h1>
+  <p class="lead">Vier Aufgaben in der vom Nutzer genannten Reihenfolge. Ziel der ersten Aufgabe: Der Simulator erscheint in LabControl als eigenes Gerät und lässt sich über GUI, Testablauf und MCP steuern. Damit werden die MC33771C-Nachweise am BCU-Board (IO-115, Rest von IO-27) möglich.</p>
+  <p class="meta">Quellen (nur lesen): <code>C:\DATA\Hobby-Projekte\Longboard\03_TOOLS\Batterie-Simulator</code> mit <code>SOFTWARE/BattSimV1.dbc</code>, <code>BATTSIM_CONTROL.slx</code>, <code>parameter.m</code>, vier KiCad-Projekten und <code>Konzept.pptx</code>. Offene Entscheidungen stehen im Longboard-Entscheidungsboard (Kennung <code>bs-*</code>).</p>
+</header>
+
+<section>
+  <span class="eyebrow">Reihenfolge</span>
+  <div class="track">
+    <div class="step"><span class="n">1 · jetzt</span><span class="t">LabControl-Treiber</span><span class="d">Eigene Geräteart „Batterie-Simulator“ an einem vorhandenen CAN-Interface. Vorab ein kleiner Ausschnitt aus Aufgabe 3: das CAN-Verhalten der Firmware.</span></div>
+    <div class="step"><span class="n">2 · danach, parallel möglich</span><span class="t">Hardware-Analyse</span><span class="d">Vier Platinen, Messkette, Pinbelegung. Liefert die Genauigkeit für die MC33771C-Nachweise und die Pin-Tabelle für Aufgabe 4.</span></div>
+    <div class="step"><span class="n">3</span><span class="t">Firmware-Analyse</span><span class="d">Simulink-Modell mit MBDT-Blöcken und 10 Stateflow-Diagrammen. Ergebnis: Anforderungsliste für die neue Firmware.</span></div>
+    <div class="step"><span class="n">4</span><span class="t">neXtBSW-Firmware, Grundlagen</span><span class="d">Eigenes Projekt-Repo mit neXtBSW-Pin, Board- und Projektbeschreibung für den S32K146, CAN nach der bestehenden DBC.</span></div>
+  </div>
+</section>
+
+<section>
+  <span class="eyebrow">Was schon feststeht</span>
+  <div class="two">
+    <div class="card">
+      <h3>Aufbau (Sichtung)</h3>
+      <ul>
+        <li><b>Master</b>: S32K146 LQFP-144 (Foto 22.10.: FS32K146HAMLQ), 16-MHz-Quarz, CAN-Transceiver „VP1040“ (SN65HVD1040), <b>gebaut mit Drahtbrücken für Taster und LIMIT</b>, Drehgeber, 2 × LM4132 (2,0 V Referenz), JTAG/SWD 10-polig</li>
+        <li><b>Zellkanal</b> (BattSim_V1): galvanisch getrennt (ISO6742<b>F</b>, AMC1311), LT3080 als Stellglied, TLV272 statt LM358 (Foto Kanal 13), TLV9301, Strombegrenzung</li>
+        <li><b>Bus-Platine</b>: DIN41612-Rückwand, 2 × DE9 für CAN, Zellabgriff zur Kabelpeitsche</li>
+        <li><b>Versorgung</b>: IRM-60-48 (48 V), LM2576HVS-5, Strommessung INA181, Überlast ab 1,28 A</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>CAN-Protokoll (BattSimV1.dbc)</h3>
+      <ul>
+        <li><b>Senden an den Simulator</b>: <code>0x100–0x105</code> Zellsollwert + Freigabe für Zellen 1–16, alle 1000 ms, Ausfall nach 3 s</li>
+        <li><code>0x130</code> CONTROL_BATTSIM (Remote, Ausgänge, Modus) alle 100 ms, Ausfall nach 3 s</li>
+        <li><code>0x131/0x132</code> dynamisches Zellmodell (OCV, Rs, 2 RC-Glieder, Strom), 100 ms / 1000 ms</li>
+        <li><b>Vom Simulator</b>: <code>0x110–0x115</code> Istspannung + Zellstatus, <code>0x120</code> Gerätestatus</li>
+        <li>Jede Botschaft hat einen 4-Bit-Alive-Zähler, die Firmware prüft ihn. Bitrate im Modell: 500 kbit/s</li>
+      </ul>
+    </div>
+  </div>
+  <div class="note"><b>Geklärt (Nutzer und Modell, 21.10.):</b> 14 Kanäle sind bestückt, die Kanäle 15/16 sind auch in der Firmware abgeschaltet. Die Firmware läuft auf dem Gerät und lässt sich heute fernsteuern. CAN-Interface wählt der Nutzer in LabControl, jedes dort bekannte Interface muss gehen.</div>
+  <div class="note warn"><b>Abweichungen der Firmware von der DBC (BS-1.0, aus dem Modell, am Gerät noch zu prüfen):</b> Zellfreigabe 1 („disable“) wirkt als Freigabe, nur 0 schaltet aus. Zellstatus meldet 0 für „ein“ statt 2. Die Alive-Prüfung ist durch eine ODER-Verknüpfung wirkungslos. Nach Ausfall von 0x130 bleiben die Ausgänge noch 4,5–6 s an, dann FAIL. Details: <code>BatterieSimulator/doc/can-verhalten.md</code>.</div>
+</section>
+
+<section>
+  <h2><span class="prio">1</span>LabControl-Treiber für den Batterie-Simulator</h2>
+  <p>LabControl hat heute eine allgemeine CAN-Schicht: <code>device-driver/can_bus</code> öffnet pro konfiguriertem Interface genau einen Bus (Vector, PCAN, SLCAN), der <code>DeviceWorker</code> liest alle 100 ms alle Frames, zeigt sie roh an und decodiert sie optional mit einer DBC. Senden geht nur von Hand oder als Testschritt, nicht über Netzwerk/MCP. Ein Gerät, das selbst <em>über</em> CAN spricht, gibt es noch nicht.</p>
+
+  <h3>Vorschlag: CAN-Geräte hängen sich an ein vorhandenes CAN-Interface</h3>
+  <p>Der Simulator bekommt keinen eigenen Bus. Er wird als <b>CAN-Gerät</b> auf einem schon konfigurierten Interface angemeldet. Das Interface bleibt im CAN-Reiter mit Rohdaten sichtbar, der Simulator erscheint daneben als eigene Kachel mit eigener Geräte-ID.</p>
+
+  <div class="diagram" role="img" aria-label="Architektur: CAN-Interface, Verteiler, Batterie-Simulator-Knoten, GUI und MCP">
+  <svg viewBox="0 0 900 360" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah"/></marker>
+      <marker id="ma" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="aha"/></marker>
+    </defs>
+    <!-- hardware -->
+    <rect x="16" y="40" width="150" height="56" rx="5" class="box"/>
+    <text x="91" y="64" text-anchor="middle">VN1610 Kanal</text>
+    <text x="91" y="82" text-anchor="middle" class="mono">500 kbit/s</text>
+    <rect x="16" y="250" width="150" height="70" rx="5" class="box"/>
+    <text x="91" y="276" text-anchor="middle">Batterie-Simulator</text>
+    <text x="91" y="294" text-anchor="middle" class="mono">S32K146, 16 Zellen</text>
+    <text x="91" y="310" text-anchor="middle" class="small">Zellabgriff → BCU-Board</text>
+    <path d="M91,96 L91,250" class="ln" marker-start="url(#m)" marker-end="url(#m)"/>
+    <text x="100" y="178" class="small">CAN</text>
+    <!-- device worker group -->
+    <rect x="200" y="16" width="420" height="328" rx="8" class="grp"/>
+    <text x="214" y="36" class="small">DeviceWorker-Thread (bestehend) + neuer Sendetakt</text>
+    <rect x="222" y="48" width="170" height="52" rx="5" class="box"/>
+    <text x="307" y="70" text-anchor="middle">CanBus</text>
+    <text x="307" y="88" text-anchor="middle" class="mono">can_bus/driver.py</text>
+    <path d="M166,68 L222,68" class="ln" marker-end="url(#m)"/>
+    <rect x="430" y="48" width="170" height="52" rx="5" class="boxa"/>
+    <text x="515" y="70" text-anchor="middle">Verteiler (neu)</text>
+    <text x="515" y="88" text-anchor="middle" class="mono">Frame → Abnehmer</text>
+    <path d="M392,74 L430,74" class="ln" marker-end="url(#m)"/>
+    <rect x="430" y="132" width="170" height="44" rx="5" class="box"/>
+    <text x="515" y="159" text-anchor="middle">Rohdaten + DBC-Anzeige</text>
+    <path d="M515,100 L515,132" class="ln" marker-end="url(#m)"/>
+    <rect x="222" y="200" width="378" height="124" rx="5" class="boxa"/>
+    <text x="236" y="222">CanNode „battsim“ (neu, Qt-frei)</text>
+    <text x="236" y="242" class="mono">device-driver/battsim/driver.py + BattSimV1.dbc</text>
+    <text x="236" y="264" class="small">• Istwerte 0x110–0x115, Status 0x120 empfangen</text>
+    <text x="236" y="282" class="small">• Online, solange 0x120 mit wechselndem Alive-Zähler kommt</text>
+    <text x="236" y="300" class="small">• Sendetabelle 0x100–0x105 (1 s), 0x130 (100 ms) mit Alive-Zähler</text>
+    <text x="236" y="318" class="small">• set_cell_voltage / enable / output / remote</text>
+    <path d="M560,100 L560,200" class="lna" marker-end="url(#ma)"/>
+    <path d="M250,200 L250,100" class="lna" marker-end="url(#ma)"/>
+    <text x="256" y="160" class="small">zyklisch senden</text>
+    <!-- consumers -->
+    <rect x="660" y="40" width="224" height="52" rx="5" class="box"/>
+    <text x="772" y="62" text-anchor="middle">CAN-Kachel (unverändert)</text>
+    <text x="772" y="80" text-anchor="middle" class="small">zeigt auch die Simulator-Frames</text>
+    <path d="M600,154 L640,154 L640,66 L660,66" class="ln" marker-end="url(#m)"/>
+    <rect x="660" y="150" width="224" height="52" rx="5" class="boxa"/>
+    <text x="772" y="172" text-anchor="middle">Kachel „Batterie-Simulator“</text>
+    <text x="772" y="190" text-anchor="middle" class="small">Dashboard + Control-Reiter</text>
+    <rect x="660" y="218" width="224" height="44" rx="5" class="boxa"/>
+    <text x="772" y="245" text-anchor="middle">Testablauf: Aktionen, Messwerte</text>
+    <rect x="660" y="278" width="224" height="52" rx="5" class="boxa"/>
+    <text x="772" y="300" text-anchor="middle">Netzwerk / MCP</text>
+    <text x="772" y="318" text-anchor="middle" class="mono">control_device, read_device</text>
+    <path d="M600,240 L660,176" class="lna" marker-end="url(#ma)"/>
+    <path d="M600,250 L660,240" class="lna" marker-end="url(#ma)"/>
+    <path d="M600,262 L660,302" class="lna" marker-end="url(#ma)"/>
+  </svg>
+  </div>
+
+  <div class="two">
+    <div class="card">
+      <h3>Warum so</h3>
+      <ul>
+        <li>Ein Interface, ein Bus-Handle: PCAN und SLCAN lassen einen Kanal nicht zweimal öffnen. Der Simulator kann auf demselben Kanal liegen wie das BCU-Board.</li>
+        <li>Die Rohdaten-Ansicht bleibt der Ort für Fehlersuche, der Simulator ist trotzdem ein eigenes Gerät mit eigener Kachel, eigenem Namen und eigener ID (<code>battsim:&lt;CAN-Interface-ID&gt;</code>).</li>
+        <li>Die DBC wird die Quelle des Protokolls. Sie liegt versioniert im Treiberordner und wird mit <code>cantools</code> kodiert; LabControl nutzt <code>cantools</code> heute schon.</li>
+        <li>Die Schicht <code>CanNode</code> ist allgemein. Spätere CAN-Geräte (BCU, eigene Steuergeräte, weitere Laborwerkzeuge) kommen auf demselben Weg dazu.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Zyklisches Senden</h3>
+      <p>Der Simulator überwacht seine Steuerbotschaften: <code>0x130</code> und <code>0x131</code> kommen alle 100 ms, sonst fällt er nach 1–3 s aus dem Fernsteuerbetrieb. Der 100-ms-Takt des <code>DeviceWorker</code> reicht dafür nur, solange nichts anderes den Thread blockiert (serielle Zeitüberschreitungen anderer Geräte, Oszilloskop).</p>
+      <p>Darum ein eigener Sendetakt in <code>can_bus</code> (python-can <code>send_periodic</code> mit Callback für den Alive-Zähler, sonst ein kleiner eigener Thread). Endet LabControl ungeplant, hört das Senden auf und der Simulator geht über seine eigene Zeitüberwachung in den Rückfall. Was er dann genau tut, klärt Paket 1.0.</p>
+    </div>
+  </div>
+
+  <div class="note"><b>Umgesetzt 21.10.:</b> LabControl v0.22.0 (Commit <code>b958d3c</code>, nicht gepusht). Treiber, CAN-Knoten-Schicht, Kacheln, Einstellungen, Testablauf und MCP stehen; <code>tools/check_battsim.py</code> mit 44 Prüfungen gegen den nachgebildeten Simulator grün. Gerätetest BS-1.8 als Board-Punkt <code>bs-geraetetest</code>.</div>
+  <div class="note"><b>Am Gerät geprüft 22.10.:</b> Prüfskript (nur lesen und Folge mit 3,7 V), FAIL nach 5,16 s und Zurücksetzen, App-Kachel und MCP, Fronttaster, Reset und Einschalten am Zellabgriff (Oszilloskop), Multimeter an vier Zellen. Das Protokoll stimmt mit dem Modell überein; gefunden wurden Abweichungen je Kanal (±0,1 V), Pulse am Zellabgriff beim RESET (≈ 5,4 V für ≈ 40 ms) und Nacharbeiten am Master (fehlende Bahnen für Taster und LIMIT). Details: <code>doc/can-verhalten.md</code>, die drei Analyse-Artefakte.</div>
+  <h3>Arbeitspakete</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Paket</th><th>Inhalt</th><th>Fertig, wenn</th></tr></thead>
+    <tbody>
+      <tr><td class="id">BS-1.0 <span class="chip ok">erledigt</span></td><td>CAN-Verhalten aus dem Modell lesen (Ausschnitt aus Aufgabe 3): Zustandsautomat (<code>chart_318</code>), die neun kleinen Diagramme (vermutlich Alive/Timeout je Empfangsbotschaft), Übergang Standalone ↔ Remote, Verhalten bei Ausfall, Bedeutung des Zellstatus</td><td>Protokollbeschreibung im Treiber-README, Unstimmigkeiten der DBC benannt</td></tr>
+      <tr><td class="id">BS-1.1 <span class="chip mock">Mock</span></td><td>Allgemeine Schicht <code>can_bus/node.py</code>: <code>CanNode</code> (Empfangs-IDs, <code>on_frame</code>, Sendetabelle mit Alive-Zähler, Online-Überwachung) und Sendetakt in <code>CanBus</code>; Verteiler im <code>DeviceWorker</code>, Sendezähler der CAN-Kachel zählen mit</td><td>Mock-Test: Knoten empfängt, sendet im Takt, meldet offline nach Ausfall</td></tr>
+      <tr><td class="id">BS-1.2 <span class="chip mock">Mock</span></td><td><code>device-driver/battsim/</code>: <code>driver.py</code>, <code>mock.py</code>, <code>README.md</code>, <code>BattSimV1.dbc</code>. Mock als simulierter Simulator auf Frame-Ebene (wie beim SCPI-Oszilloskop), damit der echte Treibercode mitläuft</td><td>Treiber gegen Mock: Sollwert → Istwert, Ausfall → Rückfall wie in 1.0 beschrieben</td></tr>
+      <tr><td class="id">BS-1.3 <span class="chip mock">Mock</span></td><td>Einbindung: Geräteart <code>battsim</code>, Einstellungen „CAN-Geräte“ (Typ, Interface, Name), <code>device_registry</code> „Batterie-Simulator“, Simulationsmodus</td><td>Gerät taucht auf, sobald 0x120 kommt, und verschwindet nach Ausfall</td></tr>
+      <tr><td class="id">BS-1.4 <span class="chip mock">Mock</span></td><td>GUI: Kachel mit 14 Zellen (Soll/Ist, Status als Farbe), Stapelspannung, Betriebsart, Ausgang; Control-Gruppe mit Einzel- und Gesamtsollwert, Freigaben, Ausgang, Remote</td><td>Bedienung im Simulationsmodus vollständig</td></tr>
+      <tr><td class="id">BS-1.5 <span class="chip mock">Mock</span></td><td>Netzwerk/MCP: <code>battsim</code> in <code>CONTROL_KINDS</code>; Aktionen <code>BS_CELL_VOLT</code> (Kanal 1–16), <code>BS_ALL_VOLT</code>, <code>BS_CELL_ON/OFF</code>, <code>BS_OUT_ON/OFF</code>, <code>BS_REMOTE_ON/OFF</code>; Grenzwert je Zelle in <code>safety.py</code>; Lesefelder je Zelle</td><td><code>tools/check_network_share.py</code> grün, Aufruf über MCP im Simulationsmodus</td></tr>
+      <tr><td class="id">BS-1.6 <span class="chip mock">Mock</span></td><td>Testablauf: Aktionen und Messwerte (Zelle n, Stapel) für Bedingungen und Pass/Fail</td><td>Beispiel-Testablauf „Zelle 5 auf 2,5 V, warten, prüfen“ läuft</td></tr>
+      <tr><td class="id">BS-1.7 <span class="chip mock">Mock</span></td><td>„Alles aus“: Ausgänge sperren (<code>OUTPUT_CONTROL = disable</code>) und weiter zyklisch senden, damit der Zustand gehalten wird</td><td>Mock-Test; am Gerät in 1.8</td></tr>
+      <tr><td class="id">BS-1.8 <span class="chip dec">weitgehend erledigt</span></td><td>Nachweis am Gerät mit dem Nutzer: Remote ein, alle Zellen 3,7 V, Istwerte zurücklesen, eine Zelle abweichend, Ausgang aus, Senden abbrechen → FAIL nach 5,16 s beobachtet (22.10.). CHANGELOG ist nachgetragen, das Handbuch nicht (keine Änderung am Treiber). <b>Offen:</b> Kartentausch (Kanal 13 ↔ 5) mit Standby-Werten, Bedienen in der Kachel, Messungen am geöffneten Gerät (Board-Punkt <code>bs-geraetetest-offen-messen</code>)</td><td><span class="chip mock">Mock</span> und <span class="chip ok">Hardware</span> im CHANGELOG getrennt ausgewiesen</td></tr>
+      <tr><td class="id">BS-1.9</td><td>Später: dynamisches Zellmodell (0x131/0x132). Idee: den gemessenen Strom der Last 150 W als <code>DYNCELLSIM_CURRENT_SET</code> durchreichen</td><td>eigene Entscheidung, siehe Board</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note"><b>Vorbedingung erfüllt:</b> Die offenen LabControl-Änderungen (UNI-T-Oszilloskop 0.21.0, CHANGELOG zu #37) sind geprüft (acht Prüfskripte grün) und als eigener Commit <code>f0ae056</code> (v0.21.1) eingecheckt, nicht gepusht. Der Treiber startet auf diesem Stand.</div>
+</section>
+
+<section>
+  <h2><span class="prio">2</span>Hardware-Analyse</h2>
+  <p>Ziel: verstehen, wie eine Zellspannung entsteht und gemessen wird, wie genau das ist und welche Fehlerbilder der Aufbau hat. Werkzeug: <code>kicad-cli</code> 10 (Netzlisten, Schaltplan-PDF), Quellen bleiben unverändert in <code>C:\DATA</code>.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Paket</th><th>Inhalt</th><th>Ergebnis</th></tr></thead>
+    <tbody>
+      <tr><td class="id">BS-2.1 <span class="chip ok">erledigt</span></td><td>Export Netzlisten und PDF für Master, Zellkanal, Bus-Platine, Versorgung; Abgleich mit <code>BattSimMaster_bestellt.zip</code> und den Produktionsdaten</td><td>welcher Stand ist gebaut</td></tr>
+      <tr><td class="id">BS-2.2 <span class="chip ok">erledigt</span></td><td>Blockschaltbild und Funktion je Platine: 230 V → 48 V → 5 V, Kaskadierung der isolierten Kanäle, Stellglied LT3080, Strombegrenzung, Freigabe über die Strombegrenzung, isolierte Messung AMC1311</td><td>Diagramme vor Text</td></tr>
+      <tr><td class="id">BS-2.3 <span class="chip ok">erledigt</span></td><td>Pin-Tabelle S32K146: CAN-Instanzen, PWM-Kanäle (FTM) je Zelle, ADC-Kanäle, FlexIO (Anzeige?), Drehgeber, Taster, LEDs</td><td>Eingabe für Board-Beschreibung in Aufgabe 4. <b>Nachtrag 22.10.:</b> Der gebaute Master weicht ab (Taster per Drahtbrücke, LIMIT auf PTE25, PTD10 ohne Bahn); die Board-Beschreibung muss beide Versionen kennen (V1 gebaut, korrigierter Quellstand)</td></tr>
+      <tr><td class="id">BS-2.4 <span class="chip ok">erledigt</span></td><td>Messkette und Grenzen: Stellbereich 0–5 V, 0,5 A, Kennlinien aus <code>parameter.m</code> (PWM-Tabelle, ADC-Tabelle), erreichbare Genauigkeit gegen den Bedarf der MC33771C-Nachweise</td><td>Aussage, welche IO-115-Prüfungen der Simulator tragen kann</td></tr>
+      <tr><td class="id">BS-2.5 <span class="chip ok">erledigt</span></td><td>„Fails Erstaufbau“ aus <code>Konzept.pptx</code> (14 Punkte) gegen den aktuellen Schaltplan prüfen; zweiter CAN-Transceiver: Zweck klären</td><td>Befundliste mit Status</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="prio">3</span>Firmware-Analyse (Simulink)</h2>
+  <p><code>BATTSIM_CONTROL.slx</code> nutzt die NXP-MBDT-Toolbox für S32K1xx (FCAN, FTM-PWM, ADC, FlexIO, LPTMR, GPIO-ISR), die eigene <code>BACE_lib</code> (Ein-/Ausschaltverzögerung, Flanken, Tiefpass) und zehn Stateflow-Diagramme. Die Analyse läuft über die XML-Inhalte der <code>.slx</code>; MATLAB nur für Bilder der Subsysteme.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Paket</th><th>Inhalt</th><th>Ergebnis</th></tr></thead>
+    <tbody>
+      <tr><td class="id">BS-3.1 <span class="chip ok">erledigt</span></td><td>Struktur: Tasks (10 ms CAN-Qualifier, 100 ms Rest), Subsysteme, Datenflüsse, Parameter aus <code>parameter.m</code></td><td>Übersichtsbild</td></tr>
+      <tr><td class="id">BS-3.2 <span class="chip ok">erledigt</span></td><td>Zustandsautomat (STANDBY, ON_Standalone, ON_RemoteControl, ON_DynamicCellSim, FAIL) und CAN-Qualifier (Alive, Timeout, Entprellung)</td><td>Zustandsdiagramm mit Übergängen</td></tr>
+      <tr><td class="id">BS-3.3 <span class="chip ok">erledigt</span></td><td>Stellen und Messen je Zelle: Sollwert → PWM über Tabelle, ADC → Istwert, PI-Regler (heute abgeschaltet), Überlast der Versorgung</td><td>Signalfluss je Kanal</td></tr>
+      <tr><td class="id">BS-3.4 <span class="chip ok">erledigt</span></td><td>Bedienung: Drehgeber (Wert, Kanalwahl), Anzeige, LEDs, Taster; dynamisches Zellmodell (2 RC-Glieder)</td><td>Funktionsbeschreibung</td></tr>
+      <tr><td class="id">BS-3.5 <span class="chip ok">erledigt</span></td><td>Anforderungsliste für die neue Firmware, mit Schwächen der alten (z. B. kein Ausfallverhalten dokumentiert)</td><td>Grundlage für Aufgabe 4</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="prio">4</span>Neue Firmware auf neXtBSW: Grundlagen</h2>
+  <p>Nach der neXtBSW-Anleitung „Your own ECU repository“: eigenes Repo, neXtBSW als Submodul auf einem Release-Tag, im Repo nur Board, Projekt und Anwendung. Leitlinie: <b>Die neue Firmware hält das CAN-Protokoll der BattSimV1.dbc ein.</b> Dann funktioniert der LabControl-Treiber aus Aufgabe 1 unverändert mit alter und neuer Firmware.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Paket</th><th>Inhalt</th><th>Fertig, wenn</th></tr></thead>
+    <tbody>
+      <tr><td class="id">BS-4.1</td><td>Repo anlegen (Ort laut Entscheidung), Pin auf neXtBSW, <code>.venv</code>, CI lokal; Stand der S32K146-Unterstützung prüfen (mcudb und Pinmux für LQFP100 sind vorhanden; der Master ist ein LQFP-144, Derivat <code>S32K146_LQFP144</code>, Plattform-Bauprofil offen)</td><td>leeres Projekt baut für Host und Target</td></tr>
+      <tr><td class="id">BS-4.2</td><td><code>board.yaml</code> BattSimMaster aus der Pin-Tabelle (BS-2.3): 16-MHz-Quarz, CAN, PWM, ADC, GPIO</td><td><code>nxconfig check</code> ohne Befund</td></tr>
+      <tr><td class="id">BS-4.3</td><td><code>project.yaml</code>: Tasks, CAN-Kommunikation aus der DBC mit Alive- und Timeout-Überwachung</td><td>generierter Code baut</td></tr>
+      <tr><td class="id">BS-4.4</td><td>Anwendungs-SWC als Gerüst (Simulink, AUTOSAR Blockset wie in neXtBSW üblich), Ports nach BS-3.5; erste Funktion: Zellsollwerte per CAN</td><td>Host-Test: Sollwert-Frame → PWM-Sollwert</td></tr>
+      <tr><td class="id">BS-4.5</td><td>Vor dem ersten Flashen: alte Firmware per J-Link auslesen und sichern; erst dann Flash-Test am Master</td><td>Sicherung liegt vor, Rückweg geprüft</td></tr>
+      <tr><td class="id">BS-4.6</td><td>Lücken in neXtBSW sammeln (z. B. FlexIO-Anzeige, Drehgeber) und dem neXtBSW-Koordinator als Aufgaben melden</td><td>Liste übergeben</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <span class="eyebrow">Entscheidungen im Longboard-Entscheidungsboard (21.10.)</span>
+  <div class="tbl"><table>
+    <thead><tr><th>Board-Punkt</th><th>Frage</th><th>Entscheidung</th></tr></thead>
+    <tbody>
+      <tr><td class="id">bs-architektur</td><td>Simulator als CAN-Gerät an einem vorhandenen Interface?</td><td><span class="chip ok">ja</span></td></tr>
+      <tr><td class="id">bs-umfang-v1</td><td>Erste Version nur statische Zellspannungen, dynamisches Zellmodell später?</td><td><span class="chip ok">ja</span></td></tr>
+      <tr><td class="id">bs-grenzwert</td><td>Voreinstellung für die höchste Zellspannung</td><td><span class="chip ok">4,30 V, änderbar bis 5,0 V</span></td></tr>
+      <tr><td class="id">bs-aufbau</td><td>Kanalzahl, CAN-Kanal, Firmware-Stand, andere LabControl-Sitzung</td><td>14 Kanäle; Interface in LabControl wählbar, alle Interfaces; Firmware läuft; Änderungen separat committet</td></tr>
+      <tr><td class="id">bs-workspace</td><td>Ort für Analysen und neue Firmware</td><td><span class="chip ok">Workspace <code>BatterieSimulator</code> angelegt</span></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+</div>

@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Review C-1 Strommessung</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #f3f5f6; --surface: #ffffff; --ink: #172026; --muted: #56656e; --rule: #d2dade;
+  --accent: #1d5f86; --accent-soft: #dcebf4; --warn: #9a5b00; --warn-soft: #f6ead6;
+  --display: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #11171b; --surface: #182127; --ink: #e2e9ed; --muted: #95a5ae; --rule: #2c3840;
+  --accent: #6db3dc; --accent-soft: #17303f; --warn: #e0a64e; --warn-soft: #3a2c16; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #11171b; --surface: #182127; --ink: #e2e9ed; --muted: #95a5ae; --rule: #2c3840;
+  --accent: #6db3dc; --accent-soft: #17303f; --warn: #e0a64e; --warn-soft: #3a2c16; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 15.5px/1.55 var(--body); margin: 0;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 32px 64px; }
+main { max-width: 760px; margin-inline: auto; display: grid; gap: 28px; }
+h1, h2, h3 { font-family: var(--display); margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(26px, 4vw, 34px); line-height: 1.1; }
+h2 { font-size: 21px; }
+h3 { font-size: 17px; }
+p, li { max-width: 68ch; }
+p { margin: 0; }
+.label { font: 600 12px/1.2 var(--display); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+code { font-family: var(--mono); font-size: .92em; }
+header { display: grid; gap: 10px; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 18px; color: var(--muted); font-size: 14px; }
+.summary, .pt { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 14px 18px 16px; display: grid; gap: 8px; min-width: 0; }
+.summary ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+.points { display: grid; gap: 14px; }
+.pt-head { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.pt-id { font: 600 13px var(--mono); color: var(--accent); }
+.rec { display: inline-block; font: 600 12px/1 var(--display); letter-spacing: .05em; text-transform: uppercase; padding: 5px 8px; border-radius: 3px; background: var(--accent-soft); color: var(--accent); }
+.opts { margin: 0; padding-left: 20px; display: grid; gap: 3px; font-size: 14.5px; }
+.limit { background: var(--warn-soft); color: var(--ink); border-left: 3px solid var(--warn); padding: 8px 12px; border-radius: 3px; font-size: 14.5px; }
+.how { font-size: 14px; color: var(--muted); }
+.tw { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font: 600 12px var(--display); letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+td.n { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.diagram { overflow-x: auto; min-width: 0; }
+.diagram svg { display: block; max-width: 100%; height: auto; }
+.diagram text { font: 12px var(--body); fill: var(--ink); }
+.diagram .ax { stroke: var(--muted); stroke-width: 1; }
+.diagram .soll { stroke: var(--muted); stroke-width: 2; stroke-dasharray: 5 4; fill: none; }
+.diagram .out { stroke: var(--accent); stroke-width: 2.5; fill: none; }
+.diagram .thr { stroke: var(--warn); stroke-width: 1.5; stroke-dasharray: 3 3; fill: none; }
+.diagram .floor { fill: var(--warn-soft); }
+</style>
+
+<style>
+/* Statisches Protokoll: Entscheidungen aus der Datenbank des Artefakts */
+.archiv { font-size: 13.5px; color: var(--muted); border-top: 1px solid var(--rule); padding-top: 10px; }
+.status { background: var(--surface); border: 1px solid var(--accent); border-left: 4px solid var(--accent); border-radius: 6px; padding: 12px 16px; display: grid; gap: 4px; }
+.status.offen { border-color: var(--warn); }
+.status strong { font-family: var(--display); font-size: 17px; }
+.pt.decided { border-left: 4px solid var(--accent); }
+.pt.open { border-left: 4px solid var(--warn); }
+.opts.static li { padding: 2px 6px; border-radius: 3px; }
+.opts.static li.chosen { background: var(--accent-soft); outline: 1px solid var(--accent); }
+.opts.static .pick { font: 600 11.5px/1 var(--display); letter-spacing: .05em; text-transform: uppercase; color: var(--surface); background: var(--accent); border-radius: 3px; padding: 3px 6px; margin-right: 6px; white-space: nowrap; }
+.decision { font-size: 14px; background: var(--bg); border: 1px solid var(--rule); border-radius: 4px; padding: 8px 12px; display: grid; gap: 2px; }
+.decision .k { color: var(--muted); }
+.decision.offen { background: var(--warn-soft); border-color: var(--warn); }
+.decision .dev { color: var(--warn); font-weight: 600; }
+pre.mermaid { white-space: pre; overflow-x: auto; font: 12.5px/1.45 var(--mono); background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 10px 12px; margin: 0; }
+</style>
+</head><body>
+<main>
+  <header>
+    <span class="label">BattSimFW · Review · C-1 Strommessung · 30.10.2026</span>
+    <h1>C-1 fängt eine gültige, aber falsche Strommessung nicht</h1>
+    <div class="meta"><span>Stand main 9223da8 (0.3.2)</span><span>Befund aus der Terminplanung (a6), nur Analyse, nichts geändert</span><span>Entscheider: du als Safety Responsible</span></div>
+  </header>
+  <section class="status" aria-label="Stand der Entscheidung"><strong>Abgeschlossen am 30.10.2026, 13:40 Uhr</strong><span>2 von 2 Punkten entschieden; alle wie empfohlen.</span></section>
+  <section class="summary">
+    <h2>Befund</h2>
+    <div class="tw"><table>
+      <tr><th>Fehler</th><th>Was die Firmware sieht</th><th>C-1</th><th>Überlast (Grund 3)</th></tr>
+      <tr><td>ADC-Wandlung scheitert</td><td>Qualifier ungültig</td><td>löst nach 200 ms aus</td><td>–</td></tr>
+      <tr><td>Shunt/Leitung offen</td><td>gültig, etwa 0 A</td><td><strong>nein</strong></td><td>blind</td></tr>
+      <tr><td>Verstärker am Anschlag</td><td>gültig, Vollausschlag</td><td><strong>nein</strong></td><td>löst aus (sicher)</td></tr>
+    </table></div>
+    <p>I_SUPPLY ist in board.yaml ein normaler skalierter ADC-Kanal ohne Sensorgrenzen. Der Qualifier wird nur ungültig, wenn die Wandlung selbst scheitert. Ein offener Shunt oder eine unterbrochene Leitung ergibt eine gültige Messung von etwa 0 A. Die Überlastabschaltung (FAIL Grund 3) ist dann blind, und C-1 merkt es nicht.</p>
+    <p class="how">Bisher ist C-1 nur im SIL-Test geprüft. Am Gerät auslösen ginge nur mit einem Testbau (CurrentInvalid_cycles = 0, zusätzlicher Flash und Rückflash) oder mit einem Test-DID, der den Qualifier erzwingt (Codeänderung). Beides ist nicht umgesetzt.</p>
+  </section>
+  <section class="points">
+    <h2>Punkte</h2>
+    <article class="pt decided" id="S-1"><div class="pt-head"><span class="pt-id">S-1</span><h3>Plausibilität der Strommessung</h3><span class="rec">Empfehlung a</span></div>
+      <p>Mit eingeschalteten, freigegebenen Kanälen fließt immer ein Mindeststrom: Jede Zellkarte hat etwa 1,6 mA Grundlast, und am Gerät wurden bei 3,7 V 0,259 A gemessen. Ein Messwert nahe 0 A in diesem Zustand ist deshalb unplausibel.</p>
+      <ol class="opts static" type="a"><li class="chosen"><span class="pick">gewählt</span>Plausibilitätsprüfung ergänzen: In RUN mit Ausgang ein und mindestens einem freigegebenen Kanal gilt eine Strommessung unter einer Mindestschwelle länger als 200 ms als ungültig → C-1 (FAIL Grund 5). Schwelle als Parameter, aus der Messung beim Termin festgelegt. Dazu SIL-Test, Doku und eigene Freigabe zum Flashen.</li><li>Nur in der Sicherheitsdoku als Restrisiko festhalten (offener Shunt macht die Überlastabschaltung blind).</li><li>Zusätzlich Hardware-Abhilfe prüfen (zweiter Strompfad oder Shunt-Überwachung) als Aufgabe im BatterieSimulator-Workspace.</li></ol>
+      <div class="decision"><span><span class="k">Entscheidung:</span> <strong>a)</strong> wie empfohlen</span><span class="k">Keine Anmerkung.</span><span class="k">Entschieden am 30.10.2026, 13:39 Uhr</span></div></article>
+    <article class="pt decided" id="S-2"><div class="pt-head"><span class="pt-id">S-2</span><h3>C-1 am Gerät nachweisen</h3><span class="rec">Empfehlung a</span></div>
+      <p>Der Pfad Zähler → FAIL Grund 5 ist im SIL-Test geprüft, auch der Wechsel STOP → RUN ohne einen einzigen Schritt mit Ausgang ein.</p>
+      <ol class="opts static" type="a"><li class="chosen"><span class="pick">gewählt</span>Mit S-1 a am Gerät nachweisen: Beim Termin den Mindeststrom messen. Danach mit dem neuen Stand eine Ausgangsstufe ohne Last betreiben und die Schwelle per Parameter so setzen, dass sie anspricht. Kein Eingriff in die Hardware. Das Verfahren legt a6 als Teil von S-1 vor.</li><li>Testbau mit CurrentInvalid_cycles = 0, ein zusätzlicher Flash mit Rückflash</li><li>Nur SIL-Nachweis</li></ol>
+      <div class="decision"><span><span class="k">Entscheidung:</span> <strong>a)</strong> wie empfohlen</span><span class="k">Keine Anmerkung.</span><span class="k">Entschieden am 30.10.2026, 13:40 Uhr</span></div></article>
+  </section>
+
+  <p class="archiv">Statisches Protokoll des claude.ai-Artefakts „Review C-1 Strommessung“ (Version 1793362760-fc12), archiviert am 05.11.2026, siehe <a href="../archiv/artefakte-2026-11.html">Archivindex</a>. Die Auswahl je Punkt, Anmerkung und Zeitpunkt stammen aus der Datenbank des Artefakts (Rohdaten: <a href="2026-10-30-review-c1-strommessung.db.json">2026-10-30-review-c1-strommessung.db.json</a>). Zeiten in Mitteleuropäischer Zeit.</p>
+</main>
+</body></html>

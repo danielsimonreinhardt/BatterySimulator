@@ -1,0 +1,315 @@
+<title>BattSim Firmware-Konzept</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: eine Lesespalte; Datenfluss und Zustände zuerst, dann Bausteine, Befunde, Anforderungen */
+:root{
+  --bg:#f6f7f8; --surface:#ffffff; --fg:#1b2228; --muted:#5b6670; --line:#d9dee3;
+  --accent:#0b6e7f; --accent-soft:#e3f1f3; --task:#4b5fa8; --task-soft:#e8ebf7;
+  --warn:#9a5b00; --warn-soft:#fbf0dc; --bad:#a3262e; --bad-soft:#fbe5e6; --ok:#2f7a3d; --ok-soft:#e5f3e7;
+  --f-display:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12171b; --surface:#1a2127; --fg:#e4e9ed; --muted:#9aa6b0; --line:#2e3840;
+  --accent:#5cc3d3; --accent-soft:#163238; --task:#9aa9ec; --task-soft:#20253a;
+  --warn:#e9b25a; --warn-soft:#352812; --bad:#f08a8f; --bad-soft:#3a1c1e; --ok:#7fcb8b; --ok-soft:#18301c; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12171b; --surface:#1a2127; --fg:#e4e9ed; --muted:#9aa6b0; --line:#2e3840;
+  --accent:#5cc3d3; --accent-soft:#163238; --task:#9aa9ec; --task-soft:#20253a;
+  --warn:#e9b25a; --warn-soft:#352812; --bad:#f08a8f; --bad-soft:#3a1c1e; --ok:#7fcb8b; --ok-soft:#18301c; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.55}
+.wrap{max-width:1060px;margin:0 auto;padding-block:32px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:36px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:2.1rem;font-weight:600}
+h2{font-size:1.45rem;font-weight:600}
+h3{font-size:1.1rem;font-weight:600}
+p{margin:0;max-width:76ch}
+section{display:flex;flex-direction:column;gap:14px}
+.eyebrow{font-family:var(--f-mono);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.meta{color:var(--muted);font-size:.9rem}
+code{font-family:var(--f-mono);font-size:.88em}
+ul{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:4px;max-width:78ch}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.88rem}
+th,td{text-align:left;vertical-align:top;padding:7px 10px;border-bottom:1px solid var(--line)}
+th{font-family:var(--f-mono);font-weight:500;font-size:.74rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);background:var(--bg)}
+tr:last-child td{border-bottom:none}
+td.id{font-family:var(--f-mono);white-space:nowrap;color:var(--accent)}
+td.mono,.mono{font-family:var(--f-mono);font-size:.84rem}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;font-family:var(--f-mono)}
+.chip{display:inline-block;font-family:var(--f-mono);font-size:.72rem;padding:1px 7px;border-radius:10px;white-space:nowrap}
+.chip.bad{background:var(--bad-soft);color:var(--bad)}
+.chip.warn{background:var(--warn-soft);color:var(--warn)}
+.chip.ok{background:var(--ok-soft);color:var(--ok)}
+.chip.info{background:var(--accent-soft);color:var(--accent)}
+.diagram{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px;overflow-x:auto}
+.diagram svg{display:block;width:100%;height:auto;min-width:900px}
+.diagram text{font-family:var(--f-body);font-size:12.5px;fill:var(--fg)}
+.diagram .t{font-weight:600}
+.diagram .s{font-size:11px;fill:var(--muted)}
+.diagram .m{font-family:var(--f-mono);font-size:10.5px;fill:var(--muted)}
+.diagram .tk{font-family:var(--f-mono);font-size:11px;fill:var(--task)}
+.diagram .lane{fill:var(--task-soft);stroke:var(--task);stroke-width:1.2}
+.diagram .box{fill:var(--surface);stroke:var(--muted);stroke-width:1.2}
+.diagram .boxa{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.3}
+.diagram .boxw{fill:var(--bad-soft);stroke:var(--bad);stroke-width:1.3}
+.diagram .w{stroke:var(--muted);stroke-width:1.4;fill:none}
+.diagram .wa{stroke:var(--accent);stroke-width:1.7;fill:none}
+.diagram .ah{fill:var(--muted)} .diagram .aha{fill:var(--accent)}
+pre.mermaid{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px;overflow-x:auto;margin:0}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+@media (max-width:720px){.two{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.formula{font-family:var(--f-mono);font-size:.86rem;background:var(--bg);border-radius:4px;padding:6px 8px;overflow-x:auto;white-space:nowrap}
+.four{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.card h3{font-size:1rem}
+.card.k{border-top:3px solid var(--accent)}
+.card.w{border-top:3px solid var(--warn)}
+.note{background:var(--accent-soft);border-left:3px solid var(--accent);padding:10px 14px;border-radius:0 6px 6px 0;max-width:86ch}
+.note.w{background:var(--warn-soft);border-left-color:var(--warn)}
+pre.tree{font-family:var(--f-mono);font-size:.84rem;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px 14px;margin:0;overflow-x:auto;line-height:1.5}
+.tree .c{color:var(--muted)}
+td.stage{font-family:var(--f-display);font-weight:600;font-size:1.05rem;color:var(--accent);white-space:nowrap}
+</style>
+
+<div class="wrap">
+
+<header style="display:flex;flex-direction:column;gap:10px">
+  <span class="eyebrow">BatterieSimulator · Firmware-Konzept BS-4 · Entwurf 22.10.2026</span>
+  <h1>Neue Firmware für den Master</h1>
+  <p>Wie die neue Firmware des Batterie-Simulators auf neXtBSW aufgebaut wird: Komponenten, Betriebsarten, Verhalten bei Start und Ausfall, CAN, Regelung und Kalibrierung, was neXtBSW schon liefert und in welchen Stufen wir vorgehen. Zum Besprechen; nach der Freigabe wird daraus BS-4.1 bis 4.4.</p>
+  <p class="meta">Grundlage: Anforderungen FW-01…FW-16 (Firmware-Analyse, freigegeben 22.10.), Pin-Tabelle und Aufbau wie gebaut (Hardware-Analyse System), Gerätetest BS-1.8, neXtBSW <code>origin/dev</code> 3ce5fdb2 (Doku <code>doc/guide/customer-project.md</code>, <code>doc/reference/*.md</code>). Was hier „Vorschlag“ heißt, ist noch nicht entschieden.</p>
+</header>
+
+<section>
+  <h2>Auf einen Blick</h2>
+  <div class="four">
+    <div class="card k"><h3>Ziel</h3><p>Die alte Simulink-Firmware ersetzen. Der LabControl-Treiber und die DBC bleiben unverändert gültig; was neu ist, kommt unter neuen Kennungen dazu.</p></div>
+    <div class="card k"><h3>Was besser wird</h3><p>Ausgänge 300 ms nach Ausfall von 0x130 aus (heute 4,5–6 s), sicherer Start mit 0 V, Watchdog, Rücksetzen per CAN, Regelung und Kalibrierung je Kanal, Flashen per CAN.</p></div>
+    <div class="card k"><h3>Wie</h3><p>Eigenes Kundenprojekt im Workspace BatterieSimulator, neXtBSW als Submodul. Ablauflogik in Simulink (wie bisher modellbasiert), Treiber in neXtBSW.</p></div>
+    <div class="card w"><h3>Größte Hürden</h3><p>neXtBSW lief noch nie auf einem S32K146, kann 14 einzelne PWM-Ausgänge noch nicht, und die Alive-Prüfung ohne CRC fehlt. Das sind neXtBSW-Aufgaben für den Koordinator.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>Aufbau</h2>
+<pre class="mermaid">
+flowchart LR
+  subgraph HW["Master S32K146 (gebaut V1)"]
+    direction TB
+    PWM["14 × PWM<br/>FTM0/3/4/5"]
+    EN["14 × ENABLE<br/>14 × STATUS<br/>14 × SELECT"]
+    ADC["15 × ADC<br/>Zellen + 48 V"]
+    IO["Tasten, LIMIT, LEDs"]
+    CAN0["FlexCAN0<br/>500 kbit/s"]
+    DSP["FlexIO-I²C<br/>Anzeige 0x71"]
+    QD["FTM1/FTM2<br/>Drehgeber"]
+  end
+  subgraph BSW["neXtBSW"]
+    direction TB
+    DRV["BSP-Treiber<br/>PWM · ADC · DIO · CAN"]
+    COM["COM aus DBC<br/>Qualifier, Timeout"]
+    SAFE["Start, Watchdog,<br/>sicherer Zustand"]
+    DIAG["UDS · DEM · NvM<br/>Bootloader"]
+  end
+  subgraph APP["Anwendung (SWCs)"]
+    direction TB
+    MODE["BattSimMode<br/>Betriebsarten"]
+    CELL["CellChannels<br/>Stellen · Messen · Regeln"]
+    SUP["SupplyMonitor<br/>48 V Überlast"]
+    MDL["CellModel<br/>2RC (Stufe D)"]
+    HMI["Hmi (C++)<br/>Anzeige, Drehgeber"]
+  end
+  HW --- DRV
+  DRV --> COM
+  COM <--> MODE
+  DRV <--> CELL
+  DRV --> SUP
+  MODE --> CELL
+  SUP --> MODE
+  MDL --> CELL
+  HMI <--> MODE
+  SAFE -.-> DRV
+  DIAG <--> CELL
+</pre>
+  <p>Die Anwendung sieht keine Register. Sie liest und schreibt RTE-Ports; die Pins stehen in <code>board.yaml</code>, Takte, CAN und Diagnose in <code>project.yaml</code>/<code>rte.yaml</code>/<code>diag.yaml</code>. Damit ist der gebaute Master V1 nur eine Board-Beschreibung: eine korrigierte Leiterplatte bekommt eine zweite <code>board.yaml</code>, die Anwendung bleibt.</p>
+</section>
+
+<section>
+  <h2>Software-Komponenten</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>SWC</th><th>Aufgabe</th><th>Takt</th><th>Umsetzung</th><th>Anforderungen</th></tr></thead>
+    <tbody>
+      <tr><td class="id">BattSimMode</td><td>Zustandsautomat Standby / Hand / Fernsteuerung / Zellmodell / FAIL, FAIL-Grund, Ausgang ein/aus, Freigaben je Kanal, Sollwerte auf 0 bei Standby und FAIL</td><td class="num">10 ms</td><td>Simulink (Stateflow)</td><td>FW-01, 03, 04, 16</td></tr>
+      <tr><td class="id">CellChannels</td><td>je Kanal: Sollwert begrenzen → Kennlinie und Kalibrierung → PI-Regler → Tastgrad; ADC → Kalibrierung → Istwert; Status, Taste der Karte</td><td class="num">10 ms</td><td>Simulink, Kanal als Vektor (14)</td><td>FW-06, 07, 15</td></tr>
+      <tr><td class="id">SupplyMonitor</td><td>48-V-Strom filtern, Überlast 1,28 A / Rückkehr unter 1,08 A, LIMIT lesen</td><td class="num">10 ms</td><td>Simulink</td><td>FW-08, 09</td></tr>
+      <tr><td class="id">CellModel</td><td>OCV + Rs + 2 RC wie heute, Strom aus 0x131</td><td class="num">100 ms</td><td>Simulink</td><td>FW-10 (Stufe D)</td></tr>
+      <tr><td class="id">Hmi</td><td>Tasten entprellen, Drehgeber, LEDs, Anzeige über I²C</td><td class="num">10 ms</td><td>C++ (Anzeige hat in neXtBSW keinen RTE-Port)</td><td>FW-11, 12</td></tr>
+    </tbody>
+  </table></div>
+  <p class="meta">CAN-Senden 100 ms und Zellbotschaften 1 s macht COM nach der DBC. Die Steuerung läuft mit 10 ms statt heute 100 ms: Die Reaktion auf einen neuen Sollwert sinkt von bis zu 100 ms auf 10 ms, die Glättung auf der Karte (0,2–0,3 s) bleibt.</p>
+</section>
+
+<section>
+  <h2>Betriebsarten</h2>
+<pre class="mermaid">
+stateDiagram-v2
+    direction LR
+    [*] --> Standby: Start, Sollwerte 0 V
+    Standby --> Fernsteuerung: REMOTE=2, MODE=2<br/>oder Taste REMOTE
+    Standby --> Hand: Taste ALL ON/OFF<br/>(ab Stufe D)
+    Standby --> Zellmodell: REMOTE=2, MODE=3<br/>(ab Stufe D)
+    state Fernsteuerung {
+        [*] --> Stop
+        Stop --> Run: OUTPUT=2
+        Run --> Stop: OUTPUT=1
+    }
+    Fernsteuerung --> Standby: REMOTE=1 oder MODE=1<br/>oder Taste REMOTE
+    Fernsteuerung --> Zellmodell: MODE=3
+    Zellmodell --> Fernsteuerung: MODE=2
+    Hand --> Standby: Taste ALL ON/OFF
+    Fernsteuerung --> FAIL: in Run 0x130 fehlt 300 ms<br/>oder Alive falsch; Überlast
+    Hand --> FAIL: Überlast
+    Zellmodell --> FAIL: Überlast oder 0x130 fehlt
+    FAIL --> Standby: MODE=1 oder Taste ALL ON/OFF,<br/>wenn Strom < 1,08 A
+</pre>
+  <div class="tbl"><table>
+    <thead><tr><th>Thema</th><th>Heute</th><th>Neu</th></tr></thead>
+    <tbody>
+      <tr><td>Ausfall 0x130 in Run</td><td>Ungültig nach 1,5–3 s, FAIL 3 s später, gemessen 5,16 s</td><td>Timeout 300 ms (3 Zyklen), Ausgänge im selben 10-ms-Schritt aus, dann FAIL. In Stop wie heute kein FAIL.</td></tr>
+      <tr><td>Alive-Zähler</td><td>wirkungslos (ODER)</td><td>wirksam: Sprung ≠ +1 zweimal hintereinander = ungültig</td></tr>
+      <tr><td>Überlast</td><td>nur per Taste zurück</td><td>auch per CAN (MODE=1), sobald der Strom unter 1,08 A liegt</td></tr>
+      <tr><td>Sollwerte</td><td>starten mit 0,5 V, Handbetrieb übernimmt den letzten CAN-Wert</td><td>0 V beim Start, beim Eintritt in Standby und in FAIL</td></tr>
+      <tr><td>Zellfreigabe / Zellstatus</td><td>1 wirkt als „ein“, Status 0 = ein</td><td>nach DBC: 0 und 1 = aus, 2 = ein; Status 2 = ein. Der LabControl-Treiber sendet schon 0/2 und liest 0 und 2 als „ein“, er bleibt gültig.</td></tr>
+      <tr><td>Zellbotschaften 0x100–0x105 fehlen</td><td>letzte Werte gelten weiter</td><td>wie heute (0x130 ist der Lebenszeichen-Kanal); Qualifier je Botschaft in der neuen Statusbotschaft</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>Start und Ausfälle</h2>
+<pre class="mermaid">
+flowchart LR
+  R["Reset<br/>Pins hochohmig"] --> HWS["Hardware hält Kanal aus<br/>ISO6742F: Ruhepegel low<br/>gemessen: Puls ≈ 5,4 V / 40 ms"]
+  R --> BOOT["Bootloader<br/>(ab Stufe C)"]
+  BOOT --> ST["neXtBSW-Start<br/>MPU, Watchdog-Test, WDOG ein"]
+  ST --> PIN["Pins setzen<br/>ENABLE high = Kanal aus<br/>PWM high = Sollwert 0"]
+  PIN --> APP["Anwendung<br/>Standby, 0 V"]
+  APP --> WD{"Watchdog<br/>bedient?"}
+  WD -- nein --> R
+</pre>
+  <div class="tbl"><table>
+    <thead><tr><th>Ereignis</th><th>Reaktion</th><th>Zeit bis Ausgang aus</th></tr></thead>
+    <tbody>
+      <tr><td>0x130 fehlt oder Alive falsch (Run, Zellmodell)</td><td>PWM aus, alle ENABLE aus, FAIL mit Grund</td><td class="num">≤ 310 ms</td></tr>
+      <tr><td>48-V-Strom &gt; 1,28 A</td><td>wie oben, Grund „Überlast“</td><td class="num">≤ 10 ms + Filter</td></tr>
+      <tr><td>Software hängt</td><td>Watchdog-Reset; Hardware hält die Kanäle aus, danach Standby mit Grund „Watchdog“ in der Statusbotschaft</td><td class="num">Watchdog-Zeit (in BS-4.3 festlegen)</td></tr>
+      <tr><td>Istwert weicht ab <span class="chip warn">Vorschlag FW-17</span></td><td>Kanal aus, wenn der Istwert länger als 100 ms mehr als 0,2 V über dem Sollwert liegt; schützt den Prüfling bei defekter Karte</td><td class="num">≈ 100 ms</td></tr>
+      <tr><td>Sollwert über Grenze</td><td>auf die Grenze begrenzen (Parameter, Vorgabe 5,0 V); der 4,30-V-Grenzwert bleibt in LabControl</td><td class="num">—</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note w">Was die Firmware nicht lösen kann: In der Zeit zwischen Reset und Pin-Initialisierung sind die Pins hochohmig, dann entscheidet die Hardware (S2). Gemessen ist der Reset an der Supply (≈ 5,4 V für 40 ms); der Reset des Masters bei vorhandenen 5 V (Debugger, Watchdog) ist noch nicht gemessen. Bis dahin gilt die Regel aus der Hardware-Analyse: Flashen und Debuggen nur ohne Prüfling am Zellabgriff.</p>
+</section>
+
+<section>
+  <h2>CAN und Diagnose</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Kennung</th><th>Richtung</th><th>Inhalt</th><th>Stand</th></tr></thead>
+    <tbody>
+      <tr><td class="id">0x100–0x105, 0x130–0x132</td><td>→ Simulator</td><td>wie <code>BattSimV1.dbc</code></td><td><span class="chip ok">unverändert</span></td></tr>
+      <tr><td class="id">0x110–0x115, 0x120</td><td>← Simulator</td><td>wie <code>BattSimV1.dbc</code>, Zellstatus jetzt nach DBC</td><td><span class="chip ok">unverändert</span></td></tr>
+      <tr><td class="id">0x121</td><td>← Simulator, 100 ms</td><td>Firmware-Version, 48-V-Strom, Überlast, LIMIT, FAIL-Grund, Qualifier der Steuerbotschaften, Regler ein/aus</td><td><span class="chip warn">Vorschlag FW-13</span></td></tr>
+      <tr><td class="id">0x7E1 / 0x7E9</td><td>UDS</td><td>Diagnose und Bootloader (Kalibrierung, Version, Fehlerspeicher, Flashen)</td><td><span class="chip warn">Vorschlag</span></td></tr>
+      <tr><td class="id">0x7F2 / 0x7F3</td><td>XCP</td><td>Messen und Verstellen bei der Inbetriebnahme</td><td><span class="chip warn">Vorschlag</span></td></tr>
+    </tbody>
+  </table></div>
+  <p>neXtBSW belegt für Diagnose standardmäßig 0x7E0/0x7E8 und für XCP 0x7F0/0x7F1. Weil der Simulator den Bus mit dem BCU-Board teilen soll, bekommt er eigene Kennungen; der Bootloader hört später fest darauf. Die BCU hat noch keine festgelegten Kennungen, das prüfe ich, sobald sie feststehen. Die erweiterte DBC (V1 plus 0x121) heißt <code>BattSimV2.dbc</code>; LabControl kann bei V1 bleiben.</p>
+</section>
+
+<section>
+  <h2>Stellen, Messen, Regeln, Kalibrieren</h2>
+<pre class="mermaid">
+flowchart LR
+  SW["Sollwert<br/>CAN / Hand / Modell"] --> LIM["Begrenzen<br/>0…Grenze"]
+  LIM --> FF["Kennlinie<br/>+ Kalibrierung Stellen"]
+  LIM --> PI["PI-Regler<br/>Korrektur ±0,1 V"]
+  FF --> SUM(("+"))
+  PI --> SUM
+  SUM --> PWMO["Tastgrad<br/>FTM, aktiv low"]
+  PWMO --> CARD["Zellkarte<br/>LT3080"]
+  CARD --> AMC["AMC1311<br/>ADC"]
+  AMC --> CAL["Kalibrierung Messen<br/>Filter"]
+  CAL --> IST["Istwert<br/>0x110–0x115"]
+  CAL --> PI
+</pre>
+  <ul>
+    <li><b>Vorsteuerung bleibt:</b> der Tastgrad kommt wie heute aus der Kennlinie, zusätzlich mit Offset und Steigung je Kanal. Der Regler korrigiert nur den Rest und ist auf ±0,1 V begrenzt. Fällt die Messung aus, kann er den Kanal nicht hochtreiben.</li>
+    <li><b>Regler</b> je Kanal, 10 ms, mit Anti-Windup. Er steht still, wenn der Kanal aus ist oder LIMIT meldet (eine gemeinsame Leitung für alle Kanäle). Abschaltbar per Diagnose.</li>
+    <li><b>Kalibrierung</b> je Kanal: Offset und Steigung für Stellen und für Messen, 14 × 4 Werte mit Prüfsumme im nichtflüchtigen Speicher. Ablauf: je Kanal 1,0 V und 4,0 V stellen, mit Multimeter am Zellabgriff messen, per UDS schreiben. Ohne Kalibrierung gilt die gemeinsame Kennlinie von heute.</li>
+    <li><b>Ziel</b> nach Gerätetest: heute ±0,1 V Rückmeldung und −15…+40 mV am Ausgang; mit Kalibrierung und Regler sollten wenige mV erreichbar sein (Auflösung 0,26 mV Stellen, ≈ 1,25 mV Messen). Grenze ist der AMC1311 und der Offset der Karte von Kanal 13.</li>
+  </ul>
+  <p class="note">Für den nichtflüchtigen Speicher muss der FlexNVM des Masters partitioniert werden (wie beim Eval Board 2 KB EEPROM-Emulation). Das ist nur durch komplettes Löschen umkehrbar und kommt deshalb mit eigener Freigabe vor Stufe C, nach der Sicherung der alten Firmware.</p>
+</section>
+
+<section>
+  <h2>Was neXtBSW liefert und was fehlt</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Baustein</th><th>Stand in neXtBSW</th><th>Für den Simulator</th></tr></thead>
+    <tbody>
+      <tr><td>Kundenprojekt außerhalb des Repos</td><td><span class="chip ok">vorhanden</span> Submodul, <code>nextbsw.yaml</code>, eigene Boards</td><td>passt direkt</td></tr>
+      <tr><td>S32K146 LQFP-144</td><td><span class="chip warn">teilweise</span> Derivat und Pinmux vorhanden, Linker/Start generisch; kein Projekt, nie gebaut oder am Gerät</td><td><b>G1</b>: erstes S32K146-Ziel, Taktbaum 16 MHz → 80 MHz, RAM-Variante des FS32K146HAMLQ prüfen</td></tr>
+      <tr><td>PWM</td><td><span class="chip bad">fehlt</span> nur komplementäre Paare mit Totzeit (Motor)</td><td><b>G2</b>: 14 einzelne Ausgänge auf 4 FTM, 1 kHz, aktiv low, sicherer Zustand „Sollwert 0“</td></tr>
+      <tr><td>Alive-Prüfung</td><td><span class="chip bad">fehlt</span> nur als Teil eines E2E-Profils mit CRC</td><td><b>G3</b>: 4-Bit-Zähler ohne CRC als Qualifier-Option</td></tr>
+      <tr><td>ADC, Digital-Ein/Ausgänge</td><td><span class="chip ok">vorhanden</span> <code>adc[]</code> mit VREFH, <code>dio</code> mit Ruhepegel und Pull</td><td>15 ADC-Kanäle, 32 Ausgänge (ENABLE, SELECT, LEDs), 19 Eingänge (STATUS, Tasten, LIMIT)</td></tr>
+      <tr><td>CAN aus DBC, Timeout, Qualifier</td><td><span class="chip ok">vorhanden</span> dbcgen/rtegen, <code>timeout_ms</code>, <code>on_error: hold</code></td><td>passt</td></tr>
+      <tr><td>Watchdog, sicherer Start</td><td><span class="chip ok">vorhanden</span> WDOG vor BSP-Init, Ausgänge starten inaktiv</td><td>Projekt-<code>safety:</code> verlangt drei Pins (sicherer Ausgang, Lock, Test) – am Master in BS-4.2 klären</td></tr>
+      <tr><td>UDS, Fehlerspeicher, NvM, Bootloader</td><td><span class="chip ok">vorhanden</span> aus YAML erzeugt; Bootloader nur am S32K144 geprüft</td><td><b>G4</b>: Bootloader am S32K146 einmal prüfen</td></tr>
+      <tr><td>FlexIO-I²C</td><td><span class="chip warn">teilweise</span> Treiber vorhanden, nur gegen Nachbildung geprüft, kein RTE-Port</td><td><b>G5</b> (Stufe D): erster Einsatz am Gerät</td></tr>
+      <tr><td>Quadraturdecoder FTM1/FTM2</td><td><span class="chip bad">fehlt</span></td><td><b>G6</b> (Stufe D): Drehgeber</td></tr>
+      <tr><td>Simulink-SWC (AUTOSAR Blockset) und C-SWC</td><td><span class="chip ok">vorhanden</span> <code>swc.yaml</code>, erzeugter Code eingecheckt</td><td>passt</td></tr>
+    </tbody>
+  </table></div>
+  <p>G1–G6 sind seit 23.10. neXtBSW-Aufgaben (dev c0e5e27b): G1 = PLAT-123, G2 = IO-116, G3 = COM-54 (mit Safety-Bewertung, weil ein Zähler ohne CRC weniger abdeckt als E2E), alle P2; G4 = BL-47, G5 = IO-117, G6 = IO-118, alle P3. G1–G3 braucht schon Stufe B. Im Simulator-Projekt baue ich nur, was kundenspezifisch ist; ein Behelfstreiber für die PWM im Kundenprojekt wäre möglich, wenn G2 lange dauert.</p>
+</section>
+
+<section>
+  <h2>Repository</h2>
+<pre class="tree">BatterieSimulator/                  <span class="c"># bestehender Workspace, wird Kundenprojekt</span>
+├─ nextbsw/                         <span class="c"># Submodul neXtBSW_development, fester Commit</span>
+├─ nextbsw.yaml                     <span class="c"># Pin auf neXtBSW, Suchpfade</span>
+├─ CMakeLists.txt, CMakePresets.json
+├─ boards/battsim_master_v1/        <span class="c"># gebaut: LIMIT an PTE25, Tasten PTD11/PTD12</span>
+│  └─ board.yaml, README.md
+├─ projects/battsim_master/
+│  ├─ project.yaml, rte.yaml, diag.yaml
+│  └─ BattSimV2.dbc                 <span class="c"># V1 + 0x121</span>
+├─ swc/BattSimMode, CellChannels, SupplyMonitor, CellModel, Hmi
+├─ doc/                             <span class="c"># Analysen, Konzept, Plan wie bisher</span>
+└─ tools/                           <span class="c"># slx_dump, netlist_dump, Kalibrier-Skript</span></pre>
+</section>
+
+<section>
+  <h2>Stufen</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Stufe</th><th>Inhalt</th><th>Gerät nötig</th><th>Fertig, wenn</th></tr></thead>
+    <tbody>
+      <tr><td class="stage">A</td><td>Gerüst (BS-4.1–4.4): Submodul, <code>board.yaml</code> V1, <code>rte.yaml</code> mit DBC, SWC-Gerüste, Host-Tests; G1–G6 an den Koordinator</td><td>nein</td><td>baut für Host und Target, <code>nxconfig check</code> ohne Befund, Host-Test Sollwert-Frame → Tastgrad</td></tr>
+      <tr><td class="stage">B</td><td>Gleichwertiger Ersatz: Betriebsarten ohne Hand und Zellmodell, CAN nach DBC mit 300 ms, gesteuert über die Kennlinie, Istwerte, Tasten, LEDs, LIMIT, Überlast, Watchdog, sicherer Start (FW-01…05, 08, 09, 15, 16)</td><td>ja, J-Link</td><td>alte Firmware gesichert und Rückweg geprüft; <code>check_battsim.py --hardware --remote</code> unverändert grün; Abschaltzeit ≤ 310 ms gemessen</td></tr>
+      <tr><td class="stage">C</td><td>Genauigkeit und Diagnose: FlexNVM (eigene Freigabe), Kalibrierung, Regler, 0x121, UDS auf eigenen Kennungen, Bootloader (FW-06, 07, 13, 14)</td><td>ja</td><td>Fehler je Kanal nach Kalibrierung gemessen; Flashen per CAN aus LabControl-Umgebung</td></tr>
+      <tr><td class="stage">D</td><td>Bedienung und Zellmodell: Drehgeber, Anzeige, Handbetrieb, Zellmodell, LabControl BS-1.9 (FW-10, 11, 12)</td><td>ja</td><td>Handbetrieb wie heute, Zellmodell gegen das alte Modell verglichen</td></tr>
+    </tbody>
+  </table></div>
+  <p>Zwischen B und D fehlt am Gerät der Handbetrieb (Drehgeber und Anzeige brauchen G5/G6). Die Taste ALL ON/OFF schaltet in dieser Zeit nur den Ausgang aus und setzt FAIL zurück. Wer den Handbetrieb vorher braucht, flasht die gesicherte alte Firmware zurück.</p>
+</section>
+
+<section>
+  <h2>Zu entscheiden</h2>
+  <ul>
+    <li><b>Konzept und Stufen</b> – Board-Punkt <code>bs-fw-konzept</code>, darin auch die Vorschläge FW-13 (0x121), FW-17 (Überspannungsabschaltung je Kanal) und die Kennungen 0x7E1/0x7E9, 0x7F2/0x7F3.</li>
+    <li><b>Später, mit eigener Freigabe:</b> erstes Flashen am Master (Stufe B, nach J-Link-Sicherung), FlexNVM-Partitionierung (Stufe C).</li>
+  </ul>
+</section>
+
+</div>

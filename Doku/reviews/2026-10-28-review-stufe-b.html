@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Review BattSim Stufe B</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one reading column, review points as a numbered register (the order is the review order), decision summary on top */
+:root {
+  --bg: #f3f5f6; --surface: #ffffff; --ink: #172026; --muted: #56656e; --rule: #d2dade;
+  --accent: #1d5f86; --accent-soft: #dcebf4; --warn: #9a5b00; --warn-soft: #f6ead6;
+  --display: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #11171b; --surface: #182127; --ink: #e2e9ed; --muted: #95a5ae; --rule: #2c3840;
+  --accent: #6db3dc; --accent-soft: #17303f; --warn: #e0a64e; --warn-soft: #3a2c16; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #11171b; --surface: #182127; --ink: #e2e9ed; --muted: #95a5ae; --rule: #2c3840;
+  --accent: #6db3dc; --accent-soft: #17303f; --warn: #e0a64e; --warn-soft: #3a2c16; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 15.5px/1.55 var(--body); margin: 0;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 32px 64px; }
+main { max-width: 760px; margin-inline: auto; display: grid; gap: 28px; }
+h1, h2, h3 { font-family: var(--display); margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(28px, 4vw, 38px); line-height: 1.1; }
+h2 { font-size: 21px; }
+p, li { max-width: 68ch; }
+p { margin: 0; }
+.label { font: 600 12px/1.2 var(--display); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+code, .mono { font-family: var(--mono); font-size: .92em; }
+header { display: grid; gap: 10px; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 18px; color: var(--muted); font-size: 14px; }
+.summary { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 16px 18px; display: grid; gap: 10px; }
+.summary ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+.points { display: grid; gap: 14px; counter-reset: p; }
+.pt { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 14px 18px 16px; display: grid; gap: 8px; min-width: 0; }
+.pt-head { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.pt-id { font: 600 13px var(--mono); color: var(--accent); }
+.rec { display: inline-block; font: 600 12px/1 var(--display); letter-spacing: .05em; text-transform: uppercase; padding: 5px 8px; border-radius: 3px; background: var(--accent-soft); color: var(--accent); }
+.opts { margin: 0; padding-left: 20px; display: grid; gap: 3px; font-size: 14.5px; }
+.limit { background: var(--warn-soft); color: var(--ink); border-left: 3px solid var(--warn); padding: 8px 12px; border-radius: 3px; font-size: 14.5px; }
+.how { font-size: 14px; color: var(--muted); }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+.tw { overflow-x: auto; }
+th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font: 600 12px var(--display); letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+td.n { font-variant-numeric: tabular-nums; font-family: var(--mono); white-space: nowrap; }
+</style>
+
+<style>
+/* Statisches Protokoll: Entscheidungen aus der Datenbank des Artefakts */
+.archiv { font-size: 13.5px; color: var(--muted); border-top: 1px solid var(--rule); padding-top: 10px; }
+.status { background: var(--surface); border: 1px solid var(--accent); border-left: 4px solid var(--accent); border-radius: 6px; padding: 12px 16px; display: grid; gap: 4px; }
+.status.offen { border-color: var(--warn); }
+.status strong { font-family: var(--display); font-size: 17px; }
+.pt.decided { border-left: 4px solid var(--accent); }
+.pt.open { border-left: 4px solid var(--warn); }
+.opts.static li { padding: 2px 6px; border-radius: 3px; }
+.opts.static li.chosen { background: var(--accent-soft); outline: 1px solid var(--accent); }
+.opts.static .pick { font: 600 11.5px/1 var(--display); letter-spacing: .05em; text-transform: uppercase; color: var(--surface); background: var(--accent); border-radius: 3px; padding: 3px 6px; margin-right: 6px; white-space: nowrap; }
+.decision { font-size: 14px; background: var(--bg); border: 1px solid var(--rule); border-radius: 4px; padding: 8px 12px; display: grid; gap: 2px; }
+.decision .k { color: var(--muted); }
+.decision.offen { background: var(--warn-soft); border-color: var(--warn); }
+.decision .dev { color: var(--warn); font-weight: 600; }
+pre.mermaid { white-space: pre; overflow-x: auto; font: 12.5px/1.45 var(--mono); background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 10px 12px; margin: 0; }
+</style>
+</head><body>
+<main>
+  <header>
+    <span class="label">BattSimFW · Review · 28.10.2026</span>
+    <h1>BattSim Stufe B: Annahmen der Modelllogik und Befunde</h1>
+    <div class="meta"><span>Zweig stufe-b-ersatz (00cd989, a7272a0, 3c331b1), noch nicht auf main</span><span>Prüfstand: Host-Test (SIL) und Target-Bau, nichts am Gerät</span><span>Entscheider: du als Safety Responsible</span></div>
+  </header>
+  <section class="status" aria-label="Stand der Entscheidung"><strong>Abgeschlossen am 28.10.2026, 16:41 Uhr</strong><span>10 von 10 Punkten entschieden; alle wie empfohlen.</span></section>
+  <section class="summary">
+    <h2>Was steht</h2>
+    <ul>
+      <li><strong>Hardware:</strong> 14 einzelne PWM-Ausgänge SET_01…SET_14 auf FTM5/FTM4/FTM3/FTM0, 1 kHz, aktiv low, sicherer Zustand Pin high (IO-116). Ohne FTM3_CH5 und FTM4_CH4.</li>
+      <li><strong>Logik:</strong>
+        <ul>
+          <li><code>BattSimMode</code>: Zustände STANDBY, STOP, RUN und FAIL mit Grund. Fällt 0x130 in RUN aus, sind die Ausgänge im selben 10-ms-Schritt aus.</li>
+          <li><code>CellChannels</code>: Sollwert über die Kennlinie der alten Firmware zum Tastgrad.</li>
+          <li><code>SupplyMonitor</code>: Überlast 1,28 A, Rücksetzen unter 1,08 A.</li>
+        </ul>
+      </li>
+      <li><strong>CAN:</strong> 0x120, STATUS_CELL16 und 0x121 werden jetzt gesendet. Die Alive-Prüfung empfängt 0..15 mit max_delta 2, das ist Vorschlag a der offenen Board-Frage <code>bs-alive-rx</code>.</li>
+      <li><strong>Geprüft:</strong>
+        <ul>
+          <li>a6: nxconfig ok mit 8 Warnungen. Die 4 neuen sind Punkt B-1.</li>
+          <li>Bau ohne Compiler-, Linker- und rtegen-Warnung, Workspace-Tests 8/8 mit 770 Fällen, davon 546 im neuen SIL-Test. Nachgebaut habe ich selbst.</li>
+          <li>Den Zustandsautomaten habe ich im Quelltext gelesen (<code>BattSimMode_create.m</code>).</li>
+        </ul>
+      </li>
+    </ul>
+    <p class="how">Wie die alte Firmware: Wo „wie bisher“ steht, hat a6 das Verhalten aus <code>firmware-analyse.html</code> übernommen. Das Gerät selbst prüft erst der Geräteteil von Stufe B.</p>
+  </section>
+  <section class="points">
+    <h2>Punkte</h2>
+    <article class="pt decided" id="B-1"><div class="pt-head"><span class="pt-id">B-1</span><h3>Kein zweiter Abschaltweg für die PWM-Gruppen (DFA-4)</h3><span class="rec">Empfehlung a</span></div>
+      <p>nxconfig warnt je Gruppe (4×): Kein <code>safe_off</code>-Ausgang auf einem anderen Peripheriebaustein. Taktgatter oder FTM-Fehler legen sonst auch die Abschaltung lahm. Als zweiter Weg kommt der ENABLE-Pin je Kanal (EN_01…EN_14, GPIO) in Frage, er lässt sich heute aber nur als <code>dio</code> der Anwendung führen und nicht als <code>safe_off</code> einer single-Gruppe.</p>
+      <p class="limit">ENABLE ist nur dann ein Abschaltweg, wenn sein Ruhepegel im Reset wirklich „aus“ bedeutet. EN ist aktiv low, ein ISO6742F gibt ohne Eingang low aus. Das ist genau die offene Pull-up-Frage aus IO-116 (Board 26.10., c), Befund S2 beim Geräteteil.</p>
+      <ol class="opts static" type="a"><li class="chosen"><span class="pick">gewählt</span>Warnungen für Stufe B bewusst hinnehmen, Begründung in die BattSimFW-Doku. Folgeaufgabe in neXtBSW: <code>dio</code>-Ausgänge als <code>safe_off</code> einer single-Gruppe zuordnen. Pegel von EN im Reset beim Geräteteil messen.</li><li>Hinnehmen ohne Folgeaufgabe</li><li>Geräteteil erst, wenn neXtBSW die Zuordnung kann</li></ol>
+      <div class="decision"><span><span class="k">Entscheidung:</span> <strong>a)</strong> wie empfohlen</span><span class="k">Keine Anmerkung.</span><span class="k">Entschieden am 28.10.2026, 16:35 Uhr</span></div></article>
+    <article class="pt decided" id="B-2"><div class="pt-head"><span class="pt-id">B-2</span><h3>Ungültige Strommessung (ADC-Qualifier ≠ OK)</h3><span class="rec">Empfehlung a</span></div>
+      <p>Heute ignoriert <code>SupplyMonitor</code> den Wert dann, es gibt also kein Fail-safe für eine ausgefallene Strommessung. Die Überlast-Abschaltung wäre in diesem Fall blind. Die alte Firmware prüft das ebenso wenig.</p>
+      <ol class="opts static" type="a"><li class="chosen"><span class="pick">gewählt</span>So lassen, in der Safety-Bewertung von Stufe C behandeln</li><li>Schon jetzt: ungültige Strommessung in RUN → FAIL mit neuem Grund 5</li></ol>
+      <div class="decision"><span><span class="k">Entscheidung:</span> <strong>a)</strong> wie empfohlen</span><span class="k">Keine Anmerkung.</span><span class="k">Entschieden am 28.10.2026, 16:35 Uhr</span></div></article>
+    <article class="pt decided" id="B-3"><div class="pt-head"><span class="pt-id">B-3</span><h3>Filter der Überlast</h3><span class="rec">Empfehlung a</span></div>
+      <p>Der Strom wird mit 1/128 je 10 ms gefiltert (τ ≈ 1,3 s) wie bei der alten Firmware. Bei 1,5 A spricht die Überlast also erst nach etwa 2,5 s an. Der Istwert der Zellen wird mit 0,1 je 10 ms gefiltert.</p>
+      <ol class="opts static" type="a"><li class="chosen"><span class="pick">gewählt</span>Wie die alte Firmware</li><li>Schneller (Zeitkonstante bitte in der Anmerkung)</li></ol>
+      <div class="decision"><span><span class="k">Entscheidung:</span> <strong>a)</strong> wie empfohlen</span><span class="k">Keine Anmerkung.</span><span class="k">Entschieden am 28.10.2026, 16:39 Uhr</span></div></article>
+    <article class="pt decided" id="B-4"><div class="pt-head"><span class="pt-id">B-4</span><h3>Rücksetzen aus FAIL</h3><span class="rec">Empfehlung a</span></div>
+      <p>Mit REMOTE=2 und MODE=1 auf 0x130, oder mit der Taste ALL ON/OFF, beides nur ohne aktive Überlast. Der Befehl ist pegelgetriggert wie bisher: Steht REMOTE=2/MODE=1 dauerhaft an, setzt er zurück, sobald die Überlast weg ist. Nach FAIL geht es immer erst nach STANDBY, nie direkt wieder in RUN.</p>
+      <ol class="opts static" type="a"><li class="chosen"><span class="pick">gewählt</span>Pegelgetriggert wie bisher</li><li>Flankengetriggert: Der Befehl muss nach dem Ende der Überlast neu kommen (LabControl sendet ihn dann eventuell nicht neu)</li></ol>
+      <div class="decision"><span><span class="k">Entscheidung:</span> <strong>a)</strong> wie empfohlen</span><span class="k">Keine Anmerkung.</span><span class="k">Entschieden am 28.10.2026, 16:40 Uhr</span></div></article>
+    <article class="pt decided" id="B-5"><div class="pt-head"><span class="pt-id">B-5</span><h3>Tasten ALL ON/OFF und REMOTE</h3><span class="rec">Empfehlung a</span></div>
+      <p>So umgesetzt:</p>
+      <ul>
+        <li><strong>ALL ON/OFF in FAIL:</strong> geht nach STANDBY, außer bei Überlast.</li>
+        <li><strong>ALL ON/OFF in RUN:</strong> geht nach STOP. Der Ausgang bleibt aus, bis OUTPUT auf 0x130 einmal von 2 weggegangen ist.</li>
+        <li><strong>ALL ON/OFF in STANDBY und STOP:</strong> keine Wirkung.</li>
+        <li><strong>REMOTE:</strong> schaltet STANDBY ↔ STOP/RUN.</li>
+      </ul>
+      <p>Das deckt sich mit dem Konzept: Zwischen B und D schaltet ALL ON/OFF nur den Ausgang aus und setzt FAIL zurück.</p>
+      <ol class="opts static" type="a"><li class="chosen"><span class="pick">gewählt</span>Wie umgesetzt</li><li>Anders (bitte in der Anmerkung)</li></ol>
+      <div class="decision"><span><span class="k">Entscheidung:</span> <strong>a)</strong> wie empfohlen</span><span class="k">Keine Anmerkung.</span><span class="k">Entschieden am 28.10.2026, 16:40 Uhr</span></div></article>
+    <article class="pt decided" id="B-6"><div class="pt-head"><span class="pt-id">B-6</span><h3>Sollwertgrenze je Zelle</h3><span class="rec">Empfehlung a</span></div>
+      <p>Die Grenze ist ein Parameter mit 5,0 V. Darüber wird der Sollwert begrenzt und der Zellstatus meldet 3. Getestet ist 5,5 V → begrenzt, Status 3.</p>
+      <ol class="opts static" type="a"><li class="chosen"><span class="pick">gewählt</span>5,0 V</li><li>Anderer Wert (bitte in der Anmerkung)</li></ol>
+      <div class="decision"><span><span class="k">Entscheidung:</span> <strong>a)</strong> wie empfohlen</span><span class="k">Keine Anmerkung.</span><span class="k">Entschieden am 28.10.2026, 16:40 Uhr</span></div></article>
+    <article class="pt decided" id="B-7"><div class="pt-head"><span class="pt-id">B-7</span><h3>Was CELLn_STATUS meldet</h3><span class="rec">Empfehlung a</span></div>
+      <p>CELLn_STATUS folgt wie bisher dem Befehl (Freigabe = 2) und nicht dem tatsächlichen Ausgang. In STOP meldet eine freigegebene Zelle also „ein“, obwohl der Ausgang aus ist. Den Ausgang selbst zeigt BATTSIM_OUTPUT_STATUS.</p>
+      <ol class="opts static" type="a"><li class="chosen"><span class="pick">gewählt</span>Wie bisher, LabControl bleibt unverändert</li><li>Dem Ausgang folgen (LabControl-Anzeige ändert sich)</li></ol>
+      <div class="decision"><span><span class="k">Entscheidung:</span> <strong>a)</strong> wie empfohlen</span><span class="k">Keine Anmerkung.</span><span class="k">Entschieden am 28.10.2026, 16:40 Uhr</span></div></article>
+    <article class="pt decided" id="B-8"><div class="pt-head"><span class="pt-id">B-8</span><h3>Anzeige eines Watchdog- oder Safety-Resets</h3><span class="rec">Empfehlung a</span></div>
+      <p>Folgt der Start auf einen Watchdog- oder Safety-Reset (<code>bsw.reset.watchdog</code>), zeigt 0x121 in STANDBY FAIL-Grund 4, bis zum ersten Zustandswechsel. Der Zustand ist STANDBY und nicht FAIL.</p>
+      <ol class="opts static" type="a"><li class="chosen"><span class="pick">gewählt</span>Wie umgesetzt</li><li>Nach so einem Reset in FAIL starten (Grund 4, Rücksetzen wie B-4)</li></ol>
+      <div class="decision"><span><span class="k">Entscheidung:</span> <strong>a)</strong> wie empfohlen</span><span class="k">Keine Anmerkung.</span><span class="k">Entschieden am 28.10.2026, 16:40 Uhr</span></div></article>
+    <article class="pt decided" id="B-9"><div class="pt-head"><span class="pt-id">B-9</span><h3>Form der Modelllogik</h3><span class="rec">Empfehlung a</span></div>
+      <p>Die Logik ist ein MATLAB-Function-Block je Runnable, erzeugt aus <code>&lt;Swc&gt;_create.m</code>. Ein Stateflow-Chart lässt sich später ohne Änderung der Ports nachziehen.</p>
+      <ol class="opts static" type="a"><li class="chosen"><span class="pick">gewählt</span>MATLAB Function für Stufe B</li><li>Jetzt schon als Stateflow-Chart</li></ol>
+      <div class="decision"><span><span class="k">Entscheidung:</span> <strong>a)</strong> wie empfohlen</span><span><span class="k">Anmerkung:</span> „ich baue selbst auf StateFlow um“</span><span class="k">Entschieden am 28.10.2026, 16:41 Uhr</span></div></article>
+    <article class="pt decided" id="B-10"><div class="pt-head"><span class="pt-id">B-10</span><h3>CI für den Workspace</h3><span class="rec">Empfehlung a</span></div>
+      <p>BattSimFW hat jetzt eine <code>ci/tests.yaml</code> mit <code>konfiguration</code> und <code>battsim-sil</code>. Ein Profil für <code>tools.ci run</code> gibt es nicht, das Repository hat auch kein Remote.</p>
+      <ol class="opts static" type="a"><li class="chosen"><span class="pick">gewählt</span>Vorerst nur lokal mit <code>tools/test --workspace</code></li><li>Profil für <code>tools.ci run</code> anlegen</li></ol>
+      <div class="decision"><span><span class="k">Entscheidung:</span> <strong>a)</strong> wie empfohlen</span><span class="k">Keine Anmerkung.</span><span class="k">Entschieden am 28.10.2026, 16:41 Uhr</span></div></article>
+  </section>
+  <section class="summary">
+    <h2>Ohne Entscheidung hier</h2>
+    <ul>
+      <li>Board-Frage <code>bs-alive-rx</code> (Alive-Bereich beim Empfang) ist noch offen, umgesetzt ist dort a.</li>
+      <li>Version 0.2.0. Die FAIL-LED blinkt mit 200 ms. Grund 1 heißt Timeout oder Busfehler von 0x130 in RUN, in STOP gibt es wie bisher kein FAIL.</li>
+      <li>Befunde für neXtBSW, die ich als Aufgaben anlege: rtegen-Konsole zeigt Umlaute falsch (Windows), <code>swc_create</code>/<code>swc_build</code> melden „Precision loss“ bei jedem single-Parameter, die Doku <code>signal-qualifier.md</code> nennt 1..14 ohne Senderichtung (kommt mit <code>bs-alive-rx</code>).</li>
+      <li>Geräteteil von Stufe B mit eigener Board-Freigabe:
+        <ul>
+          <li>Flash und <code>check_battsim.py --hardware --remote</code></li>
+          <li>Abschaltzeit ≤ 310 ms messen</li>
+          <li>Pegel von EN und SET im Reset und vor dem Start messen</li>
+        </ul>
+      </li>
+    </ul>
+  </section>
+
+  <p class="archiv">Statisches Protokoll des claude.ai-Artefakts „Review BattSim Stufe B“ (Version 1793184975-3930), archiviert am 05.11.2026, siehe <a href="../archiv/artefakte-2026-11.html">Archivindex</a>. Die Auswahl je Punkt, Anmerkung und Zeitpunkt stammen aus der Datenbank des Artefakts (Rohdaten: <a href="2026-10-28-review-stufe-b.db.json">2026-10-28-review-stufe-b.db.json</a>). Zeiten in Mitteleuropäischer Zeit.</p>
+</main>
+</body></html>

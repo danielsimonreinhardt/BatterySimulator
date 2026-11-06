@@ -1,0 +1,48 @@
+{
+  "quelle": "claude.ai-Artefakt „BattSim Reset-Eskalation“, Version 1793214758-9770, siehe doc/archiv/artefakte-2026-11.html",
+  "gelesen": "2026-11-05",
+  "hinweis": "Roher Inhalt der Artefakt-Datenbank: Collection decisions (Dokument je Punkt, data = choice/note/at) und meta/status (done/at). Zeitpunkte in UTC.",
+  "decisions": [
+    {
+      "id": "S-1",
+      "data": {
+        "at": "2026-10-28T19:04:49.478Z",
+        "choice": "a",
+        "note": ""
+      },
+      "version": 1,
+      "updatedAt": "2026-10-28T19:04:47.343083Z"
+    },
+    {
+      "id": "S-2",
+      "data": {
+        "at": "2026-10-28T19:05:13.576Z",
+        "choice": "a",
+        "note": ""
+      },
+      "version": 1,
+      "updatedAt": "2026-10-28T19:05:11.342582Z"
+    },
+    {
+      "id": "S-3",
+      "data": {
+        "at": "2026-10-28T19:05:40.648Z",
+        "choice": "b",
+        "note": ""
+      },
+      "version": 1,
+      "updatedAt": "2026-10-28T19:05:38.446684Z"
+    }
+  ],
+  "meta": [
+    {
+      "id": "status",
+      "data": {
+        "at": "2026-10-28T19:05:44.756Z",
+        "done": true
+      },
+      "version": 1,
+      "updatedAt": "2026-10-28T19:05:42.535464Z"
+    }
+  ]
+}

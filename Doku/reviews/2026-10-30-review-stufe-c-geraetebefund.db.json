@@ -1,0 +1,48 @@
+{
+  "quelle": "claude.ai-Artefakt „Review Stufe C Gerätebefund“, Version 1793354512-c5ee, siehe doc/archiv/artefakte-2026-11.html",
+  "gelesen": "2026-11-05",
+  "hinweis": "Roher Inhalt der Artefakt-Datenbank: Collection decisions (Dokument je Punkt, data = choice/note/at) und meta/status (done/at). Zeitpunkte in UTC.",
+  "decisions": [
+    {
+      "id": "C-2c",
+      "data": {
+        "at": "2026-10-30T10:17:10.597Z",
+        "choice": "a",
+        "note": ""
+      },
+      "version": 1,
+      "updatedAt": "2026-10-30T10:17:10.851015Z"
+    },
+    {
+      "id": "F-1",
+      "data": {
+        "at": "2026-10-30T10:17:27.684Z",
+        "choice": "a",
+        "note": ""
+      },
+      "version": 1,
+      "updatedAt": "2026-10-30T10:17:27.852062Z"
+    },
+    {
+      "id": "R-1",
+      "data": {
+        "at": "2026-10-30T10:17:19.848Z",
+        "choice": "a",
+        "note": ""
+      },
+      "version": 1,
+      "updatedAt": "2026-10-30T10:17:20.03195Z"
+    }
+  ],
+  "meta": [
+    {
+      "id": "status",
+      "data": {
+        "at": "2026-10-30T10:17:30.020Z",
+        "done": true
+      },
+      "version": 1,
+      "updatedAt": "2026-10-30T10:17:30.247363Z"
+    }
+  ]
+}

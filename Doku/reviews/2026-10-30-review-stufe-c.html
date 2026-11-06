@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Review BattSim Stufe C</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: eine Lesespalte, Zusammenfassung oben, die Prüfpunkte als nummeriertes Verzeichnis (die Reihenfolge ist die Review-Reihenfolge). Statisches Protokoll: die Entscheidungen stehen fest im Text. */
+:root {
+  --bg: #f3f5f6; --surface: #ffffff; --ink: #172026; --muted: #56656e; --rule: #d2dade;
+  --accent: #1d5f86; --accent-soft: #dcebf4; --warn: #9a5b00; --warn-soft: #f6ead6;
+  --display: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #11171b; --surface: #182127; --ink: #e2e9ed; --muted: #95a5ae; --rule: #2c3840;
+  --accent: #6db3dc; --accent-soft: #17303f; --warn: #e0a64e; --warn-soft: #3a2c16; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #11171b; --surface: #182127; --ink: #e2e9ed; --muted: #95a5ae; --rule: #2c3840;
+  --accent: #6db3dc; --accent-soft: #17303f; --warn: #e0a64e; --warn-soft: #3a2c16; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 15.5px/1.55 var(--body); margin: 0;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 32px 64px; }
+main { max-width: 760px; margin-inline: auto; display: grid; gap: 28px; }
+h1, h2, h3 { font-family: var(--display); margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(28px, 4vw, 38px); line-height: 1.1; }
+h2 { font-size: 21px; }
+h3 { font-size: 17px; }
+p, li { max-width: 68ch; }
+p { margin: 0; }
+.label { font: 600 12px/1.2 var(--display); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+code, .mono { font-family: var(--mono); font-size: .92em; }
+header { display: grid; gap: 10px; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 18px; color: var(--muted); font-size: 14px; }
+.summary { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 16px 18px; display: grid; gap: 10px; min-width: 0; }
+.summary ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+.points { display: grid; gap: 14px; }
+.pt { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 14px 18px 16px; display: grid; gap: 8px; min-width: 0; }
+.pt-head { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.pt-id { font: 600 13px var(--mono); color: var(--accent); }
+.rec { display: inline-block; font: 600 12px/1 var(--display); letter-spacing: .05em; text-transform: uppercase; padding: 5px 8px; border-radius: 3px; background: var(--accent-soft); color: var(--accent); }
+.opts { margin: 0; padding-left: 20px; display: grid; gap: 3px; font-size: 14.5px; }
+.limit { background: var(--warn-soft); color: var(--ink); border-left: 3px solid var(--warn); padding: 8px 12px; border-radius: 3px; font-size: 14.5px; }
+.how { font-size: 14px; color: var(--muted); }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+.tw { overflow-x: auto; }
+th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font: 600 12px var(--display); letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+td.n { font-variant-numeric: tabular-nums; font-family: var(--mono); white-space: nowrap; }
+.diagram { overflow-x: auto; min-width: 0; }
+</style>
+
+<style>
+/* Statisches Protokoll: Entscheidungen aus der Datenbank des Artefakts */
+.archiv { font-size: 13.5px; color: var(--muted); border-top: 1px solid var(--rule); padding-top: 10px; }
+.status { background: var(--surface); border: 1px solid var(--accent); border-left: 4px solid var(--accent); border-radius: 6px; padding: 12px 16px; display: grid; gap: 4px; }
+.status.offen { border-color: var(--warn); }
+.status strong { font-family: var(--display); font-size: 17px; }
+.pt.decided { border-left: 4px solid var(--accent); }
+.pt.open { border-left: 4px solid var(--warn); }
+.opts.static li { padding: 2px 6px; border-radius: 3px; }
+.opts.static li.chosen { background: var(--accent-soft); outline: 1px solid var(--accent); }
+.opts.static .pick { font: 600 11.5px/1 var(--display); letter-spacing: .05em; text-transform: uppercase; color: var(--surface); background: var(--accent); border-radius: 3px; padding: 3px 6px; margin-right: 6px; white-space: nowrap; }
+.decision { font-size: 14px; background: var(--bg); border: 1px solid var(--rule); border-radius: 4px; padding: 8px 12px; display: grid; gap: 2px; }
+.decision .k { color: var(--muted); }
+.decision.offen { background: var(--warn-soft); border-color: var(--warn); }
+.decision .dev { color: var(--warn); font-weight: 600; }
+pre.mermaid { white-space: pre; overflow-x: auto; font: 12.5px/1.45 var(--mono); background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 10px 12px; margin: 0; }
+</style>
+</head><body>
+<main>
+  <header>
+    <span class="label">BattSimFW · Review · 30.10.2026</span>
+    <h1>BattSim Stufe C: Kalibrierung, Regler und Diagnose</h1>
+    <div class="meta"><span>Zweig stufe-c-kalibrierung (0a26297, 27b7d69, ab1e744), noch nicht auf main</span><span>Prüfstand: Host-Test (SIL), Target-Bau und Konfigurationsprüfung, nichts am Gerät</span><span>Entscheider: du als Safety Responsible</span></div>
+  </header>
+  <section class="status" aria-label="Stand der Entscheidung"><strong>Abgeschlossen am 30.10.2026, 09:45 Uhr</strong><span>7 von 7 Punkten entschieden; alle wie empfohlen.</span></section>
+  <section class="summary">
+    <h2>Was steht</h2>
+    <pre class="mermaid">
+flowchart LR
+    T["Tester<br/>UDS 0x7E1"] -->|"2E CalCh01..14<br/>(Extended + Security)"| CAL["CellCal<br/>bereitgelegte Werte"]
+    T -->|"31 01 0200 ApplyCalibration"| CAL
+    CAL -->|"nur bei Ausgang aus,<br/>alles oder nichts"| NV[("NvM 4 Blöcke<br/>asil_b")]
+    CAL -->|"Offset, Steigung<br/>je Kanal"| CH["CellChannels<br/>Kalibrierung + PI-Regler"]
+    SUP["SupplyMonitor<br/>LIMIT"] --> CH
+    T -->|"2E 0211<br/>Regler aus"| CH
+    CH --> HW["Zellkarten"]
+    HW -->|"ADC"| CH
+    CH -->|"0x121<br/>CONTROLLER_ON"| CAN["CAN"]
+    </pre>
+    <ul>
+      <li><strong>Kalibrierung (FW-06):</strong> je Kanal Offset und Steigung für Stellen und für Messen, 14 × 4 Werte, in vier NvM-Blöcken. Neue Komponente <code>CellCal</code>, gemeinsame Werte (Zellzahl 14, Zellgrenze 5,0 V) in der Parameter-Komponente <code>BattSimParams</code>.</li>
+      <li><strong>Regler (FW-07):</strong> PI je Kanal, Korrektur auf ±0,1 V begrenzt, steht bei LIMIT, per Diagnose abschaltbar, 0x121 zeigt ihn.</li>
+      <li><strong>Diagnose:</strong> Kennungen <code>0x0201</code>…<code>0x020E</code> (Werte je Kanal), <code>0x0210</code> (Zustand), <code>0x0211</code> (Regler), Routine <code>0x0200</code> (Übernehmen). Vier DTCs, wenn ein Kalibrierblock verloren geht.</li>
+      <li><strong>Geprüft:</strong>
+        <ul>
+          <li>nxconfig ok mit denselben 8 Warnungen wie in Stufe B, Target-Bau ohne Compiler-Warnung.</li>
+          <li>Workspace-Tests 8/8 mit 921 Fällen, davon 697 im SIL-Test (vorher 629). Den Bau und den SIL-Test habe ich selbst laufen lassen.</li>
+          <li>Im SIL-Test regelt der PI-Regler eine Strecke (Verstärkung 0,99, Offset −0,02 V, 0,25 s Tiefpass) auf unter 4 mV an den Sollwert. Bei 0,3 V Fehler stoppt die Korrektur bei +0,1 V.</li>
+        </ul>
+      </li>
+      <li><strong>neXtBSW:</strong> Pin auf dev <code>e70ea7b8</code>, Bericht <code>doc/nextbsw-updates/</code>.</li>
+    </ul>
+    <p class="how">Nichts davon lief am Gerät. FlexNVM-Partition und Flashen bekommen je eine eigene Freigabe im Entscheidungsboard. Ohne Partition laufen die NvM-Blöcke im RAM: Die Kalibrierung geht dann bei jedem Reset verloren.</p>
+  </section>
+  <section class="points">
+    <h2>Punkte</h2>
+    <article class="pt decided" id="C-1"><div class="pt-head"><span class="pt-id">C-1</span><h3>Ungültige Strommessung (aus Review B-2)</h3><span class="rec">Empfehlung a</span></div>
+      <p><code>SupplyMonitor</code> ignoriert Abtastwerte mit ungültigem ADC-Qualifier und behält den letzten gefilterten Wert. Fällt die Strommessung aus, bleibt die Überlast-Abschaltung (FAIL Grund 3) blind, und niemand erfährt es. Das gilt auch für die alte Firmware.</p>
+      <p class="limit">Einzelne ungültige Abtastwerte sollen nicht abschalten. Der Vorschlag wartet deshalb 200 ms (20 Zyklen) am Stück ab. Die Umsetzung (neuer FAIL-Grund 5, SIL-Test) folgt nach deiner Entscheidung, sie ist noch nicht im Zweig.</p>
+      <ol class="opts static" type="a"><li class="chosen"><span class="pick">gewählt</span>In RUN länger als 200 ms ungültig → FAIL mit Grund 5, Ausgänge im selben Schritt aus</li><li>Nur melden (Grund in 0x121), nicht abschalten</li><li>So lassen</li></ol>
+      <div class="decision"><span><span class="k">Entscheidung:</span> <strong>a)</strong> wie empfohlen</span><span class="k">Keine Anmerkung.</span><span class="k">Entschieden am 30.10.2026, 09:44 Uhr</span></div></article>
+    <article class="pt decided" id="C-2"><div class="pt-head"><span class="pt-id">C-2</span><h3>Überspannung je Kanal (Vorschlag FW-17)</h3><span class="rec">Empfehlung a</span></div>
+      <p>Schutz des Prüflings bei defekter Karte: In RUN, bei freigegebenem Kanal, liegt der kalibrierte Istwert länger als 100 ms mehr als 0,2 V über dem Sollwert. Der Regler schafft höchstens +0,1 V, er kann diese Schwelle nicht selbst auslösen.</p>
+      <p class="limit">Die Erkennung nutzt dieselbe Messkette (ADC) wie der Regler. Ein zu niedrig messender ADC-Kanal verdeckt die Überspannung und lässt den Regler um bis zu 0,1 V anheben. Eine unabhängige Messung gibt es nicht.</p>
+      <ol class="opts static" type="a"><li class="chosen"><span class="pick">gewählt</span>Alle Ausgänge aus, FAIL mit Grund 6 (wie die Überlast)</li><li>Nur den betroffenen Kanal ausschalten (ENABLE), Meldung in 0x121, die anderen laufen weiter</li><li>Nicht umsetzen</li></ol>
+      <div class="decision"><span><span class="k">Entscheidung:</span> <strong>a)</strong> wie empfohlen</span><span class="k">Keine Anmerkung.</span><span class="k">Entschieden am 30.10.2026, 09:44 Uhr</span></div></article>
+    <article class="pt decided" id="C-3"><div class="pt-head"><span class="pt-id">C-3</span><h3>Grenzen der Kalibrierwerte</h3><span class="rec">Empfehlung a</span></div>
+      <p>Offset ±0,2 V, Steigung 0,9000…1,1000. Die Diagnose lehnt Werte außerhalb ab (NRC 0x31), <code>CellCal</code> prüft noch einmal, <code>CellChannels</code> nimmt bei unplausiblen Paaren die Werkswerte. Der Tastgrad bleibt am Tabellenende gedeckelt (5 V nominal, 95,66 %): Eine Kalibrierung kann den Tastgrad nie über den Wert für 5,0 V heben.</p>
+      <p class="how">Gemessen waren −15…+40 mV am Ausgang und ±0,1 V Rückmeldung bei der alten Firmware. Die Grenzen lassen viel Reserve, damit auch eine schlechte Karte kalibrierbar ist.</p>
+      <ol class="opts static" type="a"><li class="chosen"><span class="pick">gewählt</span>±0,2 V und 0,9…1,1</li><li>Enger: ±0,1 V und 0,95…1,05</li><li>Anders (bitte in der Anmerkung)</li></ol>
+      <div class="decision"><span><span class="k">Entscheidung:</span> <strong>a)</strong> wie empfohlen</span><span class="k">Keine Anmerkung.</span><span class="k">Entschieden am 30.10.2026, 09:44 Uhr</span></div></article>
+    <article class="pt decided" id="C-4"><div class="pt-head"><span class="pt-id">C-4</span><h3>Schutz beim Schreiben der Kalibrierung</h3><span class="rec">Empfehlung a</span></div>
+      <p>Werte bereitlegen (2E) geht nur in der Extended-Session nach Security-Access „Application“ (Gerätschlüssel, wie das Flashen). Übernommen werden sie erst mit der Routine <code>ApplyCalibration</code>, nur bei Ausgang aus, alles oder nichts, mit Rückmeldung (angewendet, abgelehnt, Wert außer Bereich mit Kanalnummer, nichts Neues). Im Betrieb (Ausgang ein) ändert sich nie etwas.</p>
+      <ol class="opts static" type="a"><li class="chosen"><span class="pick">gewählt</span>So</li><li>Zusätzlich nur in STANDBY, nicht in STOP</li><li>Ohne Security-Access (Extended reicht)</li></ol>
+      <div class="decision"><span><span class="k">Entscheidung:</span> <strong>a)</strong> wie empfohlen</span><span class="k">Keine Anmerkung.</span><span class="k">Entschieden am 30.10.2026, 09:45 Uhr</span></div></article>
+    <article class="pt decided" id="C-5"><div class="pt-head"><span class="pt-id">C-5</span><h3>Verlust der gespeicherten Kalibrierung</h3><span class="rec">Empfehlung a</span></div>
+      <p>Vier NvM-Blöcke mit zwei Kopien und CRC-32 (<code>asil_b</code>), eine defekte Kopie wird aus der anderen repariert. Sind beide defekt, laufen die Kanäle mit Werkswerten (Offset 0, Steigung 1), Kennung <code>0x0210</code> meldet „Speicher defekt“, und je Block entsteht ein DTC. Es gibt kein FAIL: Die Genauigkeit sinkt, die Grenzen und Schutzfunktionen bleiben.</p>
+      <p class="limit">Geschrieben wird 2 s nach einer Änderung. Ein Spannungsverlust in dieser Zeit verliert die neue Kalibrierung, die alte bleibt erhalten.</p>
+      <ol class="opts static" type="a"><li class="chosen"><span class="pick">gewählt</span>Mit Werkswerten weiterlaufen und melden</li><li>Ausgänge gesperrt (FAIL), bis neu kalibriert wurde</li><li>QM-Block: eine Kopie mit CRC-16</li></ol>
+      <div class="decision"><span><span class="k">Entscheidung:</span> <strong>a)</strong> wie empfohlen</span><span class="k">Keine Anmerkung.</span><span class="k">Entschieden am 30.10.2026, 09:45 Uhr</span></div></article>
+    <article class="pt decided" id="C-6"><div class="pt-head"><span class="pt-id">C-6</span><h3>Regler: Eingriff und Zustand nach dem Start</h3><span class="rec">Empfehlung a</span></div>
+      <p>Der Regler addiert höchstens ±0,1 V zum Sollwert. Er arbeitet nur bei Ausgang ein, freigegebenem Kanal, unbegrenztem Sollwert über 0 V und gültigem ADC-Wert, bei LIMIT der Versorgung steht er. Nach jedem Start ist er ein. Abschalten geht per Diagnose (<code>2E 0211</code>), der Zustand ist nicht gespeichert, 0x121 zeigt ihn.</p>
+      <p class="limit">Ein gültiger, aber falscher ADC-Wert verschiebt die Ausgangsspannung um bis zu 0,1 V. Das bleibt unter der Schwelle aus C-2 (0,2 V).</p>
+      <ol class="opts static" type="a"><li class="chosen"><span class="pick">gewählt</span>Nach dem Start ein, ±0,1 V</li><li>Nach dem Start aus, per Diagnose einzuschalten</li><li>Kleinerer Eingriff (Wert in der Anmerkung)</li></ol>
+      <div class="decision"><span><span class="k">Entscheidung:</span> <strong>a)</strong> wie empfohlen</span><span class="k">Keine Anmerkung.</span><span class="k">Entschieden am 30.10.2026, 09:45 Uhr</span></div></article>
+    <article class="pt decided" id="C-7"><div class="pt-head"><span class="pt-id">C-7</span><h3>Zweiter Abschaltweg über ENABLE und die Hardware-Abhilfe</h3><span class="rec">Empfehlung a</span></div>
+      <p>Die DFA-4-Warnungen (B-1) bleiben stehen. Der zweite Abschaltweg über EN_01…EN_14 hängt am Ruhepegel im Reset. Der Geräteteil von Stufe B hat gezeigt, dass Zelle 1 im Master-Reset etwa 5,25 V führt, solange die Pull-ups an SET und EN fehlen (Hardware-Aufgabe im BatterieSimulator-Workspace).</p>
+      <ol class="opts static" type="a"><li class="chosen"><span class="pick">gewählt</span>Bewertung nach dem Einbau der Pull-ups und einer wiederholten Reset-Messung abschließen. Bis dahin gilt die Regel AoU S-1 a (Prüfling nur bei laufendem Master).</li><li>Stufe C ohne Wiederholung abschließen</li></ol>
+      <div class="decision"><span><span class="k">Entscheidung:</span> <strong>a)</strong> wie empfohlen</span><span class="k">Keine Anmerkung.</span><span class="k">Entschieden am 30.10.2026, 09:45 Uhr</span></div></article>
+  </section>
+  <section class="summary">
+    <h2>Ohne Entscheidung hier</h2>
+    <ul>
+      <li>FlexNVM-Partition und Flashen: je eine eigene Freigabe im Entscheidungsboard. Der Vorschlag für die Partition steht in <code>project.yaml</code> und in <code>doc/stufe-c-kalibrierung-regler.md</code> (4 KB EEPROM, 32 KB D-Flash, 20 CSEc-Schlüsselplätze; der Schlüsselraum lässt sich später nicht erweitern).</li>
+      <li>Befunde zu neXtBSW, gemeldet an den Koordinator: Datenidentifier-Elemente nur skalar (Board-Frage <code>diag-did-vektor</code>), Anfangswert eines Vektor-Provided-Ports kommt nicht in die ARXML, MATLAB Function nimmt keine symbolische Dimension (Reshape-Umgehung), gleichnamige Ports zweier Komponenten (RTE-49).</li>
+      <li>Regelparameter (Kp 0,2, Ki 1,0/s) sind Startwerte und werden am Gerät abgestimmt.</li>
+    </ul>
+  </section>
+
+  <p class="archiv">Statisches Protokoll des claude.ai-Artefakts „Review BattSim Stufe C“ (Version 1793342624-6e05), archiviert am 05.11.2026, siehe <a href="../archiv/artefakte-2026-11.html">Archivindex</a>. Die Auswahl je Punkt, Anmerkung und Zeitpunkt stammen aus der Datenbank des Artefakts (Rohdaten: <a href="2026-10-30-review-stufe-c.db.json">2026-10-30-review-stufe-c.db.json</a>). Zeiten in Mitteleuropäischer Zeit.</p>
+</main>
+</body></html>

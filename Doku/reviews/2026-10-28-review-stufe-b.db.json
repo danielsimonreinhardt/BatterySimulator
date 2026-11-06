@@ -1,0 +1,118 @@
+{
+  "quelle": "claude.ai-Artefakt „Review BattSim Stufe B“, Version 1793184975-3930, siehe doc/archiv/artefakte-2026-11.html",
+  "gelesen": "2026-11-05",
+  "hinweis": "Roher Inhalt der Artefakt-Datenbank: Collection decisions (Dokument je Punkt, data = choice/note/at) und meta/status (done/at). Zeitpunkte in UTC.",
+  "decisions": [
+    {
+      "id": "B-1",
+      "data": {
+        "at": "2026-10-28T15:35:09.764Z",
+        "choice": "a",
+        "note": ""
+      },
+      "version": 1,
+      "updatedAt": "2026-10-28T15:35:07.616362Z"
+    },
+    {
+      "id": "B-10",
+      "data": {
+        "at": "2026-10-28T15:41:22.704Z",
+        "choice": "a",
+        "note": ""
+      },
+      "version": 1,
+      "updatedAt": "2026-10-28T15:41:20.439142Z"
+    },
+    {
+      "id": "B-2",
+      "data": {
+        "at": "2026-10-28T15:35:23.467Z",
+        "choice": "a",
+        "note": ""
+      },
+      "version": 1,
+      "updatedAt": "2026-10-28T15:35:21.244716Z"
+    },
+    {
+      "id": "B-3",
+      "data": {
+        "at": "2026-10-28T15:39:55.627Z",
+        "choice": "a",
+        "note": ""
+      },
+      "version": 1,
+      "updatedAt": "2026-10-28T15:39:53.396506Z"
+    },
+    {
+      "id": "B-4",
+      "data": {
+        "at": "2026-10-28T15:40:23.543Z",
+        "choice": "a",
+        "note": ""
+      },
+      "version": 1,
+      "updatedAt": "2026-10-28T15:40:21.299408Z"
+    },
+    {
+      "id": "B-5",
+      "data": {
+        "at": "2026-10-28T15:40:29.919Z",
+        "choice": "a",
+        "note": ""
+      },
+      "version": 1,
+      "updatedAt": "2026-10-28T15:40:27.659581Z"
+    },
+    {
+      "id": "B-6",
+      "data": {
+        "at": "2026-10-28T15:40:40.527Z",
+        "choice": "a",
+        "note": ""
+      },
+      "version": 1,
+      "updatedAt": "2026-10-28T15:40:38.284904Z"
+    },
+    {
+      "id": "B-7",
+      "data": {
+        "at": "2026-10-28T15:40:42.078Z",
+        "choice": "a",
+        "note": ""
+      },
+      "version": 1,
+      "updatedAt": "2026-10-28T15:40:39.838334Z"
+    },
+    {
+      "id": "B-8",
+      "data": {
+        "at": "2026-10-28T15:40:45.363Z",
+        "choice": "a",
+        "note": ""
+      },
+      "version": 1,
+      "updatedAt": "2026-10-28T15:40:43.117113Z"
+    },
+    {
+      "id": "B-9",
+      "data": {
+        "at": "2026-10-28T15:41:10.278Z",
+        "choice": "a",
+        "note": "ich baue selbst auf StateFlow um"
+      },
+      "version": 4,
+      "updatedAt": "2026-10-28T15:41:08.02911Z"
+    }
+  ],
+  "meta": [
+    {
+      "id": "status",
+      "data": {
+        "at": "2026-10-28T15:41:30.123Z",
+        "done": true
+      },
+      "version": 1,
+      "updatedAt": "2026-10-28T15:41:27.915278Z"
+    }
+  ]
+}

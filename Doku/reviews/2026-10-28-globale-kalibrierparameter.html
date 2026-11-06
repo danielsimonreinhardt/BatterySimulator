@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Globale Kalibrierparameter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one reading column, review points as a numbered register (the order is the review order), decision summary on top */
+:root {
+  --bg: #f3f5f6; --surface: #ffffff; --ink: #172026; --muted: #56656e; --rule: #d2dade;
+  --accent: #1d5f86; --accent-soft: #dcebf4; --warn: #9a5b00; --warn-soft: #f6ead6;
+  --display: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #11171b; --surface: #182127; --ink: #e2e9ed; --muted: #95a5ae; --rule: #2c3840;
+  --accent: #6db3dc; --accent-soft: #17303f; --warn: #e0a64e; --warn-soft: #3a2c16; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #11171b; --surface: #182127; --ink: #e2e9ed; --muted: #95a5ae; --rule: #2c3840;
+  --accent: #6db3dc; --accent-soft: #17303f; --warn: #e0a64e; --warn-soft: #3a2c16; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 15.5px/1.55 var(--body); margin: 0;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 32px 64px; }
+main { max-width: 760px; margin-inline: auto; display: grid; gap: 28px; }
+h1, h2, h3 { font-family: var(--display); margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(28px, 4vw, 38px); line-height: 1.1; }
+h2 { font-size: 21px; }
+p, li { max-width: 68ch; }
+p { margin: 0; }
+.label { font: 600 12px/1.2 var(--display); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+code, .mono { font-family: var(--mono); font-size: .92em; }
+header { display: grid; gap: 10px; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 18px; color: var(--muted); font-size: 14px; }
+.summary { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 16px 18px; display: grid; gap: 10px; }
+.summary ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+.points { display: grid; gap: 14px; counter-reset: p; }
+.pt { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 14px 18px 16px; display: grid; gap: 8px; min-width: 0; }
+.pt-head { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.pt-id { font: 600 13px var(--mono); color: var(--accent); }
+.rec { display: inline-block; font: 600 12px/1 var(--display); letter-spacing: .05em; text-transform: uppercase; padding: 5px 8px; border-radius: 3px; background: var(--accent-soft); color: var(--accent); }
+.opts { margin: 0; padding-left: 20px; display: grid; gap: 3px; font-size: 14.5px; }
+.limit { background: var(--warn-soft); color: var(--ink); border-left: 3px solid var(--warn); padding: 8px 12px; border-radius: 3px; font-size: 14.5px; }
+.how { font-size: 14px; color: var(--muted); }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+.tw { overflow-x: auto; }
+th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font: 600 12px var(--display); letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+td.n { font-variant-numeric: tabular-nums; font-family: var(--mono); white-space: nowrap; }
+</style>
+
+<style>
+/* Statisches Protokoll: Entscheidungen aus der Datenbank des Artefakts */
+.archiv { font-size: 13.5px; color: var(--muted); border-top: 1px solid var(--rule); padding-top: 10px; }
+.status { background: var(--surface); border: 1px solid var(--accent); border-left: 4px solid var(--accent); border-radius: 6px; padding: 12px 16px; display: grid; gap: 4px; }
+.status.offen { border-color: var(--warn); }
+.status strong { font-family: var(--display); font-size: 17px; }
+.pt.decided { border-left: 4px solid var(--accent); }
+.pt.open { border-left: 4px solid var(--warn); }
+.opts.static li { padding: 2px 6px; border-radius: 3px; }
+.opts.static li.chosen { background: var(--accent-soft); outline: 1px solid var(--accent); }
+.opts.static .pick { font: 600 11.5px/1 var(--display); letter-spacing: .05em; text-transform: uppercase; color: var(--surface); background: var(--accent); border-radius: 3px; padding: 3px 6px; margin-right: 6px; white-space: nowrap; }
+.decision { font-size: 14px; background: var(--bg); border: 1px solid var(--rule); border-radius: 4px; padding: 8px 12px; display: grid; gap: 2px; }
+.decision .k { color: var(--muted); }
+.decision.offen { background: var(--warn-soft); border-color: var(--warn); }
+.decision .dev { color: var(--warn); font-weight: 600; }
+pre.mermaid { white-space: pre; overflow-x: auto; font: 12.5px/1.45 var(--mono); background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 10px 12px; margin: 0; }
+</style>
+</head><body>
+<main>
+  <header>
+    <span class="label">neXtBSW · Konzept · 28.10.2026</span>
+    <h1>Globale Kalibrierparameter für mehrere Komponenten</h1>
+    <div class="meta"><span>Ergänzung zu doc/architecture/kalibrierung.md (ARCH-64)</span><span>vor BattSim Stufe C</span><span>Entscheider: du</span></div>
+  </header>
+  <section class="status" aria-label="Stand der Entscheidung"><strong>Abgeschlossen am 28.10.2026, 21:26 Uhr</strong><span>6 von 6 Punkten entschieden; abweichend von der Empfehlung: G-1, G-5.</span></section>
+  <section class="summary">
+    <h2>Heute und Vorschlag</h2>
+    <ul>
+      <li><strong>Heute:</strong> Jede Komponente legt ihre Kalibriergrößen in <code>swc.yaml</code> unter <code>parameters:</code> an. Alle zusammen bilden ihren Port <code>CalPrm</code>, das Modell liest sie mit <code>Rte_Prm_CalPrm_&lt;Name&gt;()</code>. Die Werte stehen im Datensatz des Projekts, je Komponente in einer Datei. Gemeinsame Achsen (<code>kind: axis</code>) gibt es nur innerhalb einer Komponente. In der <code>rte.yaml</code> werden Parameter nicht verbunden.</li>
+      <li><strong>Was fehlt:</strong> ein Wert, den mehrere Komponenten lesen, z. B. Zellzahl, Grenzspannung oder Nennspannung. Ebenso eine Achse für den gleichen Betriebspunkt in mehreren Komponenten. Heute müsste man so einen Wert in jeder Komponente doppelt anlegen und gleich halten. Das verletzt die Regel „ein Wert, eine Stelle“.</li>
+      <li><strong>Vorschlag:</strong> Das Projekt bekommt eigene globale Kalibriergrößen. Die Komponente behält ihren eigenen Parameter, Modell und <code>swc.yaml</code> bleiben unverändert und wiederverwendbar. Erst das Projekt verbindet in der <code>rte.yaml</code> den Parameter der Komponente mit der globalen Größe. Im Steuergerät liegt der Wert dann einmal, im A2L ist er ein Objekt, im Datensatz eine Zeile.</li>
+    </ul>
+<pre class="mermaid">
+flowchart LR
+  G[("projects/p/parameters.yaml<br/>CellVoltLimit_V, CellCount")] --> B(["rte.yaml parameters:<br/>Bindung je Komponente"])
+  B --> C1("CellChannels.CalPrm.LimitV")
+  B --> C2("BattSimMode.CalPrm.VoltLimit")
+  D[("Datensatz<br/>calibration/base/Global.cal.yaml")] --> S(["Kalibriersegment<br/>ein Speicherplatz"])
+  G --> S
+  S --> A("A2L: ein CHARACTERISTIC<br/>Global.CellVoltLimit_V")
+</pre>
+    <p class="how">Im Modell ändert sich nichts. Es liest weiter seinen Parameter über <code>Rte_Prm_CalPrm_LimitV()</code>, und rtegen lässt diesen Zugriff auf den globalen Speicher zeigen. Ob ein Parameter global ist, entscheidet also das Projekt, nicht die Komponente.</p>
+  </section>
+  <section class="points">
+    <h2>Punkte</h2>
+    <article class="pt decided" id="G-1"><div class="pt-head"><span class="pt-id">G-1</span><h3>Wo werden globale Größen definiert?</h3><span class="rec">Empfehlung a</span></div>
+      <p>Globale Größen sind meistens Tatsachen des Projekts, zum Beispiel Fahrzeug, Batterie oder Gerät, und keine Tatsachen einer Komponente. Sie brauchen dieselben Schlüssel wie Komponentenparameter: <code>kind</code>, <code>type</code>, <code>lsb</code>, <code>unit</code>, <code>min</code>/<code>max</code>, <code>safety</code>, Achsen.</p>
+      <ol class="opts static" type="a"><li>Eine eigene Datei im Projekt, <code>projects/&lt;p&gt;/parameters.yaml</code>, mit denselben Schlüsseln wie <code>swc.yaml parameters:</code>. Die Werte stehen im Datensatz unter <code>calibration/&lt;ds&gt;/Global.cal.yaml</code>. Im A2L heißen sie <code>Global.&lt;Name&gt;</code>.</li><li class="chosen"><span class="pick">gewählt</span>Als eigene Parameter-Komponente nach AUTOSAR (ParameterSwComponentType): eine eigene <code>swc.yaml</code> ohne Runnables, die Parameter anbietet und über Projekte hinweg wiederverwendbar ist, mit Instanz in der <code>rte.yaml</code>. Das ist mehr Aufwand (neue Komponentenart, ARXML-Export), aber näher an AUTOSAR.</li><li>Direkt in der <code>project.yaml</code></li></ol>
+      <div class="decision"><span><span class="k">Entscheidung:</span> <strong>b)</strong> <span class="dev">abweichend von der Empfehlung a)</span></span><span class="k">Keine Anmerkung.</span><span class="k">Entschieden am 28.10.2026, 21:22 Uhr</span></div></article>
+    <article class="pt decided" id="G-2"><div class="pt-head"><span class="pt-id">G-2</span><h3>Wie kommt eine Komponente an die globale Größe?</h3><span class="rec">Empfehlung a</span></div>
+      <ol class="opts static" type="a"><li class="chosen"><span class="pick">gewählt</span>Die Komponente behält ihren eigenen Parameter. Das Projekt bindet ihn in der <code>rte.yaml</code>, z. B. <code>parameters: {CellChannels.LimitV: Global.CellVoltLimit_V}</code>. Ein gebundener Parameter hat keinen eigenen Wert im Datensatz (calgen weist einen Wert dafür ab) und kein eigenes A2L-Objekt. Die Komponente bleibt wiederverwendbar, und die Namen dürfen sich unterscheiden.</li><li>Die Komponente verweist in ihrer <code>swc.yaml</code> selbst auf die globale Größe (<code>global: CellVoltLimit_V</code>). Das ist kürzer, aber dann hängt die Komponente am Projekt.</li><li>Automatisch über gleichen Namen. Das rate ich ab: Eine Umbenennung trennt die Bindung stillschweigend.</li></ol>
+      <div class="decision"><span><span class="k">Entscheidung:</span> <strong>a)</strong> wie empfohlen</span><span class="k">Keine Anmerkung.</span><span class="k">Entschieden am 28.10.2026, 21:24 Uhr</span></div></article>
+    <article class="pt decided" id="G-3"><div class="pt-head"><span class="pt-id">G-3</span><h3>Was muss zusammenpassen?</h3><span class="rec">Empfehlung a</span></div>
+      <p>Ein Wert an einer Stelle heißt, dass alle Leser dieselben Bytes lesen.</p>
+      <ol class="opts static" type="a"><li class="chosen"><span class="pick">gewählt</span>rtegen prüft streng und meldet sonst einen Fehler mit YAML-Pfad. Gleich sein müssen: Art, Typ, <code>lsb</code>/<code>offset</code>, Dimension, Achsen und Einheit. <code>min</code>/<code>max</code> der globalen Größe müssen innerhalb der Grenzen jedes Lesers liegen, denn das sind die Annahmen der Komponente. Die Sicherheitsklasse der globalen Größe muss mindestens die höchste ihrer Leser sein, wie heute schon bei gemeinsamen Achsen.</li><li>Umrechnung erlauben: Der Generator legt je Leser eine umgerechnete Kopie an. Das wären mehrere Speicherplätze, und jeder XCP-Schreibzugriff müsste nachgerechnet werden. Das rate ich ab.</li></ol>
+      <div class="decision"><span><span class="k">Entscheidung:</span> <strong>a)</strong> wie empfohlen</span><span class="k">Keine Anmerkung.</span><span class="k">Entschieden am 28.10.2026, 21:24 Uhr</span></div></article>
+    <article class="pt decided" id="G-4"><div class="pt-head"><span class="pt-id">G-4</span><h3>Gemeinsame Achsen über Komponenten hinweg</h3><span class="rec">Empfehlung a</span></div>
+      <p>Kennlinien und Kennfelder verschiedener Komponenten über denselben Betriebspunkt, z. B. Drehzahl oder Temperatur, sollen eine Achse teilen können.</p>
+      <ol class="opts static" type="a"><li class="chosen"><span class="pick">gewählt</span>Ja, mit demselben Mechanismus: Eine globale <code>kind: axis</code> wird an die gemeinsame Achse einer Komponente gebunden. Im A2L wird daraus ein <code>AXIS_PTS</code>, auf das die <code>COM_AXIS</code> mehrerer Komponenten verweisen.</li><li>Erst einmal nur Werte und Felder, Achsen später</li></ol>
+      <div class="decision"><span><span class="k">Entscheidung:</span> <strong>a)</strong> wie empfohlen</span><span class="k">Keine Anmerkung.</span><span class="k">Entschieden am 28.10.2026, 21:24 Uhr</span></div></article>
+    <article class="pt decided" id="G-5"><div class="pt-head"><span class="pt-id">G-5</span><h3>Auch nicht verstellbare globale Konstanten?</h3><span class="rec">Empfehlung a</span></div>
+      <p>Manche gemeinsamen Werte sollen nicht kalibrierbar sein, weil sie den Bau festlegen, z. B. die Zahl der Kanäle als Felddimension. Sie gehören nach dem Konzept (4.5) in die Konfiguration und nicht in den Datensatz.</p>
+      <ol class="opts static" type="a"><li>Jetzt nur kalibrierbare Größen. Globale Konstanten zur Bauzeit kommen als eigener Punkt später, mit eigener Generierung in Header und Modell.</li><li class="chosen"><span class="pick">gewählt</span>Gleich mitmachen: <code>kind: constant</code> in derselben Datei. Daraus werden ein C-Header und ein Simulink-Parameter fürs Modell, aber nichts im Datensatz und im A2L nur lesbar.</li></ol>
+      <div class="decision"><span><span class="k">Entscheidung:</span> <strong>b)</strong> <span class="dev">abweichend von der Empfehlung a)</span></span><span class="k">Keine Anmerkung.</span><span class="k">Entschieden am 28.10.2026, 21:24 Uhr</span></div></article>
+    <article class="pt decided" id="G-6"><div class="pt-head"><span class="pt-id">G-6</span><h3>Reihenfolge zu BattSim Stufe C</h3><span class="rec">Empfehlung a</span></div>
+      <p>Die Umsetzung braucht schätzungsweise rtegen (Bindung, Prüfungen, Speicher), calgen und den Datensatz, a2lgen sowie das Studio: Seite „Globale Parameter“ und eine Auswahl „lokal / global“ je Parameter. Dazu kommen Host-Tests und die Doku in kalibrierung.md.</p>
+      <ol class="opts static" type="a"><li class="chosen"><span class="pick">gewählt</span>Erst umsetzen, danach startet Stufe C mit globalen Größen (Kalibrierung gehört zu Stufe C)</li><li>Parallel: Stufe C fängt mit den Teilen ohne Kalibrierung an (FlexNVM, UDS, Bootloader)</li><li>Stufe C ohne globale Größen, umstellen später</li></ol>
+      <div class="decision"><span><span class="k">Entscheidung:</span> <strong>a)</strong> wie empfohlen</span><span class="k">Keine Anmerkung.</span><span class="k">Entschieden am 28.10.2026, 21:26 Uhr</span></div></article>
+  </section>
+  <section class="summary">
+    <h2>Ohne Entscheidung hier</h2>
+    <ul>
+      <li>Nach deiner Entscheidung lege ich die Aufgaben an (rtegen, calgen, a2lgen, Studio, Doku) und ergänze kalibrierung.md um einen Abschnitt. Ein Agent setzt sie um.</li>
+      <li>BSW-Module bleiben außen vor. Ihre Werte sind Konfiguration (Konzept 4.5) und werden nicht gebunden.</li>
+      <li>Das Layout des Kalibriersegments ändert sich durch die globalen Größen. Ein alter Datensatz passt dann nicht mehr zum neuen Layout, calgen meldet das wie heute.</li>
+    </ul>
+  </section>
+
+  <p class="archiv">Statisches Protokoll des claude.ai-Artefakts „Globale Kalibrierparameter“ (Version 1793215616-96a4), archiviert am 05.11.2026, siehe <a href="../archiv/artefakte-2026-11.html">Archivindex</a>. Die Auswahl je Punkt, Anmerkung und Zeitpunkt stammen aus der Datenbank des Artefakts (Rohdaten: <a href="2026-10-28-globale-kalibrierparameter.db.json">2026-10-28-globale-kalibrierparameter.db.json</a>). Zeiten in Mitteleuropäischer Zeit.</p>
+</main>
+</body></html>

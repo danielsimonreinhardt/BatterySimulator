@@ -1,0 +1,58 @@
+{
+  "quelle": "claude.ai-Artefakt „Review Termin 0.3.2“, Version 1793366236-f40f, siehe doc/archiv/artefakte-2026-11.html",
+  "gelesen": "2026-11-05",
+  "hinweis": "Roher Inhalt der Artefakt-Datenbank: Collection decisions (Dokument je Punkt, data = choice/note/at) und meta/status (done/at). Zeitpunkte in UTC.",
+  "decisions": [
+    {
+      "id": "T-1",
+      "data": {
+        "at": "2026-10-30T13:17:40.647Z",
+        "choice": "a",
+        "note": ""
+      },
+      "version": 1,
+      "updatedAt": "2026-10-30T13:17:40.897358Z"
+    },
+    {
+      "id": "T-2",
+      "data": {
+        "at": "2026-10-30T13:17:57.847Z",
+        "choice": "a",
+        "note": ""
+      },
+      "version": 1,
+      "updatedAt": "2026-10-30T13:17:58.028995Z"
+    },
+    {
+      "id": "T-3",
+      "data": {
+        "at": "2026-10-30T13:18:18.827Z",
+        "choice": "a",
+        "note": ""
+      },
+      "version": 1,
+      "updatedAt": "2026-10-30T13:18:19.019288Z"
+    },
+    {
+      "id": "T-4",
+      "data": {
+        "at": "2026-10-30T13:18:22.319Z",
+        "choice": "a",
+        "note": ""
+      },
+      "version": 1,
+      "updatedAt": "2026-10-30T13:18:22.52379Z"
+    }
+  ],
+  "meta": [
+    {
+      "id": "status",
+      "data": {
+        "at": "2026-10-30T13:18:23.806Z",
+        "done": true
+      },
+      "version": 1,
+      "updatedAt": "2026-10-30T13:18:23.999094Z"
+    }
+  ]
+}

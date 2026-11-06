@@ -1,0 +1,473 @@
+<title>Batterie-Simulator Zellkanal</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: eine Lesespalte; Blockschaltbild zuerst, dann Kennwerte, Befunde, Pinbelegung */
+:root{
+  --bg:#f6f7f8; --surface:#ffffff; --fg:#1b2228; --muted:#5b6670; --line:#d9dee3;
+  --accent:#0b6e7f; --accent-soft:#e3f1f3; --iso:#7a4fb3; --iso-soft:#efe8f8;
+  --warn:#9a5b00; --warn-soft:#fbf0dc; --bad:#a3262e; --bad-soft:#fbe5e6; --ok:#2f7a3d; --ok-soft:#e5f3e7;
+  --f-display:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12171b; --surface:#1a2127; --fg:#e4e9ed; --muted:#9aa6b0; --line:#2e3840;
+  --accent:#5cc3d3; --accent-soft:#163238; --iso:#b99ae6; --iso-soft:#2a2238;
+  --warn:#e9b25a; --warn-soft:#352812; --bad:#f08a8f; --bad-soft:#3a1c1e; --ok:#7fcb8b; --ok-soft:#18301c; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12171b; --surface:#1a2127; --fg:#e4e9ed; --muted:#9aa6b0; --line:#2e3840;
+  --accent:#5cc3d3; --accent-soft:#163238; --iso:#b99ae6; --iso-soft:#2a2238;
+  --warn:#e9b25a; --warn-soft:#352812; --bad:#f08a8f; --bad-soft:#3a1c1e; --ok:#7fcb8b; --ok-soft:#18301c; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.55}
+.wrap{max-width:1040px;margin:0 auto;padding-block:32px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:36px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:2.1rem;font-weight:600}
+h2{font-size:1.45rem;font-weight:600}
+h3{font-size:1.1rem;font-weight:600}
+p{margin:0;max-width:74ch}
+section{display:flex;flex-direction:column;gap:14px}
+.eyebrow{font-family:var(--f-mono);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.meta{color:var(--muted);font-size:.9rem}
+code{font-family:var(--f-mono);font-size:.88em}
+ul{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:4px;max-width:76ch}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--line)}
+th{font-family:var(--f-mono);font-weight:500;font-size:.76rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);background:var(--bg)}
+tr:last-child td{border-bottom:none}
+td.id{font-family:var(--f-mono);white-space:nowrap;color:var(--accent)}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;font-family:var(--f-mono)}
+.chip{display:inline-block;font-family:var(--f-mono);font-size:.72rem;padding:1px 7px;border-radius:10px;white-space:nowrap}
+.chip.bad{background:var(--bad-soft);color:var(--bad)}
+.chip.warn{background:var(--warn-soft);color:var(--warn)}
+.chip.ok{background:var(--ok-soft);color:var(--ok)}
+.chip.info{background:var(--accent-soft);color:var(--accent)}
+.note{border-left:3px solid var(--accent);background:var(--accent-soft);padding:10px 14px;border-radius:0 6px 6px 0;max-width:82ch}
+.note.warn{border-color:var(--warn);background:var(--warn-soft)}
+.diagram{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px;overflow-x:auto}
+.diagram svg{display:block;min-width:900px;width:100%;height:auto}
+.diagram text{font-family:var(--f-body);font-size:12.5px;fill:var(--fg)}
+.diagram .t{font-weight:600}
+.diagram .s{font-size:11px;fill:var(--muted)}
+.diagram .m{font-family:var(--f-mono);font-size:10.5px;fill:var(--muted)}
+.diagram .lab{font-family:var(--f-mono);font-size:11px;fill:var(--accent)}
+.diagram .box{fill:var(--surface);stroke:var(--muted);stroke-width:1.3}
+.diagram .boxa{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.4}
+.diagram .boxi{fill:var(--iso-soft);stroke:var(--iso);stroke-width:1.5}
+.diagram .boxw{fill:var(--bad-soft);stroke:var(--bad);stroke-width:1.4}
+.diagram .zone{fill:var(--bg);stroke:none}
+.diagram .barrier{stroke:var(--iso);stroke-width:2;stroke-dasharray:7 5;fill:none}
+.diagram .w{stroke:var(--muted);stroke-width:1.4;fill:none}
+.diagram .wa{stroke:var(--accent);stroke-width:1.6;fill:none}
+.diagram .wb{stroke:var(--bad);stroke-width:1.5;fill:none;stroke-dasharray:4 3}
+.diagram .ah{fill:var(--muted)}
+.diagram .aha{fill:var(--accent)}
+.diagram .ahb{fill:var(--bad)}
+.diagram .plot{fill:none;stroke:var(--line);stroke-width:1}
+.diagram .grid{stroke:var(--line);stroke-width:1;stroke-dasharray:3 3;fill:none}
+.diagram .an{font-size:11.5px;fill:var(--fg)}
+.legend{display:flex;flex-wrap:wrap;gap:16px;font-size:.85rem;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:14px;height:10px;border-radius:2px;display:inline-block}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+@media (max-width:720px){.two{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.formula{font-family:var(--f-mono);font-size:.88rem;background:var(--bg);border-radius:4px;padding:6px 8px;overflow-x:auto;white-space:nowrap}
+</style>
+
+<div class="wrap">
+
+<header style="display:flex;flex-direction:column;gap:10px">
+  <span class="eyebrow">BatterieSimulator · Hardware-Analyse BS-2 · Teil 1 von 4 · 22.10.2026</span>
+  <h1>Zellkanal BattSim_V1</h1>
+  <p>Eine von 14 gleichen Steckkarten. Jede Karte erzeugt eine galvanisch getrennte Zellspannung von 0 bis 5 V, meldet sie isoliert an den Master zurück und begrenzt den Strom. Die Ausgänge der Karten liegen über die Rückwand in Reihe und bilden den Stapel.</p>
+  <p class="meta">Grundlage: <code>HARDWARE/BattSim_V1/BattSim_V1.kicad_sch</code> (Stand 30.11.2024), Netzliste per kicad-cli 10, Stückliste <code>production/bom.csv</code>, Fehlerliste in <code>Konzept.pptx</code>, PWM-Einstellung aus <code>BATTSIM_CONTROL.slx</code>. <b>Nachtrag 22.10.2026:</b> Messungen und Fotos vom Gerätetest (BS-1.8) sind eingearbeitet, siehe den ersten Abschnitt; geänderte Aussagen sind in den Tabellen markiert. Datenblattwerte stammen aus den Herstellerangaben der Bauteile; die Datenblätter liegen noch nicht im Workspace. Rechenwerte sind Nennwerte, Schätzungen sind als solche markiert.</p>
+</header>
+
+<section>
+  <h2>Nachtrag Gerätetest 22.10.2026</h2>
+  <div class="diagram" role="img" aria-label="Spannung an Zelle 1 beim RESET und beim Einschalten, Oszilloskop-Messung">
+  <svg viewBox="0 0 1000 400" xmlns="http://www.w3.org/2000/svg">
+<text x="70" y="22" class="t">RESET an der Front der Supply-Platine (5-V-Regler aus), Zelle 1</text>
+<rect x="70" y="30" width="880" height="150" class="plot"/>
+<path d="M70,176.0 L950,176.0" class="grid"/><text x="62" y="180.0" text-anchor="end" class="m">0 V</text>
+<path d="M70,128.5 L950,128.5" class="grid"/><text x="62" y="132.5" text-anchor="end" class="m">2 V</text>
+<path d="M70,81.0 L950,81.0" class="grid"/><text x="62" y="85.0" text-anchor="end" class="m">4 V</text>
+<path d="M70,33.5 L950,33.5" class="grid"/><text x="62" y="37.5" text-anchor="end" class="m">6 V</text>
+<path d="M70.0,30 L70.0,180" class="grid"/>
+<path d="M195.7,30 L195.7,180" class="grid"/>
+<path d="M447.1,30 L447.1,180" class="grid"/>
+<path d="M698.6,30 L698.6,180" class="grid"/>
+<path d="M950.0,30 L950.0,180" class="grid"/>
+<path d="M70.5,176.0 L73.8,176.0 L77.1,176.0 L80.4,176.0 L83.7,176.0 L87.0,180.2 L90.3,176.0 L93.6,176.0 L96.8,176.0 L100.1,176.0 L103.4,176.0 L106.7,178.1 L110.0,176.0 L113.3,171.8 L116.6,176.0 L119.9,176.0 L123.2,178.1 L126.5,176.0 L129.8,176.0 L133.1,176.0 L136.4,176.0 L139.7,176.0 L143.0,176.0 L146.3,176.0 L149.6,176.0 L152.9,176.0 L156.2,176.0 L159.5,176.0 L162.8,176.0 L166.1,176.0 L169.4,176.0 L172.6,176.0 L175.9,176.0 L179.2,176.0 L182.5,176.0 L185.8,176.0 L189.1,176.0 L192.4,176.0 L195.7,163.5 L199.0,150.9 L202.3,142.6 L205.6,134.2 L208.9,125.9 L212.2,117.5 L215.5,109.2 L218.8,107.1 L222.1,96.6 L225.4,84.1 L228.7,84.1 L232.0,75.7 L235.3,67.4 L238.6,61.1 L241.9,50.6 L245.1,48.5 L248.4,50.6 L251.7,50.6 L255.0,54.8 L258.3,50.6 L261.6,42.3 L264.9,52.7 L268.2,50.6 L271.5,50.6 L274.8,48.5 L278.1,48.5 L281.4,50.6 L284.7,54.8 L288.0,50.6 L291.3,84.1 L294.6,125.9 L297.9,150.9 L301.2,161.4 L304.5,167.7 L307.8,173.9 L311.1,171.8 L314.4,173.9 L317.6,173.9 L320.9,171.8 L324.2,173.9 L327.5,171.8 L330.8,176.0 L334.1,176.0 L337.4,176.0 L340.7,176.0 L344.0,176.0 L347.3,182.3 L350.6,176.0 L353.9,176.0 L357.2,176.0 L360.5,176.0 L363.8,176.0 L367.1,176.0 L370.4,176.0 L373.7,176.0 L377.0,176.0 L380.3,176.0 L383.6,171.8 L386.9,173.9 L390.2,173.9 L393.4,176.0 L396.7,176.0 L400.0,176.0 L403.3,173.9 L406.6,176.0 L409.9,176.0 L413.2,178.1 L416.5,176.0 L419.8,176.0 L423.1,173.9 L426.4,176.0 L429.7,176.0 L433.0,176.0 L436.3,173.9 L439.6,176.0 L442.9,176.0 L446.2,176.0 L449.5,176.0 L452.8,176.0 L456.1,176.0 L459.4,176.0 L462.7,176.0 L465.9,176.0 L469.2,171.8 L472.5,176.0 L475.8,176.0 L479.1,176.0 L482.4,176.0 L485.7,176.0 L489.0,176.0 L492.3,171.8 L495.6,176.0 L498.9,176.0 L502.2,176.0 L505.5,176.0 L508.8,176.0 L512.1,176.0 L515.4,173.9 L518.7,176.0 L522.0,176.0 L525.3,176.0 L528.6,176.0 L531.9,176.0 L535.2,176.0 L538.4,176.0 L541.7,176.0 L545.0,173.9 L548.3,176.0 L551.6,171.8 L554.9,176.0 L558.2,176.0 L561.5,178.1 L564.8,173.9 L568.1,176.0 L571.4,176.0 L574.7,176.0 L578.0,176.0 L581.3,176.0 L584.6,176.0 L587.9,176.0 L591.2,176.0 L594.5,173.9 L597.8,173.9 L601.1,176.0 L604.4,176.0 L607.7,178.1 L611.0,176.0 L614.2,173.9 L617.5,176.0 L620.8,176.0 L624.1,173.9 L627.4,173.9 L630.7,176.0 L634.0,176.0 L637.3,176.0 L640.6,176.0 L643.9,176.0 L647.2,173.9 L650.5,176.0 L653.8,176.0 L657.1,176.0 L660.4,176.0 L663.7,180.2 L667.0,173.9 L670.3,176.0 L673.6,176.0 L676.9,176.0 L680.2,167.7 L683.5,163.5 L686.7,159.3 L690.0,159.3 L693.3,155.1 L696.6,146.8 L699.9,140.5 L703.2,134.2 L706.5,130.0 L709.8,148.8 L713.1,159.3 L716.4,167.7 L719.7,171.8 L723.0,171.8 L726.3,173.9 L729.6,176.0 L732.9,176.0 L736.2,173.9 L739.5,176.0 L742.8,176.0 L746.1,176.0 L749.4,171.8 L752.7,176.0 L756.0,176.0 L759.2,176.0 L762.5,169.7 L765.8,176.0 L769.1,171.8 L772.4,176.0 L775.7,176.0 L779.0,180.2 L782.3,176.0 L785.6,176.0 L788.9,176.0 L792.2,176.0 L795.5,176.0 L798.8,176.0 L802.1,176.0 L805.4,176.0 L808.7,176.0 L812.0,176.0 L815.3,176.0 L818.6,173.9 L821.9,176.0 L825.2,176.0 L828.5,176.0 L831.8,176.0 L835.0,176.0 L838.3,180.2 L841.6,173.9 L844.9,176.0 L848.2,176.0 L851.5,176.0 L854.8,176.0 L858.1,176.0 L861.4,176.0 L864.7,176.0 L868.0,173.9 L871.3,176.0 L874.6,176.0 L877.9,176.0 L881.2,173.9 L884.5,176.0 L887.8,176.0 L891.1,173.9 L894.4,176.0 L897.7,173.9 L901.0,178.1 L904.3,176.0 L907.5,176.0 L910.8,176.0 L914.1,176.0 L917.4,176.0 L920.7,176.0 L924.0,171.8 L927.3,173.9 L930.6,176.0 L933.9,173.9 L937.2,176.0 L940.5,176.0 L943.8,176.0 L947.1,176.0" fill="none" stroke="var(--bad)" stroke-width="1.8"/>
+<text x="334.0" y="58" class="an">≈ 5,4 V für ≈ 40 ms</text>
+<text x="711.1" y="100" class="an">1,9 V · ≈ 20 ms</text>
+<text x="70" y="227" class="t">Netzschalter ein, Zelle 1</text>
+<rect x="70" y="235" width="880" height="150" class="plot"/>
+<path d="M70,381.0 L950,381.0" class="grid"/><text x="62" y="385.0" text-anchor="end" class="m">0 V</text>
+<path d="M70,333.5 L950,333.5" class="grid"/><text x="62" y="337.5" text-anchor="end" class="m">2 V</text>
+<path d="M70,286.0 L950,286.0" class="grid"/><text x="62" y="290.0" text-anchor="end" class="m">4 V</text>
+<path d="M70,238.5 L950,238.5" class="grid"/><text x="62" y="242.5" text-anchor="end" class="m">6 V</text>
+<path d="M70.0,235 L70.0,385" class="grid"/>
+<path d="M195.7,235 L195.7,385" class="grid"/>
+<path d="M447.1,235 L447.1,385" class="grid"/>
+<path d="M698.6,235 L698.6,385" class="grid"/>
+<path d="M950.0,235 L950.0,385" class="grid"/>
+<path d="M70.5,381.0 L73.8,381.0 L77.1,381.0 L80.4,381.0 L83.7,381.0 L87.0,381.0 L90.3,376.8 L93.6,381.0 L96.8,381.0 L100.1,376.8 L103.4,383.1 L106.7,381.0 L110.0,381.0 L113.3,376.8 L116.6,381.0 L119.9,381.0 L123.2,381.0 L126.5,381.0 L129.8,381.0 L133.1,376.8 L136.4,381.0 L139.7,381.0 L143.0,381.0 L146.3,381.0 L149.6,381.0 L152.9,381.0 L156.2,381.0 L159.5,381.0 L162.8,381.0 L166.1,381.0 L169.4,381.0 L172.6,381.0 L175.9,381.0 L179.2,381.0 L182.5,381.0 L185.8,381.0 L189.1,376.8 L192.4,368.5 L195.7,362.2 L199.0,355.9 L202.3,351.8 L205.6,347.6 L208.9,343.4 L212.2,339.2 L215.5,339.2 L218.8,335.0 L222.1,330.9 L225.4,330.9 L228.7,330.9 L232.0,326.7 L235.3,326.7 L238.6,326.7 L241.9,328.8 L245.1,330.9 L248.4,330.9 L251.7,333.0 L255.0,335.0 L258.3,339.2 L261.6,339.2 L264.9,339.2 L268.2,341.3 L271.5,339.2 L274.8,343.4 L278.1,345.5 L281.4,345.5 L284.7,347.6 L288.0,347.6 L291.3,349.7 L294.6,362.2 L297.9,364.3 L301.2,364.3 L304.5,364.3 L307.8,364.3 L311.1,364.3 L314.4,364.3 L317.6,364.3 L320.9,364.3 L324.2,364.3 L327.5,364.3 L330.8,364.3 L334.1,364.3 L337.4,364.3 L340.7,364.3 L344.0,364.3 L347.3,364.3 L350.6,364.3 L353.9,364.3 L357.2,364.3 L360.5,364.3 L363.8,364.3 L367.1,364.3 L370.4,364.3 L373.7,364.3 L377.0,364.3 L380.3,364.3 L383.6,364.3 L386.9,364.3 L390.2,364.3 L393.4,364.3 L396.7,364.3 L400.0,364.3 L403.3,364.3 L406.6,368.5 L409.9,366.4 L413.2,366.4 L416.5,366.4 L419.8,364.3 L423.1,364.3 L426.4,364.3 L429.7,364.3 L433.0,364.3 L436.3,364.3 L439.6,364.3 L442.9,364.3 L446.2,364.3 L449.5,366.4 L452.8,368.5 L456.1,368.5 L459.4,368.5 L462.7,368.5 L465.9,368.5 L469.2,368.5 L472.5,368.5 L475.8,366.4 L479.1,366.4 L482.4,366.4 L485.7,364.3 L489.0,364.3 L492.3,364.3 L495.6,366.4 L498.9,366.4 L502.2,368.5 L505.5,368.5 L508.8,368.5 L512.1,368.5 L515.4,370.6 L518.7,370.6 L522.0,370.6 L525.3,368.5 L528.6,368.5 L531.9,366.4 L535.2,364.3 L538.4,364.3 L541.7,366.4 L545.0,364.3 L548.3,368.5 L551.6,368.5 L554.9,368.5 L558.2,370.6 L561.5,370.6 L564.8,372.7 L568.1,372.7 L571.4,372.7 L574.7,370.6 L578.0,370.6 L581.3,368.5 L584.6,366.4 L587.9,366.4 L591.2,366.4 L594.5,366.4 L597.8,366.4 L601.1,368.5 L604.4,368.5 L607.7,370.6 L611.0,372.7 L614.2,372.7 L617.5,372.7 L620.8,372.7 L624.1,372.7 L627.4,370.6 L630.7,368.5 L634.0,368.5 L637.3,368.5 L640.6,366.4 L643.9,366.4 L647.2,366.4 L650.5,366.4 L653.8,368.5 L657.1,370.6 L660.4,372.7 L663.7,372.7 L667.0,372.7 L670.3,372.7 L673.6,372.7 L676.9,372.7 L680.2,372.7 L683.5,368.5 L686.7,368.5 L690.0,368.5 L693.3,366.4 L696.6,368.5 L699.9,368.5 L703.2,368.5 L706.5,370.6 L709.8,372.7 L713.1,372.7 L716.4,372.7 L719.7,372.7 L723.0,372.7 L726.3,372.7 L729.6,372.7 L732.9,372.7 L736.2,368.5 L739.5,368.5 L742.8,368.5 L746.1,368.5 L749.4,368.5 L752.7,368.5 L756.0,370.6 L759.2,372.7 L762.5,372.7 L765.8,374.7 L769.1,374.7 L772.4,374.7 L775.7,372.7 L779.0,372.7 L782.3,372.7 L785.6,370.6 L788.9,368.5 L792.2,368.5 L795.5,368.5 L798.8,368.5 L802.1,368.5 L805.4,368.5 L808.7,372.7 L812.0,372.7 L815.3,374.7 L818.6,376.8 L821.9,374.7 L825.2,374.7 L828.5,372.7 L831.8,372.7 L835.0,372.7 L838.3,370.6 L841.6,368.5 L844.9,368.5 L848.2,368.5 L851.5,368.5 L854.8,370.6 L858.1,372.7 L861.4,372.7 L864.7,374.7 L868.0,376.8 L871.3,376.8 L874.6,376.8 L877.9,374.7 L881.2,372.7 L884.5,372.7 L887.8,372.7 L891.1,370.6 L894.4,368.5 L897.7,368.5 L901.0,368.5 L904.3,370.6 L907.5,372.7 L910.8,372.7 L914.1,374.7 L917.4,376.8 L920.7,376.8 L924.0,376.8 L927.3,376.8 L930.6,374.7 L933.9,372.7 L937.2,372.7 L940.5,372.7 L943.8,370.6 L947.1,368.5" fill="none" stroke="var(--warn)" stroke-width="1.8"/>
+<text x="296.3" y="280" class="an">bis 2,3 V · ≈ 40 ms</text>
+<text x="434.6" y="347" class="an">≈ 0,7 V bis ≈ 80 ms</text>
+<text x="70" y="396" class="m">t = 0 am Trigger (1 V steigend) · Skala: −50 … +300 ms · Tastkopf 10:1, 8 Bit (≈ 0,09 V je Stufe) · gemessen mit PicoScope 2204A</text>
+</svg>
+  </div>
+  <p>Beim RESET und beim Einschalten springt der Kanal kurz hoch, danach liegt er wieder bei 0 V. Gemessen an Zelle 1 ohne Prüfling. Das ist weniger als befürchtet (kein Dauerzustand mit 5,26 V), aber ein Prüfling am Zellabgriff sieht diese Pulse. Die Ursache liegt in der Isolator-Variante: Auf der Karte steht <b>ISO6742F</b> (Foto Kanal 13). Mit F geht der Ausgang ohne Versorgung der Eingangsseite auf <b>low</b>, also Kanal aus (TI-Datenblatt SLLSFJ6G, Suffix „F = default low“). Die Pulse entstehen dazwischen: Bei RESET fallen die 5 V der Master-Seite langsam, der Master ist schon im Reset, seine Pins sind hochohmig, Q8/Q9 sperren, die Isolator-Eingänge liegen high, und der Kanal geht kurz auf „voll ein“. Das ist eine <em>Erklärung aus Schaltplan und Messung, nicht einzeln nachgewiesen</em>. Ein Master-Reset bei vorhandenen 5 V (Debugger, Watchdog) ist nicht gemessen; dort bliebe der Eingang high, solange der Master im Reset ist.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Aussage in dieser Analyse</th><th>Am Gerät / auf dem Foto</th><th>Auswirkung</th></tr></thead>
+    <tbody>
+      <tr><td>Isolator „ISO6742“, Ruhepegel high</td><td>Aufdruck <b>ISO6742F</b>, Ruhepegel low <span class="chip info">Foto + Datenblatt</span></td><td>S2 (System-Analyse) neu bewertet: Verlust der 5 V = Kanal aus</td></tr>
+      <tr><td>B1: U3/U5 sind LM358</td><td>Aufdruck „T272I“ = <b>TLV272</b>; Eingang bis V+ − 1,35 V = 7,65 V <span class="chip warn">Datenblatt SLOS351E</span></td><td>B1 bleibt bestehen, nur anders begründet; TP6-Messung steht aus</td></tr>
+      <tr><td>Glättung Sollwert: Einschwingen 0,2–0,3 s <span class="chip warn">Schätzung</span></td><td>Anstieg 10–90 % in <b>16 ms</b> beim RESET-Puls <span class="chip ok">gemessen</span></td><td>Schätzung zu groß; die Filterstruktur ist anders als angenommen oder der Pfad schneller. Ursache offen.</td></tr>
+      <tr><td>B4/B5: Abweichung je Kanal „einige 10 mV“, Messfehler ±30 mV</td><td>Ausgang −15 … +40 mV, Rückmeldung −16 … +73 mV (Tabelle unten) <span class="chip ok">Multimeter</span></td><td>B5 größer als geschätzt, bei Kanal 13 ein fester Offset der Rückmeldung von ≈ +70 mV</td></tr>
+      <tr><td>C15, C1 nicht bestückt; kein Kühlkörper an U1; R1 = Dale WSR-2, 1 Ω; U4 = LM334</td><td>auf dem Foto bestätigt <span class="chip ok">Foto</span></td><td>keine Änderung (B6 bestätigt)</td></tr>
+    </tbody>
+  </table></div>
+  <div class="tbl"><table>
+    <thead><tr><th>Zelle</th><th>Sollwert</th><th>Multimeter</th><th>Meldung</th><th>Ausgang − Soll</th><th>Meldung − Multimeter</th></tr></thead>
+    <tbody>
+      <tr><td class="id">2</td><td class="num">3,700 V</td><td class="num">3,685 V</td><td class="num">3,669 V</td><td class="num">−15 mV</td><td class="num">−16 mV</td></tr>
+      <tr><td class="id">5</td><td class="num">3,700 V</td><td class="num">≈ 3,700 V</td><td class="num">3,712 V</td><td class="num">≈ 0 mV</td><td class="num">+12 mV</td></tr>
+      <tr><td class="id">10</td><td class="num">3,700 V</td><td class="num">3,735 V</td><td class="num">3,773 V</td><td class="num">+35 mV</td><td class="num">+38 mV</td></tr>
+      <tr><td class="id">13</td><td class="num">3,700 V</td><td class="num">≈ 3,740 V</td><td class="num">3,813 V</td><td class="num">+40 mV</td><td class="num">+73 mV</td></tr>
+      <tr><td class="id">13</td><td class="num">3,000 V</td><td class="num">3,022 V</td><td class="num">3,088 V</td><td class="num">+22 mV</td><td class="num">+66 mV</td></tr>
+      <tr><td class="id">13</td><td class="num">4,000 V</td><td class="num">4,045 V</td><td class="num">4,117 V</td><td class="num">+45 mV</td><td class="num">+72 mV</td></tr>
+    </tbody>
+  </table></div>
+  <p class="meta">Zelle 13 im Standby: Meldung 0,064 V bei 0 V, die anderen Zellen 0,02–0,05 V. Der Offset der Rückmeldung (≈ +70 mV) entsteht hinter dem Messteiler (ein Teiler erzeugt keinen Offset): im AMC1311, in U11, auf der Rückwand oder im ADC-Kanal des Masters. <b>Kartentausch Kanal 13 ↔ 5 (22.10.):</b> Der Offset folgt der Karte. Standby jetzt Zelle 13 0,037 V und Zelle 5 0,079 V (vorher 0,064 V und 0,03 V); bei 3,7 V meldet die Karte von Kanal 13 im Steckplatz 5 3,797 V (vorher 3,813 V), die von Kanal 5 im Steckplatz 13 3,722 V (vorher 3,712 V). Karte ≈ 85–91 mV, Steckplatz/ADC ≈ 13 mV. Der Fehler liegt auf der Karte (AMC1311, U11 oder Teiler). Ob der Ausgangsfehler (+40 mV) mitwandert, ist nicht geprüft. Die Multimeterwerte tragen ±5 mV Streuung. Die übrigen zehn Zellen sind nicht gegen das Multimeter geprüft.</p>
+</section>
+
+<section>
+  <h2>Blockschaltbild</h2>
+  <div class="diagram" role="img" aria-label="Blockschaltbild des Zellkanals mit Isolationsgrenze zwischen Master-Seite und Zellseite">
+  <svg viewBox="0 0 1000 600" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah"/></marker>
+      <marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="aha"/></marker>
+      <marker id="ab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ahb"/></marker>
+    </defs>
+    <!-- Zonen -->
+    <rect x="8" y="8" width="252" height="584" rx="6" class="zone"/>
+    <text x="20" y="30" class="t">Master-Seite</text>
+    <text x="20" y="46" class="s">Rückwand, Bezug GNDPWR</text>
+    <text x="330" y="30" class="t">Zellseite (schwebend)</text>
+    <text x="330" y="46" class="s">Bezug GND = V_OUT−, Versorgung +9 V / +5VA</text>
+    <path d="M270,14 L270,590" class="barrier"/>
+    <text x="276" y="586" class="s" style="fill:var(--iso)">Isolationsgrenze</text>
+
+    <!-- Rückwand-Signale links -->
+    <text x="18" y="84" class="lab">VOLTAGE_SET_ISO</text>
+    <text x="18" y="97" class="m">c14 · PWM 1 kHz, aktiv low</text>
+    <text x="18" y="142" class="lab">ENABLE_ISO</text>
+    <text x="18" y="155" class="m">c10 · high = Kanal aus</text>
+    <text x="18" y="206" class="lab">LIMIT_ISO ←</text>
+    <text x="18" y="219" class="m">c12 · low = Begrenzung</text>
+    <text x="18" y="252" class="lab">STATUS_ISO ←</text>
+    <text x="18" y="265" class="m">c8 · low = Taste</text>
+    <text x="18" y="352" class="lab">VOLTAGE_SENSE+ ←</text>
+    <text x="18" y="365" class="m">c4 · 0,4 V/V</text>
+    <text x="18" y="452" class="lab">+48 V</text>
+    <text x="18" y="465" class="m">c18 · GNDPWR c24/c26</text>
+    <text x="18" y="520" class="lab">+5 V</text>
+    <text x="18" y="533" class="m">c16 · Master-Logik</text>
+
+    <!-- Q8 / Q9 Pegelwandler -->
+    <rect x="140" y="70" width="80" height="34" rx="4" class="box"/>
+    <text x="180" y="86" text-anchor="middle">Q8 invert.</text>
+    <text x="180" y="99" text-anchor="middle" class="m">3,3→5 V</text>
+    <rect x="140" y="128" width="80" height="34" rx="4" class="box"/>
+    <text x="180" y="144" text-anchor="middle">Q9 invert.</text>
+    <text x="180" y="157" text-anchor="middle" class="m">3,3→5 V</text>
+    <path d="M124,90 L140,90" class="w" marker-end="url(#a)"/>
+    <path d="M124,148 L140,148" class="w" marker-end="url(#a)"/>
+
+    <!-- ISO6742 -->
+    <rect x="228" y="62" width="84" height="214" rx="5" class="boxi"/>
+    <text x="270" y="80" text-anchor="middle" class="t">ISO6742</text>
+    <text x="270" y="94" text-anchor="middle" class="m">2 hin, 2 zurück</text>
+    <path d="M220,87 L228,87" class="w"/>
+    <path d="M220,145 L228,145" class="w"/>
+    <path d="M228,210 L170,210" class="w" marker-end="url(#a)"/>
+    <path d="M228,256 L170,256" class="w" marker-end="url(#a)"/>
+
+    <!-- TLV9301 / AMC1311 -->
+    <rect x="228" y="330" width="84" height="46" rx="5" class="boxi"/>
+    <text x="270" y="350" text-anchor="middle" class="t">AMC1311</text>
+    <text x="270" y="366" text-anchor="middle" class="m">0–2 V, ×1</text>
+    <rect x="138" y="332" width="76" height="42" rx="4" class="box"/>
+    <text x="176" y="350" text-anchor="middle">U11 TLV9301</text>
+    <text x="176" y="365" text-anchor="middle" class="m">diff → single</text>
+    <path d="M228,353 L214,353" class="w" marker-end="url(#a)"/>
+    <path d="M138,353 L125,353" class="w" marker-end="url(#a)"/>
+
+    <!-- DC/DC -->
+    <rect x="228" y="430" width="84" height="56" rx="5" class="boxi"/>
+    <text x="270" y="450" text-anchor="middle" class="t">U2 DC/DC</text>
+    <text x="270" y="465" text-anchor="middle" class="m">SI06W8-09</text>
+    <text x="270" y="478" text-anchor="middle" class="m">48 V → 9 V, 6 W</text>
+    <path d="M70,448 L228,448" class="w" marker-end="url(#a)"/>
+    <text x="150" y="442" class="m">L1 10 µH, C2</text>
+
+    <!-- Zellseite: Sollwertpfad -->
+    <rect x="340" y="64" width="128" height="48" rx="4" class="box"/>
+    <text x="404" y="83" text-anchor="middle">PWM-Filter</text>
+    <text x="404" y="98" text-anchor="middle" class="m">2× 10 k/1 µF, 47 k</text>
+    <path d="M312,87 L340,87" class="wa" marker-end="url(#aa)"/>
+    <text x="316" y="80" class="m">OUTA</text>
+    <rect x="496" y="64" width="98" height="48" rx="4" class="box"/>
+    <text x="545" y="83" text-anchor="middle">U5A ×1,5</text>
+    <text x="545" y="98" text-anchor="middle" class="m">LM358</text>
+    <path d="M468,87 L496,87" class="wa" marker-end="url(#aa)"/>
+    <text x="474" y="80" class="m">Vset</text>
+    <path d="M594,87 L640,87" class="wa" marker-end="url(#aa)"/>
+    <text x="598" y="80" class="m">R7, R8</text>
+    <circle cx="616" cy="87" r="3.5" style="fill:var(--accent)"/>
+    <text x="600" y="60" class="lab">EN_SW</text>
+
+    <rect x="640" y="60" width="120" height="58" rx="5" class="boxa"/>
+    <text x="700" y="80" text-anchor="middle" class="t">U1 LT3080</text>
+    <text x="700" y="95" text-anchor="middle" class="m">OUT folgt SET</text>
+    <text x="700" y="108" text-anchor="middle" class="m">SET: C6 22 µF</text>
+    <path d="M760,87 L930,87" class="wa" marker-end="url(#aa)"/>
+    <text x="936" y="84" class="lab">V_OUT+</text>
+    <text x="936" y="97" class="m">c30</text>
+    <text x="800" y="80" class="m">C7 2,2 µF, D1, D3</text>
+
+    <!-- Versorgung Zellseite -->
+    <rect x="340" y="430" width="120" height="56" rx="4" class="box"/>
+    <text x="400" y="450" text-anchor="middle">+9 V Zellseite</text>
+    <text x="400" y="465" text-anchor="middle" class="m">OPV, VCONTROL</text>
+    <text x="400" y="478" text-anchor="middle" class="m">C3 220 µF</text>
+    <path d="M312,458 L340,458" class="w" marker-end="url(#a)"/>
+    <rect x="490" y="430" width="120" height="56" rx="4" class="box"/>
+    <text x="550" y="450" text-anchor="middle">U8 NCP1117</text>
+    <text x="550" y="465" text-anchor="middle" class="m">+5VA: Isolatoren,</text>
+    <text x="550" y="478" text-anchor="middle" class="m">LEDs, Sollwert-Pegel</text>
+    <path d="M460,458 L490,458" class="w" marker-end="url(#a)"/>
+
+    <!-- Strom: Shunt + U3 -->
+    <rect x="640" y="430" width="120" height="56" rx="4" class="boxw"/>
+    <text x="700" y="450" text-anchor="middle">R1 1 Ω + U3</text>
+    <text x="700" y="465" text-anchor="middle" class="m">I → 1 V/A</text>
+    <text x="700" y="478" text-anchor="middle" class="m">LM358 (Befund B1)</text>
+    <path d="M400,486 L400,510 L700,510 L700,486" class="w" marker-end="url(#a)"/>
+    <text x="520" y="524" class="m">+9 V → R1 → Vregin (IN von U1)</text>
+    <path d="M760,458 L790,458 L790,128 L730,128 L730,118" class="w" marker-end="url(#a)"/>
+    <text x="796" y="300" class="m">Vregin</text>
+
+    <!-- Strombegrenzung -->
+    <rect x="640" y="300" width="120" height="70" rx="4" class="boxw"/>
+    <text x="700" y="320" text-anchor="middle">U5B Vergleich</text>
+    <text x="700" y="335" text-anchor="middle" class="m">CurrentMeas ↔ RV1</text>
+    <text x="700" y="348" text-anchor="middle" class="m">RV1: 0–1,67 A</text>
+    <text x="700" y="361" text-anchor="middle" class="m">ohne Hysterese</text>
+    <path d="M700,430 L700,370" class="w" marker-end="url(#a)"/>
+    <text x="706" y="418" class="m">CurrentMeas</text>
+    <rect x="496" y="300" width="112" height="70" rx="4" class="box"/>
+    <text x="552" y="318" text-anchor="middle">Q1 · Q2 · Q3</text>
+    <text x="552" y="333" text-anchor="middle" class="m">Q1 zieht EN_SW</text>
+    <text x="552" y="346" text-anchor="middle" class="m">Q2 LED LIMIT</text>
+    <text x="552" y="359" text-anchor="middle" class="m">Q3 → LIMIT</text>
+    <path d="M640,335 L608,335" class="w" marker-end="url(#a)"/>
+    <path d="M604,300 L604,226 L624,226 L624,95" class="wb" marker-end="url(#ab)"/>
+    <path d="M496,318 L482,318 L482,218 L312,218" class="w" marker-end="url(#a)"/>
+
+    <!-- Enable -->
+    <rect x="340" y="150" width="128" height="52" rx="4" class="box"/>
+    <text x="404" y="170" text-anchor="middle">Q5 (+ Q7 LED)</text>
+    <text x="404" y="185" text-anchor="middle" class="m">ENABLE high = an</text>
+    <path d="M312,145 L330,145 L330,170 L340,170" class="w" marker-end="url(#a)"/>
+    <text x="316" y="140" class="m">OUTB</text>
+    <rect x="496" y="150" width="112" height="52" rx="4" class="box"/>
+    <text x="552" y="170" text-anchor="middle">Q4 · Q6</text>
+    <text x="552" y="185" text-anchor="middle" class="m">aus: SET 0, Brücke</text>
+    <path d="M468,176 L496,176" class="w" marker-end="url(#a)"/>
+    <path d="M596,150 L612,96" class="wb" marker-end="url(#ab)"/>
+    <path d="M608,190 L805,190 L805,92" class="wb" marker-end="url(#ab)"/>
+    <text x="640" y="214" class="m">Q6 AO3400 + R25 0 Ω brücken V_OUT</text>
+
+    <!-- Taste / Status -->
+    <rect x="340" y="236" width="128" height="40" rx="4" class="box"/>
+    <text x="404" y="253" text-anchor="middle">SW1 Taste</text>
+    <text x="404" y="267" text-anchor="middle" class="m">R29/C27 entprellt</text>
+    <path d="M340,256 L312,256" class="w" marker-end="url(#a)"/>
+
+    <!-- Messpfad -->
+    <rect x="820" y="230" width="140" height="52" rx="4" class="boxa"/>
+    <text x="890" y="250" text-anchor="middle">Teiler 15 k / 10 k</text>
+    <text x="890" y="265" text-anchor="middle" class="m">× 0,4, C15 nicht best.</text>
+    <path d="M920,92 L920,230" class="wa" marker-end="url(#aa)"/>
+    <path d="M890,282 L890,395 L330,395 L330,353 L312,353" class="wa" marker-end="url(#aa)"/>
+    <text x="800" y="389" class="m">0–2 V</text>
+
+    <!-- Grundlast -->
+    <rect x="820" y="120" width="140" height="44" rx="4" class="box"/>
+    <text x="890" y="138" text-anchor="middle">U4 LM334</text>
+    <text x="890" y="153" text-anchor="middle" class="m">Grundlast 1,44 mA</text>
+    <path d="M890,92 L890,120" class="w" marker-end="url(#a)"/>
+
+    <!-- Ausgang minus -->
+    <text x="936" y="548" class="lab">V_OUT−</text>
+    <text x="936" y="561" class="m">c32 = GND</text>
+    <path d="M880,555 L930,555" class="w" marker-end="url(#a)"/>
+    <text x="640" y="560" class="m">NT1: GND der Zellseite = V_OUT−</text>
+  </svg>
+  </div>
+  <div class="legend">
+    <span><i class="sw" style="background:var(--iso-soft);border:1px solid var(--iso)"></i>überbrückt die Isolationsgrenze</span>
+    <span><i class="sw" style="background:var(--accent-soft);border:1px solid var(--accent)"></i>Hauptpfad Sollwert → Ausgang → Messung</span>
+    <span><i class="sw" style="background:var(--bad-soft);border:1px solid var(--bad)"></i>Stelle mit Befund</span>
+    <span>gestrichelt rot: zieht den Sollwert auf 0 (Begrenzung, Abschalten)</span>
+  </div>
+</section>
+
+<section>
+  <h2>So arbeitet der Kanal</h2>
+  <div class="two">
+    <div class="card">
+      <h3>Sollwert</h3>
+      <p>Der Master gibt je Kanal eine PWM aus (FTM5, 1 kHz, im Modell „Active Low“). Q8 hebt sie von 3,3 V auf 5 V und invertiert dabei; die Active-Low-Einstellung der Firmware hebt die Invertierung wieder auf. Hinter dem ISO6742 glätten zwei RC-Glieder die PWM, U5A verstärkt um 1,5, und der LT3080 bringt die Spannung am Pin SET 1:1 an den Ausgang.</p>
+      <div class="formula">U_out = D · 5 V(+5VA) · 47/67 · (1 + 4,99/10) = D · 5,26 V</div>
+      <p class="meta">Die Firmware-Tabelle setzt 5 V bei D = 0,9566 (Rechnung: 5,03 V) und 1 V bei D = 0,1859 (Rechnung: 0,98 V). Das passt im Rahmen der Toleranzen.</p>
+    </div>
+    <div class="card">
+      <h3>Rückmessung</h3>
+      <p>Ein Teiler 15 k/10 k bringt die Ausgangsspannung auf 0,4-fach. Der AMC1311 überträgt sie isoliert, U11 macht aus dem Differenzsignal ein Signal gegen GNDPWR für den ADC des Masters.</p>
+      <div class="formula">VOLTAGE_SENSE = 0,4 · U_out  →  5,0 V ≙ 2,0 V</div>
+      <p class="meta">Die Firmware rechnet mit 798 LSB/V (Tabelle <code>VoltageSenseMeas_Ax</code>), also etwa 1,25 mV je Stufe. Der lineare Eingangsbereich des AMC1311 endet bei 2 V: über 5,0 V gibt es keine Reserve.</p>
+    </div>
+    <div class="card">
+      <h3>Abschalten</h3>
+      <p>ENABLE kommt invertiert über Q9 und ISO6742 auf die Zellseite. Ist ENABLE low, sperrt Q5. Dann ziehen gleichzeitig Q4 den Sollwertknoten EN_SW auf 0 und Q6 den Ausgang über R25 auf GND. Ein abgeschalteter Kanal ist dadurch gebrückt und der Stapel bleibt geschlossen. Das ist die Abhilfe aus der Fehlerliste („Enable über Strombegrenzung“).</p>
+      <p class="meta">Passt zur Firmware: <code>EnableArray(n) = true</code> im Zustand „Disabled“ setzt ENABLE_ISO high.</p>
+    </div>
+    <div class="card">
+      <h3>Strom und Begrenzung</h3>
+      <p>R1 (1 Ω) liegt zwischen +9 V und dem Eingang des LT3080. U3A puffert die Spannung hinter dem Shunt, U3B bildet 9 V − Vregin = I · 1 Ω. U5B vergleicht das mit dem Trimmer RV1. Überschreitet der Strom die Schwelle, zieht Q1 den Sollwert herunter, Q2 schaltet die LED LIMIT und Q3 meldet LIMIT an den Master.</p>
+      <p class="meta">R26 (Hysterese) und C15 (Filter am AMC-Eingang) sind im Schaltplan als nicht bestückt markiert, C1 (48-V-Eingang) ebenfalls.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Kennwerte</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Größe</th><th>Wert</th><th>Herleitung</th></tr></thead>
+    <tbody>
+      <tr><td>Stellbereich</td><td class="num">0 … 5,26 V</td><td>D = 1, +5VA = 5,00 V; nutzbar laut Konzept 0–5 V</td></tr>
+      <tr><td>Glättung Sollwert</td><td class="num">τ ≈ 10 + 10 + 24 ms</td><td>2× 10 k·1 µF, dazu (R7+R8)·C6 = 1,1 k·22 µF. Einschwingen auf 0,1 % ≈ 0,2–0,3 s (Schätzung, am Gerät widerlegt: Anstieg 10–90 % in 16 ms beim RESET-Puls, siehe Nachtrag)</td></tr>
+      <tr><td>PWM-Restwelligkeit am Ausgang</td><td class="num">≪ 1 mV</td><td>1 kHz gegen Ecken bei 16 Hz und 6,6 Hz (Schätzung)</td></tr>
+      <tr><td>Messung</td><td class="num">0,4 V/V · 798 LSB/V</td><td>Teiler 15 k/10 k, AMC1311 ×1, U11 ×1; Filter U11 ≈ 146 kHz (3,3 k·330 pF)</td></tr>
+      <tr><td>Grundlast am Ausgang</td><td class="num">≈ 1,6 mA</td><td>LM334 mit R6 47 Ω: 67,7 mV/47 Ω = 1,44 mA (bei 25 °C, steigt mit der Temperatur) plus Teiler 25 kΩ</td></tr>
+      <tr><td>Strommessung</td><td class="num">1 V/A</td><td>R1 1 Ω, U3B Differenzverstärker ×1</td></tr>
+      <tr><td>Begrenzung (RV1)</td><td class="num">0 … 1,67 A</td><td>5 V · 10 k/(20 k + 10 k)</td></tr>
+      <tr><td>Versorgung je Kanal</td><td class="num">6 W, 9 V</td><td>U2 SI06W8-09; nach Abzug von Logik und LT3080-Steuerstrom bleiben etwa 0,6 A (Schätzung)</td></tr>
+      <tr><td>Verlust LT3080</td><td class="num">0,5 W … 4 W</td><td>(9 V − I·1 Ω − U_out)·I: 0,1 A bei 3,7 V ≈ 0,5 W; 0,5 A bei 2,5 V ≈ 3 W</td></tr>
+      <tr><td>Rückwand</td><td class="num">nur Reihe c</td><td>Reihe a ist frei; Belegung siehe unten</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>Befunde</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Nr.</th><th>Befund</th><th>Folge</th><th>Vorschlag</th></tr></thead>
+    <tbody>
+      <tr><td class="id">B1 <span class="chip bad">hoch</span></td>
+        <td>U3A puffert Vregin ≈ 8,5–9 V. Der LM358 verarbeitet am Eingang nur bis V+ − 1,5 V = 7,5 V, und sein Ausgang kommt auch nur dorthin. Die Fehlerliste nennt dafür „Rail-to-Rail-OPV nötig“, die Stückliste von V1 hat aber weiter LM358 an U3 und U5. <b>Gerätetest 22.10.:</b> Auf der Karte von Kanal 13 steht an U3 und U5 „T272I“, also TLV272 (getauscht). Der TLV272 hat nur einen Rail-to-Rail-<em>Ausgang</em>; sein Eingangsgleichtaktbereich endet laut Datenblatt bei V+ − 1,35 V, hier 7,65 V (LM358: 7,5 V). Vregin liegt bei 8,5–9 V.</td>
+        <td>U3A klemmt bei etwa 7,5 V, CurrentMeas zeigt dann etwa 1,5 V (= 1,5 A) unabhängig vom Strom. Die Begrenzung greift dauernd, außer RV1 steht am oberen Anschlag. Der Tausch auf TLV272 ändert daran kaum etwas. Gemessen ist es noch nicht: TP6 (I_ACT) bei bekanntem Laststrom steht aus.</td>
+        <td>U3 durch einen pinkompatiblen Doppel-OPV mit Rail-to-Rail-<em>Eingang</em> und -Ausgang für 9 V ersetzen, z. B. TLV9152 oder LMC6482 (Typ prüfen, nicht TLV272). U5 kann LM358 bleiben.</td></tr>
+      <tr><td class="id">B2 <span class="chip warn">mittel</span></td>
+        <td>Beim Abschalten ziehen Q4 den Sollwert auf etwa U_CE(sat) und Q6 den Ausgang gleichzeitig auf GND. Der LT3080 versucht dann, einige 10 mV in einen Kurzschluss von etwa 30 mΩ zu treiben.</td>
+        <td><em>Annahme, zu messen:</em> Ein abgeschalteter Kanal könnte bis in die Strombegrenzung des LT3080 (≥ 1,1 A) gehen. Dann wären der DC/DC (6 W) überlastet und U1 heiß, und zwar gerade im Standby, in dem alle Kanäle aus sind.</td>
+        <td>Strom eines abgeschalteten Kanals und Temperatur von U1 messen. Falls nötig, R25 (heute 0 Ω) auf 1–2 Ω setzen oder Q6 erst nach Q4 schalten.</td></tr>
+      <tr><td class="id">B3 <span class="chip warn">mittel</span></td>
+        <td>RV1 stellt 0–1,67 A ein, der DC/DC liefert aber nur etwa 0,6 A.</td>
+        <td>Nur das untere Drittel des Trimmers ist sinnvoll; das erklärt „Trimmer schlecht bedienbar“ aus der Fehlerliste.</td>
+        <td>R36 von 20 k auf etwa 75 k ändern, dann reicht der Bereich bis 0,59 A.</td></tr>
+      <tr><td class="id">B4 <span class="chip warn">mittel</span></td>
+        <td>Der Sollwert wird gesteuert, nicht geregelt: Er hängt von +5VA (Toleranz des NCP1117), den 1-%-Widerständen und dem Offset des LM358 ab. Die Firmware nutzt eine gemeinsame Tabelle für alle Kanäle, der PI-Regler ist abgeschaltet (<code>VoltageControllerEnable_P = false</code>).</td>
+        <td>Kanalabhängige Abweichungen im Bereich einiger 10 mV (Schätzung). <b>Gemessen 22.10.:</b> Ausgang −15 … +40 mV gegen Soll an vier Zellen. Für Funktionstests des MC33771C reicht das (Schwellen mit Abstand, Balancing, Open-Wire). Als Referenz für Genauigkeitsnachweise im mV-Bereich reicht es nicht.</td>
+        <td>In der neuen Firmware den Istwert per Regelung nachführen und je Kanal kalibrieren. Für Genauigkeitsnachweise ein Referenz-Multimeter verwenden.</td></tr>
+      <tr><td class="id">B5 <span class="chip warn">mittel</span></td>
+        <td>Der Messteiler aus R21 und R20 hat 1 % Toleranz (R20 laut LCSC-Nr. 1 %, R21 ohne Angabe). Die Firmware rechnet mit einer gemeinsamen Kennlinie.</td>
+        <td>Bis zu etwa ±0,8 % Verstärkungsfehler je Kanal, also rund ±30 mV bei 3,7 V (Schätzung). <b>Gemessen 22.10.:</b> Rückmeldung −16 … +73 mV gegen Multimeter, bei Kanal 13 ein fester Offset (siehe Nachtrag). Eine Stufe des ADC entspricht etwa 1,25 mV.</td>
+        <td>Kalibrierung je Kanal (Offset und Steigung) in der neuen Firmware ablegen, langfristig 0,1-%-Widerstände verwenden.</td></tr>
+      <tr><td class="id">B6 <span class="chip warn">mittel</span></td>
+        <td>Der LT3080 hat keinen Kühlkörper (laut Fehlerliste bewusst entfernt). Bei 0,5 A und kleiner Ausgangsspannung fallen 3–4 W an.</td>
+        <td>Dauerbetrieb mit hohem Strom ist thermisch fraglich (Schätzung). Bei Balancing-Strömen um 0,1 A sind es etwa 0,5 W, das ist unkritisch.</td>
+        <td>Die Strombegrenzung im Betrieb auf etwa 0,2 A einstellen (nach B1/B3) oder die Temperatur bei 0,5 A messen.</td></tr>
+      <tr><td class="id">B7 <span class="chip info">Hinweis</span></td>
+        <td>Das 48-V-Netzteil IRM-60-48 liefert 60 W für 14 Kanäle.</td>
+        <td>Etwa 4 W je Kanal, nicht alle gleichzeitig bei 0,5 A. Die Firmware schaltet bei 1,28 A Versorgungsstrom ab.</td>
+        <td>Bei der Auslegung von Tests beachten.</td></tr>
+      <tr><td class="id">B8 <span class="chip info">Hinweis</span></td>
+        <td>R26 (Hysterese der Begrenzung) ist nicht bestückt.</td>
+        <td>Ohne Hysterese kann die Begrenzung schwingen. Prüfen lässt sich das erst, wenn B1 behoben ist.</td>
+        <td>Nach dem OPV-Tausch das Verhalten im Begrenzungsfall mit dem Oszilloskop ansehen.</td></tr>
+      <tr><td class="id">B9 <span class="chip info">Hinweis</span></td>
+        <td>Q8 und Q9 invertieren den Sollwert- und den Enable-Pfad.</td>
+        <td>Die alte Firmware gleicht das mit „Active Low“ an FTM5 und mit ENABLE_ISO high = aus aus.</td>
+        <td>Die neue Firmware muss die Polarität übernehmen (Board-Beschreibung, BS-4.2).</td></tr>
+    </tbody>
+  </table></div>
+  <p class="meta">Nicht Teil dieses Schritts: Luft- und Kriechstrecken zwischen GND und GNDPWR im Layout. Jede Karte kann bis etwa 65 V gegen die Rückwand liegen (13 Kanäle darunter). Das gehört zur Prüfung der Rückwand (BS-2, Teil 2).</p>
+</section>
+
+<section>
+  <h2>Abgleich mit der Fehlerliste des Erstaufbaus</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Punkt aus Konzept.pptx</th><th>Stand im Schaltplan V1</th></tr></thead>
+    <tbody>
+      <tr><td>Isolierte Spannungsmessung geht nicht, OPV für Single-ended nötig</td><td><span class="chip ok">umgesetzt</span> U11 TLV9301 als Differenzverstärker</td></tr>
+      <tr><td>Digitaler Isolator schaltet erst bei 3,5 V sauber, Pegelwandler nötig</td><td><span class="chip ok">umgesetzt</span> Q8/Q9 mit 10 k nach +5 V (die Eingangsschwelle des ISO6742 liegt bei 0,7 · VCC; auf der Karte sitzt die Variante ISO6742F, Ruhepegel low)</td></tr>
+      <tr><td>Enable verhindert Ausgangsspannung unter 1 V, Enable über Strombegrenzung lösen</td><td><span class="chip ok">umgesetzt</span> Q4 an EN_SW, dazu Q6 als Brücke (siehe B2)</td></tr>
+      <tr><td>Regelt nicht sauber auf null, Grundstrom erhöhen, R6 anpassen</td><td><span class="chip ok">umgesetzt</span> R6 = 47 Ω, also 1,44 mA</td></tr>
+      <tr><td>Kühlkörper überflüssig</td><td><span class="chip ok">umgesetzt</span> kein Kühlkörper in der Stückliste (siehe B6)</td></tr>
+      <tr><td>Strombegrenzung geht nicht, Rail-to-Rail-OPV nötig</td><td><span class="chip bad">offen</span> Stückliste weiter LM358 (B1)</td></tr>
+      <tr><td>Trimmer schlecht bedienbar</td><td><span class="chip warn">offen</span> Bereich passt nicht zum DC/DC (B3)</td></tr>
+      <tr><td>Enable und Limit vertauscht</td><td><span class="chip info">mit der Rückwand prüfen</span> V1: ENABLE_ISO an c10, LIMIT_ISO an c12</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>Rückwand-Stecker J1 (DIN 41612, nur Reihe c)</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Pin</th><th>Signal</th><th>Richtung</th><th>Bezug</th><th>Bedeutung</th></tr></thead>
+    <tbody>
+      <tr><td class="id">c2</td><td>SELECT</td><td>Master → Karte</td><td>GNDPWR</td><td>LED SELECT (D6) direkt über R19</td></tr>
+      <tr><td class="id">c4</td><td>VOLTAGE_SENSE+</td><td>Karte → Master</td><td>GNDPWR</td><td>0,4 · U_out, an den ADC</td></tr>
+      <tr><td class="id">c6</td><td>VOLTAGE_SENSE−</td><td>—</td><td>GNDPWR</td><td>über NT2 an GNDPWR (Messmasse)</td></tr>
+      <tr><td class="id">c8</td><td>STATUS_ISO</td><td>Karte → Master</td><td>GNDPWR</td><td>Taste SW1, low = gedrückt</td></tr>
+      <tr><td class="id">c10</td><td>ENABLE_ISO</td><td>Master → Karte</td><td>GNDPWR</td><td>high = Kanal aus (über Q9 invertiert)</td></tr>
+      <tr><td class="id">c12</td><td>LIMIT_ISO</td><td>Karte → Master</td><td>GNDPWR</td><td>low = Strombegrenzung aktiv</td></tr>
+      <tr><td class="id">c14</td><td>VOLTAGE_SET_ISO</td><td>Master → Karte</td><td>GNDPWR</td><td>PWM 1 kHz, aktiv low (über Q8 invertiert)</td></tr>
+      <tr><td class="id">c16</td><td>+5V</td><td>Versorgung</td><td>GNDPWR</td><td>Master-Seite: ISO6742 Seite 1, AMC1311 Seite 2, U11</td></tr>
+      <tr><td class="id">c18</td><td>+48V</td><td>Versorgung</td><td>GNDPWR</td><td>DC/DC U2</td></tr>
+      <tr><td class="id">c24, c26</td><td>GNDPWR</td><td>—</td><td>—</td><td>Masse Rückwand</td></tr>
+      <tr><td class="id">c28</td><td>GND</td><td>—</td><td>Zellseite</td><td>Masse der Zellseite (= V_OUT−)</td></tr>
+      <tr><td class="id">c30</td><td>V_OUT+</td><td>Ausgang</td><td>Zellseite</td><td>Zellspannung +</td></tr>
+      <tr><td class="id">c32</td><td>V_OUT−</td><td>Ausgang</td><td>Zellseite</td><td>Zellspannung −, über NT1 = GND</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>Offene Punkte</h2>
+  <ul>
+    <li><b>Beantwortet 22.10.</b> (Foto Kanal 13): U3/U5 sind TLV272, keine LM358 mehr. Offen bleibt, ob die übrigen Karten gleich bestückt sind, und ob Datenblätter zu DC/DC und Isolationsspannung vorliegen.</li>
+    <li><b>Gemacht 22.10.:</b> Abweichung Soll/Ist je Kanal mit Multimeter an Zelle 2, 5, 10, 13 (B4/B5). <b>Offen</b> (nur am geöffneten Gerät, Board-Punkt <code>bs-geraetetest-offen-messen</code>): Strom eines abgeschalteten Kanals und Temperatur von U1 (B2), TP6 bei Laststrom (B1), Ursache des Offsets auf der Karte von Kanal 13 (Messung am AMC1311-Eingang und U11-Ausgang, Teiler stromlos); Multimeter nach dem Kartentausch (wandert der Ausgangsfehler mit?).</li>
+    <li><b>Nächste Teile von BS-2</b>: Rückwand (Kaskadierung, Zellabgriff, Belegung der Steckplätze, Isolationsabstände), Master (Pinbelegung für BS-4.2, ADC-Referenz LM4132, FTM-Takt und damit Auflösung der PWM), Versorgung.</li>
+  </ul>
+</section>
+
+</div>

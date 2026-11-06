@@ -1,0 +1,252 @@
+<title>BattSim Studio-Anlage</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#f6f7f8; --surface:#ffffff; --fg:#1b2228; --muted:#5b6670; --line:#d9dee3;
+  --accent:#0b6e7f; --accent-soft:#e3f1f3;
+  --warn:#9a5b00; --warn-soft:#fbf0dc; --ok:#2f7a3d; --ok-soft:#e5f3e7;
+  --f-display:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12171b; --surface:#1a2127; --fg:#e4e9ed; --muted:#9aa6b0; --line:#2e3840;
+  --accent:#5cc3d3; --accent-soft:#163238;
+  --warn:#e9b25a; --warn-soft:#352812; --ok:#7fcb8b; --ok-soft:#18301c; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12171b; --surface:#1a2127; --fg:#e4e9ed; --muted:#9aa6b0; --line:#2e3840;
+  --accent:#5cc3d3; --accent-soft:#163238;
+  --warn:#e9b25a; --warn-soft:#352812; --ok:#7fcb8b; --ok-soft:#18301c; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.55}
+a{color:var(--accent)}
+.wrap{max-width:1000px;margin:0 auto;padding-block:32px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:34px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:2.1rem;font-weight:600}
+h2{font-size:1.45rem;font-weight:600}
+h3{font-size:1.1rem;font-weight:600}
+p{margin:0;max-width:78ch}
+section{display:flex;flex-direction:column;gap:14px}
+.eyebrow{font-family:var(--f-mono);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.meta{color:var(--muted);font-size:.9rem}
+code{font-family:var(--f-mono);font-size:.88em}
+ul{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:4px;max-width:78ch}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.88rem}
+th,td{text-align:left;vertical-align:top;padding:7px 10px;border-bottom:1px solid var(--line)}
+th{font-family:var(--f-mono);font-weight:500;font-size:.74rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);background:var(--bg)}
+tr:last-child td{border-bottom:none}
+td.mono,.mono{font-family:var(--f-mono);font-size:.84rem;white-space:nowrap}
+td.num{font-variant-numeric:tabular-nums;font-family:var(--f-mono)}
+.steps{display:flex;flex-direction:column;gap:14px;counter-reset:st}
+.step{display:grid;grid-template-columns:36px minmax(0,1fr);gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px}
+.step::before{counter-increment:st;content:counter(st);font-family:var(--f-display);font-weight:600;font-size:1.15rem;color:var(--accent);background:var(--accent-soft);border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center}
+.step>div{display:flex;flex-direction:column;gap:9px;min-width:0}
+.ui{font-family:var(--f-display);font-weight:600;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:0 5px}
+.note{background:var(--accent-soft);border-left:3px solid var(--accent);padding:10px 14px;border-radius:0 6px 6px 0;max-width:86ch}
+.note.w{background:var(--warn-soft);border-left-color:var(--warn)}
+.chk{color:var(--ok);font-weight:600}
+dl.kv{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:5px 16px;margin:0}
+dl.kv dt{color:var(--muted)}
+dl.kv dd{margin:0;font-family:var(--f-mono);font-size:.88rem;overflow-wrap:anywhere}
+@media (max-width:560px){dl.kv{grid-template-columns:1fr;gap:0} dl.kv dd{margin-bottom:8px}}
+</style>
+
+<div class="wrap">
+
+<header style="display:flex;flex-direction:column;gap:10px">
+  <span class="eyebrow">BatterieSimulator · Stufe A · Anleitung · 23.10.2026</span>
+  <h1>Projekt im neXtBSW Studio anlegen</h1>
+  <p>Schritt für Schritt vom leeren Ordner bis zum ersten Prüfen und Bauen: eigenes Repository mit festem neXtBSW-Stand, Board „Master V1 wie gebaut“ und Projekt <code>battsim_master</code>. Alle Werte zum Eintragen stehen in den Schritten.</p>
+  <p class="meta">Grundlage: Studio-Handbuch <code>tools/studio/doc/studio-guide.md</code> und <code>doc/guide/customer-project.md</code> (neXtBSW <code>origin/dev</code> 092058da), Pin-Tabelle und „Aufbau wie gebaut“ der <a href="hardware-system.html">Hardware-Analyse</a> (<code>doc/hardware-system.html</code>, Artefakt archiviert 2026-11-05), Pin-Einstellungen der alten Firmware (Pull, Startwert) und Netzliste des Masters. Die Fensterabläufe stammen aus dem Handbuch, das einige davon als „nur offscreen getestet“ markiert. Weicht das Fenster ab, gilt das Fenster – bitte notieren.</p>
+</header>
+
+<section>
+  <h2>Vorher</h2>
+  <div class="tbl"><table><tbody>
+    <tr><td>Studio</td><td><code>C:\TOOLS\neXtBSW Studio\neXtBSW_Studio_v_0.24.0</code> (neueste installierte). Unter <span class="ui">Hilfe → Über neXtBSW Studio</span> sollte der Baum <code>C:\WORK\vscode_workspace\S32K14x basic software</code> stehen.</td></tr>
+    <tr><td>neXtBSW-Stand</td><td>Der Baum steht auf <code>dev</code> 092058da, ohne geänderte verfolgte Dateien (nur 246 nicht verfolgte, z. B. Logs und Mitschnitte). Das wird der Pin.</td></tr>
+    <tr><td>Ordner</td><td>Der Assistent braucht einen <b>leeren oder neuen</b> Ordner; <code>BatterieSimulator</code> ist belegt. Vorschlag: <code>C:\WORK\vscode_workspace\BattSimFW</code> (34 Zeichen, das Build-Verzeichnis bleibt unter der Grenze von 67). Analysen und Konzept bleiben im Workspace BatterieSimulator.</td></tr>
+    <tr><td>Nicht nötig</td><td>Gerät, J-Link, CAN-Adapter, MATLAB.</td></tr>
+  </tbody></table></div>
+</section>
+
+<section>
+  <h2>Schritte</h2>
+  <div class="steps">
+
+  <div class="step"><div>
+    <h3>Assistent starten</h3>
+    <p>Seite <span class="ui">Projekt</span> → <span class="ui">Neues Projekt …</span> (Strg+N). Erste Seite <span class="ui">Ablage</span>: <span class="ui">Eigenes Repository mit fester neXtBSW-Version</span>.</p>
+  </div></div>
+
+  <div class="step"><div>
+    <h3>Seite „Eigenes Repository“</h3>
+    <dl class="kv">
+      <dt>Ordner</dt><dd>C:\WORK\vscode_workspace\BattSimFW</dd>
+      <dt>neXtBSW-Version</dt><dd>Entwicklungsfall (Commit des Baums, 092058da)</dd>
+      <dt>Quelle des Untermoduls</dt><dd>Vorgabe = origin des Baums (github.com/…/neXtBSW_development.git)</dd>
+      <dt>CI-Vorlage</dt><dd>Vorgabe lassen</dd>
+      <dt>Erster Commit</dt><dd>ja</dd>
+      <dt>Umgebung gleich einrichten</dt><dd>ja (Vorgabe)</dd>
+    </dl>
+    <p class="meta">Entwicklungsfall statt Tag v1.0.0-rc2, weil die neXtBSW-Ergänzungen für den Simulator (G1–G3) auf <code>dev</code> entstehen. Meldet das Studio „nicht eingecheckte Änderungen“, sind das nur die nicht verfolgten Dateien – bestätigen.</p>
+  </div></div>
+
+  <div class="step"><div>
+    <h3>Start: „Neues Board anlegen“</h3>
+    <p>Auf der Startseite <span class="ui">Neues Board anlegen</span> wählen; der Board-Assistent öffnet sich.</p>
+    <p class="meta">Nicht <span class="ui">Aus KiCad-Netzliste …</span> verwenden: Die Netzliste beschreibt den korrigierten Quellstand (LIMIT an PTD10, Tasten andersherum), nicht den gebauten Master, enthält die Kanäle 15/16, und ihre Netznamen beginnen mit Ziffern (<code>1_ENABLE</code>).</p>
+  </div></div>
+
+  <div class="step"><div>
+    <h3>Board: Derivat und Eckdaten</h3>
+    <dl class="kv">
+      <dt>Name</dt><dd>battsim_master_v1</dd>
+      <dt>Derivat / Gehäuse</dt><dd>S32K146 / LQFP144</dd>
+      <dt>Versorgung</dt><dd>3,3 V (LM1117-3.3)</dd>
+      <dt>Quarz (MHz)</dt><dd>16</dd>
+      <dt>Debug</dt><dd>SWD, J-Link</dd>
+      <dt>ADC-Referenz</dt><dd>2048 mV (LM4132-2.0)</dd>
+      <dt>Board-Port anlegen</dt><dd>nein</dd>
+    </dl>
+  </div></div>
+
+  <div class="step"><div>
+    <h3>Board: Busse</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>Art</th><th>Name</th><th>Instanz und Pins</th><th>Hinweis</th></tr></thead>
+      <tbody>
+        <tr><td>CAN</td><td class="mono">CAN0</td><td class="mono">FlexCAN0 · RX PTB0 · TX PTB1</td><td>Transceiver SN65HVD1040 (gebaut „VP1040“) ohne Standby-Pin, also passiv. Die Warnung „no transceiver (phy)“ ist dann erwartet.</td></tr>
+        <tr><td>I²C</td><td class="mono">DISPLAY</td><td class="mono">FlexIO · SDA PTE15 (D2) · SCL PTE16 (D3)</td><td>Anzeige an 0x71, gebraucht erst in Stufe D. Der Assistent wählt FlexIO vor.</td></tr>
+      </tbody>
+    </table></div>
+  </div></div>
+
+  <div class="step"><div>
+    <h3>Board: Kanäle 1–14</h3>
+    <p>Je Kanal drei Digitalsignale und ein Analogeingang, Pegel für alle gleich:</p>
+    <ul>
+      <li><b>EN_xx</b> Ausgang, <b>aktiv low</b>: high = Kanal aus (auf der Karte über Q9 invertiert). Ausgänge starten inaktiv, also alle Kanäle aus.</li>
+      <li><b>SEL_xx</b> Ausgang, aktiv high (LED SELECT der Karte).</li>
+      <li><b>ST_xx</b> Eingang, <b>aktiv low</b>, kein Pull (Taste der Karte, vom Isolator getrieben).</li>
+      <li><b>U_CELL_xx</b> Analogeingang ohne Teiler oder Sensor; die Umrechnung macht die Anwendung mit der Kalibrierung.</li>
+    </ul>
+    <div class="tbl"><table>
+      <thead><tr><th>Kanal</th><th>Ausgang Freigabe</th><th>Ausgang Select</th><th>Eingang Status</th><th>Analog</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td class="mono">EN_01 · PTE14</td><td class="mono">SEL_01 · PTB11</td><td class="mono">ST_01 · PTD9</td><td class="mono">U_CELL_01 · ADC0:SE2 · PTA6</td></tr>
+        <tr><td class="num">2</td><td class="mono">EN_02 · PTE3</td><td class="mono">SEL_02 · PTB10</td><td class="mono">ST_02 · PTD8</td><td class="mono">U_CELL_02 · ADC1:SE16 · PTD18</td></tr>
+        <tr><td class="num">3</td><td class="mono">EN_03 · PTA27</td><td class="mono">SEL_03 · PTB9</td><td class="mono">ST_03 · PTC17</td><td class="mono">U_CELL_03 · ADC1:SE17 · PTD19</td></tr>
+        <tr><td class="num">4</td><td class="mono">EN_04 · PTE12</td><td class="mono">SEL_04 · PTD27</td><td class="mono">ST_04 · PTC16</td><td class="mono">U_CELL_04 · ADC1:SE15 · PTB16</td></tr>
+        <tr><td class="num">5</td><td class="mono">EN_05 · PTA28</td><td class="mono">SEL_05 · PTB8</td><td class="mono">ST_05 · PTB22</td><td class="mono">U_CELL_05 · ADC1:SE14 · PTB15</td></tr>
+        <tr><td class="num">6</td><td class="mono">EN_06 · PTD17</td><td class="mono">SEL_06 · PTD28</td><td class="mono">ST_06 · PTC15</td><td class="mono">U_CELL_06 · ADC1:SE9 · PTB14</td></tr>
+        <tr><td class="num">7</td><td class="mono">EN_07 · PTA29</td><td class="mono">SEL_07 · PTA1</td><td class="mono">ST_07 · PTB23</td><td class="mono">U_CELL_07 · ADC1:SE8 · PTB13</td></tr>
+        <tr><td class="num">8</td><td class="mono">EN_08 · PTA30</td><td class="mono">SEL_08 · PTD29</td><td class="mono">ST_08 · PTC14</td><td class="mono">U_CELL_08 · ADC1:SE7 · PTB12</td></tr>
+        <tr><td class="num">9</td><td class="mono">EN_09 · PTD16</td><td class="mono">SEL_09 · PTA0</td><td class="mono">ST_09 · PTB25</td><td class="mono">U_CELL_09 · ADC1:SE18 · PTD22</td></tr>
+        <tr><td class="num">10</td><td class="mono">EN_10 · PTD15</td><td class="mono">SEL_10 · PTD30</td><td class="mono">ST_10 · PTB3</td><td class="mono">U_CELL_10 · ADC1:SE6 · PTD4</td></tr>
+        <tr><td class="num">11</td><td class="mono">EN_11 · PTE9</td><td class="mono">SEL_11 · PTA15</td><td class="mono">ST_11 · PTB27</td><td class="mono">U_CELL_11 · ADC1:SE3 · PTD3</td></tr>
+        <tr><td class="num">12</td><td class="mono">EN_12 · PTA31</td><td class="mono">SEL_12 · PTE6</td><td class="mono">ST_12 · PTB28</td><td class="mono">U_CELL_12 · ADC1:SE2 · PTD2</td></tr>
+        <tr><td class="num">13</td><td class="mono">EN_13 · PTD14</td><td class="mono">SEL_13 · PTE2</td><td class="mono">ST_13 · PTB2</td><td class="mono">U_CELL_13 · ADC1:SE19 · PTD23</td></tr>
+        <tr><td class="num">14</td><td class="mono">EN_14 · PTD13</td><td class="mono">SEL_14 · PTE19</td><td class="mono">ST_14 · PTB29</td><td class="mono">U_CELL_14 · ADC1:SE1 · PTA3</td></tr>
+      </tbody>
+    </table></div>
+    <p class="meta">Kanäle 15/16 sind nicht bestückt und kommen nicht ins Board. Die PWM-Ausgänge (VOLTAGE_SET) fehlen absichtlich: neXtBSW kann einzelne PWM-Kanäle noch nicht beschreiben (Lücke G2); sie kommen nach G2 dazu.</p>
+  </div></div>
+
+  <div class="step"><div>
+    <h3>Board: übrige Signale</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>Art</th><th>Name</th><th>Pin</th><th>Pegel</th><th>Hinweis</th></tr></thead>
+      <tbody>
+        <tr><td>Analog</td><td class="mono">I_SUPPLY</td><td class="mono">ADC0:SE18 · PTB21</td><td>—</td><td>48-V-Strom, 1 V/A</td></tr>
+        <tr><td>Eingang</td><td class="mono">BTN_ALL_ON_OFF</td><td class="mono">PTD11</td><td>aktiv low, Pull-up</td><td>gebaut per Drahtbrücke (Schaltplan nennt PTD12)</td></tr>
+        <tr><td>Eingang</td><td class="mono">BTN_REMOTE</td><td class="mono">PTD12</td><td>aktiv low, Pull-up</td><td>gebaut per Drahtbrücke (Schaltplan nennt PTD11)</td></tr>
+        <tr><td>Eingang</td><td class="mono">LIMIT</td><td class="mono">PTE25</td><td>aktiv low, Pull-down</td><td>gebaut: Draht über R26; Pull wie in der alten Firmware</td></tr>
+        <tr><td>Eingang</td><td class="mono">ENC_VOLT_BTN</td><td class="mono">PTA25</td><td>aktiv low, Pull-up</td><td>Taste des Spannungs-Drehgebers</td></tr>
+        <tr><td>Eingang</td><td class="mono">ENC_SEL_BTN</td><td class="mono">PTA16</td><td>aktiv low, Pull-up</td><td>Taste des Kanal-Drehgebers</td></tr>
+        <tr><td>Ausgang</td><td class="mono">LED1</td><td class="mono">PTA11</td><td>aktiv high</td><td>Debug-LED, wird Anzeige des sicheren Zustands</td></tr>
+        <tr><td>Ausgang</td><td class="mono">LED2</td><td class="mono">PTA12</td><td>aktiv high</td><td>Debug-LED</td></tr>
+        <tr><td>Ausgang</td><td class="mono">LED_REMOTE</td><td class="mono">PTA8</td><td>aktiv high</td><td>LED4 (D6), leuchtet heute in Fernsteuerung</td></tr>
+      </tbody>
+    </table></div>
+    <p class="meta">Nicht eintragen: die Spuren A/B der Drehgeber (PTE5/PTE4, PTC7/PTC6) – sie kommen mit dem Quadraturdecoder (G6). Die Pegel der LEDs und Drehgeber-Tasten sind aus alter Firmware (Pull-up) und Schaltplan abgeleitet und am Gerät noch nicht einzeln geprüft.</p>
+  </div></div>
+
+  <div class="step"><div>
+    <h3>Board anlegen</h3>
+    <p>Zusammenfassung lesen → <span class="ui">Anlegen</span>. <b>Dieser Knopf schreibt sofort</b>: Repository (git init, Untermodul, Grunddateien) und Board. Danach prüft das Studio das Board mit einem Projekt, das alle Signale nutzt; Fehler erscheinen auf der Seite <span class="ui">Eigenes Board</span> unter „Angelegt: …“. Erwartet ist nur die Warnung zum CAN-Transceiver.</p>
+  </div></div>
+
+  <div class="step"><div>
+    <h3>Projekt auf dem Board</h3>
+    <dl class="kv">
+      <dt>Board</dt><dd>battsim_master_v1 (vorgewählt)</dd>
+      <dt>Alle Signale des Boards nutzen</dt><dd>ja</dd>
+      <dt>Standard-Diagnosen anlegen</dt><dd>ja</dd>
+      <dt>Kalibriersegment anlegen</dt><dd>nein (Kalibrierung kommt in Stufe C über NvM)</dd>
+    </dl>
+  </div></div>
+
+  <div class="step"><div>
+    <h3>Seite „Sicherheit“: Jetzt festlegen</h3>
+    <dl class="kv">
+      <dt>safe_state_output</dt><dd>LED1 (PTA11)</dd>
+      <dt>locked_pin</dt><dd>LED2 (PTA12)</dd>
+      <dt>test_pin</dt><dd>PTE13 (Pin 7, im Schaltplan unbeschaltet)</dd>
+      <dt>Am Schaltplan geprüft</dt><dd>ankreuzen</dd>
+    </dl>
+    <p class="meta">LED1 ist eine reine Anzeige, die die Anwendung nicht schreibt – das verlangt das Handbuch für diesen Pin. Keinen EN_xx-Ausgang wählen: Im sicheren Zustand würde er schweben.</p>
+  </div></div>
+
+  <div class="step"><div>
+    <h3>Name und Anlegen</h3>
+    <dl class="kv">
+      <dt>Projektname</dt><dd>battsim_master</dd>
+    </dl>
+    <p>Steht in der Zusammenfassung oben etwas in Rot: notieren und mir schicken, nicht „Trotzdem anlegen“ ankreuzen. Ausnahme sind fehlende Peripherie-Takte, die behebe ich danach. Sonst <span class="ui">Anlegen</span>. Das Studio öffnet das Projekt und richtet im Hintergrund die <code>.venv</code> ein (1–2 Minuten; die Seite <span class="ui">Werkzeuge</span> zeigt „läuft“).</p>
+  </div></div>
+
+  <div class="step"><div>
+    <h3>Diagnose-Kennungen umstellen</h3>
+    <p>Seite <span class="ui">Projekt-Konfiguration</span>:</p>
+    <dl class="kv">
+      <dt>diagnostics.request_id</dt><dd>0x7E1</dd>
+      <dt>diagnostics.functional_id</dt><dd>0x7DF (bleibt)</dd>
+      <dt>diagnostics.response_id</dt><dd>0x7E9</dd>
+      <dt>Bitrate CAN0</dt><dd>500000 (prüfen)</dd>
+    </dl>
+    <p class="meta">Grund: Der Bus wird mit dem BCU-Board geteilt, das als neXtBSW-Steuergerät 0x7E0/0x7E8 belegt. Steht ein Abschnitt <code>xcp</code> in der Datei: master_id 0x7F2, slave_id 0x7F3.</p>
+  </div></div>
+
+  <div class="step"><div>
+    <h3>Prüfen, Generieren, Bauen</h3>
+    <p><span class="ui">Prüfen und Generieren</span> → <span class="ui">Prüfen</span>, dann <span class="ui">Generieren</span>. Danach <span class="ui">Bauen und Testen</span> → <span class="ui">Target bauen</span> (bis etwa 10 Minuten).</p>
+    <p class="note w">Das ist der <b>erste Target-Build für einen S32K146</b> in neXtBSW überhaupt. Bricht er ab, ist das ein Befund für G1 und kein Bedienfehler. Dann bitte die letzte Fehlermeldung kopieren (Ansicht Experte, Feld PROTOKOLL).</p>
+  </div></div>
+
+  <div class="step"><div>
+    <h3>Noch nicht machen</h3>
+    <ul>
+      <li>Keine DBC importieren: <code>BattSimV1.dbc</code> hat keine Knoten (alle Botschaften „Vector__XXX“). Die Projekt-DBC mit Knoten und der neuen Botschaft 0x121 baue ich in Stufe A.</li>
+      <li>Keine Komponenten anlegen, nichts flashen.</li>
+    </ul>
+  </div></div>
+
+  </div>
+</section>
+
+<section>
+  <h2>Danach</h2>
+  <p>Gib mir den Ordner und das Ergebnis von Prüfen und Bauen. Dann mache ich in deinem Repository mit Stufe A weiter: Projekt-DBC (V1 + 0x121, Knoten BATTSIM), CAN-Qualifier mit 300 ms für 0x130, Komponenten-Gerüste in Simulink, Verbindungen und Tasks, Host-Test „Sollwert-Frame → Tastgrad“.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Prüfpunkt</th><th>Erwartet</th></tr></thead>
+    <tbody>
+      <tr><td>Prüfen</td><td><span class="chk">ok</span> mit Warnung(en), u. a. CAN-Transceiver passiv</td></tr>
+      <tr><td><code>git log</code> im neuen Ordner</td><td>ein erster Commit auf <code>main</code>, <code>nextbsw</code> als Untermodul auf 092058da</td></tr>
+      <tr><td>Target bauen</td><td>ok – oder ein Befund für G1</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+</div>

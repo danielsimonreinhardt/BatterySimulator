@@ -1,0 +1,3 @@
+[submodule "Firmware/nextbsw"]
+	path = Firmware/nextbsw
+	url = https://github.com/danielsimonreinhardt/neXtBSW_development.git

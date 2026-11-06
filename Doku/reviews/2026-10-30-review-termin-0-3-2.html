@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Review Termin 0.3.2</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #f3f5f6; --surface: #ffffff; --ink: #172026; --muted: #56656e; --rule: #d2dade;
+  --accent: #1d5f86; --accent-soft: #dcebf4; --warn: #9a5b00; --warn-soft: #f6ead6;
+  --display: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #11171b; --surface: #182127; --ink: #e2e9ed; --muted: #95a5ae; --rule: #2c3840;
+  --accent: #6db3dc; --accent-soft: #17303f; --warn: #e0a64e; --warn-soft: #3a2c16; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #11171b; --surface: #182127; --ink: #e2e9ed; --muted: #95a5ae; --rule: #2c3840;
+  --accent: #6db3dc; --accent-soft: #17303f; --warn: #e0a64e; --warn-soft: #3a2c16; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 15.5px/1.55 var(--body); margin: 0;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 32px 64px; }
+main { max-width: 760px; margin-inline: auto; display: grid; gap: 28px; }
+h1, h2, h3 { font-family: var(--display); margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(26px, 4vw, 34px); line-height: 1.1; }
+h2 { font-size: 21px; }
+h3 { font-size: 17px; }
+p, li { max-width: 68ch; }
+p { margin: 0; }
+.label { font: 600 12px/1.2 var(--display); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+code { font-family: var(--mono); font-size: .92em; }
+header { display: grid; gap: 10px; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 18px; color: var(--muted); font-size: 14px; }
+.summary, .pt { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 14px 18px 16px; display: grid; gap: 8px; min-width: 0; }
+.summary ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+.points { display: grid; gap: 14px; }
+.pt-head { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.pt-id { font: 600 13px var(--mono); color: var(--accent); }
+.rec { display: inline-block; font: 600 12px/1 var(--display); letter-spacing: .05em; text-transform: uppercase; padding: 5px 8px; border-radius: 3px; background: var(--accent-soft); color: var(--accent); }
+.opts { margin: 0; padding-left: 20px; display: grid; gap: 3px; font-size: 14.5px; }
+.limit { background: var(--warn-soft); color: var(--ink); border-left: 3px solid var(--warn); padding: 8px 12px; border-radius: 3px; font-size: 14.5px; }
+.how { font-size: 14px; color: var(--muted); }
+.tw { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font: 600 12px var(--display); letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+td.n { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.diagram { overflow-x: auto; min-width: 0; }
+.diagram svg { display: block; max-width: 100%; height: auto; }
+.diagram text { font: 12px var(--body); fill: var(--ink); }
+.diagram .ax { stroke: var(--muted); stroke-width: 1; }
+.diagram .soll { stroke: var(--muted); stroke-width: 2; stroke-dasharray: 5 4; fill: none; }
+.diagram .out { stroke: var(--accent); stroke-width: 2.5; fill: none; }
+.diagram .thr { stroke: var(--warn); stroke-width: 1.5; stroke-dasharray: 3 3; fill: none; }
+.diagram .floor { fill: var(--warn-soft); }
+</style>
+
+<style>
+/* Statisches Protokoll: Entscheidungen aus der Datenbank des Artefakts */
+.archiv { font-size: 13.5px; color: var(--muted); border-top: 1px solid var(--rule); padding-top: 10px; }
+.status { background: var(--surface); border: 1px solid var(--accent); border-left: 4px solid var(--accent); border-radius: 6px; padding: 12px 16px; display: grid; gap: 4px; }
+.status.offen { border-color: var(--warn); }
+.status strong { font-family: var(--display); font-size: 17px; }
+.pt.decided { border-left: 4px solid var(--accent); }
+.pt.open { border-left: 4px solid var(--warn); }
+.opts.static li { padding: 2px 6px; border-radius: 3px; }
+.opts.static li.chosen { background: var(--accent-soft); outline: 1px solid var(--accent); }
+.opts.static .pick { font: 600 11.5px/1 var(--display); letter-spacing: .05em; text-transform: uppercase; color: var(--surface); background: var(--accent); border-radius: 3px; padding: 3px 6px; margin-right: 6px; white-space: nowrap; }
+.decision { font-size: 14px; background: var(--bg); border: 1px solid var(--rule); border-radius: 4px; padding: 8px 12px; display: grid; gap: 2px; }
+.decision .k { color: var(--muted); }
+.decision.offen { background: var(--warn-soft); border-color: var(--warn); }
+.decision .dev { color: var(--warn); font-weight: 600; }
+pre.mermaid { white-space: pre; overflow-x: auto; font: 12.5px/1.45 var(--mono); background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 10px 12px; margin: 0; }
+</style>
+</head><body>
+<main>
+  <header>
+    <span class="label">BattSimFW · Review · Gerätetermin 0.3.2 mit Last · 30.10.2026</span>
+    <h1>Befunde aus dem Termin mit Last</h1>
+    <div class="meta"><span>Gerät: Master V1, 0.3.2 (main 9223da8), Zelle 1 mit 100 Ω und 1 kΩ, PicoScope 10:1</span><span>Doku: Zweig stufe-c-termin-032-doku 7a9348c, Abschnitt 10</span><span>Entscheider: du als Safety Responsible</span></div>
+  </header>
+  <section class="status" aria-label="Stand der Entscheidung"><strong>Abgeschlossen am 30.10.2026, 14:18 Uhr</strong><span>4 von 4 Punkten entschieden; alle wie empfohlen.</span></section>
+  <section class="summary">
+    <h2>Was gemessen wurde</h2>
+    <div class="tw"><table>
+      <tr><th>Soll</th><th>100 Ω: ADC</th><th>100 Ω: Klemme</th><th>1 kΩ: ADC</th><th>1 kΩ: Klemme</th><th>Status</th></tr>
+      <tr><td class="n">0,3 V</td><td class="n">0,297</td><td class="n">0,268</td><td class="n">0,330</td><td class="n">–</td><td>4</td></tr>
+      <tr><td class="n">0,5 V</td><td class="n">0,491</td><td class="n">0,445</td><td class="n">0,491</td><td class="n">0,466</td><td>4</td></tr>
+      <tr><td class="n">0,7 V</td><td class="n">0,700</td><td class="n">0,642</td><td class="n">0,700</td><td class="n">0,678</td><td>2</td></tr>
+      <tr><td class="n">3,7 V</td><td class="n">3,701</td><td class="n">3,455</td><td class="n">3,701</td><td class="n">3,626</td><td>2</td></tr>
+      <tr><td class="n">4,8 V</td><td class="n">4,801</td><td class="n">4,510</td><td class="n">4,801</td><td class="n">4,732</td><td>2</td></tr>
+    </table></div>
+    <ul>
+      <li><strong>Pegelboden 0,7 V nur ohne Last.</strong> Mit 100 Ω oder 1 kΩ folgt die Spannung dem Sollwert bis 0,3 V. Kein FAIL, C-2 löst nirgends falsch aus.</li>
+      <li><strong>Spannungsabfall unter Last:</strong> Zwischen ADC-Abgriff und Klemme liegen etwa 5–7 Ω. Bei 48 mA sind das 0,29 V, bei einigen mA unter 0,05 V. Der Regler sieht diesen Abfall nicht. Die Spannung liegt dabei immer <em>unter</em> dem Sollwert, also auf der sicheren Seite.</li>
+      <li><strong>C-2 am Gerät ausgelöst</strong>, ohne Eingriff: Die Kalibrierung verfälscht die Messung (1,1·U + 0,2). Bei 3,0 V Sollwert kommt FAIL Grund 6, alle Ausgänge aus, etwa 135 ms nach dem Überschreiten der Schwelle. Die echte Spannung blieb bei 3,05 V. Danach Werkswerte zurück.</li>
+      <li><strong>R-1 mit 500 ms:</strong> Im ADC ist das Minimum 0,971 V (−0,029 V), kaum besser als mit 300 ms. An der Klemme sind es etwa 0,02 V gegenüber dem Endwert.</li>
+      <li><strong>Abschaltzeit:</strong> FAIL-Entscheidung nach 299,8 bis 307,4 ms (28 Läufe), dazu 4,1 ms analoger Abfall. Das sind höchstens etwa 311,6 ms.</li>
+      <li><strong>Versorgungsstrom:</strong> Ruhestrom 0,216 A, alle 14 Kanäle 0,27 A, mit 100 Ω bis 0,282 A. Die Mindeststrom-Schwelle für C-1 (Review bs-c1-strommessung S-1 a) liegt damit sicher bei 0,1 A.</li>
+    </ul>
+  </section>
+  <section class="points">
+    <h2>Punkte</h2>
+    <article class="pt decided" id="T-1"><div class="pt-head"><span class="pt-id">T-1</span><h3>Pegelboden-Parameter OutputFloor_V</h3><span class="rec">Empfehlung a</span></div>
+      <p>Der Boden tritt nur ohne Last auf. Mit Last meldet Status 4 bei 0,3 und 0,5 V „unter Pegelboden“, obwohl die Spannung stimmt. Unter 0,5 V Sollwert erkennt C-2 eine Überspannung erst ab 0,9 V.</p>
+      <ol class="opts static" type="a"><li class="chosen"><span class="pick">gewählt</span>0,7 V bleibt: Ohne Last ist das der ungünstigste Fall, eine Last senkt den Boden nur. Status 4 bleibt ein Hinweis. Im Text dazu (DBC, LabControl, Doku) „ohne Last“ ergänzen.</li><li>Boden auf 0,3 V senken: genauer mit Last, ohne Last gibt es dann wieder Fehlalarme bei 0,3 bis 0,5 V.</li><li>Erst mit dem BCU-Board als Prüfling entscheiden.</li></ol>
+      <div class="decision"><span><span class="k">Entscheidung:</span> <strong>a)</strong> wie empfohlen</span><span class="k">Keine Anmerkung.</span><span class="k">Entschieden am 30.10.2026, 14:17 Uhr</span></div></article>
+    <article class="pt decided" id="T-2"><div class="pt-head"><span class="pt-id">T-2</span><h3>Spannungsabfall zwischen Messpunkt und Klemme (5–7 Ω)</h3><span class="rec">Empfehlung a</span></div>
+      <p>Der Regler stellt den ADC-Wert genau ein. An der Klemme fehlt die Spannung, die bei Laststrom über 5–7 Ω abfällt. Für einen Prüfling mit µA bis wenigen mA sind das unter 0,05 V. Für die Sicherheit ist das unkritisch, weil die Spannung zu niedrig ist, nicht zu hoch.</p>
+      <ol class="opts static" type="a"><li class="chosen"><span class="pick">gewählt</span>Als Kennwert der Genauigkeit dokumentieren (Abweichung ≈ Laststrom × 6 Ω), keine Änderung</li><li>Hardware-Aufgabe im BatterieSimulator-Workspace: den Messpunkt an die Klemme legen (Sense-Leitung)</li><li>Beides: jetzt dokumentieren, Hardware als spätere Aufgabe</li></ol>
+      <div class="decision"><span><span class="k">Entscheidung:</span> <strong>a)</strong> wie empfohlen</span><span class="k">Keine Anmerkung.</span><span class="k">Entschieden am 30.10.2026, 14:17 Uhr</span></div></article>
+    <article class="pt decided" id="T-3"><div class="pt-head"><span class="pt-id">T-3</span><h3>R-1: Korrektur beim Sollwertsprung zurücksetzen</h3><span class="rec">Empfehlung a</span></div>
+      <p>Während der Haltezeit wirkt die Korrektur des alten Arbeitspunkts weiter, am Gerät etwa −0,03 V. Der SIL-Test hat das nicht gezeigt, weil seine Strecke ideal ist. Ohne Regler stimmt der Kanal schon auf etwa 1 mV (3,0 V → 3,0001 V).</p>
+      <ol class="opts static" type="a"><li class="chosen"><span class="pick">gewählt</span>Beim Sprung über 0,2 V Korrektur und Integral auf 0 setzen und während der Haltezeit auf 0 lassen. SIL mit Strecke mit Verstärkungs- und Offsetfehler, Doku. Flashen mit eigener Freigabe beim nächsten Termin.</li><li>So lassen, die Abweichung ist klein und begrenzt</li></ol>
+      <div class="decision"><span><span class="k">Entscheidung:</span> <strong>a)</strong> wie empfohlen</span><span class="k">Keine Anmerkung.</span><span class="k">Entschieden am 30.10.2026, 14:18 Uhr</span></div></article>
+    <article class="pt decided" id="T-4"><div class="pt-head"><span class="pt-id">T-4</span><h3>Abschaltzeit gegen 310 ms</h3><span class="rec">Empfehlung a</span></div>
+      <p>Die Firmware wartet 300 ms plus einen 10-ms-Schritt, dazu kommen etwa 4 ms analoger Abfall. Die Kette kann also bis etwa 314 ms dauern. Gemessen sind höchstens etwa 311,6 ms. Der Kennwert aus Stufe B (S-2 a) ist 315 ms bis Zelle &lt; 0,5 V. In der Freigabe zum Termin hatte ich 310 ms genannt, das war zu knapp.</p>
+      <ol class="opts static" type="a"><li class="chosen"><span class="pick">gewählt</span>Der Kennwert 315 ms aus S-2 a gilt weiter, ist eingehalten und wird in der Doku bestätigt.</li><li>Messung mit gemeinsamer Zeitbasis (0x130 und Scope) beim nächsten Termin, um die genaue Obergrenze zu belegen.</li><li>Timeout auf 290 ms verkürzen, dann sicher unter 310 ms (Änderung, eigene Freigabe).</li></ol>
+      <div class="decision"><span><span class="k">Entscheidung:</span> <strong>a)</strong> wie empfohlen</span><span class="k">Keine Anmerkung.</span><span class="k">Entschieden am 30.10.2026, 14:18 Uhr</span></div></article>
+  </section>
+
+  <p class="archiv">Statisches Protokoll des claude.ai-Artefakts „Review Termin 0.3.2“ (Version 1793366236-f40f), archiviert am 05.11.2026, siehe <a href="../archiv/artefakte-2026-11.html">Archivindex</a>. Die Auswahl je Punkt, Anmerkung und Zeitpunkt stammen aus der Datenbank des Artefakts (Rohdaten: <a href="2026-10-30-review-termin-0-3-2.db.json">2026-10-30-review-termin-0-3-2.db.json</a>). Zeiten in Mitteleuropäischer Zeit.</p>
+</main>
+</body></html>

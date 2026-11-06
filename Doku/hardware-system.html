@@ -1,0 +1,521 @@
+<title>Batterie-Simulator Gesamtsystem</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: eine Lesespalte; Sicherheit zuerst, dann Systembild, je Platine Diagramm und Tabellen, zuletzt Befunde */
+:root{
+  --bg:#f6f7f8; --surface:#ffffff; --fg:#1b2228; --muted:#5b6670; --line:#d9dee3;
+  --accent:#0b6e7f; --accent-soft:#e3f1f3; --iso:#7a4fb3; --iso-soft:#efe8f8;
+  --mains:#b4471f; --mains-soft:#fbe9e1;
+  --warn:#9a5b00; --warn-soft:#fbf0dc; --bad:#a3262e; --bad-soft:#fbe5e6; --ok:#2f7a3d; --ok-soft:#e5f3e7;
+  --f-display:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12171b; --surface:#1a2127; --fg:#e4e9ed; --muted:#9aa6b0; --line:#2e3840;
+  --accent:#5cc3d3; --accent-soft:#163238; --iso:#b99ae6; --iso-soft:#2a2238; --mains:#f09a70; --mains-soft:#3a2219;
+  --warn:#e9b25a; --warn-soft:#352812; --bad:#f08a8f; --bad-soft:#3a1c1e; --ok:#7fcb8b; --ok-soft:#18301c; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12171b; --surface:#1a2127; --fg:#e4e9ed; --muted:#9aa6b0; --line:#2e3840;
+  --accent:#5cc3d3; --accent-soft:#163238; --iso:#b99ae6; --iso-soft:#2a2238; --mains:#f09a70; --mains-soft:#3a2219;
+  --warn:#e9b25a; --warn-soft:#352812; --bad:#f08a8f; --bad-soft:#3a1c1e; --ok:#7fcb8b; --ok-soft:#18301c; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.55}
+.wrap{max-width:1060px;margin:0 auto;padding-block:32px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:36px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:2.1rem;font-weight:600}
+h2{font-size:1.45rem;font-weight:600}
+h3{font-size:1.1rem;font-weight:600}
+p{margin:0;max-width:76ch}
+section{display:flex;flex-direction:column;gap:14px}
+.eyebrow{font-family:var(--f-mono);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.meta{color:var(--muted);font-size:.9rem}
+code{font-family:var(--f-mono);font-size:.88em}
+ul{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:4px;max-width:78ch}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.88rem}
+th,td{text-align:left;vertical-align:top;padding:7px 10px;border-bottom:1px solid var(--line)}
+th{font-family:var(--f-mono);font-weight:500;font-size:.74rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);background:var(--bg)}
+tr:last-child td{border-bottom:none}
+td.id{font-family:var(--f-mono);white-space:nowrap;color:var(--accent)}
+td.mono,.mono{font-family:var(--f-mono);font-size:.84rem;white-space:nowrap}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;font-family:var(--f-mono)}
+.chip{display:inline-block;font-family:var(--f-mono);font-size:.72rem;padding:1px 7px;border-radius:10px;white-space:nowrap}
+.chip.bad{background:var(--bad-soft);color:var(--bad)}
+.chip.warn{background:var(--warn-soft);color:var(--warn)}
+.chip.ok{background:var(--ok-soft);color:var(--ok)}
+.chip.info{background:var(--accent-soft);color:var(--accent)}
+.safety{border:2px solid var(--bad);border-radius:8px;background:var(--surface);padding:16px 18px;display:flex;flex-direction:column;gap:14px}
+.safety h2{color:var(--bad)}
+.sitem{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;align-items:start}
+.sitem .n{font-family:var(--f-mono);color:var(--bad);font-weight:500}
+.sitem p{max-width:none}
+.interim{background:var(--bad-soft);border-radius:6px;padding:10px 14px}
+.interim ul{max-width:none}
+.diagram{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px;overflow-x:auto}
+.diagram svg{display:block;width:100%;height:auto}
+.diagram.sys svg{min-width:920px}
+.diagram.stack svg{min-width:760px}
+.diagram text{font-family:var(--f-body);font-size:12.5px;fill:var(--fg)}
+.diagram .t{font-weight:600}
+.diagram .s{font-size:11px;fill:var(--muted)}
+.diagram .m{font-family:var(--f-mono);font-size:10.5px;fill:var(--muted)}
+.diagram .lab{font-family:var(--f-mono);font-size:11px;fill:var(--accent)}
+.diagram .labm{font-family:var(--f-mono);font-size:11px;fill:var(--mains)}
+.diagram .board{fill:var(--bg);stroke:var(--muted);stroke-width:1.4}
+.diagram .box{fill:var(--surface);stroke:var(--muted);stroke-width:1.2}
+.diagram .boxa{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.3}
+.diagram .boxm{fill:var(--mains-soft);stroke:var(--mains);stroke-width:1.4}
+.diagram .boxw{fill:var(--bad-soft);stroke:var(--bad);stroke-width:1.3}
+.diagram .ext{fill:none;stroke:var(--muted);stroke-width:1.2;stroke-dasharray:5 4}
+.diagram .w{stroke:var(--muted);stroke-width:1.4;fill:none}
+.diagram .wa{stroke:var(--accent);stroke-width:1.7;fill:none}
+.diagram .wm{stroke:var(--mains);stroke-width:2;fill:none}
+.diagram .wb{stroke:var(--bad);stroke-width:1.5;fill:none;stroke-dasharray:4 3}
+.diagram .ah{fill:var(--muted)} .diagram .aha{fill:var(--accent)} .diagram .ahm{fill:var(--mains)}
+.legend{display:flex;flex-wrap:wrap;gap:16px;font-size:.85rem;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:14px;height:10px;border-radius:2px;display:inline-block}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+@media (max-width:720px){.two{grid-template-columns:1fr}.sitem{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;min-width:0}
+</style>
+
+<div class="wrap">
+
+<header style="display:flex;flex-direction:column;gap:10px">
+  <span class="eyebrow">BatterieSimulator · Hardware-Analyse BS-2 · Teile 2–4 · 22.10.2026</span>
+  <h1>Rückwand, Master und Versorgung</h1>
+  <p>Wie die vier Platinen zusammenspielen, wo die Zellspannungen zum Stapel werden, welche Pins der S32K146 wofür nutzt und was dabei auffällt. Der Zellkanal selbst steht in einem eigenen Dokument.</p>
+  <p class="meta">Grundlage: KiCad-Schaltpläne <code>BattSimMaster</code> (+ <code>MCU</code>, 13.11.2024), <code>BattSim_BusPcb</code> (02.12.2024), <code>BattSim_Supply</code> (09.11.2024), Netzlisten per kicad-cli 10. Die Steckverbinder zwischen den Platinen habe ich per Skript Pin für Pin verglichen: keine Abweichung. Abstände im Layout sind mit einer eigenen DRC-Regel an Kopien der Layouts gemessen (geometrische Näherung von KiCad). Grenzwerte des S32K1xx stammen aus <code>S32K-Datasheet.pdf</code> im neXtBSW-Repo (Tab. 1 S. 10, Tab. 3 S. 12). Herstellerangaben anderer Bauteile sind aus deren Datenblättern, die noch nicht im Workspace liegen.</p>
+  <p class="meta"><b>Nachtrag 22.10.2026 (Gerätetest BS-1.8):</b> S2 ist am Gerät gemessen und neu bewertet (Isolator ist ISO6742<b>F</b>). Dazu kommen Sichtprüfung und Fotos von Master und Supply, der Abschnitt „Aufbau wie gebaut“ und zwei neue Befunde (N1, N2). Geänderte Aussagen sind mit „Gerät 22.10.“ gekennzeichnet.</p>
+</header>
+
+<section class="safety">
+  <h2>Zuerst: drei sicherheitsrelevante Befunde</h2>
+  <div class="sitem">
+    <span class="n">S1</span>
+    <div>
+      <p><b>Netzspannung über die Rückwand, mit zu kleinen Abständen.</b> 230 V kommen hinten an J20 der Rückwand an, laufen über den DIN-41612-Stecker J16/J1 (Pins c2 und c6) zur Versorgungsplatine, von dort über J2 zum Netzschalter an der Front und zurück über die Sicherung F1 zum Netzteil. Gemessen an den Layouts:</p>
+      <div class="tbl" style="margin-top:8px"><table>
+        <thead><tr><th>Platine</th><th>zwischen</th><th>kleinster Abstand</th><th>Art</th></tr></thead>
+        <tbody>
+          <tr><td>Rückwand</td><td>L (230V_L1) ↔ Schutzleiter-Fläche</td><td class="num">1,08 mm</td><td>Luft- und Kriechstrecke</td></tr>
+          <tr><td>Rückwand</td><td>N ↔ Schutzleiter-Fläche</td><td class="num">1,68 mm</td><td>Luft- und Kriechstrecke</td></tr>
+          <tr><td>Versorgung</td><td>L hinter dem Netzschalter ↔ GND-Fläche</td><td class="num">1,94 mm</td><td>Luft- und Kriechstrecke</td></tr>
+          <tr><td>Versorgung</td><td>L hinter dem Netzschalter ↔ +5 V</td><td class="num">2,75 mm</td><td>Luft- und Kriechstrecke</td></tr>
+          <tr><td>Versorgung</td><td>L / N ↔ CAN_H, CAN_L</td><td class="num">5,16 mm</td><td>Kriechstrecke (am selben Stecker)</td></tr>
+          <tr><td>Versorgung</td><td>L ↔ N</td><td class="num">3,74 mm</td><td>Kriechstrecke</td></tr>
+        </tbody>
+      </table></div>
+      <p style="margin-top:8px">Zum Vergleich gelten für 230 V bei Verschmutzungsgrad 2 Richtwerte von etwa 2,5 mm Kriechstrecke für die Grundisolierung (Netz ↔ Schutzleiter) und etwa 5–6 mm für die verstärkte Isolierung (Netz ↔ Kleinspannung wie GND, +5 V, CAN). Diese Werte habe ich nicht aus der Norm, sondern als Orientierung; vor einer Änderung bitte gegen IEC 61010-1 bzw. 62368-1 prüfen. Die gemessenen Abstände zu Schutzleiter und GND liegen deutlich darunter. Außerdem führt derselbe Steckverbinder Netz und CAN, also Netzspannung neben einer Leitung, die zum PC geht.</p>
+      <p style="margin-top:8px"><b>Gerät 22.10. (Sichtprüfung der Versorgungsplatine, ohne Abstände zu messen):</b> Die Sicherung F1 (Glassicherung, auf der Platine „SLOW BLOW“, Wert nicht lesbar) sitzt in einem offenen Halter neben den Pins des DIN-Steckers. Die Messpunkte TP4 und TP5 liegen offen im 230-V-Feld, das nur durch einen Silkscreen-Rahmen markiert ist; Fräsungen oder Schlitze zwischen Netz und Kleinspannung sind nicht zu sehen. Beide Adern der Netzklemme sind blau (keine Farbkennung), ein Schutzleiter-Anschluss an dieser Klemme ist nicht zu sehen. Der Befund S1 bleibt damit bestehen.</p>
+    </div>
+  </div>
+  <div class="sitem">
+    <span class="n">S2</span>
+    <div>
+      <p><b>Beim Reset des Masters und beim Einschalten gehen die Kanäle kurz auf bis zu etwa 5,4 V, ohne Prüfling gemessen.</b> <span class="chip warn">Gerät 22.10.: neu bewertet</span> Sollwert und Freigabe gehen über Transistoren mit Pull-up nach +5 V (Q8/Q9 auf jeder Karte) und die Isolatoren auf den Karten. Sie tragen den Aufdruck <b>ISO6742F</b> (Foto Kanal 13): Ohne Versorgung der Eingangsseite geben sie laut TI-Datenblatt (Suffix F) den Ruhepegel <b>low</b> aus, ein Kanal geht dann aus. Meine frühere Annahme (Typ ohne F, Ruhepegel high, Kanal dauerhaft voll ein) war falsch.</p>
+      <div class="tbl" style="margin-top:8px"><table>
+        <thead><tr><th>Ereignis (Zelle 1, Oszilloskop 10:1, ohne Prüfling)</th><th>Spannung</th><th>Dauer</th></tr></thead>
+        <tbody>
+          <tr><td>RESET an der Front der Supply-Platine (5-V-Regler aus)</td><td class="num">≈ 5,3–5,4 V, dann 1,9 V bei +200 ms</td><td class="num">≈ 40 ms, dann ≈ 20 ms</td></tr>
+          <tr><td>Netzschalter ein</td><td class="num">bis 2,3 V, dann ≈ 0,7 V</td><td class="num">≈ 40 ms, dann bis ≈ 80 ms</td></tr>
+        </tbody>
+      </table></div>
+      <p style="margin-top:8px"><em>Erklärung aus Schaltplan und Messung, nicht einzeln nachgewiesen:</em> Beim RESET fallen die 5 V der Master-Seite nicht sofort, der Master ist aber schon im Reset, seine Pins sind hochohmig, Q8/Q9 sperren und die Isolator-Eingänge liegen high. Der Kanal geht dadurch kurz voll ein; sobald die Eingangsseite spannungslos ist, schaltet der Ausgang auf low. Beim Einschalten läuft es umgekehrt. <b>Nicht gemessen:</b> ein Master-Reset bei vorhandenen 5 V (Debugger, Watchdog, Fehlstart, unprogrammierter oder beim Flashen hochohmiger Prozessor). Dort bliebe der Eingang high, solange der Master im Reset ist: im Extremfall dauerhaft ≈ 5,26 V je Kanal.</p>
+      <p style="margin-top:6px">Für einen MC33771C am BCU-Board heißt das: bei jedem RESET an der Versorgung bis zu 5,4 V je Zelle für ≈ 40 ms (≈ 75 V am Stapel von 14 Zellen), beim Einschalten weniger. Ein Debugger-Reset oder ein Reset durch den Watchdog ist noch nicht gemessen.</p>
+    </div>
+  </div>
+  <div class="sitem">
+    <span class="n">S3</span>
+    <div>
+      <p><b>5-V-Signale direkt an 3,3-V-Pins des Masters.</b> STATUS 1–16 und LIMIT kommen aus ISO6742-Ausgängen, die mit +5 V versorgt sind; der CAN-Transceiver SN65HVD1050 läuft an 5 V und gibt RXD mit 5 V aus. Alles geht ohne Widerstand an Pins eines S32K146 mit 3,3 V. Das Datenblatt erlaubt je Pin höchstens ±3 mA Einspeisestrom und in Summe 30 mA. Bei etwa 100 Ω Ausgangswiderstand der Treiber (Schätzung) wären es um 10 mA je Pin. Diese Ströme können die 3,3-V-Schiene anheben (der LM1117 kann keinen Strom aufnehmen). Das ist vor allem ein Risiko für den Master selbst und für die Messgenauigkeit.</p>
+      <p style="margin-top:8px"><b>Gerät 22.10.:</b> Die LIMIT-Leitung läuft auf dem gebauten Master über einen Draht und R26 (330 Ω) auf PTE25; der Strom in den 3,3-V-Pin ist dort auf wenige mA begrenzt. Für STATUS und CAN-RXD ist nichts geändert. Der CAN-Transceiver U2 trägt den Aufdruck „VP1040“ (so lese ich es: SN65HVD1040, nicht -1050; beide laufen an 5 V). Die Messung an TP3 steht aus.</p>
+    </div>
+  </div>
+  <div class="interim">
+    <p><b>Bis das geklärt ist, schlage ich vor:</b></p>
+    <ul>
+      <li>Das Gerät nur geschlossen und mit angeschlossenem Schutzleiter betreiben; Netzteil und Rückwand nicht unter Spannung anfassen.</li>
+      <li>Das BCU-Board erst anschließen, wenn der Master läuft. Mit angeschlossenem Prüfling nicht flashen oder debuggen und weder RESET (Versorgung) noch Reset (Master) drücken.</li>
+      <li>S2 ist gemessen (siehe oben). S3 einmal ohne Prüfling messen: Spannung an TP3 (+3,3 V) mit allen Karten gesteckt.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2>Systembild</h2>
+  <div class="diagram sys" role="img" aria-label="Systembild mit vier Platinen, Steckverbindern, Netz, CAN und Prüfling">
+  <svg viewBox="0 0 1000 560" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah"/></marker>
+      <marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="aha"/></marker>
+      <marker id="am" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ahm"/></marker>
+    </defs>
+
+    <!-- Rückwand -->
+    <rect x="20" y="20" width="960" height="120" rx="8" class="board"/>
+    <text x="34" y="42" class="t">Rückwand BattSim_BusPcb</text>
+    <text x="34" y="58" class="s">16 Steckplätze à 4 TE, Master, Versorgung · +48 V, +5 V, GND durchgehend · Stapel über Netzbrücken</text>
+    <rect x="34" y="72" width="520" height="54" rx="4" class="box"/>
+    <text x="294" y="92" text-anchor="middle">16 Steckplätze (DIN 41612, 2×16), Kanal 16 … 1</text>
+    <text x="294" y="108" text-anchor="middle" class="m">Kanal n: V_OUT− = V_OUT+ von Kanal n−1 · Kanal 5–16 mit Lötbrücke JP</text>
+    <text x="294" y="120" text-anchor="middle" class="m">LIMIT aller Karten auf einer Leitung (B-R1)</text>
+    <rect x="570" y="72" width="110" height="54" rx="4" class="boxa"/>
+    <text x="625" y="92" text-anchor="middle">J19 TE 18-pol.</text>
+    <text x="625" y="108" text-anchor="middle" class="m">Zellabgriff</text>
+    <text x="625" y="120" text-anchor="middle" class="m">0 … 16 + CSC</text>
+    <rect x="696" y="72" width="80" height="54" rx="4" class="box"/>
+    <text x="736" y="92" text-anchor="middle">J15</text>
+    <text x="736" y="108" text-anchor="middle" class="m">2×32</text>
+    <text x="736" y="120" text-anchor="middle" class="m">Master</text>
+    <rect x="788" y="72" width="80" height="54" rx="4" class="boxm"/>
+    <text x="828" y="92" text-anchor="middle">J16</text>
+    <text x="828" y="108" text-anchor="middle" class="m">2×16</text>
+    <text x="828" y="120" text-anchor="middle" class="m">Versorgung</text>
+    <rect x="880" y="72" width="88" height="24" rx="4" class="boxm"/>
+    <text x="924" y="89" text-anchor="middle" class="labm">J20 230 V</text>
+    <rect x="880" y="102" width="88" height="24" rx="4" class="box"/>
+    <text x="924" y="119" text-anchor="middle" class="lab">J21 DE9 CAN</text>
+
+    <!-- Master -->
+    <rect x="20" y="200" width="470" height="330" rx="8" class="board"/>
+    <text x="34" y="222" class="t">Master BattSimMaster</text>
+    <text x="34" y="238" class="s">Bezug GND, Versorgung +5 V aus der Versorgungsplatine</text>
+    <rect x="40" y="252" width="200" height="96" rx="5" class="boxa"/>
+    <text x="140" y="272" text-anchor="middle" class="t">S32K146 LQFP-144</text>
+    <text x="140" y="288" text-anchor="middle" class="m">VDD 3,3 V (LM1117)</text>
+    <text x="140" y="302" text-anchor="middle" class="m">VREFH 2,048 V (LM4132)</text>
+    <text x="140" y="316" text-anchor="middle" class="m">Quarz 16 MHz</text>
+    <text x="140" y="330" text-anchor="middle" class="m">SWD/JTAG J5</text>
+    <rect x="260" y="252" width="210" height="44" rx="4" class="box"/>
+    <text x="365" y="270" text-anchor="middle">16× PWM · 16× ENABLE</text>
+    <text x="365" y="285" text-anchor="middle" class="m">FTM0/3/4/5 · GPIO</text>
+    <rect x="260" y="304" width="210" height="44" rx="4" class="box"/>
+    <text x="365" y="322" text-anchor="middle">16× ADC · 16× STATUS · SELECT</text>
+    <text x="365" y="337" text-anchor="middle" class="m">ADC0/ADC1 über 1 kΩ</text>
+    <rect x="40" y="364" width="200" height="50" rx="4" class="boxw"/>
+    <text x="140" y="384" text-anchor="middle">CAN0 + SN65HVD1040</text>
+    <text x="140" y="400" text-anchor="middle" class="m">5 V, RXD an 3,3-V-Pin (S3)</text>
+    <rect x="260" y="364" width="210" height="50" rx="4" class="box"/>
+    <text x="365" y="384" text-anchor="middle">2 Drehgeber, Anzeige (UART)</text>
+    <text x="365" y="400" text-anchor="middle" class="m">PEC12R · FlexIO an PTE15/16</text>
+    <rect x="40" y="430" width="200" height="40" rx="4" class="box"/>
+    <text x="140" y="455" text-anchor="middle">120 Ω fest + ESD-Diode</text>
+    <rect x="260" y="430" width="210" height="40" rx="4" class="boxa"/>
+    <text x="365" y="455" text-anchor="middle">J4 Bananenbuchse BATT+</text>
+    <text x="34" y="500" class="m">J2 (2×32) → Rückwand J15: SELECT, VOLTAGE_SENSE, STATUS, ENABLE</text>
+    <text x="34" y="516" class="m">J3 (2×15, Flachband) → Versorgung J4: VOLTAGE_SET, CAN, LIMIT, Tasten, 48V_CURRENT, Stapel +</text>
+
+    <!-- Versorgung -->
+    <rect x="510" y="200" width="470" height="330" rx="8" class="board"/>
+    <text x="524" y="222" class="t">Versorgung BattSim_Supply</text>
+    <text x="524" y="238" class="s">Netzteil, 5-V-Regler, Strommessung, Front: Netzschalter, Tasten, BATT−</text>
+    <rect x="530" y="252" width="140" height="60" rx="5" class="boxm"/>
+    <text x="600" y="272" text-anchor="middle" class="t">Netzschalter J2</text>
+    <text x="600" y="288" text-anchor="middle" class="m">über Kabel, F1 2 AT</text>
+    <text x="600" y="302" text-anchor="middle" class="m">nur in L</text>
+    <rect x="690" y="252" width="130" height="60" rx="5" class="boxm"/>
+    <text x="755" y="272" text-anchor="middle" class="t">IRM-60-48</text>
+    <text x="755" y="288" text-anchor="middle" class="m">48 V, 1,25 A, 60 W</text>
+    <rect x="840" y="252" width="124" height="60" rx="5" class="boxa"/>
+    <text x="902" y="272" text-anchor="middle">R2 50 mΩ</text>
+    <text x="902" y="288" text-anchor="middle" class="m">INA181A1 ×20</text>
+    <text x="902" y="302" text-anchor="middle" class="m">1 V/A, in GND</text>
+    <rect x="690" y="330" width="130" height="62" rx="5" class="box"/>
+    <text x="755" y="350" text-anchor="middle" class="t">LM2576HVS-5</text>
+    <text x="755" y="366" text-anchor="middle" class="m">48 V → 5 V, 3 A</text>
+    <text x="755" y="380" text-anchor="middle" class="m">ON/OFF = Taste RESET</text>
+    <rect x="530" y="330" width="140" height="62" rx="5" class="boxw"/>
+    <text x="600" y="350" text-anchor="middle">Taste RESET</text>
+    <text x="600" y="366" text-anchor="middle" class="m">schaltet 5 V ab</text>
+    <text x="600" y="380" text-anchor="middle" class="m">→ Kanäle ≈ 40 ms ein (S2)</text>
+    <rect x="840" y="330" width="124" height="62" rx="5" class="box"/>
+    <text x="902" y="350" text-anchor="middle">Tasten ALL ON/OFF,</text>
+    <text x="902" y="366" text-anchor="middle">REMOTE</text>
+    <text x="902" y="380" text-anchor="middle" class="m">ohne Pull-up</text>
+    <rect x="530" y="410" width="140" height="40" rx="4" class="boxa"/>
+    <text x="600" y="435" text-anchor="middle">BATT− (J3, Banane)</text>
+    <text x="524" y="500" class="m">J1 (2×16) → Rückwand J16: 230 V, +48 V, +5 V, VOLTAGE_SET, CAN, Stapelenden</text>
+    <text x="524" y="516" class="m">J4 (2×15) ← Master J3</text>
+
+    <!-- Verbindungen -->
+    <path d="M736,126 L736,170 L300,170 L300,200" class="wa" marker-end="url(#aa)"/>
+    <text x="440" y="164" class="m">SENSE · STATUS · ENABLE · SELECT</text>
+    <path d="M828,126 L828,185 L600,185 L600,200" class="wm" marker-end="url(#am)"/>
+    <text x="640" y="182" class="labm">230 V · 48 V · 5 V · SET · CAN</text>
+    <path d="M490,480 L510,480" class="w" marker-start="url(#a)" marker-end="url(#a)"/>
+    <text x="500" y="548" text-anchor="middle" class="m">Flachband J3 ↔ J4</text>
+  </svg>
+  </div>
+  <div class="legend">
+    <span><i class="sw" style="background:var(--mains-soft);border:1px solid var(--mains)"></i>führt Netzspannung</span>
+    <span><i class="sw" style="background:var(--accent-soft);border:1px solid var(--accent)"></i>Mess- und Stapelpfad</span>
+    <span><i class="sw" style="background:var(--bad-soft);border:1px solid var(--bad)"></i>Stelle mit Befund</span>
+  </div>
+  <p class="meta">Auffällig verdrahtet: Die 16 Sollwert-PWM laufen vom Master über das Flachbandkabel zur Versorgungsplatine und erst von dort über J16 in die Rückwand. Das obere Stapelende (16_V_OUT+) geht denselben Weg zurück zur Bananenbuchse am Master.</p>
+</section>
+
+<section>
+  <h2>Rückwand: aus 16 Zellen wird ein Stapel</h2>
+  <div class="diagram stack" role="img" aria-label="Kaskade der Zellkanäle auf der Rückwand mit Lötbrücken und Zellabgriff">
+  <svg viewBox="0 0 900 250" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah"/></marker>
+    </defs>
+    <text x="20" y="24" class="s">Zellabgriff J19 · Pin</text>
+    <!-- Kanäle -->
+    <g>
+      <rect x="40" y="70" width="90" height="56" rx="4" class="boxa"/><text x="85" y="94" text-anchor="middle">Kanal 1</text><text x="85" y="110" text-anchor="middle" class="m">Steckpl. J2</text>
+      <rect x="170" y="70" width="90" height="56" rx="4" class="boxa"/><text x="215" y="94" text-anchor="middle">Kanal 2</text><text x="215" y="110" text-anchor="middle" class="m">J1</text>
+      <rect x="300" y="70" width="90" height="56" rx="4" class="boxa"/><text x="345" y="94" text-anchor="middle">Kanal 5</text><text x="345" y="110" text-anchor="middle" class="m">J6, JP1</text>
+      <rect x="470" y="70" width="90" height="56" rx="4" class="boxa"/><text x="515" y="94" text-anchor="middle">Kanal 14</text><text x="515" y="110" text-anchor="middle" class="m">J13, JP10</text>
+      <rect x="600" y="70" width="90" height="56" rx="4" class="box"/><text x="645" y="94" text-anchor="middle">Kanal 15</text><text x="645" y="110" text-anchor="middle" class="m">J18, JP11</text>
+      <rect x="730" y="70" width="90" height="56" rx="4" class="box"/><text x="775" y="94" text-anchor="middle">Kanal 16</text><text x="775" y="110" text-anchor="middle" class="m">J17, JP12</text>
+    </g>
+    <!-- Reihenschaltung -->
+    <path d="M130,98 L170,98" class="wa"/>
+    <path d="M260,98 L278,98" class="wa"/><text x="281" y="102" class="m">…</text><path d="M290,98 L300,98" class="wa"/>
+    <path d="M390,98 L420,98" class="wa"/><text x="425" y="102" class="m">…</text><path d="M445,98 L470,98" class="wa"/>
+    <path d="M560,98 L600,98" class="wa"/>
+    <path d="M690,98 L730,98" class="wa"/>
+    <!-- Lötbrücken -->
+    <path d="M300,140 L390,140" class="wb"/><text x="345" y="156" text-anchor="middle" class="m">JP: Kanal überbrücken</text>
+    <path d="M600,140 L690,140" class="wb"/><path d="M730,140 L820,140" class="wb"/>
+    <text x="810" y="178" text-anchor="end" class="m">bei 14 Karten: JP11, JP12 schließen, sonst ist BATT+ offen</text>
+    <!-- Abgriffe -->
+    <path d="M40,126 L40,210" class="w"/><text x="44" y="226" class="lab">1: Stapel −</text>
+    <path d="M130,70 L130,40" class="w"/><text x="122" y="34" class="lab">2</text>
+    <path d="M260,70 L260,40" class="w"/><text x="252" y="34" class="lab">3</text>
+    <path d="M390,70 L390,40" class="w"/><text x="382" y="34" class="lab">6</text>
+    <path d="M560,70 L560,40" class="w"/><text x="548" y="34" class="lab">15</text>
+    <path d="M690,70 L690,40" class="w"/><text x="678" y="34" class="lab">16</text>
+    <path d="M820,70 L820,40" class="w"/><text x="790" y="34" class="lab">17, 18 (CSC)</text>
+    <path d="M820,126 L820,210" class="w"/><text x="740" y="226" class="lab">Stapel + → BATT+ (Master)</text>
+    <text x="44" y="246" class="m">Stapel − → BATT− (Versorgung J3)</text>
+  </svg>
+  </div>
+  <div class="two">
+    <div class="card">
+      <h3>Was die Rückwand macht</h3>
+      <ul>
+        <li>Die Steckplätze tragen nur die Reihe c; Reihe a ist auf allen Karten frei.</li>
+        <li>Je Kanal gehen V_OUT− und V_OUT+ an die Rückwand. Eine Netzbrücke (NT) verbindet V_OUT+ von Kanal n−1 mit V_OUT− von Kanal n, so entsteht der Stapel.</li>
+        <li>Ab Kanal 5 kann eine Lötbrücke (JP1…JP12) einen leeren Steckplatz überbrücken. Für die Kanäle 1–4 gibt es keine; sie müssen gesteckt sein.</li>
+        <li>J19 (TE 5-794630-0, 18-polig) führt alle Abgriffe zur Kabelpeitsche: Pin 1 = Stapel −, Pin n+1 = Kanal n +, Pin 18 zusätzlich Stapel + als Versorgung des Zellüberwachungs-ICs. Das ist die Abhilfe „CSC-Versorgung fehlt“ aus der Fehlerliste.</li>
+        <li>Die Masse der Zellseite (Karten-Pin c28) ist auf der Rückwand nicht angeschlossen, wie es sein muss.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Steckplätze in Einbaulage</h3>
+      <p class="meta">Die Bezeichner sind paarweise vertauscht, die Lage ist aber durchgehend: von links Kanal 16 bis Kanal 1, dann Master, dann Versorgung. Raster 20,32 mm (4 TE).</p>
+      <div class="tbl"><table>
+        <thead><tr><th>x (mm)</th><th>Steckplatz</th><th>Kanal</th></tr></thead>
+        <tbody>
+          <tr><td class="num">94 · 114</td><td class="mono">J17 · J18</td><td>16 · 15</td></tr>
+          <tr><td class="num">135 · 155</td><td class="mono">J13 · J14</td><td>14 · 13</td></tr>
+          <tr><td class="num">175 · 196</td><td class="mono">J11 · J12</td><td>12 · 11</td></tr>
+          <tr><td class="num">216 · 236</td><td class="mono">J9 · J10</td><td>10 · 9</td></tr>
+          <tr><td class="num">256 · 277</td><td class="mono">J7 · J8</td><td>8 · 7</td></tr>
+          <tr><td class="num">297 · 317</td><td class="mono">J5 · J6</td><td>6 · 5</td></tr>
+          <tr><td class="num">338 · 358</td><td class="mono">J3 · J4</td><td>4 · 3</td></tr>
+          <tr><td class="num">378 · 399</td><td class="mono">J1 · J2</td><td>2 · 1</td></tr>
+          <tr><td class="num">460 · 482</td><td class="mono">J15 · J16</td><td>Master · Versorgung</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Master: Pinbelegung je Kanal</h2>
+  <p>Der Prozessor ist ein <b>S32K146 im LQFP-144</b>. Das Schaltplansymbol heißt zwar „S32K146_100LQFP“, Footprint und Pinnummern (bis 144, dazu Pins wie PTE21–25 und PTD27–30, die es nur im 144er-Gehäuse gibt) gehören aber zum LQFP-144. Für die neXtBSW-Board-Beschreibung (BS-4.2) ist das das Derivat <code>S32K146_LQFP144</code>, das in mcudb schon vorhanden ist. Die PWM-Zuordnung von FTM5 stimmt mit dem Simulink-Modell überein (Kanal 1 = PTC8 = FTM5_CH1, Kanal 5 = PTC9 = FTM5_CH0).</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Kanal</th><th>VOLTAGE_SET (PWM)</th><th>ENABLE</th><th>STATUS</th><th>SELECT</th><th>VOLTAGE_SENSE (ADC)</th></tr></thead>
+    <tbody>
+      <tr><td class="id">1</td><td class="mono">PTC8 FTM5_CH1</td><td class="mono">PTE14</td><td class="mono">PTD9</td><td class="mono">PTB11</td><td class="mono">PTA6 ADC0_SE2</td></tr>
+      <tr><td class="id">2</td><td class="mono">PTC29 FTM5_CH2</td><td class="mono">PTE3</td><td class="mono">PTD8</td><td class="mono">PTB10</td><td class="mono">PTD18 ADC1_SE16</td></tr>
+      <tr><td class="id">3</td><td class="mono">PTA7 FTM5_CH3</td><td class="mono">PTA27</td><td class="mono">PTC17</td><td class="mono">PTB9</td><td class="mono">PTD19 ADC1_SE17</td></tr>
+      <tr><td class="id">4</td><td class="mono">PTC30 FTM5_CH4</td><td class="mono">PTE12</td><td class="mono">PTC16</td><td class="mono">PTD27</td><td class="mono">PTB16 ADC1_SE15</td></tr>
+      <tr><td class="id">5</td><td class="mono">PTC9 FTM5_CH0</td><td class="mono">PTA28</td><td class="mono">PTB22</td><td class="mono">PTB8</td><td class="mono">PTB15 ADC1_SE14</td></tr>
+      <tr><td class="id">6</td><td class="mono">PTC28 FTM4_CH7</td><td class="mono">PTD17</td><td class="mono">PTC15</td><td class="mono">PTD28</td><td class="mono">PTB14 ADC1_SE9</td></tr>
+      <tr><td class="id">7</td><td class="mono">PTC10 FTM3_CH4</td><td class="mono">PTA29</td><td class="mono">PTB23</td><td class="mono">PTA1</td><td class="mono">PTB13 ADC1_SE8</td></tr>
+      <tr><td class="id">8</td><td class="mono">PTC12 FTM3_CH6</td><td class="mono">PTA30</td><td class="mono">PTC14</td><td class="mono">PTD29</td><td class="mono">PTB12 ADC1_SE7</td></tr>
+      <tr><td class="id">9</td><td class="mono">PTC0 FTM0_CH0</td><td class="mono">PTD16</td><td class="mono">PTB25</td><td class="mono">PTA0</td><td class="mono">PTD22 ADC1_SE18</td></tr>
+      <tr><td class="id">10</td><td class="mono">PTC2 FTM0_CH2</td><td class="mono">PTD15</td><td class="mono">PTB3</td><td class="mono">PTD30</td><td class="mono">PTD4 ADC1_SE6</td></tr>
+      <tr><td class="id">11</td><td class="mono">PTB4 FTM0_CH4</td><td class="mono">PTE9</td><td class="mono">PTB27</td><td class="mono">PTA15</td><td class="mono">PTD3 ADC1_SE3</td></tr>
+      <tr><td class="id">12</td><td class="mono">PTC3 FTM0_CH3</td><td class="mono">PTA31</td><td class="mono">PTB28</td><td class="mono">PTE6</td><td class="mono">PTD2 ADC1_SE2</td></tr>
+      <tr><td class="id">13</td><td class="mono">PTC1 FTM0_CH1</td><td class="mono">PTD14</td><td class="mono">PTB2</td><td class="mono">PTE2</td><td class="mono">PTD23 ADC1_SE19</td></tr>
+      <tr><td class="id">14</td><td class="mono">PTC13 FTM3_CH7</td><td class="mono">PTD13</td><td class="mono">PTB29</td><td class="mono">PTE19</td><td class="mono">PTA3 ADC1_SE1</td></tr>
+      <tr><td class="id">15</td><td class="mono">PTC11 FTM3_CH5</td><td class="mono">PTE8</td><td class="mono">PTC19</td><td class="mono">PTE20</td><td class="mono">PTA2 ADC1_SE0</td></tr>
+      <tr><td class="id">16</td><td class="mono">PTC27 FTM4_CH4</td><td class="mono">PTB5</td><td class="mono">PTC23</td><td class="mono">PTA14</td><td class="mono">PTD24 ADC1_SE20</td></tr>
+    </tbody>
+  </table></div>
+  <div class="tbl"><table>
+    <thead><tr><th>Funktion</th><th>Pin</th><th>Anmerkung</th></tr></thead>
+    <tbody>
+      <tr><td>CAN</td><td class="mono">PTB1 CAN0_TX · PTB0 CAN0_RX</td><td>SN65HVD1050 laut Plan, gebaut „VP1040“ (SN65HVD1040), an 5 V, 120 Ω fest auf dem Master, ESD-Schutz SZNUP2105L. Das Modell nutzt FCAN0, 500 kbit/s.</td></tr>
+      <tr><td>Versorgungsstrom 48 V</td><td class="mono">PTB21 ADC0_SE18</td><td>1 V/A von der Versorgungsplatine, über 1 kΩ + 1 kΩ</td></tr>
+      <tr><td>LIMIT (alle Kanäle)</td><td class="mono">PTD10 (Plan) · PTE25 (gebaut)</td><td>Gemeinsame Leitung (B-R1). Auf der bestellten Leiterplatte ohne Bahn zu PTD10; gebaut: Draht auf das Pad von D5 (LED3) und über R26 auf PTE25 <span class="chip warn">Gerät 22.10.</span></td></tr>
+      <tr><td>Tasten ALL ON/OFF, REMOTE</td><td class="mono">PTD11 · PTD12 (gebaut, abgeleitet)</td><td>Taster nach GND an der Versorgungsplatine, kein Pull-up auf der Leiterplatte: Der interne Pull-up muss aktiv sein. Auf der bestellten Leiterplatte fehlen beide Bahnen; zwei Drahtbrücken ersetzen sie. Output Enable (ALL ON/OFF) löst den Handbetrieb aus, Remote Control die Fernsteuerung; daraus folgt die Zuordnung PTD11 = ALL ON/OFF, PTD12 = REMOTE <span class="chip warn">Gerät 22.10.</span></td></tr>
+      <tr><td>Drehgeber Spannung</td><td class="mono">PTE5 A · PTE4 B · PTA25 Taste</td><td>A/B liegen auf FTM2_QD_PHA/PHB, also auch per Hardware-Quadraturdecoder lesbar</td></tr>
+      <tr><td>Drehgeber Kanalwahl</td><td class="mono">PTC7 A · PTC6 B · PTA16 Taste</td><td>A/B auf FTM1_QD_PHA/PHB; 10 kΩ/1 µF entprellt (τ = 10 ms)</td></tr>
+      <tr><td>Anzeige</td><td class="mono">PTE15 TX · PTE16 RX</td><td>JST-PH 4-pol. mit 3,3 V. Die Pins sind keine LPUART-TX/RX, deshalb FlexIO als UART (erklärt die FlexIO-Blöcke im Modell)</td></tr>
+      <tr><td>LEDs</td><td class="mono">PTA11 · PTA12 · PTE25 · PTA8</td><td>drei Debug-LEDs, die vierte (D6, im Schaltplan „5V“ beschriftet) hängt an PTA8 – vermutlich die Remote-LED</td></tr>
+      <tr><td>Takt, Debug</td><td class="mono">PTB7/PTB6 · PTA4/PTC4/PTA10/PTC5/PTA5</td><td>Quarz 16 MHz (R23 1 MΩ nicht bestückt), SWD/JTAG 10-pol. Samtec</td></tr>
+      <tr><td>ADC-Referenz</td><td class="mono">VREFH = 2,048 V</td><td>LM4132-2.0; VDDA über Ferrit aus 3,3 V (B-M2)</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>Aufbau wie gebaut: Nacharbeit am Master und an der Supply</h2>
+  <div class="diagram stack" role="img" aria-label="Nacharbeit am Master: Drahtbrücken für die Taster und für LIMIT">
+  <svg viewBox="0 0 1000 380" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah"/></marker>
+      <marker id="gb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--bad)"/></marker>
+    </defs>
+    <rect x="20" y="20" width="190" height="320" rx="8" class="board"/>
+    <text x="34" y="44" class="t">Supply, Front</text>
+    <rect x="34" y="70" width="162" height="50" rx="4" class="box"/><text x="115" y="92" text-anchor="middle">Taster Output Enable</text><text x="115" y="108" text-anchor="middle" class="m">BTN_ON_OFF</text>
+    <rect x="34" y="150" width="162" height="50" rx="4" class="box"/><text x="115" y="172" text-anchor="middle">Taster Remote Control</text><text x="115" y="188" text-anchor="middle" class="m">BTN_REMOTE</text>
+    <rect x="34" y="230" width="162" height="50" rx="4" class="box"/><text x="115" y="252" text-anchor="middle">LIMIT aller Karten</text><text x="115" y="268" text-anchor="middle" class="m">LIMIT_COMMON</text>
+
+    <rect x="270" y="20" width="150" height="320" rx="8" class="board"/>
+    <text x="284" y="44" class="t">Header J3 (Master)</text>
+    <rect x="284" y="70" width="122" height="50" rx="4" class="boxa"/><text x="345" y="92" text-anchor="middle">Pin 13</text><text x="345" y="108" text-anchor="middle" class="m">Draht 1</text>
+    <rect x="284" y="150" width="122" height="50" rx="4" class="boxa"/><text x="345" y="172" text-anchor="middle">Pin 15</text><text x="345" y="188" text-anchor="middle" class="m">Draht 2</text>
+    <rect x="284" y="230" width="122" height="50" rx="4" class="boxa"/><text x="345" y="252" text-anchor="middle">Pin 24</text><text x="345" y="268" text-anchor="middle" class="m">Draht 3</text>
+
+    <rect x="500" y="20" width="480" height="320" rx="8" class="board"/>
+    <text x="514" y="44" class="t">Master, S32K146 (Pins laut Netzliste)</text>
+    <rect x="800" y="70" width="170" height="50" rx="4" class="boxw"/><text x="885" y="92" text-anchor="middle">PTD11 · Pin 48</text><text x="885" y="108" text-anchor="middle" class="m">ALL ON/OFF (abgeleitet)</text>
+    <rect x="800" y="150" width="170" height="50" rx="4" class="boxw"/><text x="885" y="172" text-anchor="middle">PTD12 · Pin 47</text><text x="885" y="188" text-anchor="middle" class="m">REMOTE (abgeleitet)</text>
+    <rect x="800" y="230" width="170" height="50" rx="4" class="box"/><text x="885" y="252" text-anchor="middle">PTD10 · Pin 49</text><text x="885" y="268" text-anchor="middle" class="m">LIMIT laut Plan, ohne Bahn</text>
+    <rect x="520" y="290" width="120" height="40" rx="4" class="box"/><text x="580" y="308" text-anchor="middle">D5 (LED3)</text><text x="580" y="322" text-anchor="middle" class="m">nicht bestückt, Pad</text>
+    <rect x="660" y="290" width="100" height="40" rx="4" class="box"/><text x="710" y="308" text-anchor="middle">R26 330 Ω</text>
+    <rect x="800" y="290" width="170" height="40" rx="4" class="boxw"/><text x="885" y="308" text-anchor="middle">PTE25 · Pin 133</text><text x="885" y="322" text-anchor="middle" class="m">LIMIT (Firmware)</text>
+
+    <path d="M196,95 L284,95" class="w" marker-end="url(#g)"/>
+    <path d="M196,175 L284,175" class="w" marker-end="url(#g)"/>
+    <path d="M196,255 L284,255" class="w" marker-end="url(#g)"/>
+    <path d="M406,95 L800,95" style="stroke:var(--bad);stroke-width:2;fill:none" marker-end="url(#gb)"/>
+    <path d="M406,175 L800,175" style="stroke:var(--bad);stroke-width:2;fill:none" marker-end="url(#gb)"/>
+    <path d="M406,255 L470,255 L470,310 L520,310" style="stroke:var(--bad);stroke-width:2;fill:none" marker-end="url(#gb)"/>
+    <path d="M640,310 L660,310" class="w"/>
+    <path d="M760,310 L800,310" class="w" marker-end="url(#g)"/>
+    <path d="M406,255 L800,255" style="stroke:var(--muted);stroke-width:1.4;stroke-dasharray:5 5;fill:none"/>
+    <text x="600" y="248" text-anchor="middle" class="m">Bahn fehlt (bestellte Leiterplatte)</text>
+    <text x="600" y="88" text-anchor="middle" class="labm">Drahtbrücke</text>
+    <text x="600" y="168" text-anchor="middle" class="labm">Drahtbrücke</text>
+  </svg>
+  </div>
+  <div class="legend">
+    <span><i class="sw" style="background:var(--bad-soft);border:1px solid var(--bad)"></i>Draht, nachträglich verlötet</span>
+    <span>gestrichelt grau: im Plan vorgesehen, auf der bestellten Leiterplatte nicht vorhanden</span>
+  </div>
+  <p>Die bestellte Master-Leiterplatte (<code>BattSimMaster_bestellt.zip</code>) hat die Netze <code>BTN_ON_OFF</code>, <code>BTN_REMOTE</code> und <code>LIMIT_COMMON</code> gar nicht im Layout: Die drei Netze haben dort keinen einzigen Verweis (im aktuellen Quellstand 21, 16 und 14). Der KiCad-DRC meldet trotzdem „0 unverbundene Elemente“, weil den Pads die Netzzuordnung fehlt. Der aktuelle Quellstand ist also der korrigierte, gebaut ist die bestellte Version. Die Nacharbeit (Nutzer, 22.10.): zwei Drahtbrücken für die Taster Remote und On/Off direkt an den Prozessor, und ein Draht für LIMIT auf das Pad von D5 (LED3), das über R26 (330 Ω) an PTE25 liegt. Die Pinnummern der Taster-Drähte am Prozessor liegen unter Heißkleber und sind nicht gezählt; die Zuordnung PTD11/PTD12 ist aus dem Verhalten der Fronttaster und den Firmwarenamen abgeleitet. Die Pin-Zuordnung am Header J3 (13, 15, 24) stützt sich auf die Reihenzählung vom Foto bei Pin 1 oben.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Platine</th><th>Beobachtung am Gerät</th><th>Folge</th></tr></thead>
+    <tbody>
+      <tr><td>Master</td><td>Prozessor FS32K146HAMLQ (LQFP-144, Datumscode QWP2328AD); D3 bestückt, D4/D5 nicht; U3 = LM1117-3.3; U2 „VP1040“; C3 680 µF; Aufdruck von U1 (LM4132?) nicht lesbar</td><td>Prozessor wie im Plan; Referenz (M2) ungeklärt</td></tr>
+      <tr><td>Supply</td><td>Regler <b>LM2576HVS-5.0</b> (HV-Variante, für 48 V zulässig) auf der Unterseite, Kühlkörper SK 09 auf der Oberseite, Wärme über ein Via-Feld; Shunt R2 = „R050“ (50 mΩ); C1 nicht bestückt; drei Taster (ON/OFF, REMOTE, RESET) und eine grüne LED an der Front</td><td>Regler bestätigt; Kühlung über die Platine</td></tr>
+      <tr><td>Supply</td><td>Die Anschlüsse der INA181-Eingangswiderstände R1 und R3 sind mit Draht und Lötzinn gekreuzt</td><td>Nacharbeit zur Fehlerliste „Shunt-Abgriff vertauscht“; richtig nur, wenn 48V_CURRENT im Standby über 0 V liegt (Messung steht aus)</td></tr>
+      <tr><td>Supply</td><td>Sicherung F1 offen im Halter, Netzklemme mit zwei blauen Adern, TP4/TP5 offen im 230-V-Feld</td><td>siehe S1</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>Versorgung</h2>
+  <div class="two">
+    <div class="card">
+      <h3>48 V und 5 V</h3>
+      <ul>
+        <li>230 V über Netzschalter (Front, über Kabel an J2) und Sicherung 2 AT in L zum IRM-60-48 (48 V, 60 W).</li>
+        <li>Der Minuspol des Netzteils geht über den Shunt R2 (50 mΩ, Kelvin) auf GND. Damit misst der Shunt den gesamten 48-V-Strom: alle Karten plus den 5-V-Regler.</li>
+        <li>LM2576HVS-5 macht aus 48 V die 5 V für Master und Master-Seite der Karten (Kühlkörper SK 09).</li>
+        <li>Die Taste RESET zieht ON/OFF des Reglers über 100 kΩ auf 48 V und schaltet damit die 5 V ab. C10/R6 verzögern den Start beim Einschalten um etwa 10 ms.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Strommessung</h3>
+      <ul>
+        <li>INA181A1 (Verstärkung 20) am 50-mΩ-Shunt: 1 V/A. Der ADC des Masters reicht mit 2,048 V Referenz bis etwa 2 A; die Firmware schaltet bei 1,28 A ab.</li>
+        <li>Die Filter C1 (50 pF) und C3 (220 nF) sind nicht bestückt. Die Notiz „fg = 72 Hz“ im Schaltplan passt ohnehin nicht zu 1 kΩ/220 nF, das wären 723 Hz. Die Firmware filtert selbst (<code>SupplyCurrentSenseFilter_P</code>).</li>
+        <li>Laut Fehlerliste war der Shunt-Abgriff vertauscht, das Layout ist angepasst. <b>Gerät 22.10.:</b> Auf der gebauten Platine sind R1 und R3 (INA181-Eingangswiderstände) von Hand gekreuzt. Ob es stimmt, zeigt eine Messung: Im Standby muss 48V_CURRENT deutlich über 0 V liegen.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Weitere Befunde</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Nr.</th><th>Befund</th><th>Folge</th><th>Vorschlag</th></tr></thead>
+    <tbody>
+      <tr><td class="id">R1 <span class="chip bad">hoch</span></td>
+        <td>LIMIT_ISO aller 16 Karten liegt auf der Rückwand auf einer gemeinsamen Leitung (LIMIT_COMMON). Die Quellen sind Gegentakt-Ausgänge der ISO6742.</td>
+        <td>Begrenzt ein Kanal, zieht sein Ausgang gegen die 15 anderen, die high treiben. Der Pegel ist dann unbestimmt, die Ausgänge werden belastet, und der Master erkennt die Begrenzung kaum.</td>
+        <td>Getrennte LIMIT-Leitungen; die Reihe a der Rückwand ist frei. Oder je Karte ein Open-Drain-Transistor mit Pull-up auf 3,3 V am Master. <b>Gerät 22.10.:</b> Die Leitung hat auf der bestellten Master-Platine keine Bahn zu PTD10 und wird über einen Draht auf PTE25 gelesen.</td></tr>
+      <tr><td class="id">N1 <span class="chip warn">mittel</span></td>
+        <td>Die bestellte Master-Leiterplatte hat die Netze BTN_ON_OFF, BTN_REMOTE und LIMIT_COMMON nicht verlegt (Schaltplan und Layout nicht abgeglichen). Der DRC meldet es nicht.</td>
+        <td>Taster und LIMIT funktionieren nur durch Drahtbrücken; ein Nachbau ohne diese Kenntnis wäre ohne Bedienung und ohne Begrenzungsmeldung.</td>
+        <td>Bei der nächsten Bestellung „Leiterplatte aus Schaltplan aktualisieren“ und die unverbundenen Netze prüfen. Die neue Firmware muss die Pin-Zuordnung wie gebaut (V1) und wie korrigiert beschreiben können.</td></tr>
+      <tr><td class="id">N2 <span class="chip info">Hinweis</span></td>
+        <td>Auf der Supply sind die Eingangswiderstände R1 und R3 des INA181 von Hand gekreuzt, der Aufdruck von U1 ist nicht lesbar.</td>
+        <td>Unbekannt, ob die Strommessung richtig herum misst (Standby-Messung steht aus).</td>
+        <td>48V_CURRENT im Standby messen (soll deutlich über 0 V liegen), Nacharbeit in die Layout-Korrektur der Supply aufnehmen.</td></tr>
+      <tr><td class="id">M2 <span class="chip warn">mittel</span></td>
+        <td>VREFH = 2,048 V. Das Datenblatt verlangt mindestens 2,7 V (Tab. 3, S. 12).</td>
+        <td>Der ADC arbeitet außerhalb der Spezifikation, die Genauigkeit ist nicht zugesichert. Er funktioniert erkennbar (die Firmware-Tabelle passt: 3991 LSB bei 5 V, rechnerisch 3999).</td>
+        <td>Referenz ≥ 2,7 V (z. B. LM4132-3.0) und Messteiler der Karten passend ändern, oder die Abweichung bewusst hinnehmen und je Kanal kalibrieren.</td></tr>
+      <tr><td class="id">M4 <span class="chip info">Hinweis</span></td>
+        <td>Der DE9 (J21) belegt nur Pin 2 (CAN_L) und Pin 7 (CAN_H), kein CAN_GND an Pin 3.</td>
+        <td>Der Bezug zum PC läuft nur über Schutzleiter und Gehäuse. Die 120-Ω-Terminierung ist fest, das Gerät muss an einem Busende sitzen.</td>
+        <td>Pin 3 (und 6) auf GND legen. Die Terminierung umschaltbar machen.</td></tr>
+      <tr><td class="id">M5 <span class="chip info">Hinweis</span></td>
+        <td>Die ADC-Eingänge haben nur 1 kΩ in Reihe, keinen Kondensator am Pin.</td>
+        <td>Der Abtastkondensator wird direkt aus dem OPV der Karte über Rückwand und Stecker geladen; bei kurzer Abtastzeit kann das Messfehler geben.</td>
+        <td>In der neuen Firmware die Abtastzeit nach AN12217 wählen. Später 1–10 nF am Pin.</td></tr>
+      <tr><td class="id">V1 <span class="chip info">Hinweis</span></td>
+        <td>Die Tasten ALL ON/OFF und REMOTE gehen über das Flachbandkabel ohne Pull-up und ohne Filter.</td>
+        <td>Störanfällig, wenn der interne Pull-up fehlt.</td>
+        <td>In der neuen Firmware Pull-up und Entprellung sicherstellen.</td></tr>
+    </tbody>
+  </table></div>
+  <p class="meta">S1–S3 stehen oben. Nicht Teil dieses Schritts: Gehäuse, Erdung des Gehäuses, Kabelpeitsche. Ob GND über die Montagelöcher (Master, Versorgung) mit dem Schutzleiter verbunden ist, hängt von den Abstandsbolzen ab.</p>
+</section>
+
+<section>
+  <h2>Fehlerliste des Erstaufbaus, übrige Punkte</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Punkt aus Konzept.pptx</th><th>Stand</th></tr></thead>
+    <tbody>
+      <tr><td>Bus-Platine: CAN-Stecker falsch belegt (Pin 8 und 4 statt 2 und 7)</td><td><span class="chip ok">umgesetzt</span> J21 Pin 2/7 (ohne GND, M4)</td></tr>
+      <tr><td>Bus-Platine: Zellabgriff CSC-Versorgung fehlt</td><td><span class="chip ok">umgesetzt</span> J19 Pin 18 = Stapel +</td></tr>
+      <tr><td>Kanal: Enable und Limit vertauscht</td><td><span class="chip ok">passt</span> Karte und Rückwand: c10 ENABLE, c12 LIMIT</td></tr>
+      <tr><td>Master: Encoder-Signale stark gestört, RC-Glied</td><td><span class="chip ok">umgesetzt</span> 1 kΩ + 10 kΩ/1 µF je Spur</td></tr>
+      <tr><td>Versorgung: Shunt-Abgriff vertauscht</td><td><span class="chip warn">messen</span> Layout laut Liste angepasst</td></tr>
+      <tr><td>Versorgung: Befestigungsloch Kühlkörper</td><td><span class="chip info">Layout</span> nicht aus dem Schaltplan prüfbar</td></tr>
+      <tr><td>Remote-Status-LED fehlt, All-On/Off-LED fehlt</td><td><span class="chip info">teilweise</span> D6 an PTA8 (beschriftet „5V“); für All On/Off werden laut Liste die Kanal-LEDs genutzt</td></tr>
+      <tr><td>Bus-Platine: CE-Zeichen steht Kopf</td><td><span class="chip info">Layout</span> nicht geprüft</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>Offene Punkte</h2>
+  <ul>
+    <li><b>Entscheidung im Board</b> (<code>bs-sicherheit-hw</code>): Wie gehen wir mit S1–S3 um, und welche Zwischenregeln gelten bis dahin?</li>
+    <li><b>Gemacht 22.10.:</b> Kanalausgang beim Reset und beim Einschalten (S2, Zelle 1). <b>Offen</b> (nur am geöffneten Gerät, Board-Punkt <code>bs-geraetetest-offen-messen</code>): +3,3 V an TP3 mit allen Karten (S3), LIMIT-Pegel bei einem begrenzenden Kanal (R1), 48V_CURRENT im Standby (Shunt-Richtung, N2), Debugger-/Watchdog-Reset bei vorhandenen 5 V (S2).</li>
+    <li><b>Hardware-Aufgabe (Gerät 28.10.2026, Entscheidung bs-reset-eskalation S-1 a): Ruhepegel „aus“ für SET und EN im Reset des Masters.</b> <span class="chip warn">Messung</span> Mit J-Link <code>r0</code> gehaltener nRESET, 5 V vorhanden: Zelle 1 liegt über die ganze Haltezeit (20 s) bei etwa 5,25 V, nach <code>r1</code> fällt sie binnen etwa 10 ms auf 0 V (PicoScope 2204A, 10:1). Das ist der oben als „nicht gemessen“ geführte Debugger-Reset bei vorhandenen 5 V (S2); die Pulse beim Ein- und Ausschalten der 5 V (Abschnitt S2) sind davon getrennt. <span class="chip info">Schaltplan BattSim_V1</span> Mechanismus: Die Master-Pins <code>n_VOLTAGE_SET</code> und <code>n_ENABLE</code> sind im Reset hochohmig und haben auf dem Master keinen Widerstand (Netzliste BattSimMaster). Auf der Karte führen sie über R46/R47 (1 kΩ) an die Basis von Q8/Q9 (BC817, ohne Basis-Emitter-Widerstand); ohne Basisstrom sperren beide, R45/R48 (10 kΩ nach +5 V) ziehen die Isolatoreingänge INA/INB des ISO6742 auf high, und weil die 5 V der Eingangsseite vorhanden sind, folgen die Ausgänge: VOLTAGE_SET high (voll, 5,26 V) und ENABLE high (ein). Der Ruhepegel low der Variante F gilt nur, solange die Eingangsseite unversorgt ist; deshalb ändert ein ISO6742 ohne F nichts, und zusätzliche Pull-ups an den Isolatoreingängen sind mit R45/R48 schon vorhanden und ändern am Pegel nichts. <span class="chip dec">Vorschlag, Annahme</span> Q8/Q9 müssen im Reset leiten: je ein Pull-up von den 28 Master-Pins (SET und EN der Kanäle 1–14) nach +3,3 V, etwa 10 kΩ (Basisstrom ≈ 0,24 mA bei 0,5 mA Kollektorstrom; Eingänge dann low, SET 0 V und ENABLE aus; im Betrieb belastet ein low-Pegel den Pin mit 0,33 mA). Der Wert und die Wirkung sind nicht am Gerät geprüft. <b>Offen:</b> Die Pins EN und SET getrennt messen (Pegel am Master-Pin, an Q8/Q9-Kollektor und am Isolatorausgang), sobald das Gerät offen ist; danach Umbau durch den Nutzer und Wiederholung der Reset-Messung. Bis dahin gilt die Betriebsregel: Prüfling erst anschließen, wenn 0x120 STANDBY meldet, und kein Flashen, Halt oder Reset per J-Link mit Prüfling (BattSimFW <code>doc/sicherheitshinweise-stufe-b.md</code>).</li>
+    <li><b>Offen aus der Sichtprüfung:</b> Wert der Sicherung F1, Pin-1-Markierung am Header J3, Aufdruck der Referenz U1 (LM4132) und des INA181, Durchgang Schutzleiter ↔ GND der Supply.</li>
+    <li><b>Frage</b>: Welche Steckplätze sind bestückt, und sind JP11/JP12 geschlossen (sonst ist BATT+ ohne Kanal 15/16 offen)?</li>
+    <li><b>Für neXtBSW (BS-4.2)</b>: Die Pintabelle oben ist die Vorlage für die Board-Beschreibung, Derivat <code>S32K146_LQFP144</code>.</li>
+  </ul>
+</section>
+
+</div>

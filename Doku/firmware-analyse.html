@@ -1,0 +1,318 @@
+<title>Batterie-Simulator Firmware</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: eine Lesespalte; Datenfluss und Zustände zuerst, dann Bausteine, Befunde, Anforderungen */
+:root{
+  --bg:#f6f7f8; --surface:#ffffff; --fg:#1b2228; --muted:#5b6670; --line:#d9dee3;
+  --accent:#0b6e7f; --accent-soft:#e3f1f3; --task:#4b5fa8; --task-soft:#e8ebf7;
+  --warn:#9a5b00; --warn-soft:#fbf0dc; --bad:#a3262e; --bad-soft:#fbe5e6; --ok:#2f7a3d; --ok-soft:#e5f3e7;
+  --f-display:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12171b; --surface:#1a2127; --fg:#e4e9ed; --muted:#9aa6b0; --line:#2e3840;
+  --accent:#5cc3d3; --accent-soft:#163238; --task:#9aa9ec; --task-soft:#20253a;
+  --warn:#e9b25a; --warn-soft:#352812; --bad:#f08a8f; --bad-soft:#3a1c1e; --ok:#7fcb8b; --ok-soft:#18301c; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12171b; --surface:#1a2127; --fg:#e4e9ed; --muted:#9aa6b0; --line:#2e3840;
+  --accent:#5cc3d3; --accent-soft:#163238; --task:#9aa9ec; --task-soft:#20253a;
+  --warn:#e9b25a; --warn-soft:#352812; --bad:#f08a8f; --bad-soft:#3a1c1e; --ok:#7fcb8b; --ok-soft:#18301c; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.55}
+.wrap{max-width:1060px;margin:0 auto;padding-block:32px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:36px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:2.1rem;font-weight:600}
+h2{font-size:1.45rem;font-weight:600}
+h3{font-size:1.1rem;font-weight:600}
+p{margin:0;max-width:76ch}
+section{display:flex;flex-direction:column;gap:14px}
+.eyebrow{font-family:var(--f-mono);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.meta{color:var(--muted);font-size:.9rem}
+code{font-family:var(--f-mono);font-size:.88em}
+ul{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:4px;max-width:78ch}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.88rem}
+th,td{text-align:left;vertical-align:top;padding:7px 10px;border-bottom:1px solid var(--line)}
+th{font-family:var(--f-mono);font-weight:500;font-size:.74rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);background:var(--bg)}
+tr:last-child td{border-bottom:none}
+td.id{font-family:var(--f-mono);white-space:nowrap;color:var(--accent)}
+td.mono,.mono{font-family:var(--f-mono);font-size:.84rem}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;font-family:var(--f-mono)}
+.chip{display:inline-block;font-family:var(--f-mono);font-size:.72rem;padding:1px 7px;border-radius:10px;white-space:nowrap}
+.chip.bad{background:var(--bad-soft);color:var(--bad)}
+.chip.warn{background:var(--warn-soft);color:var(--warn)}
+.chip.ok{background:var(--ok-soft);color:var(--ok)}
+.chip.info{background:var(--accent-soft);color:var(--accent)}
+.diagram{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px;overflow-x:auto}
+.diagram svg{display:block;width:100%;height:auto;min-width:900px}
+.diagram text{font-family:var(--f-body);font-size:12.5px;fill:var(--fg)}
+.diagram .t{font-weight:600}
+.diagram .s{font-size:11px;fill:var(--muted)}
+.diagram .m{font-family:var(--f-mono);font-size:10.5px;fill:var(--muted)}
+.diagram .tk{font-family:var(--f-mono);font-size:11px;fill:var(--task)}
+.diagram .lane{fill:var(--task-soft);stroke:var(--task);stroke-width:1.2}
+.diagram .box{fill:var(--surface);stroke:var(--muted);stroke-width:1.2}
+.diagram .boxa{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.3}
+.diagram .boxw{fill:var(--bad-soft);stroke:var(--bad);stroke-width:1.3}
+.diagram .w{stroke:var(--muted);stroke-width:1.4;fill:none}
+.diagram .wa{stroke:var(--accent);stroke-width:1.7;fill:none}
+.diagram .ah{fill:var(--muted)} .diagram .aha{fill:var(--accent)}
+pre.mermaid{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px;overflow-x:auto;margin:0}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+@media (max-width:720px){.two{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.formula{font-family:var(--f-mono);font-size:.86rem;background:var(--bg);border-radius:4px;padding:6px 8px;overflow-x:auto;white-space:nowrap}
+</style>
+
+<div class="wrap">
+
+<header style="display:flex;flex-direction:column;gap:10px">
+  <span class="eyebrow">BatterieSimulator · Firmware-Analyse BS-3 · 22.10.2026</span>
+  <h1>Firmware BATTSIM_CONTROL</h1>
+  <p>Wie die bestehende Simulink-Firmware des Masters arbeitet, was davon für die neue Firmware gilt und wo sie von der Hardware oder der DBC abweicht. Am Ende steht die Anforderungsliste für die neXtBSW-Firmware (BS-3.5).</p>
+  <p class="meta">Grundlage: <code>SOFTWARE/BATTSIM_CONTROL.slx</code> und <code>parameter.m</code>, gelesen ohne MATLAB mit <code>tools/slx_dump.py</code> (162 Subsysteme, 10 Stateflow-Diagramme, MBDT-Toolbox für S32K1xx). Block-Nummern stehen in eckigen Klammern. Das CAN-Verhalten im Detail steht schon in <code>doc/can-verhalten.md</code> (BS-1.0); hier ist es nur zusammengefasst. Alles ist aus dem Modell gelesen. <b>Nachtrag 22.10.2026 (Gerätetest BS-1.8):</b> Betriebsarten, Zellfreigabe, Zellstatus, Ausfall von 0x130 (FAIL nach 5,16 s) und die Fronttaster sind am Gerät bestätigt (<code>doc/can-verhalten.md</code>, letzter Abschnitt). Die Pins PTE25, PTD10, PTD11, PTD12 sind durch Nacharbeit am Master verändert (<code>hardware-system.html</code>, „Aufbau wie gebaut“); F1 und F2 sind dadurch erklärt und neu bewertet.</p>
+</header>
+
+<section>
+  <h2>Eckdaten</h2>
+  <div class="tbl"><table>
+    <tbody>
+      <tr><td>Ziel</td><td class="mono">S32K146, 144-LQFP, 128 KB RAM, 80 MHz aus 16-MHz-Quarz, GCC, Flashen per J-Link</td></tr>
+      <tr><td>Takt der Modellausführung</td><td class="mono">LPIT Kanal 0, Priorität 15; Millisekundenzähler aus LPTMR (1 ms)</td></tr>
+      <tr><td>Werkzeuge im Modell</td><td>NXP MBDT (FCAN, FTM-PWM, ADC, GPIO, FlexIO-I²C, LPTMR), eigene Bibliothek BACE_lib (Ein-/Ausschaltverzögerung, Flanken, Tiefpass, SR-Flipflop), Stateflow</td></tr>
+      <tr><td>Kanäle</td><td>16 im Modell, davon 14 im Zustandsautomaten aktiv (Enable15/16 auskommentiert)</td></tr>
+      <tr><td>Kein Watchdog</td><td>Im Modell gibt es keinen WDOG-Block.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>Datenfluss und Tasks</h2>
+  <div class="diagram" role="img" aria-label="Datenfluss der Firmware mit Tasks und Zykluszeiten">
+  <svg viewBox="0 0 1000 470" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah"/></marker>
+      <marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="aha"/></marker>
+    </defs>
+    <!-- Eingaenge -->
+    <rect x="16" y="16" width="200" height="438" rx="8" class="lane"/>
+    <text x="28" y="38" class="t">Eingänge</text>
+    <rect x="28" y="52" width="176" height="52" rx="4" class="box"/>
+    <text x="116" y="72" text-anchor="middle">CAN-Empfang (ISR)</text>
+    <text x="116" y="88" text-anchor="middle" class="m">MB0 0x130, MB1–6 0x100–105</text>
+    <rect x="28" y="116" width="176" height="44" rx="4" class="box"/>
+    <text x="116" y="134" text-anchor="middle">Qualifier 10 ms</text>
+    <text x="116" y="150" text-anchor="middle" class="m">Timeout, Alive, Halten</text>
+    <rect x="28" y="172" width="176" height="52" rx="4" class="box"/>
+    <text x="116" y="192" text-anchor="middle">ADC 100 ms</text>
+    <text x="116" y="208" text-anchor="middle" class="m">16 Zellen + 48-V-Strom, 32× Mittel</text>
+    <rect x="28" y="236" width="176" height="52" rx="4" class="box"/>
+    <text x="116" y="256" text-anchor="middle">Drehgeber (ISR)</text>
+    <text x="116" y="272" text-anchor="middle" class="m">PTE5/PTC7 fallende Flanke</text>
+    <rect x="28" y="300" width="176" height="52" rx="4" class="boxw"/>
+    <text x="116" y="320" text-anchor="middle">Tasten, STATUS, LIMIT</text>
+    <text x="116" y="336" text-anchor="middle" class="m">LIMIT an PTE25 (F1)</text>
+
+    <!-- Steuerung -->
+    <rect x="240" y="16" width="470" height="438" rx="8" class="lane"/>
+    <text x="252" y="38" class="t">CONTROL_TASK</text>
+    <text x="370" y="38" class="tk">100 ms</text>
+    <rect x="252" y="52" width="210" height="84" rx="5" class="boxa"/>
+    <text x="357" y="72" text-anchor="middle" class="t">Zustandsautomat</text>
+    <text x="357" y="88" text-anchor="middle" class="m">chart_318: Standby, Hand,</text>
+    <text x="357" y="102" text-anchor="middle" class="m">Fernsteuerung, Zellmodell, FAIL</text>
+    <text x="357" y="116" text-anchor="middle" class="m">+ Freigabe je Kanal (14×)</text>
+    <rect x="482" y="52" width="214" height="84" rx="5" class="box"/>
+    <text x="589" y="72" text-anchor="middle">Sollwert je Betriebsart</text>
+    <text x="589" y="88" text-anchor="middle" class="m">Standby/FAIL: 0 V</text>
+    <text x="589" y="102" text-anchor="middle" class="m">Hand: Drehgeber · Fern: CAN</text>
+    <text x="589" y="116" text-anchor="middle" class="m">Zellmodell: OCV + R + 2 RC</text>
+    <rect x="482" y="152" width="214" height="56" rx="5" class="box"/>
+    <text x="589" y="172" text-anchor="middle">Kennlinie V → Tastgrad</text>
+    <text x="589" y="188" text-anchor="middle" class="m">eine Tabelle für alle Kanäle</text>
+    <rect x="482" y="222" width="214" height="56" rx="5" class="boxw"/>
+    <text x="589" y="242" text-anchor="middle">PI-Regler je Kanal</text>
+    <text x="589" y="258" text-anchor="middle" class="m">abgeschaltet (F4)</text>
+    <rect x="252" y="152" width="210" height="72" rx="5" class="box"/>
+    <text x="357" y="172" text-anchor="middle">Messung</text>
+    <text x="357" y="188" text-anchor="middle" class="m">adaptiver Tiefpass,</text>
+    <text x="357" y="202" text-anchor="middle" class="m">Kennlinie LSB → V</text>
+    <rect x="252" y="240" width="210" height="56" rx="5" class="boxw"/>
+    <text x="357" y="260" text-anchor="middle">Überlast 48 V</text>
+    <text x="357" y="276" text-anchor="middle" class="m">&gt; 1,28 A, Reset nur per Taste (F5)</text>
+    <rect x="252" y="312" width="444" height="44" rx="5" class="box"/>
+    <text x="474" y="331" text-anchor="middle">Bedienung: Grob/Fein, alle/einzeln, Kanalwahl</text>
+    <text x="474" y="347" text-anchor="middle" class="m">Stateflow-Zweige CoarseFine, SelectAll</text>
+
+    <!-- Ausgaenge -->
+    <rect x="734" y="16" width="250" height="438" rx="8" class="lane"/>
+    <text x="746" y="38" class="t">Ausgänge</text>
+    <rect x="746" y="52" width="226" height="52" rx="4" class="boxa"/>
+    <text x="859" y="72" text-anchor="middle">PWM 1 kHz, 16 Kanäle</text>
+    <text x="859" y="88" text-anchor="middle" class="m">FTM0/3/4/5, aktiv low · 100 ms</text>
+    <rect x="746" y="116" width="226" height="44" rx="4" class="box"/>
+    <text x="859" y="134" text-anchor="middle">ENABLE, SELECT, LEDs</text>
+    <text x="859" y="150" text-anchor="middle" class="m">GPIO · 100 ms</text>
+    <rect x="746" y="172" width="226" height="52" rx="4" class="box"/>
+    <text x="859" y="192" text-anchor="middle">CAN-Senden 100 ms</text>
+    <text x="859" y="208" text-anchor="middle" class="m">0x110–0x115, 0x120, MB25–31</text>
+    <rect x="746" y="236" width="226" height="52" rx="4" class="box"/>
+    <text x="859" y="256" text-anchor="middle">Anzeige 10 ms</text>
+    <text x="859" y="272" text-anchor="middle" class="m">FlexIO-I²C 0x71, 7-Segment</text>
+    <rect x="746" y="300" width="226" height="44" rx="4" class="box"/>
+    <text x="859" y="318" text-anchor="middle">Bus-Fehler</text>
+    <text x="859" y="334" text-anchor="middle" class="m">Sendepuffer abbrechen</text>
+
+    <path d="M204,78 L218,78 L218,138 L204,138" class="w"/>
+    <path d="M204,138 L252,100" class="wa" marker-end="url(#aa)"/>
+    <path d="M204,198 L252,188" class="w" marker-end="url(#a)"/>
+    <path d="M204,326 L252,268" class="w" marker-end="url(#a)"/>
+    <path d="M204,262 L252,334" class="w" marker-end="url(#a)"/>
+    <path d="M462,94 L482,94" class="wa" marker-end="url(#aa)"/>
+    <path d="M589,136 L589,152" class="wa" marker-end="url(#aa)"/>
+    <path d="M589,208 L589,222" class="wa" marker-end="url(#aa)"/>
+    <path d="M696,250 L720,250 L720,78 L746,78" class="wa" marker-end="url(#aa)"/>
+    <path d="M462,188 L482,240" class="w" marker-end="url(#a)"/>
+    <path d="M462,108 L734,108 L734,138 L746,138" class="w" marker-end="url(#a)"/>
+    <path d="M462,200 L728,200 L728,198 L746,198" class="w" marker-end="url(#a)"/>
+    <path d="M462,212 L722,212 L722,262 L746,262" class="w" marker-end="url(#a)"/>
+  </svg>
+  </div>
+  <p class="meta">Zykluszeiten aus <code>parameter.m</code>: Steuerung, Ein-/Ausgänge, PWM, ADC, Drehgeber-Auswertung und CAN-Senden 100 ms; CAN-Qualifier 10 ms; Anzeige 10 ms (ein Byte je Schritt, ein Bild in etwa 160 ms). Die Steuerung reagiert also frühestens nach 100 ms auf einen Sollwert, die Ausgangsspannung folgt danach mit der Glättung der Karte (0,2–0,3 s).</p>
+</section>
+
+<section>
+  <h2>Betriebsarten</h2>
+  <pre class="mermaid">
+stateDiagram-v2
+    direction LR
+    [*] --> Standby
+    Standby --> Hand: Taste ALL ON/OFF\n(schaltet alle Kanäle ein)
+    Standby --> Fernsteuerung: REMOTE=2, MODE=2\noder Taste REMOTE
+    Standby --> Zellmodell: REMOTE=2, MODE=3
+    Hand --> Standby: Taste ALL ON/OFF\noder REMOTE=2, MODE=1
+    Hand --> Fernsteuerung: REMOTE=2, MODE=2
+    Fernsteuerung --> Standby: REMOTE=1\noder REMOTE=2, MODE=1\noder Taste REMOTE
+    Fernsteuerung --> Zellmodell: MODE=3
+    Zellmodell --> Fernsteuerung: MODE=2
+    Hand --> FAIL: Überlast
+    Fernsteuerung --> FAIL: Überlast\noder 0x130 fehlt (4,5–6 s)
+    Zellmodell --> FAIL: Überlast
+    FAIL --> Standby: Taste ALL ON/OFF\noder REMOTE=2, MODE=1
+  </pre>
+  <div class="two">
+    <div class="card">
+      <h3>Hand (STANDALONE, Status 2)</h3>
+      <ul>
+        <li>Beim Eintritt schaltet die Firmware alle Kanäle ein (ein 1-s-Impuls setzt jede Kanal-Freigabe); danach schaltet die Taste der Karte (STATUS) den Kanal um.</li>
+        <li>Der Spannungs-Drehgeber stellt den Sollwert ein; Druck auf ihn wechselt zwischen grob (Faktor 30) und fein (Faktor 2).</li>
+        <li>Der Kanal-Drehgeber wählt den Kanal (0–15, also auch die nicht bestückten 15 und 16); Druck wechselt zwischen „einzeln“ und „alle gemeinsam“. Die Karte zeigt den gewählten Kanal mit der LED SELECT.</li>
+        <li>Die Anzeige zeigt die gemessene Spannung des gewählten Kanals in mV.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Fernsteuerung und Zellmodell (Status 3/4)</h3>
+      <ul>
+        <li>Sollwerte und Freigaben kommen aus 0x100–0x105, sie werden bei Ausfall gehalten.</li>
+        <li>Ausgang ein (OUTPUT=2) schaltet die PWM ein; ein Kanal ist nur aktiv, wenn auch seine Freigabe ≠ 0 ist.</li>
+        <li>Im Zellmodell kommt der Sollwert aus dem Ersatzschaltbild (unten), für alle Kanäle gleich.</li>
+        <li>Die LED an PTA8 leuchtet in Fernsteuerung und Zellmodell und blinkt in FAIL.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Bausteine im Einzelnen</h2>
+  <div class="two">
+    <div class="card">
+      <h3>Sollwert → PWM</h3>
+      <p>Die Firmware rechnet den Sollwert (V) über die Tabelle <code>VoltageSetValue_Ax → VoltageSetPwm_T</code> in einen Tastgrad um (5 V ≙ 0,9566). FTM0, FTM3, FTM4 und FTM5 laufen mit 1 kHz, Periode 20 000 Takte (80 MHz / 4). Eine Stufe entspricht also etwa 0,26 mV am Ausgang. Die Ausgänge sind „aktiv low“ und gleichen damit den invertierenden Transistor Q8 der Karte aus. Die Firmware schaltet alle vier FTM mit <code>PwmEnable</code> gemeinsam ein und aus.</p>
+    </div>
+    <div class="card">
+      <h3>Messung</h3>
+      <p>ADC0 und ADC1, 12 bit, Mittelung über 32 Wandlungen, Abtastzeit 64 Takte, Start per Software in der 100-ms-Task. Danach ein adaptiver Tiefpass [3518]: große Sprünge gehen schneller durch, kleine werden stärker geglättet (Faktor <code>VoltageSenseFilterFac_P</code> = 0,5). Die Tabelle <code>VoltageSenseMeas_Ax → VoltageSenseValue_T</code> macht daraus Volt (798 LSB/V). Ein ADC-Wert von 4095 gilt als übersteuert.</p>
+    </div>
+    <div class="card">
+      <h3>Spannungsregler</h3>
+      <p>Je Kanal gibt es einen diskreten PI-Regler [3609] (Kp = −0,5, Ki = 0,1, D = 0) auf den Tastgrad, Ausgang 0…1 begrenzt. Er ist abgeschaltet (<code>VoltageControllerEnable_P = false</code>): der Fehler wird dann auf 0 gesetzt, und der Tastgrad ist der reine Tabellenwert. Den Fehler auf 0 setzen auch „Kanal aus“ und „Strombegrenzung“ – letztere ist durch F1 dauerhaft gesetzt.</p>
+    </div>
+    <div class="card">
+      <h3>Überlast</h3>
+      <p>48-V-Strom aus ADC0_SE18, gefiltert (<code>SupplyCurrentSenseFilter_P</code> = 0,08), geteilt durch 2000 LSB/A. Über 1,28 A setzt ein SR-Flipflop [3624] „Überlast“. Zurück geht es nur, wenn der Strom unter 1,08 A liegt <b>und</b> die Taste ALL ON/OFF gedrückt wird. Überlast verhindert den Wechsel nach Fernsteuerung und führt aus allen aktiven Zuständen nach FAIL.</p>
+    </div>
+    <div class="card">
+      <h3>Zellmodell (DYNCELLSIM)</h3>
+      <div class="formula">U = OCV + I·Rs + U1 + U2,  U_k[n+1] = U_k[n]·(1 − Ts/(Rp_k·Cp_k)) + I·Ts/Cp_k</div>
+      <p>Ersatzschaltbild mit Innenwiderstand und zwei RC-Gliedern, Euler-Verfahren mit Ts = 0,1 s. Die Grenzen aus <code>parameter.m</code> halten τ = Rp·Cp ≥ 0,1 s, die Rechnung bleibt dadurch stabil. Ein OCV und ein Strom gelten für alle Kanäle. Positiver Strom erhöht die Spannung (Laden). Fällt 0x131 aus, wird der Strom 0 und die RC-Spannungen bleiben stehen.</p>
+    </div>
+    <div class="card">
+      <h3>Anzeige</h3>
+      <p>Serielles 7-Segment-Modul an I²C-Adresse 0x71 über FlexIO (PTE15 SDA, PTE16 SCL, 9,6 kHz). Die Befehle 0x77 (Dezimalpunkt) und 0x79 (Cursor) passen zum Protokoll des SparkFun „Serial 7-Segment Display“ (Annahme aus den Befehlscodes). Eine Zustandsmaschine schickt alle 10 ms ein Byte.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Pins: Firmware gegen Hardware</h2>
+  <p>Alle 16 Freigabe-, Select- und PWM-Ausgänge sowie die 16 STATUS-Eingänge und die ADC-Kanäle gehen in der Firmware auf genau die Pins, die der Schaltplan des Masters vorsieht (per Skript verglichen). Abweichungen gibt es nur hier:</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Pin</th><th>Schaltplan</th><th>Firmware</th><th>Folge</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">PTE25</td><td>LED3 (Debug-LED, Ausgang über 330 Ω)</td><td>Eingang „Strombegrenzung“ mit Pull-down, invertiert</td><td>gebaut: LIMIT_COMMON per Draht über R26 auf diesen Pin, LED3 nicht bestückt. Firmware und Aufbau passen zusammen (F1)</td></tr>
+      <tr><td class="mono">PTD10</td><td>LIMIT_COMMON aller Karten</td><td>nicht verwendet</td><td>auf der bestellten Leiterplatte ohne Bahn; die Begrenzungsmeldung kommt über PTE25</td></tr>
+      <tr><td class="mono">PTD11</td><td>BTN_REMOTE</td><td>„OnOffButton“</td><td>gebaut per Drahtbrücke; Output Enable löst den Handbetrieb aus (F2)</td></tr>
+      <tr><td class="mono">PTD12</td><td>BTN_ON_OFF</td><td>„RemoteButton“</td><td>gebaut per Drahtbrücke; Remote Control löst die Fernsteuerung aus (F2)</td></tr>
+      <tr><td class="mono">PTB0</td><td>CAN0_RX</td><td>zusätzlich als FTM4_CH6 eingetragen (Kanalpaar 6/7 an)</td><td>Pin-Konflikt, funktioniert nur durch die Reihenfolge der Initialisierung (F3)</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>Befunde</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Nr.</th><th>Befund</th><th>Folge</th><th>Für die neue Firmware</th></tr></thead>
+    <tbody>
+      <tr><td class="id">F1 <span class="chip info">erklärt 22.10.</span></td><td>„Strombegrenzung“ wird an PTE25 gelesen (laut Schaltplan LED3), LIMIT_COMMON an PTD10 gar nicht.</td><td>Kein Firmware-Fehler: Auf der bestellten Master-Leiterplatte fehlt die Bahn zu PTD10. Der Nutzer hat LIMIT per Draht über R26 auf PTE25 geführt, LED3 (D5) ist nicht bestückt; die Firmware liest diesen Pin. Dass LED3 nie leuchtet, ist damit klar. Die Folge „Begrenzung dauerhaft aktiv“ aus dem Schaltplan gilt nicht.</td><td>Pin-Zuordnung je Leiterplattenversion in der Board-Beschreibung führen (V1 gebaut: PTE25, korrigierter Quellstand: PTD10).</td></tr>
+      <tr><td class="id">F2 <span class="chip info">erklärt 22.10.</span></td><td>PTD11/PTD12 sind in der Firmware umgekehrt benannt wie im Schaltplan.</td><td>Am Gerät: Output Enable (ALL ON/OFF) löst den Handbetrieb aus, Remote Control die Fernsteuerung, wie beschriftet. Die Bahnen zu den beiden Pins fehlen auf der bestellten Leiterplatte; zwei Drahtbrücken ersetzen sie, die Zuordnung PTD11 = ALL ON/OFF, PTD12 = REMOTE ist aus dem Verhalten abgeleitet.</td><td>Board-Beschreibung nach dem gebauten Zustand festlegen; bei einer neuen Leiterplatte die Zuordnung neu entscheiden.</td></tr>
+      <tr><td class="id">F3 <span class="chip warn">mittel</span></td><td>FTM4 Kanal 6 ist auf PTB0 eingetragen, PTB0 ist CAN0_RX.</td><td>CAN geht heute, weil die CAN-Initialisierung den Pin danach wohl wieder übernimmt.</td><td>Nur die benutzten FTM-Kanäle konfigurieren.</td></tr>
+      <tr><td class="id">F4 <span class="chip warn">mittel</span></td><td>Gesteuert statt geregelt, eine gemeinsame Kennlinie für alle Kanäle (Soll und Ist).</td><td>Kanalabhängige Abweichungen von einigen 10 mV (siehe Hardware-Analyse B4/B5).</td><td>Regelung auf den Istwert und Kalibrierung je Kanal.</td></tr>
+      <tr><td class="id">F5 <span class="chip warn">mittel</span></td><td>Überlast lässt sich nur mit der Taste ALL ON/OFF zurücksetzen.</td><td>Nach einer Überlast hilft „FAIL zurücksetzen“ über CAN nicht; das Gerät bleibt außerhalb der Fernsteuerung, bis jemand am Gerät drückt.</td><td>Rücksetzen per CAN zulassen, wenn der Strom unter der Schwelle liegt.</td></tr>
+      <tr><td class="id">F6 <span class="chip warn">mittel</span></td><td>CAN-Abweichungen aus BS-1.0: Freigabe 1 wirkt als „ein“, Zellstatus 0 = ein, Alive-Prüfung wirkungslos, Ausgänge nach Ausfall von 0x130 noch 4,5–6 s an.</td><td>Siehe <code>doc/can-verhalten.md</code>; der LabControl-Treiber berücksichtigt das. <b>Am Gerät bestätigt 22.10.:</b> FAIL nach 5,16 s, Zellen nach 5,36 s unter 1 V; in STOP kein FAIL bei fehlendem 0x130.</td><td>DBC einhalten, Alive wirksam prüfen, bei Ausfall schnell abschalten.</td></tr>
+      <tr><td class="id">F7 <span class="chip warn">mittel</span></td><td>Kein Watchdog.</td><td>Hängt die Firmware, bleiben die Ausgänge im letzten Zustand. Ein Reset führt wegen der Hardware (S2) zu voller Spannung.</td><td>Watchdog; Ausgänge beim Start sofort auf „aus“ legen.</td></tr>
+      <tr><td class="id">F8 <span class="chip info">Hinweis</span></td><td>Die Sollwertspeicher starten mit 0,5 V statt 0 V.</td><td>Ohne Zellbotschaften gilt 0,5 V als Sollwert (die Kanäle sind dann aber aus). <b>Gerät 22.10.:</b> Der Handbetrieb startet mit dem zuletzt per CAN gesetzten Sollwert (alle Zellen sofort auf 3,695 V nach einer Fernsteuer-Sitzung mit 3,7 V).</td><td>Start und Wechsel nach Standby mit 0 V.</td></tr>
+      <tr><td class="id">F9 <span class="chip info">Hinweis</span></td><td>Die Kanalwahl reicht bis 16, aktiv sind 14.</td><td>Im Handbetrieb lassen sich nicht bestückte Kanäle wählen.</td><td>Kanalzahl aus der Konfiguration.</td></tr>
+      <tr><td class="id">F10 <span class="chip info">Hinweis</span></td><td>Der Anzeigetext des Konfigurationsblocks nennt noch S32K144, 8 MHz, IAR; die gültigen Parameter sind S32K146, 16 MHz, GCC.</td><td>Nur kosmetisch.</td><td>—</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>Anforderungen an die neue Firmware (BS-3.5)</h2>
+  <p>Grundlage für BS-4. Übernommen wird, was sich bewährt hat; die Befunde aus Hardware- und Firmware-Analyse sind eingearbeitet. Die Kennungen sind Vorschläge.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>ID</th><th>Anforderung</th><th>Herkunft</th></tr></thead>
+    <tbody>
+      <tr><td class="id">FW-01</td><td>Betriebsarten Standby, Hand, Fernsteuerung, Zellmodell, FAIL mit den heutigen Übergängen; Kanalzahl (14) aus der Konfiguration.</td><td>chart_318, F9</td></tr>
+      <tr><td class="id">FW-02</td><td>CAN-Protokoll nach <code>BattSimV1.dbc</code>, 500 kbit/s, CAN0. Freigabe: 0 und 1 = aus, 2 = ein. Zellstatus nach DBC (2 = ein).</td><td>F6, can-verhalten.md</td></tr>
+      <tr><td class="id">FW-03</td><td>Alive-Zähler und Timeout je Botschaft wirksam prüfen. Fällt 0x130 in der Fernsteuerung aus, Ausgänge innerhalb einer festgelegten Zeit sperren (Vorschlag 300 ms), dann FAIL.</td><td>F6</td></tr>
+      <tr><td class="id">FW-04</td><td>Rücksetzen aus FAIL und aus Überlast per CAN (MODE=1), sobald der Strom unter der Schwelle liegt.</td><td>F5</td></tr>
+      <tr><td class="id">FW-05</td><td>Ausgänge beim Start so früh wie möglich sperren: ENABLE-Pins high (Kanal aus), PWM-Pins auf „Sollwert 0“, Sollwerte 0 V. Watchdog aktiv. Die verbleibende Zeit im Reset (Pins hochohmig) löst nur die Hardware (S2).</td><td>F7, F8, S2</td></tr>
+      <tr><td class="id">FW-06</td><td>Spannungsregelung je Kanal auf den gemessenen Istwert, mit Begrenzung und Anti-Windup; abschaltbar.</td><td>F4</td></tr>
+      <tr><td class="id">FW-07</td><td>Kalibrierung je Kanal (Offset und Steigung für Stellen und Messen) im nichtflüchtigen Speicher, einstellbar per CAN oder Diagnose.</td><td>F4, B4/B5</td></tr>
+      <tr><td class="id">FW-08</td><td>Strombegrenzung lesen und melden (je nach Hardware-Änderung gemeinsam oder je Kanal). Pin je Leiterplattenversion: gebaut V1 PTE25, korrigierter Quellstand PTD10.</td><td>F1, R1, N1</td></tr>
+      <tr><td class="id">FW-09</td><td>Überwachung des 48-V-Stroms mit Schwelle und Hysterese wie heute (1,28 A / 0,2 A), Wert auch per CAN melden.</td><td>OverloadDetection</td></tr>
+      <tr><td class="id">FW-10</td><td>Zellmodell wie heute (OCV, Rs, 2 RC, Euler mit Grenzen), Strom auf Wunsch je Kanal.</td><td>CellVoltageModel</td></tr>
+      <tr><td class="id">FW-11</td><td>Bedienung: Drehgeber über die Hardware-Quadraturdecoder (FTM2 an PTE4/5, FTM1 an PTC6/7), Tasten mit Pull-up und Entprellung, Zuordnung nach dem gebauten Zustand (ALL ON/OFF → PTD11, REMOTE → PTD12).</td><td>INPUT, F2</td></tr>
+      <tr><td class="id">FW-12</td><td>Anzeige über FlexIO-I²C, Adresse 0x71.</td><td>DISPLAY_TASK</td></tr>
+      <tr><td class="id">FW-13</td><td>Zusätzliche Statusmeldung per CAN: Version, 48-V-Strom, Überlast, LIMIT, Grund für FAIL. Neue ID außerhalb der bestehenden DBC, damit der LabControl-Treiber unverändert bleibt.</td><td>neu</td></tr>
+      <tr><td class="id">FW-14</td><td>Flashen per CAN über den neXtBSW-UDS-Bootloader, damit J-Link nur noch zur Erstinbetriebnahme nötig ist.</td><td>neXtBSW</td></tr>
+      <tr><td class="id">FW-16</td><td>Beim Start, nach Standby und nach FAIL alle Sollwerte auf 0 V setzen (nicht den letzten Wert behalten).</td><td>F8, Gerät 22.10.</td></tr>
+      <tr><td class="id">FW-15</td><td>Nur die tatsächlich benutzten FTM-Kanäle konfigurieren; Pinbelegung aus der Board-Beschreibung (S32K146_LQFP144).</td><td>F3</td></tr>
+    </tbody>
+  </table></div>
+  <p class="meta">Mögliche Lücken in neXtBSW, die BS-4.6 klären muss: FlexIO-I²C, FTM-Quadraturdecoder, FTM-PWM mit 16 Kanälen über vier Module. Das prüfe ich gegen den aktuellen Stand von neXtBSW, bevor ich sie melde.</p>
+</section>
+
+</div>

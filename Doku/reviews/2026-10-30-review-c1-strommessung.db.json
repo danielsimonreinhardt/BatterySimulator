@@ -1,0 +1,38 @@
+{
+  "quelle": "claude.ai-Artefakt „Review C-1 Strommessung“, Version 1793362760-fc12, siehe doc/archiv/artefakte-2026-11.html",
+  "gelesen": "2026-11-05",
+  "hinweis": "Roher Inhalt der Artefakt-Datenbank: Collection decisions (Dokument je Punkt, data = choice/note/at) und meta/status (done/at). Zeitpunkte in UTC.",
+  "decisions": [
+    {
+      "id": "S-1",
+      "data": {
+        "at": "2026-10-30T12:39:57.786Z",
+        "choice": "a",
+        "note": ""
+      },
+      "version": 1,
+      "updatedAt": "2026-10-30T12:39:58.126697Z"
+    },
+    {
+      "id": "S-2",
+      "data": {
+        "at": "2026-10-30T12:40:07.879Z",
+        "choice": "a",
+        "note": ""
+      },
+      "version": 1,
+      "updatedAt": "2026-10-30T12:40:08.064945Z"
+    }
+  ],
+  "meta": [
+    {
+      "id": "status",
+      "data": {
+        "at": "2026-10-30T12:40:09.126Z",
+        "done": true
+      },
+      "version": 1,
+      "updatedAt": "2026-10-30T12:40:09.306967Z"
+    }
+  ]
+}

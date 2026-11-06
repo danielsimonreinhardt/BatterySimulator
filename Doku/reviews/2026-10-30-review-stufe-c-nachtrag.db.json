@@ -1,0 +1,38 @@
+{
+  "quelle": "claude.ai-Artefakt „Nachtrag Review Stufe C“, Version 1793352638-67e8, siehe doc/archiv/artefakte-2026-11.html",
+  "gelesen": "2026-11-05",
+  "hinweis": "Roher Inhalt der Artefakt-Datenbank: Collection decisions (Dokument je Punkt, data = choice/note/at) und meta/status (done/at). Zeitpunkte in UTC.",
+  "decisions": [
+    {
+      "id": "C-2a",
+      "data": {
+        "at": "2026-10-30T09:34:42.739Z",
+        "choice": "a",
+        "note": ""
+      },
+      "version": 1,
+      "updatedAt": "2026-10-30T09:34:38.886011Z"
+    },
+    {
+      "id": "C-2b",
+      "data": {
+        "at": "2026-10-30T09:34:51.626Z",
+        "choice": "a",
+        "note": ""
+      },
+      "version": 1,
+      "updatedAt": "2026-10-30T09:34:47.46177Z"
+    }
+  ],
+  "meta": [
+    {
+      "id": "status",
+      "data": {
+        "at": "2026-10-30T09:34:53.758Z",
+        "done": true
+      },
+      "version": 1,
+      "updatedAt": "2026-10-30T09:34:49.594536Z"
+    }
+  ]
+}

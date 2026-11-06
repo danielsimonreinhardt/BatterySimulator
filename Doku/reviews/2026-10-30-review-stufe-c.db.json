@@ -1,0 +1,88 @@
+{
+  "quelle": "claude.ai-Artefakt „Review BattSim Stufe C“, Version 1793342624-6e05, siehe doc/archiv/artefakte-2026-11.html",
+  "gelesen": "2026-11-05",
+  "hinweis": "Roher Inhalt der Artefakt-Datenbank: Collection decisions (Dokument je Punkt, data = choice/note/at) und meta/status (done/at). Zeitpunkte in UTC.",
+  "decisions": [
+    {
+      "id": "C-1",
+      "data": {
+        "at": "2026-10-30T08:44:30.579Z",
+        "choice": "a",
+        "note": ""
+      },
+      "version": 1,
+      "updatedAt": "2026-10-30T08:44:30.96446Z"
+    },
+    {
+      "id": "C-2",
+      "data": {
+        "at": "2026-10-30T08:44:41.830Z",
+        "choice": "a",
+        "note": ""
+      },
+      "version": 1,
+      "updatedAt": "2026-10-30T08:44:42.220171Z"
+    },
+    {
+      "id": "C-3",
+      "data": {
+        "at": "2026-10-30T08:44:48.475Z",
+        "choice": "a",
+        "note": ""
+      },
+      "version": 1,
+      "updatedAt": "2026-10-30T08:44:48.72651Z"
+    },
+    {
+      "id": "C-4",
+      "data": {
+        "at": "2026-10-30T08:45:04.523Z",
+        "choice": "a",
+        "note": ""
+      },
+      "version": 1,
+      "updatedAt": "2026-10-30T08:45:04.778673Z"
+    },
+    {
+      "id": "C-5",
+      "data": {
+        "at": "2026-10-30T08:45:12.326Z",
+        "choice": "a",
+        "note": ""
+      },
+      "version": 1,
+      "updatedAt": "2026-10-30T08:45:12.529662Z"
+    },
+    {
+      "id": "C-6",
+      "data": {
+        "at": "2026-10-30T08:45:23.019Z",
+        "choice": "a",
+        "note": ""
+      },
+      "version": 1,
+      "updatedAt": "2026-10-30T08:45:23.328765Z"
+    },
+    {
+      "id": "C-7",
+      "data": {
+        "at": "2026-10-30T08:45:33.339Z",
+        "choice": "a",
+        "note": ""
+      },
+      "version": 1,
+      "updatedAt": "2026-10-30T08:45:33.621747Z"
+    }
+  ],
+  "meta": [
+    {
+      "id": "status",
+      "data": {
+        "at": "2026-10-30T08:45:39.276Z",
+        "done": true
+      },
+      "version": 1,
+      "updatedAt": "2026-10-30T08:45:39.552669Z"
+    }
+  ]
+}
