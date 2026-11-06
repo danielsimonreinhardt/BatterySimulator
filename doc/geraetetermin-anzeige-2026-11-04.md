@@ -78,3 +78,37 @@ Die Rate (9600 Baud gegen 31,25 kHz) war der einzige belegte Unterschied zur Wer
 Der nächste Schritt, der eine Antwort bringt, ist eine Messung am Bus (PicoScope 2204A oder UNI-T über LabControl an PTE15/PTE16 bzw. J1 Pin 2/3; Tastkopf und Pegel vorher mit dem Nutzer klären) oder das Lesen des Fehlerflags per J-Link.
 
 Endzustand: Firmware 0.5.2, Standby, Ausgang aus, Fernsteuerung frei, Kalibrierung nicht angefasst (0x0201 nach dem Flash nicht gelesen).
+
+### Nachtrag 06.11.2026: Ursache gefunden - die I2C-Pins werden nie auf FlexIO gemuxt
+
+Board `bs-anzeige-weiter` a. J-Link EDU 801042658, 1000 kHz, `connect; g; sleep; lesen; g` (`connect` setzt den Prozessor zurück, danach läuft die Firmware 0.5.2 im Standby neu an), Ja des Nutzers je Schritt; kein Prüfling, keine Last. Skripte: `scratchpad/rte57/70_disp_err.jlink` (nur lesen), `71_mux_test.jlink` (Laufzeit-Mux).
+
+**Lesen (nach 3 s Laufzeit, Standby):**
+
+| Größe | Wert | Bedeutung |
+|---|---|---|
+| RTE `i2c.DISPLAY.write.error` (0x20001656) | 1, dauerhaft | jeder Auftrag scheitert |
+| RTE `...write.byte` (0x20001654) | immer 0x76 (Clear) | Wiederholung nach Fehler, nie ein Bild |
+| Zähler Request/Done (0x20001657/0x20001655) | laufen etwa alle 0,5 s weiter | Wiederholung nach 50 Takten |
+| FLEXIO CTRL / PIN / SHIFTERR | 0x40000001 / 0 / 0 | FlexIO an, Shifter und Timer im Ruhezustand, **FLEXIO_PIN = 0** |
+| **PORTE_PCR15, PCR16** | **0x00000000** | **Pins nicht auf FlexIO (ALT6) gemuxt, kein Pull-up** |
+| GPIOE PDIR Bit 15/16 | 0 | beide Pins als low gelesen |
+
+`FlexioI2cMaster::transfer()` prüft vor jedem Auftrag SDA und SCL über FLEXIO_PIN und liefert bei low sofort `BUS_BUSY` (Fehler, es wird nichts gesendet). Mit PCR = 0 sieht FlexIO die Pins nie high.
+
+**Gegenprobe zur Laufzeit** (Ja des Nutzers; nichts im Flash, mit dem nächsten Reset weg): PORTE_PCR15 = 0x0600 (ALT6), PCR16 = 0x0603 (ALT6, Pull-up).
+
+| Danach | Wert |
+|---|---|
+| `write.error` | 0 |
+| `write.byte` | läuft durch die Bildfolge (0x01, 0x77, 0x03 ...) |
+| FLEXIO_PIN / PDIR Bit 15/16 | 0x0C / beide high (Bus frei) |
+| **Anzeige** | **leuchtet, zeigt 0.023** (Standby, Messwert Kanal 1; Dezimalpunkt durch 0x77 0x01), Beobachtung des Nutzers |
+
+**Ursache:** neXtBSW muxt die Pins PTE15/PTE16 nicht. `ioConfiguration.h` ist nur die Tabelle; gemuxt wird erst durch `Io::setDefaultConfiguration(pin)`. Das ruft für die I2C-Pins niemand auf (`FlexioI2cBuses.cpp` nimmt irrtümlich an, staticBsp mux sie). QuadratureDecoder, FlexCAN, AnalogInput, InputCapture und SPI muxen ihre Pins selbst. Dieselbe Lücke wie IO-25 (SPI) und IO-48 (InputCapture PE8). Damit war die Anzeige mit 0.5.0, 0.5.1 und 0.5.2 dunkel, unabhängig von Takt (100 kHz, 31,25 kHz, 9541 Hz), SCL-Pull-up (IO-125, steht im selben PCR-Eintrag und wirkte deshalb nie) und Task. Fix gehört nach neXtBSW, nicht nach BattSimFW (kein Commit im Untermodul).
+
+**Nicht getestet** (Nutzer, 06.11.): Abziehen/Anstecken der Anzeige (Fehlerflag, Wiederanlauf nach 0,5 s), Task-Hängedauer bei `timeout_ms` 15 und Bus-Clear. Die Tests sind nur bei geöffnetem Gerät möglich; der Nutzer hat sie übersprungen. Sie bleiben offen, bis ein Abbild mit gemuxten Pins dauerhaft läuft. Die Oszilloskop-Messung entfiel, weil die Gegenprobe die Ursache belegt hat.
+
+**Offen:** die Wirkung der Rate und des SCL-Pull-ups ist nach dem Fix noch zu prüfen (9541 Hz und 31,25 kHz sind beide nicht mit gemuxten Pins getestet). SDA hat keinen Pull-up, die Anzeige liefert bei 9541 Hz offenbar genug (SDA wird nur vom Modul/Treiber gezogen, high durch das Modul).
+
+Endzustand: Firmware 0.5.2, Standby, Ausgang aus, Fernsteuerung frei; die beiden PCR-Werte gelten bis zum nächsten Reset oder Spannungsausfall (Laufzeit-Mux), danach ist die Anzeige wieder dunkel.
