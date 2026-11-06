@@ -144,3 +144,19 @@ Aufbau vom Nutzer bestätigt (kein Prüfling/keine Last an den Zellklemmen, BCU 
 | 7. Endzustand | Standby, Ausgang aus |
 
 Nicht getestet (Gerät müsste geöffnet werden): Abziehen/Anstecken der Anzeige, Bus-Clear, Task-Hängedauer. Fehler 5/6/3 im Handbetrieb nicht am Gerät geprüft.
+
+
+## Termin 06.11.2026, Teil 4: Firmware 0.5.5 geflasht und am Gerät geprüft
+
+Aufbau vom Nutzer bestätigt (kein Prüfling/keine Last an den Zellklemmen, BCU aus, Anzeige angesteckt), Standby, ausdrückliches Ja je Schritt (Board bs-test-055 a). Hex-SHA-256 vor dem Flashen geprüft: `0e3903beb39e0a90f634f02dbd767de5f8a5f231f784d9652c5973981fe33fa1` (Commit 7a5e27f, Build-CRC romcheck 0xBD97E5A7).
+
+| Schritt | Ergebnis |
+|---|---|
+| 1. Flashen (canflash, Bootloader 0.3.14) | „Check OK (CRC-32 0xDD84932D)", ECU-Reset |
+| 2. Version 0x121 | 0.5.5 (Bytes 6/7 = 05 05), Standby |
+| 3. Drehgeber im Handbetrieb | Nutzer: „sieht erstmal alles gut aus, wie erwartet" (Sprung 0 ↔ 0,7 V). Kanalstatus bei 0,7 V (OL oder nicht) vom Nutzer nicht gemeldet, nicht geprüft |
+| 4. Anzeige ruhig (Standby und Handbetrieb je mindestens 1 min) | vom Nutzer bestätigt |
+| 5. Power-Cycle (Versorgung aus/ein, ohne J-Link-Reset) | 0x121 weiter 0.5.5, Standby; Anzeige geht von selbst an und ist ruhig (Nutzer bestätigt) |
+| 6. Endzustand | Standby, Ausgang aus (Nutzer bestätigt) |
+
+Der Nutzer sieht weitere Anpassungen für später. Nicht getestet: PCR-Werte (bei 0.5.4 gelesen, Code dazu unverändert), Kalibrierung 0x0201 nicht erneut gelesen, Fein-Modus-Sprung und Anzeige bei kleinen Schritten nicht einzeln gemeldet.
