@@ -5,7 +5,7 @@ Stapel kaskadiert), ein Master mit S32K146, Bedienung über Drehgeber, Anzeige u
 
 | Ordner | Inhalt |
 |---|---|
-| [`Hardware/`](Hardware/) | Schaltpläne und Platinen (KiCad): Master, Zellkanal, Rückwand, Versorgung. Noch zu füllen, siehe dortige README. |
+| [`Hardware/`](Hardware/) | Schaltpläne und Platinen (KiCad): Master, Zellkanal, Rückwand, Versorgung, dazu die Stückliste. |
 | [`Firmware/`](Firmware/) | Firmware des Masters als neXtBSW-Kundenprojekt (`battsim_master`), mit Tests, Gerätetermin-Protokollen und Sicherheitshinweisen. |
 | [`Doku/`](Doku/) | Analyse der alten Hard- und Firmware, Konzept, Reviews und Entscheidungen, CAN-Verhalten. Einstieg: [`Doku/README.md`](Doku/README.md). |
 
@@ -24,6 +24,15 @@ cmake --build --preset battsim-master
 ```
 
 Weiter in [`Firmware/README.md`](Firmware/README.md).
+
+## Lizenz
+
+* **Firmware und Dokumentation** (`Firmware/`, `Doku/`): Apache License 2.0, siehe [`LICENSE`](LICENSE). Das Untermodul `Firmware/nextbsw` ist ein eigenes
+  Repository und hat seine eigenen Bedingungen.
+* **Hardware** (`Hardware/`): CERN Open Hardware Licence Version 2 – Permissive (CERN-OHL-P-2.0), siehe [`Hardware/LICENSE`](Hardware/LICENSE).
+
+Schaltpläne und Platinen enthalten Symbole und Footprints aus den offiziellen KiCad-Bibliotheken (Lizenz: CC-BY-SA 4.0 mit der
+KiCad-Ausnahme für Entwürfe, die diese Bibliotheken nur verwenden); sie bleiben dadurch unter deren Bedingungen, der Entwurf selbst unter CERN-OHL-P-2.0.
 
 ## Stand
 
