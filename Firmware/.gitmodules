@@ -1,0 +1,3 @@
+[submodule "nextbsw"]
+	path = nextbsw
+	url = https://github.com/danielsimonreinhardt/neXtBSW_development.git

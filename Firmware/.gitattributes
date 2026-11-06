@@ -1,0 +1,10 @@
+# Zeilenenden: Textquellen mit LF, damit ein Diff auf Windows und Linux gleich aussieht.
+* text=auto eol=lf
+*.dbc text eol=lf
+*.a2l text eol=lf
+
+# Binaer - nie als Text umgeschrieben und nie zeilenweise gemischt.
+*.slx binary
+*.mat binary
+*.hex binary
+*.elf binary

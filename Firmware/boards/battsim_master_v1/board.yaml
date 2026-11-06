@@ -1,0 +1,230 @@
+# SPDX-License-Identifier: Apache-2.0 WITH AdditionRef-neXtBSW-Generator-Output-Exception
+# Generator output exception (NOTICE): this generated file may be used under terms of your choice.
+# Board profile: battsim_master_v1 (S32K146, LQFP144) - hardware only: what is fitted and how it is wired.
+# Created by the new-board wizard of neXtBSW (TOOL-72) for an own ECU board. What a software project uses of it
+# (selection, frequencies, safety pins) stands in projects/<project>/project.yaml, never here.
+# Schema: tools/nxconfig/model.py (Board), responsibilities: doc/architecture/README.md section 4.
+#
+# Sources:
+#   [SCH] the schematic of this board - **not stated yet**. Every row below was entered by hand in the
+#         wizard and is marked `verify: true` until it has been read off the schematic or measured on
+#         the board. Replace this line with the document (name, revision, date) and drop the `verify`
+#         of every row it confirms.
+#   [MUX] mcudb/s32k1xx/S32K146_LQFP144.pinmux.yaml - every pin function below is taken
+#         from there (signal -> pin -> selector); the wizard offered no pin that cannot carry it.
+#   [PORT] platforms/s32k1xx/port/port.yaml - what the family port template of s32k1xx needs of this board
+#         (board.adc_reference_mv); checked by nxconfig.
+# Where a row comes from: the comment of the row says it - entered by hand in the wizard, or read off a KiCad
+# netlist (TOOL-76, with file and net), so a typed row stays distinguishable from an imported one.
+schema_version: 1
+
+board:
+  name: battsim_master_v1
+  mcu: S32K146
+  package: LQFP144
+  supply_v: 3.3                        # verify: stated in the wizard, confirm against [SCH]
+  # PTD3 is NMI_b after reset and carries U_CELL_11 (ADC1_SE3) here: the NMI is blocked (FOPT.NMI_PIN_CFG, BL-48). A change changes
+  # the bootloader image (flash configuration field): bootloader update with the user on site (appointment 0.3.15).
+  nmi: disabled
+  clock:
+    # Fitted crystal or external oscillator. Bit timing of every CAN bus and the UART dividers follow from it; a
+    # different crystal changes no code (review question 2). verify: stated in the wizard, confirm against [SCH].
+    sosc_hz: 16000000
+  debug:
+    # Debug connection of the board. The probe selects the flash targets of the build (root CMakeLists.txt); a probe
+    # the targets do not know is allowed and simply gets no flash target.
+    interface: SWD
+    probe: J-Link
+  # Voltage at the ADC reference input VREFH: the scaling base of every ADC channel. Needed by the family port - the
+  # nominal voltage at VREFH the reference monitor compares its bandgap reading with (generated as
+  # bsp/adc/adcReferenceConfiguration.h, ARCH-32); without it nothing can be said about the reference
+  # (platforms/s32k1xx/port/safety/safeSystem/src/safeSystem/SafeSystem.cpp); stated in
+  # platforms/s32k1xx/port/port.yaml
+  adc_reference_mv: 2048
+
+# CAN connections. Instance and pins are checked against the derivative and [MUX].
+can:
+  - name: CAN0
+    instance: FlexCAN0
+    rx: { pin: PTB0 }                   # [MUX] FlexCAN0_RX on PTB0
+    tx: { pin: PTB1 }                   # [MUX] FlexCAN0_TX on PTB1
+    # entered by hand (Studio wizard, step can)
+
+# I2C buses. Instance and pins are checked against the derivative and [MUX].
+i2c:
+  - name: DISP_I2C
+    instance: FlexIO
+    sda: { pin: PTE15, flexio_pin: 2 }  # [MUX] FlexIO_D2 on PTE15
+    scl: { pin: PTE16, flexio_pin: 3 }  # [MUX] FlexIO_D3 on PTE16
+    # entered by hand (Studio wizard, step i2c). NO pull-ups on SDA/SCL: [SCH] BattSimMaster.kicad_sch
+    # nets DISP_TX/DISP_RX only join J1 (pin 2 = PTE15, pin 3 = PTE16) and the MCU, the MCU pins have none (IO-117). The bus holds only
+    # if the display module carries pull-ups or 4.7 k to +3.3 V are added at J1 (hardware, user).
+
+# Devices on the I2C buses that the application writes through the RTE (targets i2c.<NAME>.write.<value>, IO-117).
+i2c_devices:
+  - name: DISPLAY
+    bus: DISP_I2C
+    address: 0x71                       # 7 bit address of the 7-segment display module
+    part: 7-segment display module of the master (4 digits)
+    verify: true                        # not checked at the device yet (BattSimFW: assumption)
+
+# Rotary encoders of the front panel (IO-118): FTM quadrature decoder, only FTM1 and FTM2 can do it. [SCH] BattSimMaster.kicad_sch
+# shows a 10 k pull-up to +3.3 V on every phase (R34..R37), 1 k in series (R30..R33) and 1 uF to GND (C22..C25) - but the BUILT board does
+# not show them: at the device test of 2026-11-04 all four phase pins read low and the decoders never counted (J-Link read of FTM1/FTM2 CNT and
+# GPIO PDIR). The factory firmware (BATTSIM_CONTROL.slx, pin_settings of the image of 2026-10-27) enables the internal pull-up on all four
+# phases, so the MCU pull-up is set here (a pull-up that is also fitted is harmless). Filter and polarity stay assumptions until the device test.
+quadrature:
+  - name: ENC_VOLTAGE
+    instance: FTM2
+    phase_a: { pin: PTE5 }              # [MUX] FTM2_QD_PHA on PTE5
+    phase_b: { pin: PTE4 }              # [MUX] FTM2_QD_PHB on PTE4
+    pull: up                            # internal pull-up like the factory firmware (PORT_INTERNAL_PULL_UP_ENABLED on PTE4/PTE5/PTC6/PTC7)
+    filter_ns: 1000
+    verify: true
+  - name: ENC_SELECT
+    instance: FTM1
+    phase_a: { pin: PTC7 }              # [MUX] FTM1_QD_PHA on PTC7
+    phase_b: { pin: PTC6 }              # [MUX] FTM1_QD_PHB on PTC6
+    pull: up                            # internal pull-up like the factory firmware (PORT_INTERNAL_PULL_UP_ENABLED on PTE4/PTE5/PTC6/PTC7)
+    filter_ns: 1000
+    verify: true
+
+# Analog inputs. `scale` converts the pin voltage to the value in mV; factor 1 means the signal reaches the pin
+# unchanged. A divider or a sensor circuit in front of the pin is a board fact and belongs here (architecture section
+# 4, IO-18) - the wizard cannot know it, so it writes the neutral scale with verify.
+adc:
+  - { name: U_CELL_01, instance: ADC0, channel: SE2, pin: PTA6,
+      scale: { factor: 1, offset_mv: 0, verify: true } }   # [MUX] ADC0_SE2 on PTA6
+  - { name: U_CELL_02, instance: ADC1, channel: SE16, pin: PTD18,
+      scale: { factor: 1, offset_mv: 0, verify: true } }   # [MUX] ADC1_SE16 on PTD18
+  - { name: U_CELL_03, instance: ADC1, channel: SE17, pin: PTD19,
+      scale: { factor: 1, offset_mv: 0, verify: true } }   # [MUX] ADC1_SE17 on PTD19
+  - { name: U_CELL_04, instance: ADC1, channel: SE15, pin: PTB16,
+      scale: { factor: 1, offset_mv: 0, verify: true } }   # [MUX] ADC1_SE15 on PTB16
+  - { name: U_CELL_05, instance: ADC1, channel: SE14, pin: PTB15,
+      scale: { factor: 1, offset_mv: 0, verify: true } }   # [MUX] ADC1_SE14 on PTB15
+  - { name: U_CELL_06, instance: ADC1, channel: SE9, pin: PTB14,
+      scale: { factor: 1, offset_mv: 0, verify: true } }   # [MUX] ADC1_SE9 on PTB14
+  - { name: U_CELL_07, instance: ADC1, channel: SE8, pin: PTB13,
+      scale: { factor: 1, offset_mv: 0, verify: true } }   # [MUX] ADC1_SE8 on PTB13
+  - { name: U_CELL_08, instance: ADC1, channel: SE7, pin: PTB12,
+      scale: { factor: 1, offset_mv: 0, verify: true } }   # [MUX] ADC1_SE7 on PTB12
+  - { name: U_CELL_09, instance: ADC1, channel: SE18, pin: PTD22,
+      scale: { factor: 1, offset_mv: 0, verify: true } }   # [MUX] ADC1_SE18 on PTD22
+  - { name: U_CELL_10, instance: ADC1, channel: SE6, pin: PTD4,
+      scale: { factor: 1, offset_mv: 0, verify: true } }   # [MUX] ADC1_SE6 on PTD4
+  - { name: U_CELL_11, instance: ADC1, channel: SE3, pin: PTD3,
+      scale: { factor: 1, offset_mv: 0, verify: true } }   # [MUX] ADC1_SE3 on PTD3
+  - { name: U_CELL_12, instance: ADC1, channel: SE2, pin: PTD2,
+      scale: { factor: 1, offset_mv: 0, verify: true } }   # [MUX] ADC1_SE2 on PTD2
+  - { name: U_CELL_13, instance: ADC1, channel: SE19, pin: PTD23,
+      scale: { factor: 1, offset_mv: 0, verify: true } }   # [MUX] ADC1_SE19 on PTD23
+  - { name: U_CELL_14, instance: ADC1, channel: SE1, pin: PTA3,
+      scale: { factor: 1, offset_mv: 0, verify: true } }   # [MUX] ADC1_SE1 on PTA3
+  - { name: I_SUPPLY, instance: ADC0, channel: SE18, pin: PTB21,
+      scale: { factor: 1, offset_mv: 0, verify: true } }   # [MUX] ADC0_SE18 on PTB21
+
+# PWM setpoint outputs (VOLTAGE_SET of the 14 cell channels, IO-116): every channel is an output of its own, one group per
+# timer. The card inverts the signal (transistor Q8 with pull-up to 5 V), so the pin is low during the pulse and high at
+# rest: duty 0 = 0 V, and the safe state of a channel is the pin high. Pins and timer channels as built, read off the
+# KiCad netlist of the master (BatterieSimulator doc/hardware-system.html, "Master: Pinbelegung je Kanal"); channel 15
+# (PTC11, FTM3_CH5) and 16 (PTC27, FTM4_CH4) are not fitted and not listed (board decision 26.10.).
+pwm:
+  - name: SET_FTM5
+    instance: FTM5
+    mode: single
+    active_level: low
+    verify: true
+    channels:
+      - { name: SET_05, channel: 0, pin: PTC9 }
+      - { name: SET_01, channel: 1, pin: PTC8 }
+      - { name: SET_02, channel: 2, pin: PTC29 }
+      - { name: SET_03, channel: 3, pin: PTA7 }
+      - { name: SET_04, channel: 4, pin: PTC30 }
+  - name: SET_FTM4
+    instance: FTM4
+    mode: single
+    active_level: low
+    verify: true
+    channels:
+      - { name: SET_06, channel: 7, pin: PTC28 }
+  - name: SET_FTM3
+    instance: FTM3
+    mode: single
+    active_level: low
+    verify: true
+    channels:
+      - { name: SET_07, channel: 4, pin: PTC10 }
+      - { name: SET_08, channel: 6, pin: PTC12 }
+      - { name: SET_14, channel: 7, pin: PTC13 }
+  - name: SET_FTM0
+    instance: FTM0
+    mode: single
+    active_level: low
+    verify: true
+    channels:
+      - { name: SET_09, channel: 0, pin: PTC0 }
+      - { name: SET_13, channel: 1, pin: PTC1 }
+      - { name: SET_10, channel: 2, pin: PTC2 }
+      - { name: SET_12, channel: 3, pin: PTC3 }
+      - { name: SET_11, channel: 4, pin: PTB4 }
+
+# Digital inputs and outputs. `active` is the pin level of the active state and `pull` the resistor the MCU has to
+# switch on - both are properties of the circuit, not of the software; a wrong level only inverts the signal, the code
+# stays the same.
+dio:
+  inputs:
+    - { name: ST_01, pin: PTD9, active: low, verify: true }
+    - { name: ST_02, pin: PTD8, active: low, verify: true }
+    - { name: ST_03, pin: PTC17, active: low, verify: true }
+    - { name: ST_04, pin: PTC16, active: low, verify: true }
+    - { name: ST_05, pin: PTB22, active: low, verify: true }
+    - { name: ST_06, pin: PTC15, active: low, verify: true }
+    - { name: ST_07, pin: PTB23, active: low, verify: true }
+    - { name: ST_08, pin: PTC14, active: low, verify: true }
+    - { name: ST_09, pin: PTB25, active: low, verify: true }
+    - { name: ST_10, pin: PTB3, active: low, verify: true }
+    - { name: ST_11, pin: PTB27, active: low, verify: true }
+    - { name: ST_12, pin: PTB28, active: low, verify: true }
+    - { name: ST_13, pin: PTB2, active: low, verify: true }
+    - { name: ST_14, pin: PTB29, active: low, verify: true }
+    - { name: BTN_ALL_ON_OFF, pin: PTD11, active: low, pull: up, verify: true }
+    - { name: BTN_REMOTE, pin: PTD12, active: low, pull: up, verify: true }
+    - { name: LIMIT, pin: PTE25, active: low, pull: down, verify: true }
+    - { name: ENC_VOLT_BTN, pin: PTA25, active: low, pull: up, verify: true }
+    - { name: ENC_SEL_BTN, pin: PTA16, active: low, pull: up, verify: true }
+  outputs:
+    - { name: EN_01, pin: PTE14, active: low, verify: true }
+    - { name: SEL_01, pin: PTB11, active: high, verify: true }
+    - { name: EN_02, pin: PTE3, active: low, verify: true }
+    - { name: SEL_02, pin: PTB10, active: high, verify: true }
+    - { name: EN_03, pin: PTA27, active: low, verify: true }
+    - { name: SEL_03, pin: PTB9, active: high, verify: true }
+    - { name: EN_04, pin: PTE12, active: low, verify: true }
+    - { name: SEL_04, pin: PTD27, active: high, verify: true }
+    - { name: EN_05, pin: PTA28, active: low, verify: true }
+    - { name: SEL_05, pin: PTB8, active: high, verify: true }
+    - { name: EN_06, pin: PTD17, active: low, verify: true }
+    - { name: SEL_06, pin: PTD28, active: high, verify: true }
+    - { name: EN_07, pin: PTA29, active: low, verify: true }
+    - { name: SEL_07, pin: PTA1, active: high, verify: true }
+    - { name: EN_08, pin: PTA30, active: low, verify: true }
+    - { name: SEL_08, pin: PTD29, active: high, verify: true }
+    - { name: EN_09, pin: PTD16, active: low, verify: true }
+    - { name: SEL_09, pin: PTA0, active: high, verify: true }
+    - { name: EN_10, pin: PTD15, active: low, verify: true }
+    - { name: SEL_10, pin: PTD30, active: high, verify: true }
+    - { name: EN_11, pin: PTE9, active: low, verify: true }
+    - { name: SEL_11, pin: PTA15, active: high, verify: true }
+    - { name: EN_12, pin: PTA31, active: low, verify: true }
+    - { name: SEL_12, pin: PTE6, active: high, verify: true }
+    - { name: EN_13, pin: PTD14, active: low, verify: true }
+    - { name: SEL_13, pin: PTE2, active: high, verify: true }
+    - { name: EN_14, pin: PTD13, active: low, verify: true }
+    - { name: SEL_14, pin: PTE19, active: high, verify: true }
+    - { name: LED1, pin: PTA11, active: high, verify: true }
+    - { name: LED2, pin: PTA12, active: high, verify: true }
+    - { name: LED_REMOTE, pin: PTA8, active: high, verify: true }
+
+# No board port was written (ecu/platforms/<board>/Options.cmake). Since ARCH-58 that is not needed to build: the
+# feature switches are derived. Add the file only for a justified exception of this board.

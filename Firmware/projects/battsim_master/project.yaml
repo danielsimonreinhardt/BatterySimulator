@@ -1,0 +1,105 @@
+# SPDX-License-Identifier: Apache-2.0 WITH AdditionRef-neXtBSW-Generator-Output-Exception
+# Generator output exception (NOTICE): this generated file may be used under terms of your choice.
+# Project battsim_master: created empty for board battsim_master_v1 by the new-project wizard (TOOL-59).
+# Schema: tools/nxconfig/model.py (Project); levels: doc/architecture/README.md section 4.
+# Every value below was derived from the board and its derivative and checked by nxconfig; adapt
+# them to the ECU (projects/README.md).
+schema_version: 1
+
+project:
+  name: battsim_master
+  board: ../../boards/battsim_master_v1
+  rte: rte.yaml
+  diag: diag.yaml
+  description: Empty project on battsim_master_v1
+
+clock:
+  system_hz: 80000000
+
+# Memory partitioning (projects/README.md, Speicheraufteilung): derived from the derivative by the wizard -
+# the bootloader flash has to hold the bootloader image of this core, check the size after the first build.
+memory:
+  flash: PFLASH
+  bootloader: { size: 0x8000, ram: SRAM_L, ram_size: 0x8000, stack_size: 0x1000 }
+  application: { ram: [SRAM_L, SRAM_U], noinit_size: 0x400 }
+
+# Bootloader and diagnostic addresses (COM-11): the first CAN bus of the board.
+bootloader:
+  can: CAN0
+
+diagnostics:
+  request_id: 0x7E1
+  response_id: 0x7E9
+
+use:
+  can: [CAN0]
+  i2c: [DISP_I2C]
+  i2c_devices: [DISPLAY]
+  quadrature: [ENC_VOLTAGE, ENC_SELECT]
+  adc: [U_CELL_01, U_CELL_02, U_CELL_03, U_CELL_04, U_CELL_05, U_CELL_06, U_CELL_07, U_CELL_08, U_CELL_09, U_CELL_10, U_CELL_11, U_CELL_12, U_CELL_13, U_CELL_14, I_SUPPLY]
+  dio: [LED1, LED2, EN_01, SEL_01, EN_02, SEL_02, EN_03, SEL_03, EN_04, SEL_04, EN_05, SEL_05, EN_06, SEL_06, EN_07, SEL_07, EN_08, SEL_08, EN_09, SEL_09, EN_10, SEL_10, EN_11, SEL_11, EN_12, SEL_12, EN_13, SEL_13, EN_14, SEL_14, LED_REMOTE, ST_01, ST_02, ST_03, ST_04, ST_05, ST_06, ST_07, ST_08, ST_09, ST_10, ST_11, ST_12, ST_13, ST_14, BTN_ALL_ON_OFF, BTN_REMOTE, LIMIT, ENC_VOLT_BTN, ENC_SEL_BTN]
+
+can:
+  CAN0: { bitrate: 500000 }
+
+# Display bus (IO-117): standard mode; time limit 2 ms: one byte takes about 0.3 ms at 100 kHz, a hanging clock may stretch the
+# 10 ms task by at most 2 x timeout_ms (board io117-blockieren a).
+i2c:
+  DISP_I2C: { baudrate_hz: 100000, timeout_ms: 2 }
+
+# PWM setpoint outputs: 1 kHz, 20000 ticks per period at 80 MHz / 4 (the frequency of the old firmware, 0.26 mV per step).
+pwm:
+  SET_FTM5: { frequency_hz: 1000, prescaler: 4 }
+  SET_FTM4: { frequency_hz: 1000, prescaler: 4 }
+  SET_FTM3: { frequency_hz: 1000, prescaler: 4 }
+  SET_FTM0: { frequency_hz: 1000, prescaler: 4 }
+
+# Interrupt priorities as ranks (PLAT-21): CAN before the console.
+interrupts:
+  ranks:
+    - { source: can, name: CAN0, rank: 0 }
+
+# Internal ADC channels the family port s32k1xx reads (reference and supply monitor of the safety task).
+adc_internal:
+  - { name: BANDGAP, instance: ADC0, channel: BANDGAP }
+  - { name: ADCINTERNAL0, instance: ADC0, channel: INTERNAL0 }
+
+# Safety section (platforms/<family>/port/safety, SafeIo and SafeState). What each pin does at run time:
+#   safe_state_output: digital output of the board used as INDICATOR of the safe state: entering the safe state
+#   disables the pin (it floats), leaving it switches it back to GPIO with the level the application last wrote.
+#   Never an actuator (enable of a pump, motor, heater, relay): it would float in the safe state and come back on
+#   when the safe state is left. Take an output the application does not write: if an rte.yaml dio.out connection
+#   writes it, nxconfig warns until safety.safe_state_output_shared_with_application gives the reason (SYS-87,
+#   AoU-30); one a device driver owns is refused.
+#   locked_pin: digital output whose pin configuration is locked at start (PCR lock) and checked every safety
+#   cycle; its level stays writable, but any reconfiguration is refused by the hardware and a changed direction
+#   enters the safe state. Not the same output as safe_state_output.
+#   test_pin: pin that is UNCONNECTED on the circuit: configured as GPIO input with pull-down and checked every
+#   safety cycle (the console command `safety dst`/`est` switches it to enter/leave the safe state). A pin the
+#   board file does not describe is not necessarily unconnected - check the schematic.
+# chosen by the user when the project was created, not by the wizard.
+safety:
+  safe_state_output: LED1
+  locked_pin: LED2
+  test_pin: PTE13
+
+# Non-volatile memory (stage C, FW-06): the calibration of the 14 cell channels lives in four NvM blocks (one value per channel,
+# integrity asil_b = two copies with CRC-32, a defective copy is repaired from the other). The blocks are written some
+# seconds after a change (ApplyCalibration), so a power cut right after the calibration loses at most that much.
+# PARTITION: the emulated EEPROM needs the one-time FlexNVM partition of the chip (PGMPART), which only a complete erase
+# undoes. It is NOT done by this file: it needs its own release of the user and the J-Link run with a backup beforehand (stage C,
+# device part). The values below are the proposal for that release (same split as the eval board: 4 KB EEPROM, 32 KB D-flash,
+# 32 KB backup, 20 CSEc key slots - the key space cannot be added later). Without the partition the blocks stay in RAM and
+# start from their defaults.
+nvm:
+  partition:
+    eeprom_bytes: 4096
+    data_flash_bytes: 0x8000
+    partition_code: 0xB
+    load_on_reset: true
+    key_slots: 20
+  blocks:
+    CalSetOffset:  {type: sint16, length: 14, integrity: asil_b, write: change, min_interval_ms: 2000}
+    CalSetGain:    {type: uint16, length: 14, integrity: asil_b, write: change, min_interval_ms: 2000}
+    CalMeasOffset: {type: sint16, length: 14, integrity: asil_b, write: change, min_interval_ms: 2000}
+    CalMeasGain:   {type: uint16, length: 14, integrity: asil_b, write: change, min_interval_ms: 2000}

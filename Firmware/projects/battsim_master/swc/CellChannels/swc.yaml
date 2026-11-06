@@ -1,0 +1,688 @@
+# SPDX-License-Identifier: Apache-2.0
+# Description of CellChannels: the model CellChannels.slx is the master (made by CellChannels_create.m); this file is the
+# description it matches, and tools/rtegen compares it with the generated ARXML. Written by tools/gen_swc_ports.py.
+version: 1
+name: CellChannels
+description: "14 Zellkanaele: Sollwert auf Tastgrad, Freigabe, Istwert, Kalibrierung, Regler und Status"
+implementation: simulink
+runnables:
+  - name: CellTask10ms
+    period_ms: 10
+ports:
+  - name: OutputEnable
+    direction: in
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: LimitActive           # LIMIT line of the 48 V supply: the regulator stands still
+    direction: in
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: ControllerOffReq           # 1 = regulator switched off by the diagnosis (0 after every start: on)
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: HandActive           # hand mode: setpoints and releases come from HandControl, not from the CAN messages (stage D, step 2)
+    direction: in
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: HandSetpoint_V           # setpoints of the hand mode (HandControl, from the previous step)
+    direction: in
+    type: float32
+    dimension: CellCount
+    runnables: [CellTask10ms]
+  - name: HandEnable           # releases of the hand mode (HandControl, from the previous step)
+    direction: in
+    type: boolean
+    dimension: CellCount
+    runnables: [CellTask10ms]
+  - name: SelectedChannel           # selected channel 1..14 (SELECT LED)
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: SelectAllMode           # all channels are edited together (SELECT LED of all channels)
+    direction: in
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: CalSetOffset_V           # from CellCal
+    direction: in
+    type: float32
+    dimension: CellCount
+    runnables: [CellTask10ms]
+  - name: CalSetGain           # from CellCal
+    direction: in
+    type: float32
+    dimension: CellCount
+    runnables: [CellTask10ms]
+  - name: CalMeasOffset_V           # from CellCal
+    direction: in
+    type: float32
+    dimension: CellCount
+    runnables: [CellTask10ms]
+  - name: CalMeasGain           # from CellCal
+    direction: in
+    type: float32
+    dimension: CellCount
+    runnables: [CellTask10ms]
+  - name: Cell01VoltSet_V
+    direction: in
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell01Enable
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: UCell01_mV
+    direction: in
+    type: uint32
+    runnables: [CellTask10ms]
+  - name: UCell01Qlf
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: En01
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Sel01           # SELECT LED of the card, hand mode of stage D
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Cell01VoltAct_V
+    direction: out
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell01State
+    direction: out
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: Duty01           # duty in 0.01 %
+    direction: out
+    type: uint16
+    runnables: [CellTask10ms]
+  - name: Cell02VoltSet_V
+    direction: in
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell02Enable
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: UCell02_mV
+    direction: in
+    type: uint32
+    runnables: [CellTask10ms]
+  - name: UCell02Qlf
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: En02
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Sel02           # SELECT LED of the card, hand mode of stage D
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Cell02VoltAct_V
+    direction: out
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell02State
+    direction: out
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: Duty02           # duty in 0.01 %
+    direction: out
+    type: uint16
+    runnables: [CellTask10ms]
+  - name: Cell03VoltSet_V
+    direction: in
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell03Enable
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: UCell03_mV
+    direction: in
+    type: uint32
+    runnables: [CellTask10ms]
+  - name: UCell03Qlf
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: En03
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Sel03           # SELECT LED of the card, hand mode of stage D
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Cell03VoltAct_V
+    direction: out
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell03State
+    direction: out
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: Duty03           # duty in 0.01 %
+    direction: out
+    type: uint16
+    runnables: [CellTask10ms]
+  - name: Cell04VoltSet_V
+    direction: in
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell04Enable
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: UCell04_mV
+    direction: in
+    type: uint32
+    runnables: [CellTask10ms]
+  - name: UCell04Qlf
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: En04
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Sel04           # SELECT LED of the card, hand mode of stage D
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Cell04VoltAct_V
+    direction: out
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell04State
+    direction: out
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: Duty04           # duty in 0.01 %
+    direction: out
+    type: uint16
+    runnables: [CellTask10ms]
+  - name: Cell05VoltSet_V
+    direction: in
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell05Enable
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: UCell05_mV
+    direction: in
+    type: uint32
+    runnables: [CellTask10ms]
+  - name: UCell05Qlf
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: En05
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Sel05           # SELECT LED of the card, hand mode of stage D
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Cell05VoltAct_V
+    direction: out
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell05State
+    direction: out
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: Duty05           # duty in 0.01 %
+    direction: out
+    type: uint16
+    runnables: [CellTask10ms]
+  - name: Cell06VoltSet_V
+    direction: in
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell06Enable
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: UCell06_mV
+    direction: in
+    type: uint32
+    runnables: [CellTask10ms]
+  - name: UCell06Qlf
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: En06
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Sel06           # SELECT LED of the card, hand mode of stage D
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Cell06VoltAct_V
+    direction: out
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell06State
+    direction: out
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: Duty06           # duty in 0.01 %
+    direction: out
+    type: uint16
+    runnables: [CellTask10ms]
+  - name: Cell07VoltSet_V
+    direction: in
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell07Enable
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: UCell07_mV
+    direction: in
+    type: uint32
+    runnables: [CellTask10ms]
+  - name: UCell07Qlf
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: En07
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Sel07           # SELECT LED of the card, hand mode of stage D
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Cell07VoltAct_V
+    direction: out
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell07State
+    direction: out
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: Duty07           # duty in 0.01 %
+    direction: out
+    type: uint16
+    runnables: [CellTask10ms]
+  - name: Cell08VoltSet_V
+    direction: in
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell08Enable
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: UCell08_mV
+    direction: in
+    type: uint32
+    runnables: [CellTask10ms]
+  - name: UCell08Qlf
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: En08
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Sel08           # SELECT LED of the card, hand mode of stage D
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Cell08VoltAct_V
+    direction: out
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell08State
+    direction: out
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: Duty08           # duty in 0.01 %
+    direction: out
+    type: uint16
+    runnables: [CellTask10ms]
+  - name: Cell09VoltSet_V
+    direction: in
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell09Enable
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: UCell09_mV
+    direction: in
+    type: uint32
+    runnables: [CellTask10ms]
+  - name: UCell09Qlf
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: En09
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Sel09           # SELECT LED of the card, hand mode of stage D
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Cell09VoltAct_V
+    direction: out
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell09State
+    direction: out
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: Duty09           # duty in 0.01 %
+    direction: out
+    type: uint16
+    runnables: [CellTask10ms]
+  - name: Cell10VoltSet_V
+    direction: in
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell10Enable
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: UCell10_mV
+    direction: in
+    type: uint32
+    runnables: [CellTask10ms]
+  - name: UCell10Qlf
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: En10
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Sel10           # SELECT LED of the card, hand mode of stage D
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Cell10VoltAct_V
+    direction: out
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell10State
+    direction: out
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: Duty10           # duty in 0.01 %
+    direction: out
+    type: uint16
+    runnables: [CellTask10ms]
+  - name: Cell11VoltSet_V
+    direction: in
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell11Enable
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: UCell11_mV
+    direction: in
+    type: uint32
+    runnables: [CellTask10ms]
+  - name: UCell11Qlf
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: En11
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Sel11           # SELECT LED of the card, hand mode of stage D
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Cell11VoltAct_V
+    direction: out
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell11State
+    direction: out
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: Duty11           # duty in 0.01 %
+    direction: out
+    type: uint16
+    runnables: [CellTask10ms]
+  - name: Cell12VoltSet_V
+    direction: in
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell12Enable
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: UCell12_mV
+    direction: in
+    type: uint32
+    runnables: [CellTask10ms]
+  - name: UCell12Qlf
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: En12
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Sel12           # SELECT LED of the card, hand mode of stage D
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Cell12VoltAct_V
+    direction: out
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell12State
+    direction: out
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: Duty12           # duty in 0.01 %
+    direction: out
+    type: uint16
+    runnables: [CellTask10ms]
+  - name: Cell13VoltSet_V
+    direction: in
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell13Enable
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: UCell13_mV
+    direction: in
+    type: uint32
+    runnables: [CellTask10ms]
+  - name: UCell13Qlf
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: En13
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Sel13           # SELECT LED of the card, hand mode of stage D
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Cell13VoltAct_V
+    direction: out
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell13State
+    direction: out
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: Duty13           # duty in 0.01 %
+    direction: out
+    type: uint16
+    runnables: [CellTask10ms]
+  - name: Cell14VoltSet_V
+    direction: in
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell14Enable
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: UCell14_mV
+    direction: in
+    type: uint32
+    runnables: [CellTask10ms]
+  - name: UCell14Qlf
+    direction: in
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: En14
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Sel14           # SELECT LED of the card, hand mode of stage D
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Cell14VoltAct_V
+    direction: out
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell14State
+    direction: out
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: Duty14           # duty in 0.01 %
+    direction: out
+    type: uint16
+    runnables: [CellTask10ms]
+  - name: ActualVolt_V           # actual values of the 14 channels (the ones of the CAN status messages), for the display of HandControl
+    direction: out
+    type: float32
+    dimension: CellCount
+    runnables: [CellTask10ms]
+  - name: ControllerOn           # regulator active (not switched off)
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: ControllerOffAct           # request of the diagnosis as the model uses it
+    direction: out
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: ChannelsReleased           # output on and at least one channel released: feeds the plausibility check of the current measurement in SupplyMonitor
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: OverVoltage           # a released channel was above setpoint + OverVoltThd_V for OverVoltTime_cycles samples (C-2): BattSimMode switches off in RUN, FAIL reason 6
+    direction: out
+    type: boolean
+    runnables: [CellTask10ms]
+  - name: Cell15State           # not fitted: disabled
+    direction: out
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: Cell15VoltAct_V           # not fitted: 0 V
+    direction: out
+    type: float32
+    runnables: [CellTask10ms]
+  - name: Cell16State           # not fitted: disabled
+    direction: out
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: Cell16VoltAct_V           # not fitted: 0 V
+    direction: out
+    type: float32
+    runnables: [CellTask10ms]
+parameters:
+  - name: CellCount
+    kind: constant
+    type: sint32
+    min: 14
+    max: 14
+    description: "Anzahl der Zellkanaele (Dimension der Vektorports)"
+    value: 14
+  - name: VoltageSetValue_Ax
+    type: float32
+    dim: 6
+    runnables: [CellTask10ms]
+  - name: VoltageSetPwm_T
+    type: float32
+    dim: 6
+    runnables: [CellTask10ms]
+  - name: VoltageSenseMeas_Ax
+    type: float32
+    dim: 6
+    runnables: [CellTask10ms]
+  - name: VoltageSenseValue_T
+    type: float32
+    dim: 6
+    runnables: [CellTask10ms]
+  - name: SetpointLimit_V
+    type: float32
+    unit: "V"
+    min: 0
+    max: 5.0
+    description: "Obere Grenze jedes Sollwerts"
+    runnables: [CellTask10ms]
+  - name: OverVoltThd_V
+    type: float32
+    unit: "V"
+    min: 0.1
+    max: 1.0
+    description: "Schwelle der Ueberspannungserkennung"
+    runnables: [CellTask10ms]
+  - name: OverVoltTime_cycles
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: OutputFloor_V
+    type: float32
+    unit: "V"
+    min: 0
+    max: 2.0
+    description: "Pegelboden der Endstufe ohne Last"
+    runnables: [CellTask10ms]
+  - name: StepThreshold_V
+    type: float32
+    unit: "V"
+    min: 0
+    max: 5.0
+    description: "Sollwertsprung, der den Regler anhaelt"
+    runnables: [CellTask10ms]
+  - name: StepHold_cycles
+    type: uint8
+    runnables: [CellTask10ms]
+  - name: VoltageSenseFilter
+    type: float32
+    runnables: [CellTask10ms]
+  - name: CtrlKp
+    type: float32
+    unit: "-"
+    min: 0
+    max: 2.0
+    description: "Proportionalanteil des Reglers"
+    runnables: [CellTask10ms]
+  - name: CtrlKi_per_s
+    type: float32
+    unit: "1/s"
+    min: 0
+    max: 10.0
+    description: "Integralanteil des Reglers"
+    runnables: [CellTask10ms]
+  - name: CtrlLimit_V
+    type: float32
+    unit: "V"
+    min: 0
+    max: 0.1
+    description: "Begrenzung der Reglerkorrektur"
+    runnables: [CellTask10ms]

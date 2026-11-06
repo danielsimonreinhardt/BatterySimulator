@@ -1,0 +1,27 @@
+# BattSimFW - was nicht eingecheckt wird (doc/architecture/customer-project.md 3.2):
+# Quellen ja, Abgeleitetes nein.
+
+# Bau-Verzeichnisse und alles, was die Generatoren dort hineinschreiben (bswgen, rtegen, dbcgen,
+# diaggen, Speicheraufteilung, A2L). Aus den Quellen dieses Repositorys und dem gepinnten neXtBSW
+# jederzeit reproduzierbar; eingecheckt waere es eine zweite Wahrheit, die auseinanderlaeuft.
+build/
+
+# Python-Umgebung dieses Workspace (python -m tools.setup venv .)
+.venv/
+
+# Sicherungen von `nxconfig migrate` (customer-project.md 5.5)
+.nextbsw-backup/
+
+# Einstellungen des Arbeitsplatzes: Compilerpfad, CAN-Adapter, Debug-Probe
+CMakeUserPresets.json
+
+# Caches der Werkzeuge
+__pycache__/
+*.pyc
+slprj/
+*.slxc
+*.asv
+*_ert_rtw/
+
+# Absichtlich **nicht** ignoriert: swc/<Swc>/generated/ (ARXML und Embedded-Coder-Code). Firmware
+# und CI bauen ohne MATLAB, deshalb ist dieses Generat eine Quelle (customer-project.md 3.2).

@@ -1,0 +1,69 @@
+# SPDX-License-Identifier: Apache-2.0
+# Description of SupplyMonitor: the model SupplyMonitor.slx is the master (made by SupplyMonitor_create.m); this file is the
+# description it matches, and tools/rtegen compares it with the generated ARXML. Written by tools/gen_swc_ports.py.
+version: 1
+name: SupplyMonitor
+description: "48-V-Versorgung: Strom filtern, Ueberlast mit Hysterese, LIMIT-Leitung"
+implementation: simulink
+runnables:
+  - name: SupplyTask10ms
+    period_ms: 10
+ports:
+  - name: ISupply_mV
+    direction: in
+    type: uint32
+    runnables: [SupplyTask10ms]
+  - name: ISupplyQlf
+    direction: in
+    type: uint8
+    runnables: [SupplyTask10ms]
+  - name: Limit
+    direction: in
+    type: boolean
+    runnables: [SupplyTask10ms]
+  - name: Overload
+    direction: out
+    type: boolean
+    runnables: [SupplyTask10ms]
+  - name: SupplyCurrent_A
+    direction: out
+    type: float32
+    runnables: [SupplyTask10ms]
+  - name: LimitActive
+    direction: out
+    type: boolean
+    runnables: [SupplyTask10ms]
+  - name: ChannelsReleased           # output on and at least one channel released (CellChannels, from the previous step): the quiescent current of the supply is always above MinCurrent_mA then (review bs-c1-strommessung S-1)
+    direction: in
+    type: boolean
+    runnables: [SupplyTask10ms]
+  - name: CurrentInvalid           # the current measurement was invalid for CurrentInvalid_cycles samples in a row, or implausibly low for MinCurrentTime_cycles samples with the output on and a channel released (C-1): BattSimMode switches off in RUN, FAIL reason 5
+    direction: out
+    type: boolean
+    runnables: [SupplyTask10ms]
+parameters:
+  - name: SupplyCurrentFilter
+    type: float32
+    runnables: [SupplyTask10ms]
+  - name: SupplyCurrentGain
+    type: float32
+    runnables: [SupplyTask10ms]
+  - name: OverloadThd_mA
+    type: float32
+    runnables: [SupplyTask10ms]
+  - name: OverloadHyst_mA
+    type: float32
+    runnables: [SupplyTask10ms]
+  - name: MinCurrent_mA
+    type: float32
+    unit: "mA"
+    min: 0
+    max: 200
+    description: "Mindeststrom der 48-V-Versorgung bei Ausgang ein"
+    runnables: [SupplyTask10ms]
+  - name: MinCurrentTime_cycles
+    type: uint8
+    runnables: [SupplyTask10ms]
+  - name: CurrentInvalid_cycles
+    type: uint8
+    runnables: [SupplyTask10ms]

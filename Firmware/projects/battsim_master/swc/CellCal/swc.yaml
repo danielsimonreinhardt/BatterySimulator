@@ -1,0 +1,173 @@
+# SPDX-License-Identifier: Apache-2.0
+# Description of CellCal: the model CellCal.slx is the master (made by CellCal_create.m); this file is the
+# description it matches, and tools/rtegen compares it with the generated ARXML. Written by tools/gen_swc_ports.py.
+version: 1
+name: CellCal
+description: "Kalibrierung der Zellkanaele: Werte per Diagnose uebernehmen (nur bei Ausgang aus), im NvM halten, an CellChannels geben"
+implementation: simulink
+runnables:
+  - name: CalTask10ms
+    period_ms: 10
+ports:
+  - name: OutputEnable           # outputs enabled (the same name as the port of CellChannels and the provided port of BattSimMode: allowed since RTE-49)
+    direction: in
+    type: boolean
+    runnables: [CalTask10ms]
+  - name: ApplyRequest           # counts the requests of the routine ApplyCalibration (31 01)
+    direction: in
+    type: uint8
+    runnables: [CalTask10ms]
+  - name: StSetOffset           # staged values of the 14 channels written by the tester (2E 0201, all kinds at once)
+    direction: in
+    type: sint16
+    dimension: CellCount
+    runnables: [CalTask10ms]
+  - name: NvSetOffsetIn           # stored value
+    direction: in
+    type: sint16
+    dimension: CellCount
+    runnables: [CalTask10ms]
+  - name: NvSetOffsetQlf
+    direction: in
+    type: uint8
+    runnables: [CalTask10ms]
+  - name: StSetGain           # staged values of the 14 channels written by the tester (2E 0201, all kinds at once)
+    direction: in
+    type: uint16
+    dimension: CellCount
+    runnables: [CalTask10ms]
+  - name: NvSetGainIn           # stored value
+    direction: in
+    type: uint16
+    dimension: CellCount
+    runnables: [CalTask10ms]
+  - name: NvSetGainQlf
+    direction: in
+    type: uint8
+    runnables: [CalTask10ms]
+  - name: StMeasOffset           # staged values of the 14 channels written by the tester (2E 0201, all kinds at once)
+    direction: in
+    type: sint16
+    dimension: CellCount
+    runnables: [CalTask10ms]
+  - name: NvMeasOffsetIn           # stored value
+    direction: in
+    type: sint16
+    dimension: CellCount
+    runnables: [CalTask10ms]
+  - name: NvMeasOffsetQlf
+    direction: in
+    type: uint8
+    runnables: [CalTask10ms]
+  - name: StMeasGain           # staged values of the 14 channels written by the tester (2E 0201, all kinds at once)
+    direction: in
+    type: uint16
+    dimension: CellCount
+    runnables: [CalTask10ms]
+  - name: NvMeasGainIn           # stored value
+    direction: in
+    type: uint16
+    dimension: CellCount
+    runnables: [CalTask10ms]
+  - name: NvMeasGainQlf
+    direction: in
+    type: uint8
+    runnables: [CalTask10ms]
+  - name: NvSetOffsetOut           # value to store
+    direction: out
+    type: sint16
+    dimension: CellCount
+    runnables: [CalTask10ms]
+  - name: AcSetOffset           # values in use of the 14 channels (read back by the tester, 22 0201)
+    direction: out
+    type: sint16
+    dimension: CellCount
+    runnables: [CalTask10ms]
+  - name: CalSetOffset_V           # value in use, physical, for CellChannels
+    direction: out
+    type: float32
+    dimension: CellCount
+    runnables: [CalTask10ms]
+  - name: NvSetGainOut           # value to store
+    direction: out
+    type: uint16
+    dimension: CellCount
+    init: 10000
+    runnables: [CalTask10ms]
+  - name: AcSetGain           # values in use of the 14 channels (read back by the tester, 22 0201)
+    direction: out
+    type: uint16
+    dimension: CellCount
+    init: 10000
+    runnables: [CalTask10ms]
+  - name: CalSetGain           # value in use, physical, for CellChannels
+    direction: out
+    type: float32
+    dimension: CellCount
+    init: 1.0
+    runnables: [CalTask10ms]
+  - name: NvMeasOffsetOut           # value to store
+    direction: out
+    type: sint16
+    dimension: CellCount
+    runnables: [CalTask10ms]
+  - name: AcMeasOffset           # values in use of the 14 channels (read back by the tester, 22 0201)
+    direction: out
+    type: sint16
+    dimension: CellCount
+    runnables: [CalTask10ms]
+  - name: CalMeasOffset_V           # value in use, physical, for CellChannels
+    direction: out
+    type: float32
+    dimension: CellCount
+    runnables: [CalTask10ms]
+  - name: NvMeasGainOut           # value to store
+    direction: out
+    type: uint16
+    dimension: CellCount
+    init: 10000
+    runnables: [CalTask10ms]
+  - name: AcMeasGain           # values in use of the 14 channels (read back by the tester, 22 0201)
+    direction: out
+    type: uint16
+    dimension: CellCount
+    init: 10000
+    runnables: [CalTask10ms]
+  - name: CalMeasGain           # value in use, physical, for CellChannels
+    direction: out
+    type: float32
+    dimension: CellCount
+    init: 1.0
+    runnables: [CalTask10ms]
+  - name: ApplyResult
+    direction: out
+    type: uint8
+    runnables: [CalTask10ms]
+  - name: ApplyBadChannel
+    direction: out
+    type: uint8
+    runnables: [CalTask10ms]
+  - name: CalState
+    direction: out
+    type: uint8
+    runnables: [CalTask10ms]
+parameters:
+  - name: CellCount
+    kind: constant
+    type: sint32
+    min: 14
+    max: 14
+    description: "Anzahl der Zellkanaele (Dimension der Vektorports)"
+    value: 14
+  - name: OffsetLimit_code
+    type: uint16
+    description: "Grenze des Offsets in 0,1-mV-Schritten"
+    runnables: [CalTask10ms]
+  - name: GainMin_code
+    type: uint16
+    description: "kleinste Steigung"
+    runnables: [CalTask10ms]
+  - name: GainMax_code
+    type: uint16
+    description: "groesste Steigung"
+    runnables: [CalTask10ms]

@@ -1,0 +1,204 @@
+# SPDX-License-Identifier: Apache-2.0
+# Description of BattSimMode: the model BattSimMode.slx is the master (made by BattSimMode_create.m); this file is the
+# description it matches, and tools/rtegen compares it with the generated ARXML. Written by tools/gen_swc_ports.py.
+version: 1
+name: BattSimMode
+description: "Betriebsarten (Standby, Fernsteuerung, FAIL), Ausgang ein/aus, Tasten, Lebenszeichen und Statusbotschaft 0x121"
+implementation: simulink
+runnables:
+  - name: ModeTask10ms
+    period_ms: 10
+ports:
+  - name: RemoteControl
+    direction: in
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: ModeControl
+    direction: in
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: OutputControl
+    direction: in
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: ControlCell010203Qlf
+    direction: in
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: ControlCell040506Qlf
+    direction: in
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: ControlCell070809Qlf
+    direction: in
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: ControlCell101112Qlf
+    direction: in
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: ControlCell131415Qlf
+    direction: in
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: ControlCell16Qlf
+    direction: in
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: ControlBattSimQlf
+    direction: in
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: ControlDynCellSim1Qlf
+    direction: in
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: ControlDynCellSim2Qlf
+    direction: in
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: BtnAllOnOff
+    direction: in
+    type: boolean
+    runnables: [ModeTask10ms]
+  - name: BtnRemote
+    direction: in
+    type: boolean
+    runnables: [ModeTask10ms]
+  - name: Overload
+    direction: in
+    type: boolean
+    runnables: [ModeTask10ms]
+  - name: CurrentInvalid           # current measurement failed (C-1): FAIL reason 5 in RUN
+    direction: in
+    type: boolean
+    runnables: [ModeTask10ms]
+  - name: OverVoltage           # a channel is above its setpoint for too long (C-2): FAIL reason 6 in RUN
+    direction: in
+    type: boolean
+    runnables: [ModeTask10ms]
+  - name: ResetWatchdog
+    direction: in
+    type: boolean
+    runnables: [ModeTask10ms]
+  - name: ResetQlf
+    direction: in
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: BattSimStatus
+    direction: out
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: OutputStatus
+    direction: out
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: LedRemote
+    direction: out
+    type: boolean
+    runnables: [ModeTask10ms]
+  - name: OutputEnable
+    direction: out
+    type: boolean
+    runnables: [ModeTask10ms]
+  - name: HandActive           # hand mode (STANDALONE, status 2) is active: HandControl starts at 0 V, CellChannels takes the setpoints and releases of HandControl instead of the CAN ones (stage D, step 2)
+    direction: out
+    type: boolean
+    runnables: [ModeTask10ms]
+  - name: FailReason
+    direction: out
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: AliveStatusBattSim
+    direction: out
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: AliveStatusCells010203
+    direction: out
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: AliveStatusCells040506
+    direction: out
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: AliveStatusCells070809
+    direction: out
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: AliveStatusCells101112
+    direction: out
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: AliveStatusCells131415
+    direction: out
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: AliveStatusCell16
+    direction: out
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: AliveStatusBattSimExt
+    direction: out
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: ValidCell010203
+    direction: out
+    type: boolean
+    runnables: [ModeTask10ms]
+  - name: ValidCell040506
+    direction: out
+    type: boolean
+    runnables: [ModeTask10ms]
+  - name: ValidCell070809
+    direction: out
+    type: boolean
+    runnables: [ModeTask10ms]
+  - name: ValidCell101112
+    direction: out
+    type: boolean
+    runnables: [ModeTask10ms]
+  - name: ValidCell131415
+    direction: out
+    type: boolean
+    runnables: [ModeTask10ms]
+  - name: ValidCell16
+    direction: out
+    type: boolean
+    runnables: [ModeTask10ms]
+  - name: ValidBattSim
+    direction: out
+    type: boolean
+    runnables: [ModeTask10ms]
+  - name: ValidDynCellSim1
+    direction: out
+    type: boolean
+    runnables: [ModeTask10ms]
+  - name: ValidDynCellSim2
+    direction: out
+    type: boolean
+    runnables: [ModeTask10ms]
+  - name: FwVersionMajor
+    direction: out
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: FwVersionMinor
+    direction: out
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: FwVersionPatch
+    direction: out
+    type: uint8
+    runnables: [ModeTask10ms]
+parameters:
+  - name: VersionMajor
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: VersionMinor
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: VersionPatch
+    type: uint8
+    runnables: [ModeTask10ms]
+  - name: ButtonDebounce_cycles
+    type: uint8
+    runnables: [ModeTask10ms]
