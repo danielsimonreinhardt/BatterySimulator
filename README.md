@@ -34,6 +34,10 @@ Weiter in [`Firmware/README.md`](Firmware/README.md).
 Schaltpläne und Platinen enthalten Symbole und Footprints aus den offiziellen KiCad-Bibliotheken (Lizenz: CC-BY-SA 4.0 mit der
 KiCad-Ausnahme für Entwürfe, die diese Bibliotheken nur verwenden); sie bleiben dadurch unter deren Bedingungen, der Entwurf selbst unter CERN-OHL-P-2.0.
 
+**Aufdruck auf den Platinen:** Auf den Platinen `BattSimMaster`, `BattSim_V1` und `BattSim_Supply` steht der Text „CREATED 11/2024 – ALL RIGHTS RESERVED“.
+Er gilt nicht mehr: Für die Entwürfe in `Hardware/` gilt die CERN-OHL-P-2.0, auch wenn der Aufdruck auf bereits gefertigten Platinen etwas anderes sagt. Der Aufdruck wird mit der
+nächsten Platinen-Revision angepasst; die KiCad-Quellen sind bis dahin unverändert.
+
 ## Stand
 
 Firmware und Doku sind der Arbeitsstand der Entwicklung; ein Release gibt es nicht. Ein Gerät darf nur nach den
