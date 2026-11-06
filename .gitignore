@@ -1,0 +1,19 @@
+# KiCad: lokale Zustände, Sicherungen, Zwischenspeicher
+*.kicad_prl
+*-backups/
+*.kicad_sch-bak
+_autosave-*
+fp-info-cache
+fp-lib-table.bak
+*.lck
+~$*
+
+# Fertigungs- und Modelldaten (nicht Teil der Quellen)
+Hardware/**/*.step
+Hardware/**/gerber/
+Hardware/**/production/
+Hardware/**/*.zip
+
+# Bauausgaben und Umgebungen
+Firmware/build/
+Firmware/.venv/
