@@ -109,6 +109,6 @@ Board `bs-anzeige-weiter` a. J-Link EDU 801042658, 1000 kHz, `connect; g; sleep;
 
 **Nicht getestet** (Nutzer, 06.11.): Abziehen/Anstecken der Anzeige (Fehlerflag, Wiederanlauf nach 0,5 s), Task-Hängedauer bei `timeout_ms` 15 und Bus-Clear. Die Tests sind nur bei geöffnetem Gerät möglich; der Nutzer hat sie übersprungen. Sie bleiben offen, bis ein Abbild mit gemuxten Pins dauerhaft läuft. Die Oszilloskop-Messung entfiel, weil die Gegenprobe die Ursache belegt hat.
 
-**Offen:** die Wirkung der Rate und des SCL-Pull-ups ist nach dem Fix noch zu prüfen (9541 Hz und 31,25 kHz sind beide nicht mit gemuxten Pins getestet). SDA hat keinen Pull-up, die Anzeige liefert bei 9541 Hz offenbar genug (SDA wird nur vom Modul/Treiber gezogen, high durch das Modul).
+**Offen:** die Wirkung der Rate und des SCL-Pull-ups ist nach dem Fix noch zu prüfen (9541 Hz und 31,25 kHz sind beide nicht mit gemuxten Pins getestet). SDA hat im MCU keinen Pull-up und auf der Platine keinen; gemessen ist nur, dass SDA im Ruhezustand high liest (PDIR Bit 15 nach dem Mux), woher der High-Pegel kommt (Pull-up im Modul?), ist nicht untersucht.
 
 Endzustand: Firmware 0.5.2, Standby, Ausgang aus, Fernsteuerung frei; die beiden PCR-Werte gelten bis zum nächsten Reset oder Spannungsausfall (Laufzeit-Mux), danach ist die Anzeige wieder dunkel.
