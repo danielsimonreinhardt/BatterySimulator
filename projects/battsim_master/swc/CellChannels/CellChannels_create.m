@@ -14,8 +14,10 @@ function CellChannels_create()
 %       correction and channel calibration (below) are added to the limited setpoint: command = SetGain * (setpoint +
 %       correction) + SetOffset, the sum limited to 0 .. SetpointLimit_V before the calibration. Curve VoltageSetValue_Ax ->
 %       VoltageSetPwm_T (the table of the old firmware, 5 V = 0.9566) gives the duty, in 0.01 % for the PWM target. The
-%       duty is 0 while OutputEnable is off (STANDBY, STOP, FAIL) and for a setpoint of 0 V: setpoints are 0 V there, held
-%       CAN values do not act (FW-16), and the calibration (two points, 1 V and 4 V) does not claim to reach 0 V.
+%       duty is 0 while OutputEnable is off (STANDBY, STOP, FAIL), for a setpoint of 0 V and, since 0.5.6, for a channel that is
+%       not released (CELLn_ENABLE not 2, or blocked by its card key in the hand mode): a shutdown of the card independent of the
+%       ENABLE path (board bs-pwm-bei-aus a; it does not help when the control side of a card is stuck). Setpoints are 0 V in the
+%       first case, held CAN values do not act (FW-16), and the calibration (two points, 1 V and 4 V) does not claim to reach 0 V.
 %     - Release: the ENABLE output of a channel is on when OutputEnable is on and CELLn_ENABLE = 2 (0 and 1 are off).
 %     - Actual value: curve VoltageSenseMeas_Ax (mV at the ADC pin) -> VoltageSenseValue_T (V), channel calibration
 %       (MeasGain * value + MeasOffset), first-order low-pass VoltageSenseFilter per 10 ms; only samples with a valid ADC
@@ -173,7 +175,7 @@ lines = {
 '        corrHold(k) = single(0);'
 '    end'
 '    % setpoint -> command -> duty'
-'    if outEn && (v > single(0))'
+'    if outEn && commanded && (v > single(0))'
 '        cmd = min(max(v + corr, single(0)), limitV);'
 '        cmd = sg * cmd + so;'
 '        d = interp1d(setAx, setT, cmd) * single(10000);'
