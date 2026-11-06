@@ -22,7 +22,9 @@ noch nicht angeschlossen):
 | 16:06:58 (t ≈ 46 s) | BS_OUT_OFF (Duty 0, Ausgang aus) | die sechs Werte ändern sich nicht |
 | bis t = 363 s | | unverändert (3,71 / 4,53 / 4,80 / 4,52 / 4,48 / 3,83 V), kein FAIL, kein Overload/Limit |
 
-Der Nutzer misst an der Last **28 V** (echt, Summe der Meldungen 26,07 V).
+Der Nutzer misst an der Last **28 V** (echt, Summe der Meldungen 26,07 V). Die Last war ein **Gerät mit Eingangskondensatoren** (Angabe des Nutzers, Kapazität unbekannt); sie war beim Erstfund
+nicht, bei der Nachstellung beim zweiten Versuch angeschlossen. Das stützt den **Entladestoß beim gleichzeitigen Brücken aller Zellen** (Q6 + R25 ohne Strombegrenzung, siehe Abschnitt 3 und 4) als Auslöser; die Kapazität
+ist bisher weder bekannt noch gemessen, und ob R25/Q6 beschädigt sind, ist nicht geprüft.
 
 **Zeitverlauf der Meldung (Firmware-Tiefpass τ ≈ 100 ms):** gute Zellen fallen mit Faktor 0,36 je 100 ms (3,70 → 3,15 → 1,14 → 0,41 → 0,16 → 0,07 → 0,03 V); die sechs betroffenen
 Werte laufen mit derselben Zeitkonstante zu ihrem Endwert (Zelle 2: 3,70 → 3,92 → 4,36 → 4,48 → 4,53 → 4,54 V). Der Rohwert springt also innerhalb ≲ 30 ms nach dem Befehl.
