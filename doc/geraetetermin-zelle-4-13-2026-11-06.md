@@ -65,7 +65,7 @@ Verbleibende Erklärungen (nicht unterschieden):
 
 ## 4. Hardware-Befunde für die nächste Revision
 
-1. Q9 hat keinen Pull-down an der Basis und R48 zieht INB auf +5V: ein offener oder nicht getriebener `ENABLE_ISO` schaltet den Kanal **ein** (fail-unsafe). Sicherer Zustand hängt am aktiv getriebenen High des Masters
+1. Q9 hat keinen Pull-**up** an der Basis (07.11. korrigiert, vorher fälschlich „Pull-down“; EN_nn ist active low) und R48 zieht INB auf +5V: ein offener oder nicht getriebener `ENABLE_ISO` sperrt Q9 und schaltet den Kanal **ein** (fail-unsafe). Abhilfe: Pull-up von der Basis (R47.2) nach +5V, 47 kΩ (22–100 kΩ; Basis bei Low des Masters ≈ V_OL + 0,1 V, bei offen I_B ≈ 90 µA). Sicherer Zustand hängt am aktiv getriebenen High des Masters
    (ISO6742F, Ruhepegel low, gilt nur bei unversorgter Eingangsseite; passt zu den Resetpulsen vom 22.10.).
 2. Q6 + R25 (0 Ω) brücken ohne Strombegrenzung (schon B2 der Zellkanal-Analyse): R25 als belastbarer Widerstand (1–2 Ω) oder Reihenfolge Q4 vor Q6; Impulsfestigkeit von Q6 prüfen.
 3. Es gibt keine Rückmeldung des tatsächlichen ENABLE-/Brückenzustands der Karte an den Master; ein zweiter, vom ENABLE-Pfad unabhängiger Abschaltweg fehlt (Firmware-Duty 0 hilft nicht, wenn OUTA nicht treibt).
@@ -133,6 +133,30 @@ Folgen (zum Teil Vermutung):
 Messung zur Bestätigung (Nutzer, geöffnet): Gate von Q6 (`LINK_SW`, R28.2 gegen Karten-GND) bei ausgeschalteter Karte, erwartet ≈ 1,0 … 1,1 V statt ≈ 5 V; danach Q6-Spannung über der ausgeschalteten Karte bei kleinem Strom (Millivolt-Bereich).
 
 Für die nächste Revision: Gate-Treiber von Q6 vom Basisknoten von Q4 trennen (eigene Pull-up/Treiberstufe, V_GS ≥ 4,5 V, z. B. Q5 schaltet zwei getrennte Knoten oder ein zweiter Transistor), R25 mit Strombegrenzung,
-und den bekannten Befund aus Abschnitt 4 (Q9 ohne Pull-down) beheben.
+und den bekannten Befund aus Abschnitt 4 (Q9 ohne Pull-up an der Basis) beheben.
 
 Werkzeuge der Auswertung: `capture_alle_aus.py` (passiver Mitschnitt, sendet nichts), `analyse_mitschnitt.py`, Netzliste per `kicad-cli` (Scratchpad der Session); der Rohmitschnitt liegt nicht im Repository (≈ 1,3 MB).
+
+## 8. Rework R23 = 22 kΩ und Folgerungen (07.11.2026, Firmware 0.5.6)
+
+**Rework (Nutzer):** R23 (1 kΩ, Basis von Q4) auf 22 kΩ; Karte 1 zuerst, danach Karten 1 bis 5. Gemessen auf dem Tisch (Nutzer): Gate von Q6 bei ausgeschalteter
+Karte ≈ 3,6 V (unverändert: 1,0 V, Drain-Source dort 300 kΩ). Q6 bei von außen getriebenem Gate (Karte unbestromt, mehrere Karten): **0,1 Ω bei 3 V**, Q6 ist also in Ordnung
+und hat eine normale Schwelle. Eine Widerstandsmessung an der bestromten Karte (14 Ω) war ungültig (Messartefakt, nicht verwerten).
+
+**Gerätetest (100 Ω, alle Zellen 1,0 V, Mitschnitt `rework_k1.txt`):** Karte 1 (umgebaut) aus: 48-V-Strom 0,722 → 0,689 A, **−33 mA**; Karten 2 und 3 (unverändert): −32 mA, −32 mA; Meldung der
+ausgeschalteten Karten 0,01 / 0,02 / 0,01 V. Kein Unterschied durch den Rework.
+
+**Korrektur der Erwartung aus Abschnitt 7:** Die Vorhersage „Brücke trägt den Strom → −64 mA“ war falsch. Der LT3080 hält den Kartenausgang auf SET + Offset (≈ +0,01 … +0,04 V, wie gemeldet)
+und kann nur Strom liefern. Der Stapelstrom (Vorwärtsrichtung) läuft deshalb **immer** durch den LT3080, egal wie gut Q6 leitet; Q6 könnte nur Kreisstrom aus dem LT3080 aufnehmen. Der Strom-Test sagt
+nichts über Q6 aus; die Wärme der ausgeschalteten Karte (9 V · I) lässt sich mit Q6 nicht beheben, sondern nur durch Abschalten des LT3080 selbst (z. B. Versorgung des LT3080 trennen). Das ist
+eine Einordnung aus der Schaltung, nicht gemessen.
+
+**Wofür Q6 gebraucht wird (Vermutung):** Rückwärtsrichtung (Kondensatorlast entlädt in den Stapel zurück): der LT3080 nimmt keinen Strom auf, der Strom geht über Q6 (wenn es wirklich leitet, V_GS ≥ 2,5 V)
+oder über D1 in die 9-V-Schiene. Das ist der Fehlerfall vom 06.11.; der Rework (Gate ≈ 3,6 V) wirkt dafür, ist dort aber nicht geprüft.
+
+**Offen / vorgeschlagen (Board über den Koordinator):**
+* Revisionsliste: R23 auf 22 kΩ (Gate-Treiber von Q4-Basis entkoppeln, besser getrennte Knoten), Pull-up 47 kΩ an der Basis von Q9 (Abschnitt 4.1), R25 strombegrenzend (1–2 Ω, Belastbarkeit prüfen),
+  LT3080 bei ausgeschalteter Karte abschalten (Wärme), Rückmeldung des Brückenzustands.
+* Rückspeisetest (Rückwärtsrichtung) mit Strombegrenzung (z. B. 0,1 A), ohne Kondensatoren, Zellen aus: fließt der Strom über Q6 (Zelle zeigt wenige mV) oder über D1 in die Schiene (Zelle zeigt Volt)?
+  Nur nach Freigabe im Board; gleicher Fehlermodus wie am 06.11.
+* Karten 1 bis 5 sind auf 22 kΩ umgerüstet (Nutzer); Test danach nach Absprache.
