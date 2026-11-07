@@ -648,7 +648,8 @@ void CellTask10ms(void)                /* Explicit Task: CellTask10ms */
       CellChannels_ARID_DEF.corrHold[k] = 0.0F;
     }
 
-    if (tmpRead && (v > 0.0F)) {
+    commanded = (tmpRead && commanded);
+    if (commanded && (v > 0.0F)) {
       v = fminf(fmaxf(v + mv, 0.0F), Rte_Prm_CalPrm_SetpointLimit_V()) *
         tmpRead_a + tmpRead_b;
       tmpRead_a = (Rte_Prm_CalPrm_VoltageSetPwm_T())[5];
@@ -676,7 +677,7 @@ void CellTask10ms(void)                /* Explicit Task: CellTask10ms */
         + 0.5F);
     }
 
-    en[k] = (tmpRead && commanded);
+    en[k] = commanded;
     if (tmp) {
       state[k] = 1U;
     } else if (clipped) {

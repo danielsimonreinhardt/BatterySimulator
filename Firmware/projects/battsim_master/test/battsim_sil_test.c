@@ -220,7 +220,7 @@ static void startIsStandbyWithWatchdogReason(void)
     CHECK(MODE(FailReason) == FAIL_WATCHDOG);
     CHECK(outputsOff());
     CHECK(MODE(LedRemote) == 0U);
-    CHECK(MODE(FwVersionMajor) == 0U && MODE(FwVersionMinor) == 5U && MODE(FwVersionPatch) == 5U);
+    CHECK(MODE(FwVersionMajor) == 0U && MODE(FwVersionMinor) == 5U && MODE(FwVersionPatch) == 6U);
     /* the held setpoints of the CAN buffers do not act in STANDBY (FW-16) */
     setpointFrame123(ENABLE_ON, 3.7, ENABLE_ON, 3.7, ENABLE_ON, 3.7);
     cycles(5);
@@ -246,10 +246,10 @@ static void setpointFrameBecomesDuty(void)
     CHECK(*dutyOut[0] == 7059U);
     CHECK(*enOut[0] == 1U);
     CHECK(*stateOut[0] == 2U);
-    /* channel 2 is not enabled: no ENABLE, status disabled; the PWM follows its setpoint like the old firmware */
+    /* channel 2 is not enabled: no ENABLE, status disabled, and (0.5.6) no PWM either, though it has a setpoint */
     CHECK(*enOut[1] == 0U);
     CHECK(*stateOut[1] == 1U);
-    CHECK(*dutyOut[1] == 7638U);
+    CHECK(*dutyOut[1] == 0U);
     /* channel 3: 5.5 V is above the limit of 5.0 V: duty of 5.0 V (0.9566), status "setpoint error" */
     CHECK(*dutyOut[2] == 9566U);
     CHECK(*stateOut[2] == 3U);
@@ -278,6 +278,7 @@ static void setpointFrameBecomesDuty(void)
     setpointFrame123(1U, 3.0, 3U, 3.0, ENABLE_ON, 3.0);
     goToRun();
     CHECK(*enOut[0] == 0U && *enOut[1] == 0U && *enOut[2] == 1U);
+    CHECK(*dutyOut[0] == 0U && *dutyOut[1] == 0U && *dutyOut[2] != 0U);
     backToStandby();
 }
 
@@ -648,7 +649,7 @@ static void statusExtensionFrame(void)
     CHECK((data[0] & 0x20U) != 0U);           /* LIMIT */
     CHECK((data[0] & 0x40U) == 0U);           /* regulator switched off by the diagnosis (ControllerOffReq = 1 here) */
     CHECK((data[1] & 0x0FU) == 0U);           /* FAIL reason none */
-    CHECK(data[5] == 0U && data[6] == 5U && data[7] == 5U); /* version 0.5.5 */
+    CHECK(data[5] == 0U && data[6] == 5U && data[7] == 6U); /* version 0.5.6 */
     uint16_t current = (uint16_t)(data[3] | (data[4] << 8U));
     CHECK(current > 480U && current < 510U);   /* 0.5 A in 0.001 A */
     *controlQlf[5] = QLF_OK;
@@ -941,11 +942,18 @@ static double plantV;
 static double plantGain   = 1.0;
 static double plantOffset = 0.0;
 static double plantTau    = 0.25; /* s */
+static double pwmTau      = 0.0;  /* s, > 0: RC filter and amplifier of the setpoint path in front of the card (0.5.6 test) */
+static double pwmFiltered;
 
 static void plantStep(void)
 {
-    double const nominal = (*dutyOut[0] == 0U) ? 0.0 : interp(setT, setAx, (double)*dutyOut[0] / 10000.0);
-    double const target  = (*dutyOut[0] == 0U) ? 0.0 : plantGain * nominal + plantOffset;
+    double nominal = (*dutyOut[0] == 0U) ? 0.0 : interp(setT, setAx, (double)*dutyOut[0] / 10000.0);
+    if (pwmTau > 0.0)
+    {
+        pwmFiltered += (nominal - pwmFiltered) * (0.01 / pwmTau);
+        nominal = pwmFiltered;
+    }
+    double const target  = (nominal < 0.001) ? 0.0 : plantGain * nominal + plantOffset;
     plantV += (target - plantV) * (0.01 / plantTau);
     *adcIn[0] = (uint32)(interp(senseT, senseAx, plantV) + 0.5);
 }
@@ -1037,6 +1045,65 @@ static void regulatorCorrectsWithinItsAuthority(void)
     goToRun();
     CHECK(*dutyOut[0] < (uint16)dutyFor(3.75));
     backToStandby();
+    *adcIn[0]              = 0U;
+    CELL(ControllerOffReq) = 1U;
+}
+
+/* 0.5.6 (board bs-pwm-bei-aus a): a channel that is not released has no PWM, a second shutdown independent of the ENABLE
+ * path. Releasing it again must start cleanly: the duty comes with the first step, the regulator works from nothing, the
+ * output stays below the overvoltage threshold and settles on the setpoint. */
+static void aChannelWithoutReleaseHasNoPwm(void)
+{
+    startCalibration(QLF_NOT_AVAILABLE, initOff, initGain, initOff, initGain);
+    *adcQlfIn[0] = QLF_OK;
+    plantV       = 0.0;
+    pwmFiltered  = 0.0;
+    pwmTau       = 0.03; /* RC 10 ms of the card plus amplifier and card: a few tens of ms */
+    plantGain    = 0.99;
+    plantOffset  = -0.02;
+    CELL(ControllerOffReq) = 0U;
+    /* channel 1 released at 3.7 V, channel 2 has a setpoint but no release, channel 3 has "disable" (1) */
+    setpointFrame123(ENABLE_ON, 3.7, 0U, 4.0, 1U, 2.0);
+    goToRun();
+    runPlant(2500);
+    CHECK(MODE(BattSimStatus) == STATUS_REMOTE && fabs(plantV - 3.7) < 0.004);
+    CHECK(*enOut[0] == 1U && *dutyOut[0] > 0U);
+    CHECK(*enOut[1] == 0U && *dutyOut[1] == 0U && *stateOut[1] == 1U);
+    CHECK(*enOut[2] == 0U && *dutyOut[2] == 0U && *stateOut[2] == 1U);
+    /* the release is taken away: the PWM is gone in the same step, the output goes to 0 V and the regulator is cleared */
+    setpointFrame123(0U, 3.7, 0U, 4.0, 1U, 2.0);
+    cycle();
+    CHECK(*enOut[0] == 0U && *dutyOut[0] == 0U && *stateOut[0] == 1U);
+    runPlant(300);
+    CHECK(plantV < 0.001 && MODE(BattSimStatus) == STATUS_REMOTE);
+    /* and given again: the first step carries the duty of the setpoint plus at most the authority of the regulator (0.1 V) */
+    setpointFrame123(ENABLE_ON, 3.7, 0U, 4.0, 1U, 2.0);
+    cycle();
+    CHECK(*enOut[0] == 1U && *dutyOut[0] >= (uint16)dutyFor(3.7) && *dutyOut[0] <= (uint16)dutyFor(3.8));
+    double peak = plantV;
+    for (int i = 0; i < 2500; ++i)
+    {
+        cycle();
+        plantStep();
+        peak = (plantV > peak) ? plantV : peak;
+    }
+    CHECK(peak < 3.7 + 0.2 && MODE(BattSimStatus) == STATUS_REMOTE && MODE(FailReason) == FAIL_NONE);
+    CHECK(fabs(plantV - 3.7) < 0.004);
+    printf("  0.5.6 re-release: peak %.3f V (setpoint 3.7 V, overvoltage threshold 3.9 V), settled %.3f V\n", peak, plantV);
+    /* the same with the regulator switched off by the diagnosis: duty exactly the table duty */
+    CELL(ControllerOffReq) = 1U;
+    setpointFrame123(0U, 3.7, 0U, 4.0, 1U, 2.0);
+    cycle();
+    CHECK(*dutyOut[0] == 0U);
+    setpointFrame123(ENABLE_ON, 3.7, 0U, 4.0, 1U, 2.0);
+    cycle();
+    CHECK(*dutyOut[0] == (uint16)dutyFor(3.7));
+    /* outputs off: every duty is 0 */
+    backToStandby();
+    CHECK(outputsOff());
+    pwmTau                 = 0.0;
+    pwmFiltered            = 0.0;
+    plantV                 = 0.0;
     *adcIn[0]              = 0U;
     CELL(ControllerOffReq) = 1U;
 }
@@ -1603,7 +1670,8 @@ static void handSetpointsReachTheChannels(void)
     /* a card key blocks and releases one channel */
     pressHand(cardKey[1]);
     cycles(2);
-    CHECK(HAND(HandEnable)[1] == 0U && *enOut[1] == 0U && *stateOut[1] == 1U); /* as with CAN: the duty of a blocked channel is not cleared */
+    CHECK(HAND(HandEnable)[1] == 0U && *enOut[1] == 0U && *stateOut[1] == 1U); /* as with CAN (0.5.6): no PWM for a blocked channel */
+    CHECK(*dutyOut[1] == 0U && near(*dutyOut[0], dutyFor(3.0), 1) && near(*dutyOut[2], dutyFor(3.0), 1));
     CHECK(*enOut[0] == 1U && *enOut[2] == 1U);
     pressHand(cardKey[1]);
     cycles(2);
@@ -1780,6 +1848,7 @@ int main(void)
     stagedValuesAreTakenOverOnRequestWithOutputsOff();
     calibrationActsOnTheChannel();
     regulatorCorrectsWithinItsAuthority();
+    aChannelWithoutReleaseHasNoPwm();
     invalidCurrentMeasurementSwitchesOffInRun();
     implausiblyLowCurrentSwitchesOffInRun();
     overvoltageOfAChannelSwitchesOffEverything();
